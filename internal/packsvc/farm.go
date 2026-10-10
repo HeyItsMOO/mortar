@@ -3,7 +3,9 @@ package packsvc
 import (
 	"context"
 	"encoding/json"
+	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/meta"
@@ -98,14 +100,84 @@ func shareable(s profile.Source) profile.Source {
 	return profile.Source{Kind: s.Kind, Name: s.Name, ModID: s.ModID, FileID: s.FileID, Version: s.Version, Repo: s.Repo, Tag: s.Tag, Asset: s.Asset}
 }
 
-// ParseFarm reads a list a host copied out, refusing one for another game.
+// formatName marks the id of a mod read from Share's mod list text, which carries names and no ids.
+const formatName = "name"
+
+// farmNexusDomain is the game's name in a Nexus Mods page address.
+const farmNexusDomain = "stardewvalley"
+
+var (
+	listLink   = regexp.MustCompile(`^\[((?:\\.|[^\\\]])*)\]\((\S*?)\)(?: (\S+))?$`)
+	listBare   = regexp.MustCompile(`^(.*?)(?: (\d\S*))?$`)
+	listPlain  = regexp.MustCompile(`^(.+?)(?: v(\S+))?(?: - (https?://\S+))?$`)
+	listEscape = regexp.MustCompile("\\\\([\\\\`*_\\[\\]()])")
+	nexusPage  = regexp.MustCompile(`^https://www\.nexusmods\.com/([^/]+)/mods/(\d+)`)
+	githubPage = regexp.MustCompile(`^https://github\.com/([^/\s]+/[^/\s]+)$`)
+)
+
+// listLine reads one line of Share's mod list text in its Markdown (also Discord) or plain form. A plain line
+// counts only with a version or an address, which is what tells a mod from a heading.
+func listLine(line string) (name, version, page string, ok bool) {
+	if md, found := strings.CutPrefix(line, "- "); found {
+		m := listLink.FindStringSubmatch(md)
+		if m == nil {
+			m = append(listBare.FindStringSubmatch(md), "")
+			m[2], m[3] = "", m[2]
+		}
+		return listEscape.ReplaceAllString(m[1], "$1"), m[3], m[2], m[1] != ""
+	}
+	m := listPlain.FindStringSubmatch(line)
+	if m == nil {
+		return "", "", "", false
+	}
+	return m[1], m[2], m[3], m[2] != "" || m[3] != ""
+}
+
+// parseModList reads the enabled mods of Share's mod list text. A mod listed on a Nexus Mods or GitHub page can be
+// downloaded from it; a list of pages for another Nexus game is that game's.
+func parseModList(text string) FarmList {
+	l := FarmList{Game: farmGame, Mods: []FarmMod{}}
+	seen := map[mod.ID]bool{}
+	off := false
+	for line := range strings.Lines(text) {
+		line = strings.TrimSpace(line)
+		name, version, page, ok := listLine(line)
+		// ponytail: the headings are matched in English, the one language Mortar ships; with a second locale,
+		// treat the second heading as the switched-off group.
+		if !ok {
+			off = off && !strings.EqualFold(line, "Enabled") || strings.EqualFold(line, "Disabled")
+			continue
+		}
+		m := FarmMod{ID: mod.NewID(formatName, strings.ToLower(name)), Name: name, Version: version}
+		if n := nexusPage.FindStringSubmatch(page); n != nil {
+			if n[1] != farmNexusDomain {
+				l.Game = n[1]
+			}
+			id, _ := strconv.Atoi(n[2])
+			m.Source = profile.Source{Kind: profile.KindNexus, ModID: id}
+		} else if g := githubPage.FindStringSubmatch(page); g != nil {
+			m.Source = profile.Source{Kind: profile.KindGitHub, Repo: g[1]}
+		}
+		if !off && !seen[m.ID] && len(l.Mods) <= maxFarmMods {
+			seen[m.ID] = true
+			l.Mods = append(l.Mods, m)
+		}
+	}
+	return l
+}
+
+// ParseFarm reads a list a host copied out, either the multiplayer list or Share's mod list text, refusing one for
+// another game.
 func ParseFarm(text string) (FarmList, error) {
 	if len(text) > maxFarmBytes {
 		return FarmList{}, usererr.New(usererr.Invalid, "the list is too large")
 	}
 	var l FarmList
-	if err := json.Unmarshal([]byte(strings.TrimSpace(text)), &l); err != nil || len(l.Mods) == 0 || len(l.Mods) > maxFarmMods {
-		return FarmList{}, usererr.New(usererr.Invalid, "this is not a farm list")
+	if err := json.Unmarshal([]byte(strings.TrimSpace(text)), &l); err != nil {
+		l = parseModList(text)
+	}
+	if len(l.Mods) == 0 || len(l.Mods) > maxFarmMods {
+		return FarmList{}, usererr.New(usererr.Invalid, "this is not a mod list")
 	}
 	if l.Game != farmGame {
 		return FarmList{}, usererr.New(usererr.OtherGame, "multiplayer lists are for Stardew Valley")
@@ -133,7 +205,7 @@ func (s *Service) CheckFarm(gameID, profileID, text string) (FarmCheck, error) {
 func farmRows(l FarmList, p profile.Profile) []FarmRow {
 	rows := []FarmRow{}
 	for _, m := range l.Mods {
-		e, c, ok := findComponent(p, m.ID)
+		e, c, ok := findComponent(p, m)
 		row := FarmRow{ID: m.ID, Name: m.Name, Host: m.Version, Fixable: installable(m.Source)}
 		switch {
 		case !ok:
@@ -150,7 +222,25 @@ func farmRows(l FarmList, p profile.Profile) []FarmRow {
 	return rows
 }
 
-func findComponent(p profile.Profile, id mod.ID) (profile.Entry, profile.Component, bool) {
+// findComponent finds the profile's mod with the host's id. A host's mod known only by name is the mod of that
+// name, the one on the host's version when several share it.
+func findComponent(p profile.Profile, m FarmMod) (profile.Entry, profile.Component, bool) {
+	id := m.ID
+	if id.Format() == formatName {
+		var (
+			entry profile.Entry
+			named profile.Component
+			found bool
+		)
+		for _, e := range p.Entries {
+			for _, c := range e.Mods {
+				if strings.EqualFold(strings.TrimSpace(c.Name), m.Name) && (!found || sameVersion(c.Version, m.Version)) {
+					entry, named, found = e, c, true
+				}
+			}
+		}
+		return entry, named, found
+	}
 	for _, e := range p.Entries {
 		if i := slices.IndexFunc(e.Mods, func(c profile.Component) bool { return mod.Equal(c.ID, id) }); i >= 0 {
 			return e, e.Mods[i], true
@@ -204,7 +294,7 @@ func (s *Service) FixFarm(ctx context.Context, gameID, profileID, text string, i
 			continue
 		}
 		if row.State == FarmDifferent {
-			e, _, _ := findComponent(p, row.ID)
+			e, _, _ := findComponent(p, l.Mods[i])
 			req.Kind, req.CurrentKey = queue.KindUpdate, e.Key
 		}
 		queued[src] = true

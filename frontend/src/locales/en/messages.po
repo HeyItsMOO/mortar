@@ -151,6 +151,10 @@ msgstr "Priority Default"
 msgid "Show failed"
 msgstr "Show failed"
 
+#: src/game/FarmMenuItem.tsx:115
+msgid "This profile matches that list."
+msgstr "This profile matches that list."
+
 #: src/settings/GameSettingsPage.tsx:102
 msgid "Streaming"
 msgstr "Streaming"
@@ -2700,7 +2704,7 @@ msgstr "Could not prepare the data folder move"
 msgid "Compact"
 msgstr "Compact"
 
-#: src/game/FarmMenuItem.tsx:139
+#: src/game/FarmMenuItem.tsx:143
 msgid "Check"
 msgstr "Check"
 
@@ -2880,7 +2884,7 @@ msgid "Could not restore the warning"
 msgstr "Could not restore the warning"
 
 #: src/console/RunProblems.tsx:263
-#: src/game/FarmMenuItem.tsx:135
+#: src/game/FarmMenuItem.tsx:139
 msgid "Fix all"
 msgstr "Fix all"
 
@@ -5325,7 +5329,7 @@ msgstr "Could not check the store files"
 msgid "Rename…"
 msgstr "Rename…"
 
-#: src/game/FarmMenuItem.tsx:113
+#: src/game/FarmMenuItem.tsx:115
 msgid "This profile matches {host}."
 msgstr "This profile matches {host}."
 
@@ -7207,7 +7211,7 @@ msgstr "Unity exception"
 msgid "Revert"
 msgstr "Revert"
 
-#: src/game/FarmMenuItem.tsx:159
+#: src/game/FarmMenuItem.tsx:163
 msgid "Multiplayer mod list…"
 msgstr "Multiplayer mod list…"
 
@@ -13838,7 +13842,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/console/BisectDialog.tsx:199
 #: src/console/HelpDialog.tsx:257
 #: src/console/SearchRunsDialog.tsx:177
-#: src/game/FarmMenuItem.tsx:132
+#: src/game/FarmMenuItem.tsx:136
 #: src/launch/LaunchLayer.tsx:227
 #: src/launch/SweepDialog.tsx:137
 #: src/mods/AssetMapDialog.tsx:283

@@ -97,3 +97,48 @@ func TestFarmListRefusesWhatIsNotOne(t *testing.T) {
 		t.Error("exported a list for another game")
 	}
 }
+
+func TestFarmCheckReadsShareModListText(t *testing.T) {
+	named := func(key, name, version string, modID int) profile.Entry {
+		e := farmEntry(key, key, version, modID, 1)
+		e.Mods[0].Name = name
+		return e
+	}
+	guest := profile.Profile{ID: "g", Entries: []profile.Entry{
+		named("a", "Content Patcher", "2.8.3", 1915), named("b", "Mod *[beta]* (new)_x", "0.9", 7),
+		named("c", "Twin", "1.0", 8), named("d", "Twin", "2.0", 8),
+	}}
+	q := &fakeQueue{}
+	svc := &Service{Profiles: &fakeProfiles{list: []profile.Profile{guest}}, Queue: q}
+	lists := map[string]string{
+		"markdown": "Enabled\n- [Content Patcher](https://www.nexusmods.com/stardewvalley/mods/1915) 2.8.3\n" +
+			"- [Mod \\*\\[beta\\]\\* \\(new\\)\\_x](https://www.nexusmods.com/stardewvalley/mods/7) 1.0\n- [Twin](https://www.nexusmods.com/stardewvalley/mods/8) 2.0\n" +
+			"- [Json Assets](https://github.com/spacechase0/JsonAssets) 1.2\n- Local Only 3.1\n\nDisabled\n- [Off](https://example.com/off) 2",
+		"plain": "Enabled\nContent Patcher v2.8.3 - https://www.nexusmods.com/stardewvalley/mods/1915\n" +
+			"Mod *[beta]* (new)_x v1.0 - https://www.nexusmods.com/stardewvalley/mods/7\nTwin v2.0 - https://www.nexusmods.com/stardewvalley/mods/8\n" +
+			"Json Assets v1.2 - https://github.com/spacechase0/JsonAssets\nLocal Only v3.1\n\nDisabled\nOff v2 - https://example.com/off",
+	}
+	for form, text := range lists {
+		check, err := svc.CheckFarm("stardew", "g", text)
+		if err != nil {
+			t.Fatalf("%s: %v", form, err)
+		}
+		got := map[string]FarmRow{}
+		for _, r := range check.Rows {
+			got[r.Name] = r
+		}
+		beta, assets, local := got["Mod *[beta]* (new)_x"], got["Json Assets"], got["Local Only"]
+		if len(got) != 3 || beta.State != FarmDifferent || beta.Mine != "0.9" || !beta.Fixable ||
+			assets.State != FarmMissing || !assets.Fixable || local.State != FarmMissing || local.Fixable {
+			t.Errorf("%s: rows = %+v", form, check.Rows)
+		}
+		q.got = nil
+		fix, err := svc.FixFarm(t.Context(), "stardew", "g", text, []mod.ID{beta.ID, assets.ID})
+		if err != nil || fix.Queued != 2 || len(q.got) != 2 || q.got[0].ModID != 7 || q.got[0].CurrentKey != "b" || q.got[1].Repo != "spacechase0/JsonAssets" {
+			t.Errorf("%s: fix = %+v, %v, queued %+v", form, fix, err, q.got)
+		}
+	}
+	if _, err := ParseFarm("- [Elden Mod](https://www.nexusmods.com/eldenring/mods/3) 1.0"); err == nil {
+		t.Error("accepted a list of another game's Nexus pages")
+	}
+}

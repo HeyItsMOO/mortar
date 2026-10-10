@@ -110,7 +110,11 @@ export function FarmDialog({
               setRows(null)
             }}
           />
-          {rows?.length === 0 ? <Typography>{t`This profile matches ${host}.`}</Typography> : null}
+          {rows?.length === 0 ? (
+            <Typography>
+              {host ? t`This profile matches ${host}.` : t`This profile matches that list.`}
+            </Typography>
+          ) : null}
           {rows?.map((row) => (
             <Box key={row.id} sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
               <Typography sx={{ flex: 1, fontSize: 14 }}>

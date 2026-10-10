@@ -12,12 +12,13 @@ func FuzzParseFarm(f *testing.F) {
 	f.Add(`{"game":"stardew","mods":[{}]}`)
 	f.Add(`{"game":"lethal","mods":[]}`)
 	f.Add(`[`)
+	f.Add("Enabled\n- [A \\[x\\]](https://www.nexusmods.com/stardewvalley/mods/1) 1.0\n\nDisabled\nB v2 - https://github.com/o/r")
 	f.Fuzz(func(t *testing.T, text string) {
 		l, err := ParseFarm(text)
 		if err != nil {
 			return
 		}
-		p := profile.Profile{Entries: []profile.Entry{{Key: "a", Mods: []profile.Component{{ID: "smapi:Me.A", Version: "0.9.0"}}}}}
+		p := profile.Profile{Entries: []profile.Entry{{Key: "a", Mods: []profile.Component{{ID: "smapi:Me.A", Name: "A [x]", Version: "0.9.0"}}}}}
 		_ = farmRows(l, p)
 	})
 }
