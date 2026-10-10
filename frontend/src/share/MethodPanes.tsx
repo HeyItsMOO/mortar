@@ -221,7 +221,7 @@ export function ListPane({ info }: { info: ShownInfo }) {
   return (
     <Pane>
       <Typography sx={note}>
-        {t`Copies the mod names as text. Pick a format; a long list is copied in parts that fit one message.`}
+        {t`Copies the mod names as text, or saves them to a file. Pick a format; a long list is copied in parts that fit one message.`}
       </Typography>
       <Box>
         <ListFormat disabled={info.count === 0} />

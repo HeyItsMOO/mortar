@@ -7495,10 +7495,6 @@ msgstr "Notes and tags"
 msgid "Current files on Nexus ({0})"
 msgstr "Current files on Nexus ({0})"
 
-#: src/share/MethodPanes.tsx:224
-msgid "Copies the mod names as text. Pick a format; a long list is copied in parts that fit one message."
-msgstr "Copies the mod names as text. Pick a format; a long list is copied in parts that fit one message."
-
 #: src/mods/updateReview/RowCopy.tsx:33
 #: src/mods/updateReview/RowCopy.tsx:38
 msgid "This update's notes mention breaking changes or new requirements"
@@ -11363,6 +11359,10 @@ msgstr "From launch until BepInEx's preloader runs"
 #: src/mods/HealthTooltipContent.tsx:25
 msgid "{clean} clean"
 msgstr "{clean} clean"
+
+#: src/share/MethodPanes.tsx:224
+msgid "Copies the mod names as text, or saves them to a file. Pick a format; a long list is copied in parts that fit one message."
+msgstr "Copies the mod names as text, or saves them to a file. Pick a format; a long list is copied in parts that fit one message."
 
 #: src/settings/sections/ItchAccount.tsx:64
 msgid "Kept in your system keyring. Create one on itch.io under Settings, API keys."
