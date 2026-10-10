@@ -18,6 +18,7 @@ import {
   ExportFarm,
   FixFarm,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/packsvc/service.ts'
+import { ReadTextFile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/picker/service.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { listNames } from '../i18n/list.ts'
 import { useProfiles } from '../profiles/store.ts'
@@ -52,6 +53,15 @@ export function FarmDialog({
         })
       })
       .catch((error: unknown) => toastError(t`Could not make the list`, error))
+  const loadList = () =>
+    ReadTextFile(t`Open the host's list`)
+      .then((loaded) => {
+        if (loaded) {
+          setText(loaded)
+          setRows(null)
+        }
+      })
+      .catch((error: unknown) => toastError(t`Could not read that file`, error))
   const check = () => {
     setBusy(true)
     CheckFarm('stardew', profile.id, text)
@@ -94,9 +104,14 @@ export function FarmDialog({
       <DialogTitle>{t`Multiplayer mod list`}</DialogTitle>
       <DialogContent dividers={true}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: space.gap }}>
-          <Button disabled={busy} sx={{ alignSelf: 'flex-start' }} onClick={copyList}>
-            {t`Copy this profile's list`}
-          </Button>
+          <Box sx={{ display: 'flex', gap: space.gap }}>
+            <Button disabled={busy} onClick={copyList}>
+              {t`Copy this profile's list`}
+            </Button>
+            <Button disabled={busy} onClick={loadList}>
+              {t`Load the host's list from a file…`}
+            </Button>
+          </Box>
           <TextField
             fullWidth={true}
             multiline={true}

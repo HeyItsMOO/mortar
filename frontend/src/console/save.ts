@@ -4,6 +4,7 @@ import { formatAll } from './filter.ts'
 const UNSAFE = /[<>:"/\\|?*]/g
 
 const SPACES = /\s+/g
+// safe makes a name usable in a file name on every platform, falling back when nothing is left.
 const safe = (name: string, fallback: string) =>
   name.replace(UNSAFE, '-').replace(SPACES, ' ').trim() || fallback
 
@@ -20,3 +21,5 @@ export function logFileName(loaderName: string, profileName: string, at: Date): 
 export function saveLogText(raw: string, entries: Entry[]): string {
   return raw === '' ? formatAll(entries) : raw
 }
+
+export { safe as safeFileName }

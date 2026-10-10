@@ -151,7 +151,7 @@ msgstr "Priority Default"
 msgid "Show failed"
 msgstr "Show failed"
 
-#: src/game/FarmMenuItem.tsx:115
+#: src/game/FarmMenuItem.tsx:130
 msgid "This profile matches that list."
 msgstr "This profile matches that list."
 
@@ -162,6 +162,10 @@ msgstr "Streaming"
 #: src/saves/SaveRow.tsx:167
 msgid "Could not back up {label}"
 msgstr "Could not back up {label}"
+
+#: src/game/FarmMenuItem.tsx:64
+msgid "Could not read that file"
+msgstr "Could not read that file"
 
 #: src/console/UpdateNoteTag.tsx:25
 msgid "Unofficial build"
@@ -271,7 +275,7 @@ msgstr "Every entry in {current} goes back to its default."
 msgid "The game could not apply the last change: {reason}"
 msgstr "The game could not apply the last change: {reason}"
 
-#: src/game/FarmMenuItem.tsx:77
+#: src/game/FarmMenuItem.tsx:87
 msgid "Could not queue the downloads"
 msgstr "Could not queue the downloads"
 
@@ -845,7 +849,7 @@ msgstr "More languages are coming."
 msgid "other checks"
 msgstr "other checks"
 
-#: src/game/FarmMenuItem.tsx:98
+#: src/game/FarmMenuItem.tsx:109
 msgid "Copy this profile's list"
 msgstr "Copy this profile's list"
 
@@ -1013,7 +1017,7 @@ msgid "Rename"
 msgstr "Rename"
 
 #. placeholder {0}: listNames(manual)
-#: src/game/FarmMenuItem.tsx:74
+#: src/game/FarmMenuItem.tsx:84
 msgid "Install by hand: {0}"
 msgstr "Install by hand: {0}"
 
@@ -1152,7 +1156,7 @@ msgstr "Measure next launch"
 msgid "Something changed this profile's mods folder without Mortar, by adding, removing or editing a file. Mortar flags it so the profile matches what you expect."
 msgstr "Something changed this profile's mods folder without Mortar, by adding, removing or editing a file. Mortar flags it so the profile matches what you expect."
 
-#: src/share/ListFormat.tsx:41
+#: src/share/ListFormat.tsx:60
 msgid "Mod list copied"
 msgstr "Mod list copied"
 
@@ -1964,7 +1968,7 @@ msgstr "Nothing in the queue needs a decision."
 msgid "Saved {name} as a launch preset template"
 msgstr "Saved {name} as a launch preset template"
 
-#: src/share/ListFormat.tsx:51
+#: src/share/ListFormat.tsx:70
 msgid "Copy mod list"
 msgstr "Copy mod list"
 
@@ -2679,7 +2683,7 @@ msgstr "Skipped"
 msgid "Edit profile"
 msgstr "Edit profile"
 
-#: src/game/FarmMenuItem.tsx:106
+#: src/game/FarmMenuItem.tsx:121
 msgid "The host's list"
 msgstr "The host's list"
 
@@ -2704,7 +2708,7 @@ msgstr "Could not prepare the data folder move"
 msgid "Compact"
 msgstr "Compact"
 
-#: src/game/FarmMenuItem.tsx:143
+#: src/game/FarmMenuItem.tsx:158
 msgid "Check"
 msgstr "Check"
 
@@ -2884,7 +2888,7 @@ msgid "Could not restore the warning"
 msgstr "Could not restore the warning"
 
 #: src/console/RunProblems.tsx:263
-#: src/game/FarmMenuItem.tsx:139
+#: src/game/FarmMenuItem.tsx:154
 msgid "Fix all"
 msgstr "Fix all"
 
@@ -3397,7 +3401,7 @@ msgstr " · {0} more required"
 
 #. placeholder {0}: row.host
 #. placeholder {1}: row.mine
-#: src/game/FarmMenuItem.tsx:89
+#: src/game/FarmMenuItem.tsx:99
 msgid "Host {0}, yours {1}"
 msgstr "Host {0}, yours {1}"
 
@@ -3708,7 +3712,7 @@ msgstr "{who} both load {target}.{winner}"
 msgid "config.json, changed from the mod's own"
 msgstr "config.json, changed from the mod's own"
 
-#: src/game/FarmMenuItem.tsx:87
+#: src/game/FarmMenuItem.tsx:97
 #: src/launch/SaveWarnDialog.tsx:62
 #: src/mods/updateReview/Row.tsx:35
 #: src/share/Included.tsx:108
@@ -4403,7 +4407,7 @@ msgstr "Choose a {0} folder"
 msgid "time in its patches {ms}"
 msgstr "time in its patches {ms}"
 
-#: src/game/FarmMenuItem.tsx:50
+#: src/game/FarmMenuItem.tsx:51
 msgid "List copied"
 msgstr "List copied"
 
@@ -4452,7 +4456,7 @@ msgstr "Content pack for {hostName}"
 msgid "Untrack the {gameName} mods none of your profiles use, out of {trackedCount} tracked? Nexus has no undo for this."
 msgstr "Untrack the {gameName} mods none of your profiles use, out of {trackedCount} tracked? Nexus has no undo for this."
 
-#: src/game/FarmMenuItem.tsx:62
+#: src/game/FarmMenuItem.tsx:72
 msgid "Could not read that list"
 msgstr "Could not read that list"
 
@@ -4463,6 +4467,10 @@ msgstr "More ways to add mods"
 #: src/queue/store.ts:255
 msgid "Downloads paused"
 msgstr "Downloads paused"
+
+#: src/game/FarmMenuItem.tsx:57
+msgid "Open the host's list"
+msgstr "Open the host's list"
 
 #: src/settings/sections/StreamOverlay.tsx:106
 msgid "Biome"
@@ -4595,7 +4603,7 @@ msgstr "Needs a CurseForge key, or the file from its page"
 #: src/profiles/ProfilesPage.tsx:277
 #: src/saves/SaveGapLine.tsx:22
 #: src/share/ImportPreview.tsx:88
-#: src/share/ListFormat.tsx:22
+#: src/share/ListFormat.tsx:26
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -4856,7 +4864,7 @@ msgid "Delete group {name}?"
 msgstr "Delete group {name}?"
 
 #: src/console/RunProblems.tsx:140
-#: src/game/FarmMenuItem.tsx:91
+#: src/game/FarmMenuItem.tsx:101
 #: src/loader/Banner.tsx:44
 #: src/mods/problemFix/LoadFailureFix.tsx:37
 #: src/mods/runErrorFixButtons.tsx:51
@@ -4882,7 +4890,7 @@ msgid "Back up to a file…"
 msgstr "Back up to a file…"
 
 #. placeholder {0}: row.host
-#: src/game/FarmMenuItem.tsx:89
+#: src/game/FarmMenuItem.tsx:99
 msgid "Host {0}"
 msgstr "Host {0}"
 
@@ -5329,7 +5337,7 @@ msgstr "Could not check the store files"
 msgid "Rename…"
 msgstr "Rename…"
 
-#: src/game/FarmMenuItem.tsx:115
+#: src/game/FarmMenuItem.tsx:130
 msgid "This profile matches {host}."
 msgstr "This profile matches {host}."
 
@@ -6654,7 +6662,7 @@ msgstr "Premium downloads come from this Nexus server when it offers the file."
 msgid "Open page"
 msgstr "Open page"
 
-#: src/game/FarmMenuItem.tsx:73
+#: src/game/FarmMenuItem.tsx:83
 #: src/share/ImportPreview.tsx:278
 msgid "{count} to download"
 msgstr "{count} to download"
@@ -6883,7 +6891,7 @@ msgid "Could not check this profile"
 msgstr "Could not check this profile"
 
 #. placeholder {0}: part.n
-#: src/share/ListFormat.tsx:93
+#: src/share/ListFormat.tsx:120
 msgid "Part {0} copied"
 msgstr "Part {0} copied"
 
@@ -7040,9 +7048,13 @@ msgstr "A folder of unpacked mods to add from the Add menu"
 msgid "Show {0} in its profile"
 msgstr "Show {0} in its profile"
 
-#: src/share/ListFormat.tsx:54
+#: src/share/ListFormat.tsx:81
 msgid "Mod list format"
 msgstr "Mod list format"
+
+#: src/share/ListFormat.tsx:43
+msgid "Mod list saved"
+msgstr "Mod list saved"
 
 #: src/settings/SettingsPage.tsx:79
 msgid "Search {gameName} settings"
@@ -7211,7 +7223,7 @@ msgstr "Unity exception"
 msgid "Revert"
 msgstr "Revert"
 
-#: src/game/FarmMenuItem.tsx:163
+#: src/game/FarmMenuItem.tsx:178
 msgid "Multiplayer mod list…"
 msgstr "Multiplayer mod list…"
 
@@ -8066,7 +8078,7 @@ msgstr "Its folder is removed from this profile. You can undo this."
 msgid "Run logs kept"
 msgstr "Run logs kept"
 
-#: src/game/FarmMenuItem.tsx:51
+#: src/game/FarmMenuItem.tsx:52
 msgid "Send it to the people joining you."
 msgstr "Send it to the people joining you."
 
@@ -8340,7 +8352,7 @@ msgstr "Bosses defeated"
 #: src/browse/CardAction.tsx:74
 #: src/console/RunProblems.tsx:138
 #: src/downloads/newDownloads.ts:35
-#: src/game/FarmMenuItem.tsx:91
+#: src/game/FarmMenuItem.tsx:101
 #: src/mods/AddToGroupDialog.tsx:105
 #: src/mods/ModDependencyTree.tsx:76
 #: src/mods/ModDependencyTree.tsx:76
@@ -8380,6 +8392,10 @@ msgstr "Keep this one"
 #: src/settings/sections/DataBackups.tsx:131
 msgid "{gameName} save backups: {0}"
 msgstr "{gameName} save backups: {0}"
+
+#: src/share/ListFormat.tsx:37
+msgid "Save mod list"
+msgstr "Save mod list"
 
 #: src/mods/updateReview/ReviewFooter.tsx:76
 msgid "Update all ({wantedCount})"
@@ -8912,7 +8928,7 @@ msgstr "A file it needs could not be opened."
 msgid "Windowed resolution width"
 msgstr "Windowed resolution width"
 
-#: src/game/FarmMenuItem.tsx:54
+#: src/game/FarmMenuItem.tsx:55
 msgid "Could not make the list"
 msgstr "Could not make the list"
 
@@ -9315,7 +9331,7 @@ msgstr "Open the import dialog"
 msgid "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
 msgstr "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
 
-#: src/share/ListFormat.tsx:27
+#: src/share/ListFormat.tsx:31
 msgid "Discord"
 msgstr "Discord"
 
@@ -9825,7 +9841,7 @@ msgstr "{0} {1} is available"
 msgid "Include config files"
 msgstr "Include config files"
 
-#: src/share/ListFormat.tsx:26
+#: src/share/ListFormat.tsx:30
 msgid "Plain text"
 msgstr "Plain text"
 
@@ -10155,7 +10171,7 @@ msgstr "Sharing"
 
 #. placeholder {0}: part.n
 #. placeholder {1}: parts.length
-#: src/share/ListFormat.tsx:91
+#: src/share/ListFormat.tsx:118
 msgid "Copy part {0} of {1}"
 msgstr "Copy part {0} of {1}"
 
@@ -10586,7 +10602,7 @@ msgid "The antivirus flagged it, so Mortar did not install it."
 msgstr "The antivirus flagged it, so Mortar did not install it."
 
 #. placeholder {0}: parts.length
-#: src/share/ListFormat.tsx:47
+#: src/share/ListFormat.tsx:66
 msgid "{0, plural, one {Copy mod list (# part)} other {Copy mod list (# parts)}}"
 msgstr "{0, plural, one {Copy mod list (# part)} other {Copy mod list (# parts)}}"
 
@@ -10807,7 +10823,7 @@ msgstr "Auto-enable requirements"
 #: src/profiles/CompareTable.tsx:76
 #: src/profiles/ProfilesPage.tsx:268
 #: src/profiles/ProfilesPage.tsx:277
-#: src/share/ListFormat.tsx:22
+#: src/share/ListFormat.tsx:26
 msgid "Enabled"
 msgstr "Enabled"
 
@@ -10923,7 +10939,7 @@ msgstr "the mod"
 msgid "Searching…"
 msgstr "Searching…"
 
-#: src/game/FarmMenuItem.tsx:94
+#: src/game/FarmMenuItem.tsx:104
 msgid "Multiplayer mod list"
 msgstr "Multiplayer mod list"
 
@@ -11762,13 +11778,17 @@ msgstr "{0} needs {1}"
 msgid "{endorsements, plural, one {# endorsement} other {# endorsements}} · {dl}"
 msgstr "{endorsements, plural, one {# endorsement} other {# endorsements}} · {dl}"
 
-#: src/share/ListFormat.tsx:25
+#: src/share/ListFormat.tsx:29
 msgid "Markdown"
 msgstr "Markdown"
 
 #: src/lan/IncomingPrompt.tsx:286
 msgid "Could not cancel transfer"
 msgstr "Could not cancel transfer"
+
+#: src/game/FarmMenuItem.tsx:112
+msgid "Load the host's list from a file…"
+msgstr "Load the host's list from a file…"
 
 #: src/mods/storeProblems.ts:66
 msgid "Could not dismiss the setting warning"
@@ -12568,6 +12588,10 @@ msgstr "Logs"
 msgid "Looking for Mortar users…"
 msgstr "Looking for Mortar users…"
 
+#: src/share/ListFormat.tsx:46
+msgid "Could not save the mod list"
+msgstr "Could not save the mod list"
+
 #: src/mods/describe.ts:177
 msgid "Only on {value}."
 msgstr "Only on {value}."
@@ -13303,6 +13327,7 @@ msgid "Check this download"
 msgstr "Check this download"
 
 #: src/settings/sections/AboutDiagnostics.tsx:168
+#: src/share/ListFormat.tsx:78
 #: src/share/MethodPanes.tsx:191
 msgid "Save…"
 msgstr "Save…"
@@ -13842,7 +13867,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/console/BisectDialog.tsx:199
 #: src/console/HelpDialog.tsx:257
 #: src/console/SearchRunsDialog.tsx:177
-#: src/game/FarmMenuItem.tsx:136
+#: src/game/FarmMenuItem.tsx:151
 #: src/launch/LaunchLayer.tsx:227
 #: src/launch/SweepDialog.tsx:137
 #: src/mods/AssetMapDialog.tsx:283

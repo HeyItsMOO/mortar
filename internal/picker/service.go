@@ -2,8 +2,11 @@
 package picker
 
 import (
+	"errors"
+
 	"github.com/Rethunk-Tech/mortar/internal/archive"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
+	"github.com/Rethunk-Tech/mortar/internal/usererr"
 	"github.com/Rethunk-Tech/mortar/internal/winhost"
 )
 
@@ -36,6 +39,30 @@ func (s *Service) PickPackFile() (string, error) {
 		{Name: "r2modman or Gale export (.r2z, .zip)", Pattern: "*.r2z;*.zip"},
 		{Name: "All files", Pattern: "*"},
 	}})
+}
+
+// maxTextBytes bounds a text file read into the window.
+const maxTextBytes = 1 << 20
+
+// ReadTextFile asks for a text file and returns what it holds, or "" when the dialog is cancelled.
+func (s *Service) ReadTextFile(title string) (string, error) {
+	path, err := s.App.OpenFile(winhost.Dialog{Title: title, Filters: []winhost.Filter{
+		{Name: "Text files", Pattern: "*.txt;*.md;*.json"},
+		{Name: "All files", Pattern: "*"},
+	}})
+	if err != nil || path == "" {
+		return "", err
+	}
+	f, err := fsx.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer func() { _ = f.Close() }()
+	text, err := fsx.ReadCapped(f, maxTextBytes)
+	if errors.Is(err, fsx.ErrTooLarge) {
+		return "", usererr.New(usererr.Invalid, "that file is too large")
+	}
+	return string(text), err
 }
 
 // SaveFile asks where to write contents and writes them. It returns "" when the dialog is cancelled.

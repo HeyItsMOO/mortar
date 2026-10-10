@@ -1,10 +1,14 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Button, ButtonGroup, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import { Check, ChevronDown, Copy, FileText, List, MessageSquare, Type } from 'lucide-react'
+import { Check, ChevronDown, Copy, FileText, List, MessageSquare, Save, Type } from 'lucide-react'
 import { useState } from 'react'
+import { SaveFile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/picker/service.ts'
+import { safeFileName } from '../console/save.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
+import { toastError } from '../toasts/report.ts'
+import { useToasts } from '../toasts/store.ts'
 import { copyText } from './copyText.ts'
 import { formatModList, listItems, type ModListFormat } from './modList.ts'
 import { useShareDialog } from './store.ts'
@@ -26,6 +30,21 @@ export function ListFormat({ disabled }: { disabled: boolean }) {
     { id: 'plain', label: t`Plain text`, icon: Type },
     { id: 'discord', label: t`Discord`, icon: MessageSquare },
   ]
+  // A file has no message limit, so Discord's list is saved whole, as the Markdown it is.
+  const save = () => {
+    const whole = formatModList(format === 'discord' ? 'markdown' : format, items, labels)
+    SaveFile(
+      t`Save mod list`,
+      `${safeFileName(profile?.name ?? '', 'profile')} mods.txt`,
+      whole[0]?.text ?? '',
+    )
+      .then((path) => {
+        if (path) {
+          useToasts.getState().push({ kind: 'success', title: t`Mod list saved`, body: path })
+        }
+      })
+      .catch((error: unknown) => toastError(t`Could not save the mod list`, error))
+  }
   return (
     <>
       <ButtonGroup variant="outlined" color="inherit">
@@ -49,6 +68,14 @@ export function ListFormat({ disabled }: { disabled: boolean }) {
                 other: 'Copy mod list (# parts)',
               })
             : t`Copy mod list`}
+        </Button>
+        <Button
+          startIcon={<Save size={16} />}
+          onClick={save}
+          disabled={disabled}
+          sx={{ height: 40, px: '14px', fontSize: 14 }}
+        >
+          {t`Save…`}
         </Button>
         <Button
           aria-label={t`Mod list format`}
