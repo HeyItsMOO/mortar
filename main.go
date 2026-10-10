@@ -1119,6 +1119,8 @@ func run() error {
 				if err := profiles.RefreshDependencies(g); err != nil {
 					log.Printf("refresh dependencies: %s: %v", g, err)
 				}
+				// The window may have read the profiles before the refresh wrote them.
+				emit(control.ChangedEvent, g)
 			}
 		}
 		for _, g := range game.Catalog() {
