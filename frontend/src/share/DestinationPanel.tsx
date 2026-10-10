@@ -5,14 +5,8 @@ import { userModCount } from '../profiles/count.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { space } from '../theme/density.ts'
 import { TipBanner } from '../tips/TipBanner.tsx'
-import {
-  FilePane,
-  LinkPane,
-  ListPane,
-  NearbyPane,
-  NexusPane,
-  ThunderstorePane,
-} from './MethodPanes.tsx'
+import { ListFormat } from './ListFormat.tsx'
+import { FilePane, LinkPane, NearbyPane, NexusPane, ThunderstorePane } from './MethodPanes.tsx'
 import type { Destination } from './methods.ts'
 import { PreviewDialog } from './PreviewDialog.tsx'
 import type { useShareBuild } from './useShareBuild.ts'
@@ -132,6 +126,6 @@ export function DestinationPanel({
         />
       )
     default:
-      return <ListPane info={info} />
+      return <ListFormat />
   }
 }
