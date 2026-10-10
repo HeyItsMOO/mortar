@@ -7,8 +7,8 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/manifest"
 )
 
-// RefreshDependencies re-reads every entry's manifests from the store so the stored needs and optional lists
-// follow the current manifest parser. It writes a profile only when something changed, and records no history.
+// RefreshDependencies re-reads every entry's manifests from the store so the stored needs, optional list and
+// content-pack framework follow the current manifest parser. It writes a profile only when something changed, and records no history.
 func (s *Store) RefreshDependencies(game string) error {
 	profiles, err := s.listOK(game)
 	if err != nil {
@@ -39,10 +39,10 @@ func (s *Store) refreshDependencies(game, id string) error {
 		for mi := range e.Mods {
 			m := &e.Mods[mi]
 			f, ok := fresh[m.ID.Fold()]
-			if !ok || (slices.Equal(m.Needs, f.Needs) && slices.Equal(m.Optional, f.Optional)) {
+			if !ok || (slices.Equal(m.Needs, f.Needs) && slices.Equal(m.Optional, f.Optional) && m.ContentPackFor == f.ContentPackFor) {
 				continue
 			}
-			m.Needs, m.Optional = f.Needs, f.Optional
+			m.Needs, m.Optional, m.ContentPackFor = f.Needs, f.Optional, f.ContentPackFor
 			changed = true
 		}
 	}

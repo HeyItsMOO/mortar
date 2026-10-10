@@ -288,6 +288,31 @@ func TestRefreshDependenciesReadsOptionalFromStoreManifest(t *testing.T) {
 	}
 }
 
+func TestRefreshDependenciesReadsTheContentPackFramework(t *testing.T) {
+	t.Parallel()
+	e := newEnv(t)
+	p := mustCreate(t, e, "Farm")
+	e.mustInstall(t, p.ID, buildZip(t, "pack.zip", map[string]string{
+		"A/manifest.json": `{"UniqueID":"X.A","Name":"A","Version":"1.0","ContentPackFor":{"UniqueID":"X.Framework"}}`,
+	}))
+	if _, err := e.update("stardew", p.ID, func(p *Profile, _ string) error {
+		p.Entries[0].Mods[0].ContentPackFor = ""
+		return nil
+	}); err != nil {
+		t.Fatal(err)
+	}
+	if err := e.RefreshDependencies("stardew"); err != nil {
+		t.Fatal(err)
+	}
+	got, err := e.read("stardew", p.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if host := got.Entries[0].Mods[0].ContentPackFor; host != "smapi:X.Framework" {
+		t.Fatalf("ContentPackFor = %q, want smapi:X.Framework", host)
+	}
+}
+
 func TestRestoreModsFolderUndoesTrash(t *testing.T) {
 	t.Parallel()
 	e := newEnv(t)
