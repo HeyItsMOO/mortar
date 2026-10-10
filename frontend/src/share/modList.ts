@@ -110,6 +110,15 @@ function numbered(parts: string[]): DiscordPart[] {
   return parts.map((text, n) => ({ id: `discord-${n + 1}-${text.length}`, n: n + 1, text }))
 }
 
+// Several parts of one download can share a name and version; the list names them once.
+function distinct(items: readonly ModListItem[]): ModListItem[] {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    const key = JSON.stringify([item.name, item.version, item.url, item.enabled])
+    return !seen.has(key) && Boolean(seen.add(key))
+  })
+}
+
 // Bundled SMAPI mods and the Mortar bridge are left out, matching what a share carries.
 function listItems(profile: Profile | undefined, keys: readonly string[] = []): ModListItem[] {
   if (!profile) {
@@ -140,7 +149,7 @@ function listItems(profile: Profile | undefined, keys: readonly string[] = []): 
       }
     }
   }
-  return items
+  return distinct(items)
 }
 
 // Names sit in Markdown link text, so the characters that would break a link or emphasis are escaped.

@@ -123,6 +123,30 @@ test('listItems can keep one entry and builds a GitHub page URL', () => {
   ])
 })
 
+test('listItems names parts that share a name, version and page once', () => {
+  const part = (id: string, name: string) => ({ id, version: '1', name, author: '', folder: id })
+  const items = listItems(
+    profile([
+      entry({
+        key: 'sve',
+        source: source('nexus', { kind: 'nexus', name: 'SVE', modId: 3753 }),
+        mods: [part('A.Code', 'Expanded'), part('A.Content', 'Expanded'), part('A.Ftm', 'Farm')],
+        disabled: ['A.Content'],
+      }),
+      entry({
+        key: 'sve-2',
+        source: source('nexus', { kind: 'nexus', name: 'SVE', modId: 3753 }),
+        mods: [part('A.Other', 'Expanded')],
+      }),
+    ]),
+  )
+  expect(items.map((i) => [i.name, i.enabled])).toEqual([
+    ['Expanded', true],
+    ['Expanded', false],
+    ['Farm', true],
+  ])
+})
+
 test('Markdown is a bulleted list of linked names and versions', () => {
   expect(
     formatMarkdown([
