@@ -35,7 +35,7 @@ runs:
 
     - name: Setup Go
       if: inputs.native == 'true'
-      uses: Rethunk-Tech/gh-actions/setup-go@f49ada2688f22a9bed2770b7ac8877f7a6f3ec0f # v1.16
+      uses: Rethunk-Tech/gh-actions/setup-go@bc5fa5b1004205c9c9399fc941d79d5ada53c59b # v1.16
       with:
         go-version-file: go.mod
 
@@ -102,7 +102,7 @@ runs:
 
     - name: Setup Bun
       if: inputs.frontend == 'true'
-      uses: Rethunk-Tech/gh-actions/setup-bun@f49ada2688f22a9bed2770b7ac8877f7a6f3ec0f # v1.16
+      uses: Rethunk-Tech/gh-actions/setup-bun@bc5fa5b1004205c9c9399fc941d79d5ada53c59b # v1.16
 
     # main.go embeds frontend/dist, so Go's typecheck in the gate needs it built.
     - name: Install dependencies and build the frontend
