@@ -583,7 +583,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@lingui/core@6.9.0
+@lingui/core@6.9.1
 licence: MIT
 https://lingui.dev
 
@@ -611,7 +611,7 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@lingui/message-utils@6.9.0
+@lingui/message-utils@6.9.1
 licence: MIT
 https://lingui.dev
 
@@ -639,7 +639,7 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@lingui/react@6.9.0
+@lingui/react@6.9.1
 licence: MIT
 https://lingui.dev
 
@@ -721,7 +721,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@mui/material@9.4.0
+@mui/material@9.5.0
 licence: MIT
 https://mui.com/material-ui/
 
@@ -749,7 +749,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@mui/private-theming@9.4.0
+@mui/private-theming@9.5.0
 licence: MIT
 https://github.com/mui/material-ui/tree/master/packages/mui-private-theming
 
@@ -777,7 +777,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@mui/styled-engine@9.4.0
+@mui/styled-engine@9.5.0
 licence: MIT
 https://mui.com/system/styled/
 
@@ -805,7 +805,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@mui/system@9.4.0
+@mui/system@9.5.0
 licence: MIT
 https://mui.com/system/getting-started/
 
@@ -833,7 +833,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@mui/utils@9.4.0
+@mui/utils@9.5.0
 licence: MIT
 https://github.com/mui/material-ui/tree/master/packages/mui-utils
 
@@ -888,7 +888,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@tanstack/react-virtual@3.14.13
+@tanstack/react-virtual@3.14.17
 licence: MIT
 https://tanstack.com/virtual
 
@@ -916,7 +916,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@tanstack/virtual-core@3.17.11
+@tanstack/virtual-core@3.19.2
 licence: MIT
 https://tanstack.com/virtual
 
@@ -1663,7 +1663,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-github.com/godbus/dbus/v5@v5.2.2
+github.com/godbus/dbus/v5@v5.2.3
 licence: BSD-2-Clause
 https://github.com/godbus/dbus
 
@@ -2159,7 +2159,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-github.com/klauspost/compress@v1.20.1
+github.com/klauspost/compress@v1.20.3
 licence: Apache-2.0
 https://github.com/klauspost/compress
 
@@ -2578,7 +2578,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-github.com/nwaples/rardecode/v2@v2.4.1
+github.com/nwaples/rardecode/v2@v2.4.4
 licence: BSD-2-Clause
 https://github.com/nwaples/rardecode
 
@@ -3248,7 +3248,7 @@ Apache License
 
 --------------------------------------------------------------------------------
 
-golang.org/x/image@v0.46.0
+golang.org/x/image@v0.47.0
 licence: BSD-3-Clause
 https://pkg.go.dev/golang.org/x/image
 
@@ -3282,7 +3282,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 
-golang.org/x/mod@v0.41.0
+golang.org/x/mod@v0.42.0
 licence: BSD-3-Clause
 https://pkg.go.dev/golang.org/x/mod
 
@@ -3316,7 +3316,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 
-golang.org/x/net@v0.60.0
+golang.org/x/net@v0.61.0
 licence: BSD-3-Clause
 https://pkg.go.dev/golang.org/x/net
 
@@ -3350,7 +3350,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 
-golang.org/x/sys@v0.48.0
+golang.org/x/sys@v0.49.0
 licence: BSD-3-Clause
 https://pkg.go.dev/golang.org/x/sys
 
@@ -3384,7 +3384,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 
-golang.org/x/text@v0.42.0
+golang.org/x/text@v0.43.0
 licence: BSD-3-Clause
 https://pkg.go.dev/golang.org/x/text
 
@@ -3672,7 +3672,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-lucide-react@1.53.0
+lucide-react@1.55.0
 licence: MIT
 https://lucide.dev
 
@@ -4862,7 +4862,7 @@ Bundled launcher icon (frontend/src/brand/vendor/minigalaxy.png) from Minigalaxy
 
 --------------------------------------------------------------------------------
 
-modernc.org/libc@v1.77.1
+modernc.org/libc@v1.78.0
 licence: BSD-3-Clause
 https://pkg.go.dev/modernc.org/libc
 
@@ -5445,7 +5445,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-simple-icons@16.34.0
+simple-icons@16.35.0
 licence: CC0-1.0
 https://simpleicons.org
 
