@@ -382,7 +382,7 @@ msgstr "Switch game"
 msgid "Sand"
 msgstr "Sand"
 
-#: src/mods/updateReview/updateAll.ts:29
+#: src/mods/updateReview/updateAll.ts:35
 msgid "Nothing to update: those mods already have their newest file"
 msgstr "Nothing to update: those mods already have their newest file"
 
@@ -1847,7 +1847,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/mods/LoadOrderTab.tsx:394
 #: src/mods/ModsTab.tsx:107
 #: src/mods/typedConfig/ConfigPane.tsx:285
-#: src/mods/updateReview/updateAll.ts:59
+#: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:138
 #: src/profiles/HealthDialog.tsx:245
 #: src/profiles/LaunchPreview.tsx:82
@@ -2394,7 +2394,7 @@ msgstr "{name} · {mods}"
 msgid "{0, plural, one {{1}} other {{2}}}"
 msgstr "{0, plural, one {{1}} other {{2}}}"
 
-#: src/mods/updateReview/updateAll.ts:37
+#: src/mods/updateReview/updateAll.ts:43
 msgid "{needChoice} need your choice"
 msgstr "{needChoice} need your choice"
 
@@ -2932,7 +2932,7 @@ msgstr "Mods and profiles"
 msgid "Imported {name}"
 msgstr "Imported {name}"
 
-#: src/mods/ModsGroupHeader.tsx:98
+#: src/mods/ModsGroupHeader.tsx:100
 msgid "Find on Nexus"
 msgstr "Find on Nexus"
 
@@ -4403,7 +4403,7 @@ msgstr "Cache cleared"
 msgid "Parallel downloads"
 msgstr "Parallel downloads"
 
-#: src/mods/updateReview/updateAll.ts:35
+#: src/mods/updateReview/updateAll.ts:41
 #: src/profiles/historyTimeline.ts:66
 msgid "{updated, plural, one {Updated # mod} other {Updated # mods}}"
 msgstr "{updated, plural, one {Updated # mod} other {Updated # mods}}"
@@ -7648,7 +7648,7 @@ msgstr "Only settings and options differ."
 msgid "From another mod manager"
 msgstr "From another mod manager"
 
-#: src/mods/ModsGroupHeader.tsx:96
+#: src/mods/ModsGroupHeader.tsx:98
 msgid "Could not look these mods up on Nexus"
 msgstr "Could not look these mods up on Nexus"
 
@@ -8767,7 +8767,7 @@ msgstr "Windowed"
 
 #: src/install/batchSummary.ts:57
 #: src/mods/updateReview/UndoAllConfirm.tsx:19
-#: src/mods/updateReview/updateAll.ts:46
+#: src/mods/updateReview/updateAll.ts:52
 msgid "Undo all"
 msgstr "Undo all"
 
@@ -9603,7 +9603,7 @@ msgstr "{0, plural, one {with # settings file, written once its mod is installed
 
 #. placeholder {0}: counts.failed
 #. placeholder {0}: sum.failed
-#: src/mods/updateReview/updateAll.ts:36
+#: src/mods/updateReview/updateAll.ts:42
 #: src/queue/QueueSheet.tsx:55
 #: src/share/importCompletion.ts:25
 msgid "{0} failed"
@@ -10501,7 +10501,7 @@ msgid "Paste it on the mod's bug tracker."
 msgstr "Paste it on the mod's bug tracker."
 
 #. placeholder {0}: counts.failed
-#: src/mods/updateReview/updateAll.ts:57
+#: src/mods/updateReview/updateAll.ts:63
 msgid "{0, plural, one {# update failed} other {# updates failed}}"
 msgstr "{0, plural, one {# update failed} other {# updates failed}}"
 
