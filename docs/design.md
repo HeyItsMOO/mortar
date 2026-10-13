@@ -42,6 +42,7 @@ The source and its window are built ([architecture.md](architecture.md#games-and
 
 ## Later
 
+- **Real-environment runs nobody on the team can do** (parked 2026-10-13; each needs an outside tester): a launch from a real GOG install and from Flatpak Steam; one Linux launch with Stardew's launch method set to Steam, confirming SMAPI loads the profile's mods; Import from Vortex against a long-lived real Vortex folder; and timings with the data folder under OneDrive on Windows.
 - **EA App libraries on another drive:** found only after the player adds the folder; there is no registry or `InstallData` lookup (`internal/gamestore/drivers.go` `eaDirs`).
 - **Long mod paths:** a mod path longer than the game can read (260 characters on Windows) is copied without a warning.
 - **Next folder game:** measured 2026-10-10 and not a priority. No loose-file game is both bigger than The Sims 4 (Nexus 5,449) and servable by the folder loader as it is. By Nexus count: Baldur's Gate 3 19,791 (needs a `modsettings.lsx` writer), Mount & Blade II: Bannerlord 9,346 (needs an install-side target and load order), inZOI 1,124 (CurseForge 5,949; two targets and re-enabling after updates), Hogwarts Legacy 1,511 (install-side `Paks/~mods`), Kerbal Space Program (CurseForge 1,968; plain `GameData`, small demand). Palworld needs UE4SS. Demand evidence is thin: Linux and Proton path complaints only. Re-weigh when asked.
