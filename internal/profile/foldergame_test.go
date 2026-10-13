@@ -599,3 +599,54 @@ func TestFolderGameRestoreWithAMissingStoreItemKeepsEntriesReportsThemAndLeavesT
 		}
 	}
 }
+
+func TestFolderGameImportsThePlayersModsFolderWhereEachFileSat(t *testing.T) {
+	t.Parallel()
+	e := newEnv(t)
+	mods := t.TempDir()
+	for rel, body := range map[string]string{
+		"Resource.cfg":        "game's own",
+		"loose.package":       "1",
+		"Hair/long.package":   "2",
+		"Tool/tool.ts4script": "3",
+		"Tool/tool.package":   "4",
+		"Notes/readme.txt":    "no mod here",
+	} {
+		p := filepath.Join(mods, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	preview, err := e.PreviewGameMods(folderGame, mods)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var names []string
+	for _, m := range preview.Mods {
+		names = append(names, m.Name)
+	}
+	if !slices.Equal(names, []string{"Hair", "Tool", "loose.package"}) {
+		t.Fatalf("preview = %v", names)
+	}
+	res, err := e.ImportGameMods(t.Context(), folderGame, mods)
+	if err != nil || res.Imported != 3 || res.Failed != 0 {
+		t.Fatalf("import = %+v, %v", res, err)
+	}
+	owners, err := e.PackageFileOwners(folderGame, res.Profile.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"Mods/Hair/long.package", "Mods/Tool/tool.package", "Mods/Tool/tool.ts4script", "Mods/loose.package"}
+	if got := slices.Sorted(maps.Keys(owners)); !slices.Equal(got, want) {
+		t.Fatalf("laid out %v, want %v", got, want)
+	}
+	if i := slices.IndexFunc(res.Profile.Entries, func(en Entry) bool { return en.File == "" }); i < 0 || res.Profile.Entries[i].Mods[0].Name != "Tool" {
+		t.Fatalf("the script folder is not one entry named for it: %v", keysOf(res.Profile))
+	}
+	if _, err := os.Stat(filepath.Join(mods, "loose.package")); err != nil {
+		t.Fatalf("the player's folder was changed: %v", err)
+	}
+}

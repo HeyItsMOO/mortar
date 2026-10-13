@@ -77,6 +77,8 @@ type gameModFolder struct {
 	disabled bool
 	mods     []manifest.Mod
 	source   Source
+	// loose marks a folder game's mod file or folder, which has no manifest: dir may then be a file.
+	loose bool
 }
 
 type gameModSlot struct {
@@ -269,6 +271,14 @@ func resolveDuplicates(slots []gameModSlot) {
 	}
 }
 
+// scanModsOf lists what Import from the game's Mods folder would take from modsDir, as the game keeps its mods.
+func scanModsOf(game, modsDir string) ([]gameModSlot, error) {
+	if kinds, ok := looseModKinds(game); ok {
+		return scanLooseMods(modsDir, kinds)
+	}
+	return scanGameMods(modsDir)
+}
+
 func scanGameMods(modsDir string) ([]gameModSlot, error) {
 	entries, err := os.ReadDir(modsDir)
 	if errors.Is(err, fs.ErrNotExist) {
@@ -309,6 +319,10 @@ func previewMod(f gameModFolder, m manifest.Mod) GameModPreview {
 func previewFrom(slots []gameModSlot) GameModsPreview {
 	var mods []GameModPreview
 	for _, s := range slots {
+		if s.ready && s.folder.loose {
+			mods = append(mods, GameModPreview{Name: s.folder.label, Status: outcomeImported, Folder: s.folder.dir})
+			continue
+		}
 		if s.ready {
 			for _, m := range s.folder.mods {
 				mods = append(mods, previewMod(s.folder, m))
@@ -339,8 +353,8 @@ func outcomesFrom(slots []gameModSlot) []GameModOutcome {
 }
 
 // PreviewGameMods lists mods that ImportGameMods would copy from modsDir. It reads only.
-func (s *Store) PreviewGameMods(modsDir string) (GameModsPreview, error) {
-	slots, err := scanGameMods(modsDir)
+func (s *Store) PreviewGameMods(game, modsDir string) (GameModsPreview, error) {
+	slots, err := scanModsOf(game, modsDir)
 	if err != nil {
 		return GameModsPreview{}, err
 	}
@@ -380,6 +394,9 @@ func (s *Store) addResolvingLinks(ctx context.Context, game, dir string) (string
 
 // importFolder adds f to the profile and returns its store key and the history event the last of its changes recorded.
 func (s *Store) importFolder(ctx context.Context, game, id string, f gameModFolder) (key, change string, err error) {
+	if f.loose {
+		return s.importLoose(ctx, game, id, f)
+	}
 	key, err = s.addResolvingLinks(ctx, game, f.dir)
 	if err != nil {
 		return "", "", err
@@ -413,7 +430,7 @@ func (s *Store) importFolder(ctx context.Context, game, id string, f gameModFold
 // ImportGameMods copies each importable folder under modsDir into the store and a new "Imported mods" profile.
 // It never writes to modsDir.
 func (s *Store) ImportGameMods(ctx context.Context, game, modsDir string) (GameModsResult, error) {
-	slots, err := scanGameMods(modsDir)
+	slots, err := scanModsOf(game, modsDir)
 	if err != nil {
 		return GameModsResult{}, err
 	}

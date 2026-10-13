@@ -69,18 +69,27 @@ func (s *Service) gameModsDir(id string) (string, error) {
 	return filepath.Join(dir, "Mods"), nil
 }
 
-// PreviewGameMods lists mods in the game folder's Mods that ImportGameMods would copy.
+// importModsDir is the folder the game reads mods from, which Import from the game's Mods folder copies: the
+// install's Mods, or for a game that names one (a folder game) its own mods folder, which may be outside the install.
+func (s *Service) importModsDir(id string) (string, error) {
+	if _, loose := looseModKinds(id); loose {
+		return game.PathFor(s.home, s.settings.Get(), id, "", "mods")
+	}
+	return s.gameModsDir(id)
+}
+
+// PreviewGameMods lists mods in the game's Mods folder that ImportGameMods would copy.
 func (s *Service) PreviewGameMods(gameID string) (GameModsPreview, error) {
-	dir, err := s.gameModsDir(gameID)
+	dir, err := s.importModsDir(gameID)
 	if err != nil {
 		return GameModsPreview{}, err
 	}
-	return s.store.PreviewGameMods(dir)
+	return s.store.PreviewGameMods(gameID, dir)
 }
 
-// ImportGameMods copies the game folder's Mods into a new profile without changing that folder.
+// ImportGameMods copies the game's Mods folder into a new profile without changing that folder.
 func (s *Service) ImportGameMods(ctx context.Context, gameID string) (GameModsResult, error) {
-	dir, err := s.gameModsDir(gameID)
+	dir, err := s.importModsDir(gameID)
 	if err != nil {
 		return GameModsResult{}, err
 	}

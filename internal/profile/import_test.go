@@ -66,7 +66,7 @@ func TestImportGameModsCopiesIntoAProfileAndLeavesTheGameFolderUnchanged(t *test
 	writeFile(t, mods, "Broken/manifest.json", `{not json`)
 	before := dumpTree(t, gameDir)
 
-	preview, err := e.PreviewGameMods(mods)
+	preview, err := e.PreviewGameMods("stardew", mods)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -158,7 +158,7 @@ func TestImportGameModsPrefersEnabledDuplicateAndOmitsBundled(t *testing.T) {
 		`{"Name":"Save Backup","Version":"4.5.2","UniqueID":"SMAPI.SaveBackup"}`)
 	before := dumpTree(t, gameDir)
 
-	preview, err := e.PreviewGameMods(mods)
+	preview, err := e.PreviewGameMods("stardew", mods)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -211,7 +211,7 @@ func TestImportGameModsPicksNewestWhenBothCopiesAreOff(t *testing.T) {
 		`{"Name":"Map","Version":"2.0.0","UniqueID":"Me.Map"}`)
 	before := dumpTree(t, gameDir)
 
-	preview, err := e.PreviewGameMods(mods)
+	preview, err := e.PreviewGameMods("stardew", mods)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -266,7 +266,7 @@ func TestPreviewGameModsSkipsASymlinkDirectory(t *testing.T) {
 	if err := os.Symlink(outside, filepath.Join(mods, "Innocent")); err != nil {
 		t.Skipf("cannot create a symlink (Windows needs the symlink privilege): %v", err)
 	}
-	preview, err := e.PreviewGameMods(mods)
+	preview, err := e.PreviewGameMods("stardew", mods)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -308,7 +308,7 @@ func TestImportGameModsCopiesVortexLinkedFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	preview, err := e.PreviewGameMods(mods)
+	preview, err := e.PreviewGameMods("stardew", mods)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -362,7 +362,7 @@ func TestPreviewGameModsExplainsUnreadableFolders(t *testing.T) {
 	if err := os.MkdirAll(filepath.Join(mods, "Empty", "Nested"), 0o750); err != nil {
 		t.Fatal(err)
 	}
-	preview, err := e.PreviewGameMods(mods)
+	preview, err := e.PreviewGameMods("stardew", mods)
 	if err != nil {
 		t.Fatal(err)
 	}

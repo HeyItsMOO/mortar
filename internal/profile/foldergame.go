@@ -53,6 +53,11 @@ func (s *Store) folderEntries(game, id, key string, source Source, whole []Compo
 		return nil, tray, arch, nil
 	}
 	if !g.Splits(mods) {
+		// A file of the player's own has no page to take a name from, and its store key is a hash.
+		if source.Kind == KindLocal && source.Name != "" && len(whole) == 1 && whole[0].Name == key {
+			whole = []Component{whole[0]}
+			whole[0].Name = source.Name
+		}
 		return []Entry{{Key: key, Source: source, Mods: whole, Disabled: []mod.ID{}, Added: now, Package: true}}, tray, arch, nil
 	}
 	out := make([]Entry, 0, len(mods.Files))

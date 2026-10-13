@@ -21,7 +21,7 @@ func (s *Service) ExtraFolderMods(game string) (GameModsPreview, error) {
 	if dir == "" {
 		return GameModsPreview{Mods: []GameModPreview{}}, nil
 	}
-	return s.store.PreviewGameMods(dir)
+	return s.store.PreviewGameMods(game, dir)
 }
 
 // InstallExtraFolderMod installs folder, a top-level folder of the extra mods folder as ExtraFolderMods returned it,
