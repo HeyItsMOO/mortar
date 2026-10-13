@@ -1,5 +1,5 @@
 {
-  "serial": 1791537136,
+  "serial": 1791923676,
   "components": [
     {
       "game": "stardew",
@@ -39,10 +39,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "tag": "v0.2.1",
-      "asset": "MortarBepInExBridge-0.2.1.zip",
-      "version": "0.2.1",
-      "sha256": "0584d6ac1dcb96cce1a23adefdcd1bc306b44755b4e1455e184b7dae388d0ea3"
+      "tag": "v0.2.2",
+      "asset": "MortarBepInExBridge-0.2.2.zip",
+      "version": "0.2.2",
+      "sha256": "a0df331e00f5e18ed51f6d467c4ac66ce87cac5ea274dd11270f015508726d4d"
     },
     {
       "game": "valheim",
@@ -53,10 +53,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "tag": "v0.2.1",
-      "asset": "MortarBepInExBridge-0.2.1.zip",
-      "version": "0.2.1",
-      "sha256": "0584d6ac1dcb96cce1a23adefdcd1bc306b44755b4e1455e184b7dae388d0ea3"
+      "tag": "v0.2.2",
+      "asset": "MortarBepInExBridge-0.2.2.zip",
+      "version": "0.2.2",
+      "sha256": "a0df331e00f5e18ed51f6d467c4ac66ce87cac5ea274dd11270f015508726d4d"
     }
   ],
   "games": [
@@ -382,6 +382,23 @@
           "windows": "{localLow}/LandCrab/PEAK/Player.log"
         }
       },
+      "graphics": {
+        "explanation": "PEAK starts with Vulkan, the game's default. Some modded setups crash at startup or when you alt-tab with Vulkan; DirectX 12 is the usual fix.",
+        "choices": [
+          {
+            "id": "dx12",
+            "label": "DirectX 12",
+            "args": ["-dx12"]
+          },
+          {
+            "id": "vulkan",
+            "label": "Vulkan"
+          }
+        ],
+        "recommended": "dx12",
+        "reason": "The BepInEx pack for PEAK recommends DirectX 12 if PEAK crashes on startup.",
+        "source": "https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/"
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -412,24 +429,7 @@
           "key": "peak",
           "gameId": 7867
         }
-      ],
-      "graphics": {
-        "explanation": "PEAK starts with Vulkan, the game's default. Some modded setups crash at startup or when you alt-tab with Vulkan; DirectX 12 is the usual fix.",
-        "choices": [
-          {
-            "id": "dx12",
-            "label": "DirectX 12",
-            "args": ["-dx12"]
-          },
-          {
-            "id": "vulkan",
-            "label": "Vulkan"
-          }
-        ],
-        "recommended": "dx12",
-        "reason": "The BepInEx pack for PEAK recommends DirectX 12 if PEAK crashes on startup.",
-        "source": "https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/"
-      }
+      ]
     },
     {
       "id": "content-warning",
@@ -2078,40 +2078,30 @@
       "marker": "TS4_x64.exe",
       "markerDir": "Game/Bin",
       "metadata": [],
+      "newProfileSeparateSaves": true,
       "paths": {
         "mods": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Mods",
           "linux": "{documents}/Electronic Arts/The Sims 4/Mods"
         },
-        "saves": {
-          "windows": "{documents}/Electronic Arts/The Sims 4/saves",
-          "linux": "{documents}/Electronic Arts/The Sims 4/saves"
-        },
         "options": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Options.ini",
           "linux": "{documents}/Electronic Arts/The Sims 4/Options.ini"
         },
-        "userData": {
-          "windows": "{documents}/Electronic Arts/The Sims 4",
-          "linux": "{documents}/Electronic Arts/The Sims 4"
+        "saves": {
+          "windows": "{documents}/Electronic Arts/The Sims 4/saves",
+          "linux": "{documents}/Electronic Arts/The Sims 4/saves"
         },
         "tray": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Tray",
           "linux": "{documents}/Electronic Arts/The Sims 4/Tray"
+        },
+        "userData": {
+          "windows": "{documents}/Electronic Arts/The Sims 4",
+          "linux": "{documents}/Electronic Arts/The Sims 4"
         }
       },
       "saveFiles": ["Slot_*.save"],
-      "newProfileSeparateSaves": true,
-      "caches": [
-        {
-          "role": "userData",
-          "path": "localthumbcache.package"
-        },
-        {
-          "role": "userData",
-          "path": "avatarcache.package"
-        }
-      ],
       "requiredSettings": [
         {
           "path": "options",
@@ -2124,6 +2114,16 @@
           "key": "scriptmodsenabled",
           "value": "1",
           "message": "Script mods (.ts4script) stay off until Options.ini has Script Mods Enabled on."
+        }
+      ],
+      "caches": [
+        {
+          "role": "userData",
+          "path": "localthumbcache.package"
+        },
+        {
+          "role": "userData",
+          "path": "avatarcache.package"
         }
       ],
       "deploy": "profile",
@@ -2139,6 +2139,7 @@
         },
         {
           "id": "tray",
+          "root": "",
           "role": "tray",
           "extensions": [
             "trayitem",
@@ -2162,15 +2163,16 @@
       },
       "loaders": [
         {
-          "id": "folder"
+          "id": "folder",
+          "name": ""
         }
       ],
       "sources": [
         {
           "id": "curseforge",
           "key": "5089",
-          "classes": ["5089", "5339", "5437", "5344", "5681"],
-          "gameId": 78062
+          "gameId": 78062,
+          "classes": ["5089", "5339", "5437", "5344", "5681"]
         },
         {
           "id": "nexus",
