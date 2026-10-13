@@ -23,7 +23,12 @@ import { ReviewTitle } from './updateReview/ReviewTitle.tsx'
 import { SourceGroups } from './updateReview/SourceGroups.tsx'
 import { UndoAllConfirm } from './updateReview/UndoAllConfirm.tsx'
 import { UpdateBar as ReviewBar } from './updateReview/UpdateBar.tsx'
-import { needChoiceUpdates, sameSourceUpdates, updateAll } from './updateReview/updateAll.ts'
+import {
+  listedBySource,
+  needChoiceUpdates,
+  sameSourceUpdates,
+  updateAll,
+} from './updateReview/updateAll.ts'
 import { WithheldGroup } from './updateReview/WithheldGroup.tsx'
 import { installedCaution, pendingUpdate, withOptional } from './updateReview/wants.ts'
 import { useEmptyReviewNotice, withheldUpdates } from './updateReview/withheld.ts'
@@ -108,7 +113,7 @@ function UpdateReview({ profile }: { profile: Profile }) {
       />
       <DialogContent sx={{ p: 0, borderTop: '1px solid var(--mortar-hairline-muted)' }}>
         <SourceGroups
-          list={list.filter((u) => !u.switch)}
+          list={listedBySource(list)}
           profile={profile}
           acked={acked}
           include={include}

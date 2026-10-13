@@ -17,6 +17,12 @@ const sameSourceUpdates = (list: readonly Update[]): Update[] =>
 const needChoiceUpdates = (list: readonly Update[]): Update[] =>
   list.filter((u) => u.switch && installableUpdate(u))
 
+/** Every update that does not wait for a choice, so each update is listed in exactly one section. */
+const listedBySource = (list: readonly Update[]): Update[] => {
+  const choice = needChoiceUpdates(list)
+  return list.filter((x) => !choice.includes(x))
+}
+
 function summarize(
   at: { game: string; profileId: string; beforeId: string },
   counts: { installed: number; failed: number; skipped: number; changes: string[] },
@@ -88,4 +94,4 @@ async function updateAll(
   return true
 }
 
-export { needChoiceUpdates, sameSourceUpdates, updateAll }
+export { listedBySource, needChoiceUpdates, sameSourceUpdates, updateAll }

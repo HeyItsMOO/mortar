@@ -23,7 +23,9 @@ mock.module(profileService, () => ({
 }))
 
 const { useProfiles } = await import('../../profiles/store.ts')
-const { updateAll, sameSourceUpdates } = await import('./updateAll.ts')
+const { listedBySource, needChoiceUpdates, updateAll, sameSourceUpdates } = await import(
+  './updateAll.ts'
+)
 const { updateWant } = await import('./wants.ts')
 const { changesAfterBatch } = await import('./undoAll.ts')
 
@@ -44,6 +46,16 @@ test('a batch of mixed sources is one Add holding only the same-source updates',
   const [reqs] = added as { repo: string; batchId: string }[][]
   expect(reqs?.map((r) => r.repo)).toEqual(['o/a', 'o/c'])
   expect(new Set(reqs?.map((r) => r.batchId))).toEqual(new Set(['batch-1']))
+})
+
+test('an update from another site that Mortar cannot download is still listed', () => {
+  const list = [
+    update('a'),
+    update('b', { switch: true }),
+    update('c', { switch: true, notDistributable: true }),
+  ]
+  expect(needChoiceUpdates(list).map((u) => u.key)).toEqual(['b'])
+  expect(listedBySource(list).map((u) => u.key)).toEqual(['a', 'c'])
 })
 
 test('changes after the batch are the events past its own bulk event', () => {
