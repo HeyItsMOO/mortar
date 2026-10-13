@@ -30,45 +30,6 @@ type ConfigField struct {
 	Section       string   `json:"section,omitempty"`
 }
 
-// ReadContentSchema returns the Content Patcher ConfigSchema object, or {}.
-func (s *Service) ReadContentSchema(game, id, key string, uniqueID mod.ID) (string, error) {
-	schema, err := s.contentSchema(game, id, key, uniqueID)
-	if err != nil {
-		return "", err
-	}
-	if len(schema) == 0 {
-		return "{}", nil
-	}
-	raw := map[string]any{}
-	for name, f := range schema {
-		entry := map[string]any{}
-		if len(f.AllowValues) > 0 {
-			entry["AllowValues"] = strings.Join(f.AllowValues, ", ")
-		}
-		if f.AllowMultiple {
-			entry["AllowMultiple"] = true
-		}
-		if f.AllowBlank {
-			entry["AllowBlank"] = true
-		}
-		if f.Default != "" {
-			entry["Default"] = f.Default
-		}
-		if f.Description != "" {
-			entry["Description"] = f.Description
-		}
-		if f.Section != "" {
-			entry["Section"] = f.Section
-		}
-		raw[name] = entry
-	}
-	b, err := json.Marshal(raw)
-	if err != nil {
-		return "", err
-	}
-	return string(b), nil
-}
-
 // ListConfigFields lists config.json values and Content Patcher allowed values.
 //
 //wails:ignore

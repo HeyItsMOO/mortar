@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"encoding/json"
 	"strings"
 	"testing"
 
@@ -52,14 +51,6 @@ func TestSetConfigValueDottedPathPreservesOrder(t *testing.T) {
 	}
 	if !found {
 		t.Fatalf("fields = %+v", fields)
-	}
-	schema, err := svc.ReadContentSchema("stardew", p.ID, "a-1", "smapi:me.cp")
-	if err != nil {
-		t.Fatal(err)
-	}
-	var doc map[string]json.RawMessage
-	if err := json.Unmarshal([]byte(schema), &doc); err != nil || doc["Season"] == nil {
-		t.Fatalf("schema %s", schema)
 	}
 }
 

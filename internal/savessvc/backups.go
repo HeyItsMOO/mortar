@@ -55,17 +55,6 @@ func (s *Service) ListBackups(game, profile string) ([]backup.Backup, error) {
 	return out, nil
 }
 
-// SaveBackups lists, newest first, every backup that contains the save folder.
-func (s *Service) SaveBackups(game, save string) ([]backup.Backup, error) {
-	all, err := s.ListBackups(game, "")
-	if err != nil {
-		return nil, err
-	}
-	return slices.DeleteFunc(all, func(b backup.Backup) bool {
-		return !slices.ContainsFunc(b.Saves, func(sn backup.Snap) bool { return sn.Folder == save })
-	}), nil
-}
-
 // DeleteBackup removes an unpinned backup, wherever the backups folders hold it.
 func (s *Service) DeleteBackup(game, name string) error {
 	if err := backupNameOK(name); err != nil {

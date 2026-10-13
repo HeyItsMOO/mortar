@@ -88,11 +88,16 @@ func TestTwoInstallsOfOneGameAreClaimedSideBySide(t *testing.T) {
 	}
 }
 
+func busyInstall(svc *Service, installID string) bool {
+	st, err := svc.StatusInstall("stardew", installID)
+	return err == nil && st.State.Active()
+}
+
 func TestBusyAndStopFollowTheInstall(t *testing.T) {
 	pair := twoInstalls(t)
 	svc, folderID, gogID := pair.svc, pair.folderID, pair.gogID
 	svc.set(Status{Game: "stardew", Install: gogID, State: Launching, Profile: "p"})
-	if !svc.BusyInstall(gogID) || svc.BusyInstall(folderID) || !svc.Busy("stardew") || !svc.AnyBusy() {
+	if !busyInstall(svc, gogID) || busyInstall(svc, folderID) || !svc.Busy("stardew") || !svc.AnyBusy() {
 		t.Fatal("busy must follow the install that runs, and stay true for the game")
 	}
 	if err := svc.StopInstall(t.Context(), folderID); err == nil {
@@ -102,7 +107,7 @@ func TestBusyAndStopFollowTheInstall(t *testing.T) {
 		t.Fatal("stopped an install that has not started running")
 	}
 	svc.set(Status{Game: "stardew", Install: gogID, State: Idle})
-	if svc.BusyInstall(gogID) || svc.AnyBusy() {
+	if busyInstall(svc, gogID) || svc.AnyBusy() {
 		t.Fatal("an idle game kept its install busy")
 	}
 }
@@ -134,7 +139,7 @@ func TestProtonProcessIsAttributedThroughItsZDrivePath(t *testing.T) {
 	if st := svc.statusOf(slot{g, gogID}); st.State != Running || st.Install != gogID {
 		t.Fatalf("status = %+v", st)
 	}
-	if svc.BusyInstall(folderID) {
+	if busyInstall(svc, folderID) {
 		t.Fatal("the other install is not busy")
 	}
 }

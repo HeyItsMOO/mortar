@@ -503,12 +503,6 @@ func (s *Service) Busy(gameID string) bool {
 	return err == nil && st.State.Active()
 }
 
-// BusyInstall reports whether the install with this id is launching or running.
-func (s *Service) BusyInstall(installID string) bool {
-	sl, ok := s.findInstall(installID)
-	return ok && s.statusOf(sl).State.Active()
-}
-
 // findInstall is the slot of the install with this id.
 func (s *Service) findInstall(installID string) (slot, bool) {
 	if installID == "" {
