@@ -253,7 +253,7 @@ func DataDirs() []string {
 		filepath.Join(base, "r2modmanPlus-local"),
 		filepath.Join(base, "Thunderstore Mod Manager", "DataFolder"),
 	} {
-		if st, err := os.Stat(p); err == nil && st.IsDir() {
+		if fsx.IsDir(p) {
 			out = append(out, p)
 		}
 	}

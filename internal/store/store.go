@@ -1036,7 +1036,7 @@ func (s *Store) Cleanup() ([]string, error) {
 		return nil, err
 	}
 	for _, l := range loaders {
-		if fi, err := os.Stat(l); err == nil && fi.IsDir() {
+		if fsx.IsDir(l) {
 			parents = append(parents, l)
 		}
 	}

@@ -65,7 +65,7 @@ func (m ModInfo) Page() Page {
 		Adult: m.Adult, Status: m.Status, Available: m.Status == "published", Requirements: m.Requirements,
 	}
 	if m.Endorsed {
-		p.Endorsement = "Endorsed"
+		p.Endorsement = string(EndorseEndorsed)
 	}
 	return p
 }

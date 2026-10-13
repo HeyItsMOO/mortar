@@ -3,7 +3,6 @@
 package templates
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -16,7 +15,6 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
-	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	gamepkg "github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/gamesettings"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
@@ -86,15 +84,8 @@ type templatesFile struct {
 }
 
 func readList(path string) ([]Template, error) {
-	b, err := fsx.ReadFile(path)
-	if errors.Is(err, os.ErrNotExist) {
-		return []Template{}, nil
-	}
-	if err != nil {
-		return nil, err
-	}
 	var f templatesFile
-	if err := json.Unmarshal(b, &f); err != nil {
+	if _, err := datadir.ReadJSON(path, &f); err != nil {
 		return nil, err
 	}
 	if err := datadir.CheckVersion(f.FormatVersion); err != nil {
