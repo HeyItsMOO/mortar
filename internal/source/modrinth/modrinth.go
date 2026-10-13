@@ -277,6 +277,8 @@ func (d Driver) Versions(ctx context.Context, project, mortarVersion string) ([]
 
 // listed holds the required dependencies of every version an update check read, keyed by project id and version
 // number, so Dependencies answers without another request.
+// ponytail: never evicted, one entry per version read for the life of the process; cap it if a session's checks ever
+// make that large.
 var listed sync.Map
 
 func remember(v versionResp) {

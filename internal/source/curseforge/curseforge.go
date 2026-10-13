@@ -800,6 +800,8 @@ func (d Driver) downloadURL(ctx context.Context, id string, file int) (string, e
 
 // listed holds the required dependencies of every file an update check read, keyed by mod id and version, so
 // Dependencies answers without another request.
+// ponytail: never evicted, one entry per mod version read for the life of the process; cap it if a session's checks
+// ever make that large.
 var listed sync.Map
 
 func remember(f fileResp) {
