@@ -148,6 +148,29 @@ func TestUpdateKeepsDisabledFolderAndRollsBack(t *testing.T) {
 	}
 }
 
+func TestAnArchiveOverASiteModKeepsItsPage(t *testing.T) {
+	t.Parallel()
+	e := newEnv(t)
+	p, _ := e.Create("stardew", "P")
+	v1 := buildZip(t, "A1.zip", map[string]string{"A/manifest.json": manifestJSON("X.A")})
+	v2 := buildZip(t, "A2.zip", map[string]string{"A/manifest.json": manifestJSON("X.A"), "A/new.txt": "2"})
+	site := Source{Kind: KindNexus, Name: "A", ModID: 77, FileID: 5, Picture: "https://img/a.png", ModName: "A page"}
+	if _, err := e.InstallSource(t.Context(), "stardew", p.ID, v1, site); err != nil {
+		t.Fatal(err)
+	}
+	res, err := e.InstallArchive(t.Context(), "stardew", p.ID, v2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := res.Profile.Entries[0].Source
+	if !res.Updated || got.Kind != KindNexus || got.ModID != 77 || got.Picture != site.Picture || got.ModName != "A page" || got.FileID != 0 {
+		t.Fatalf("source after the archive = %+v", got)
+	}
+	if prev := res.Profile.Entries[0].PreviousSource; prev == nil || prev.FileID != 5 {
+		t.Fatalf("the replaced file is not kept for a roll back: %+v", prev)
+	}
+}
+
 func TestInstallArchiveUpdatesHeldEntry(t *testing.T) {
 	t.Parallel()
 	e := newEnv(t)

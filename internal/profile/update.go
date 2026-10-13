@@ -162,6 +162,9 @@ func (s *Store) moveToLocked(game, id, oldKey, newKey string, source *Source) (P
 		case source != nil:
 			out := *source
 			out.fomod = nil
+			if held := p.Entries[ei].Source; out.Kind == KindLocal && !held.Unsourced() {
+				out = held.withOwnFile(ne.Mods)
+			}
 			ne.Source = out
 		case rollBack && p.Entries[ei].PreviousSource != nil:
 			ne.Source = *p.Entries[ei].PreviousSource

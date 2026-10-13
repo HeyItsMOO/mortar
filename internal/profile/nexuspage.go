@@ -11,6 +11,16 @@ func (s Source) Unsourced() bool {
 	return s.Kind == KindLocal || (s.Kind == KindNexus && s.ModID <= 0)
 }
 
+// withOwnFile is the source of an entry whose files the player replaced with an archive of their own: the same page,
+// picture and names, so its links, details and update checks carry on, without what named the site's file.
+func (s Source) withOwnFile(mods []Component) Source {
+	s.FileID, s.Digest, s.Tag, s.Asset, s.Version = 0, "", "", "", ""
+	if len(mods) > 0 {
+		s.Version = mods[0].Version
+	}
+	return s
+}
+
 // SetNexusPages records the Nexus page of each named entry that has no source of its own, which gives it that
 // page's links and update checks. pages maps entry keys to page ids.
 func (s *Store) SetNexusPages(game, id string, pages map[string]int) (Profile, error) {
