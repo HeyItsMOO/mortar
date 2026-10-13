@@ -320,7 +320,7 @@ func previewFrom(slots []gameModSlot) GameModsPreview {
 	var mods []GameModPreview
 	for _, s := range slots {
 		if s.ready && s.folder.loose {
-			mods = append(mods, GameModPreview{Name: s.folder.label, Status: outcomeImported, Folder: s.folder.dir})
+			mods = append(mods, GameModPreview{Name: s.folder.label, Status: outcomeImported, Disabled: s.folder.disabled, Folder: s.folder.dir})
 			continue
 		}
 		if s.ready {

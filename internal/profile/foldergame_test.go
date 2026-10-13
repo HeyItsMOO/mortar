@@ -605,12 +605,16 @@ func TestFolderGameImportsThePlayersModsFolderWhereEachFileSat(t *testing.T) {
 	e := newEnv(t)
 	mods := t.TempDir()
 	for rel, body := range map[string]string{
-		"Resource.cfg":        "game's own",
-		"loose.package":       "1",
-		"Hair/long.package":   "2",
-		"Tool/tool.ts4script": "3",
-		"Tool/tool.package":   "4",
-		"Notes/readme.txt":    "no mod here",
+		"Resource.cfg":              "game's own",
+		"loose.package":             "1",
+		"Hair/long.package":         "2",
+		"Tool/tool.ts4script":       "3",
+		"Tool/tool.package":         "4",
+		"Notes/readme.txt":          "no mod here",
+		"Hair/sub/short.packageoff": "5",
+		"asleep.packageoff":         "6",
+		"Old/old.ts4scriptoff":      "7",
+		"Old/old.packageoff":        "8",
 	} {
 		p := filepath.Join(mods, filepath.FromSlash(rel))
 		if err := os.MkdirAll(filepath.Dir(p), 0o700); err != nil {
@@ -628,22 +632,32 @@ func TestFolderGameImportsThePlayersModsFolderWhereEachFileSat(t *testing.T) {
 	for _, m := range preview.Mods {
 		names = append(names, m.Name)
 	}
-	if !slices.Equal(names, []string{"Hair", "Tool", "loose.package"}) {
+	if !slices.Equal(names, []string{"Hair", "Old", "Tool", "asleep.packageoff", "loose.package"}) {
 		t.Fatalf("preview = %v", names)
 	}
 	res, err := e.ImportGameMods(t.Context(), folderGame, mods)
-	if err != nil || res.Imported != 3 || res.Failed != 0 {
+	if err != nil || res.Imported != 5 || res.Failed != 0 {
 		t.Fatalf("import = %+v, %v", res, err)
 	}
 	owners, err := e.PackageFileOwners(folderGame, res.Profile.ID)
 	if err != nil {
 		t.Fatal(err)
 	}
+	var offNames []string
+	for _, en := range res.Profile.Entries {
+		if !en.hasPackageEnabled() {
+			offNames = append(offNames, en.Mods[0].Name)
+		}
+	}
+	slices.Sort(offNames)
+	if !slices.Equal(offNames, []string{"Hair/sub/short.package", "Old", "asleep.package"}) {
+		t.Fatalf("switched off = %v", offNames)
+	}
 	want := []string{"Mods/Hair/long.package", "Mods/Tool/tool.package", "Mods/Tool/tool.ts4script", "Mods/loose.package"}
 	if got := slices.Sorted(maps.Keys(owners)); !slices.Equal(got, want) {
 		t.Fatalf("laid out %v, want %v", got, want)
 	}
-	if i := slices.IndexFunc(res.Profile.Entries, func(en Entry) bool { return en.File == "" }); i < 0 || res.Profile.Entries[i].Mods[0].Name != "Tool" {
+	if !slices.ContainsFunc(res.Profile.Entries, func(en Entry) bool { return en.File == "" && en.Mods[0].Name == "Tool" }) {
 		t.Fatalf("the script folder is not one entry named for it: %v", keysOf(res.Profile))
 	}
 	if _, err := os.Stat(filepath.Join(mods, "loose.package")); err != nil {

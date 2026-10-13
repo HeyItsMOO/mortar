@@ -33,8 +33,72 @@ func looseModKinds(game string) ([]string, bool) {
 	return kinds, true
 }
 
+// offSuffix is what players and mod tools add to a mod file's extension to switch it off without deleting it
+// ("hair.packageoff").
+const offSuffix = "off"
+
+func extOf(name string) string {
+	return strings.ToLower(strings.TrimPrefix(filepath.Ext(name), "."))
+}
+
+// switchedOn is the name a switched-off mod file has when it is on; ok is false for any other file.
+func switchedOn(name string, kinds []string) (on string, ok bool) {
+	kind, off := strings.CutSuffix(extOf(name), offSuffix)
+	if !off || !slices.Contains(kinds, kind) {
+		return "", false
+	}
+	return name[:len(name)-len(offSuffix)], true
+}
+
 func isLooseMod(name string, kinds []string) bool {
-	return len(kinds) == 0 || slices.Contains(kinds, strings.ToLower(strings.TrimPrefix(filepath.Ext(name), ".")))
+	if _, off := switchedOn(name, kinds); off {
+		return true
+	}
+	return len(kinds) == 0 || slices.Contains(kinds, extOf(name))
+}
+
+// switchStagedOn gives the switched-off mod files below staged their real names, since a profile records what is
+// off itself, and returns their slash paths; all is true when the copy is one unit (it holds a file that only
+// works beside its siblings) and every mod file in it was off. A unit that is only partly off keeps its off names,
+// which the game goes on ignoring, because a unit is switched as one. An off file beside its on twin is dropped.
+func switchStagedOn(staged string, kinds, keepWhole []string) (off map[string]bool, all bool, err error) {
+	type file struct{ path, on string }
+	var offFiles []file
+	on, unit := 0, false
+	err = filepath.WalkDir(staged, func(p string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return err
+		}
+		name, isOff := switchedOn(d.Name(), kinds)
+		if isOff {
+			offFiles = append(offFiles, file{p, filepath.Join(filepath.Dir(p), name)})
+		} else if name = d.Name(); isLooseMod(name, kinds) {
+			on++
+		}
+		unit = unit || slices.Contains(keepWhole, extOf(name))
+		return nil
+	})
+	if err != nil || len(offFiles) == 0 || (unit && on > 0) {
+		return nil, false, err
+	}
+	off = map[string]bool{}
+	for _, f := range offFiles {
+		if _, statErr := os.Lstat(f.on); statErr == nil {
+			if err := os.Remove(f.path); err != nil {
+				return nil, false, err
+			}
+			continue
+		}
+		if err := os.Rename(f.path, f.on); err != nil {
+			return nil, false, err
+		}
+		rel, err := filepath.Rel(staged, f.on)
+		if err != nil {
+			return nil, false, err
+		}
+		off[filepath.ToSlash(rel)] = true
+	}
+	return off, unit, nil
 }
 
 // scanLooseMods lists what a folder game's mods folder holds at its top level as one slot each: a mod file, or a
@@ -66,7 +130,8 @@ func scanLooseMods(modsDir string, kinds []string) ([]gameModSlot, error) {
 		default:
 			continue
 		}
-		slots = append(slots, gameModSlot{folder: gameModFolder{dir: child, label: it.Name(), loose: true}, ready: true})
+		_, off := switchedOn(it.Name(), kinds)
+		slots = append(slots, gameModSlot{folder: gameModFolder{dir: child, label: it.Name(), loose: true, disabled: off}, ready: true})
 	}
 	return slots, nil
 }
@@ -105,9 +170,33 @@ func (s *Store) importLoose(ctx context.Context, game, id string, f gameModFolde
 	if err != nil {
 		return "", "", err
 	}
+	kinds, _ := looseModKinds(game)
+	var keepWhole []string
+	for _, t := range installerGame(game).Targets {
+		if t.ID == installer.TargetMods {
+			keepWhole = t.KeepWhole
+		}
+	}
+	off, allOff, err := switchStagedOn(staged, kinds, keepWhole)
+	if err != nil {
+		return "", "", err
+	}
 	if key, err = s.items.AddHashedDir(ctx, game, staged); err != nil {
 		return "", "", err
 	}
 	res, err := s.installKey(game, id, key, Source{Kind: KindLocal, Name: f.label})
-	return key, res.Profile.LastChange, err
+	if err != nil {
+		return "", "", err
+	}
+	var refs []EnableRef
+	for _, e := range res.Profile.Entries {
+		if e.StoreKey() == key && len(e.Mods) > 0 && (allOff || off[e.File]) {
+			refs = append(refs, EnableRef{Key: e.Key, ID: e.Mods[0].ID})
+		}
+	}
+	if len(refs) == 0 {
+		return key, res.Profile.LastChange, nil
+	}
+	p, err := s.SetModsEnabled(game, id, refs, false)
+	return key, p.LastChange, err
 }
