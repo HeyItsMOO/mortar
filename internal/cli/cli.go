@@ -851,6 +851,11 @@ func historySummary(ev profile.HistoryEvent) string {
 			return "Changed " + mods(ev.Count)
 		}
 		return "Changed mods"
+	case profile.ChangeSourced:
+		if ev.Name == "" {
+			return "Found mods on Nexus"
+		}
+		return "Set the Nexus page of " + ev.Name
 	case profile.ChangeImported:
 		return "Imported " + mods(ev.Count)
 	case profile.ChangeMoved:

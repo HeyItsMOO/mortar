@@ -1,6 +1,8 @@
 package profile
 
 import (
+	"errors"
+	"fmt"
 	"maps"
 	"slices"
 )
@@ -30,7 +32,8 @@ type NexusFile struct {
 // page's links and update checks, and the file of each that is on that page without one, which lets a share carry
 // it. found maps entry keys to what was found.
 func (s *Store) SetNexusFiles(game, id string, found map[string]NexusFile) (Profile, error) {
-	return s.updateEntries(game, id, slices.Sorted(maps.Keys(found)), func(e *Entry, key string) error {
+	note := HistoryEvent{Change: ChangeSourced}
+	return s.updateEntriesAs(game, id, historyBulk, note, slices.Sorted(maps.Keys(found)), func(e *Entry, key string) error {
 		f := found[key]
 		if e.Source.Unsourced() {
 			e.Source.Kind, e.Source.ModID = KindNexus, f.ModID
@@ -40,6 +43,33 @@ func (s *Store) SetNexusFiles(game, id string, found map[string]NexusFile) (Prof
 		}
 		if e.Source.Kind == KindNexus && e.Source.ModID == f.ModID && e.Source.FileID == 0 {
 			e.Source.FileID = f.FileID
+		}
+		return nil
+	})
+}
+
+// SetNexusFile records the Nexus page, and the file on it when known, that the player named for one entry. It
+// replaces a page a lookup got wrong; an entry from another site keeps its source.
+func (s *Store) SetNexusFile(game, id, key string, f NexusFile) (Profile, error) {
+	if f.ModID <= 0 || f.FileID < 0 {
+		return Profile{}, errors.New("a Nexus page has a positive id")
+	}
+	p, err := s.read(game, id)
+	if err != nil {
+		return Profile{}, err
+	}
+	i, err := requireEntry(p.Entries, key)
+	if err != nil {
+		return Profile{}, err
+	}
+	note := HistoryEvent{Change: ChangeSourced, Name: entryLabel(p.Entries[i])}
+	return s.updateEntriesAs(game, id, historyBulk, note, []string{key}, func(e *Entry, _ string) error {
+		if e.Source.Kind != KindLocal && e.Source.Kind != KindNexus {
+			return fmt.Errorf("%s comes from another site", entryLabel(*e))
+		}
+		e.Source.Kind, e.Source.ModID, e.Source.FileID, e.Source.Digest = KindNexus, f.ModID, f.FileID, ""
+		if len(e.Mods) > 0 {
+			e.Source.Version = e.Mods[0].Version
 		}
 		return nil
 	})

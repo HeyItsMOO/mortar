@@ -33,6 +33,7 @@ import { useNexusDetails } from './nexusDetails.ts'
 import { OldFilesCallouts } from './OldFilesCallouts.tsx'
 import { addedWithin, WEEK_MS } from './recent.ts'
 import { SelectionBar } from './SelectionBar.tsx'
+import { SetNexusPageDialog } from './SetNexusPageDialog.tsx'
 import { ModSidebar } from './Sidebar.tsx'
 import { useSelection } from './selection.ts'
 import { useMods } from './store.ts'
@@ -309,6 +310,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
       />
       <UpdateReview profile={profile} />
       <ModContextMenu />
+      <SetNexusPageDialog />
       <EndorsePrompt profile={profile} />
     </Box>
   )

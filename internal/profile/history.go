@@ -60,6 +60,8 @@ const (
 	// ChangeMods is several mods changed at once: Count when it is more than one.
 	ChangeMods     HistoryChange = "mods"
 	ChangeImported HistoryChange = "imported" // Count
+	// ChangeSourced is mods given the page they come from: Name for one the player named, none for a lookup.
+	ChangeSourced HistoryChange = "sourced"
 	// ChangeMoved is mods moved in from the game's own Mods folder: Count.
 	ChangeMoved HistoryChange = "moved"
 	// ChangeMerged is mods merged in from another profile: Name is that profile, Count the mods added or updated.

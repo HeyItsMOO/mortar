@@ -58,6 +58,7 @@ import { type ModAction, modActions, openPageLabel } from './modActions.ts'
 import { siteCategory } from './modSearch.ts'
 import { useNexusDetails } from './nexusDetails.ts'
 import { OtherProfilesDialog } from './OtherProfilesDialog.tsx'
+import { NexusPageMenuItem } from './SetNexusPageDialog.tsx'
 import { SplitCombineItems } from './SplitCombineItems.tsx'
 import { useSelection } from './selection.ts'
 import { useMods } from './store.ts'
@@ -352,6 +353,7 @@ function ModActionMenu({
               close={onClose}
               onAdd={() => setGroupOpen(true)}
             />,
+            <NexusPageMenuItem key="nexus-page" mod={mod} close={onClose} />,
             update ? (
               <EverywhereMenuItem key="everywhere" game={game} id={mod.id} close={onClose} />
             ) : null,

@@ -12,6 +12,7 @@ const KIND_OF: Partial<Record<HistoryChange, HistoryKind>> = {
   [HistoryChange.ChangeMerged]: 'added',
   [HistoryChange.ChangeRemoved]: 'removed',
   [HistoryChange.ChangeUpdated]: 'updated',
+  [HistoryChange.ChangeSourced]: 'updated',
   [HistoryChange.ChangeChannel]: 'updated',
   [HistoryChange.ChangeEnabled]: 'enabled',
   [HistoryChange.ChangeDisabled]: 'disabled',

@@ -43,6 +43,10 @@ export function historyLabel(ev: Worded): string {
       return count > 1
         ? plural(count, { one: 'Changed # mod', other: 'Changed # mods' })
         : i18n._(msg`Changed mods`)
+    case HistoryChange.ChangeSourced:
+      return name === ''
+        ? i18n._(msg`Found mods on Nexus`)
+        : i18n._(msg`Set the Nexus page of ${name}`)
     case HistoryChange.ChangeImported:
       return plural(count, { one: 'Imported # mod', other: 'Imported # mods' })
     case HistoryChange.ChangeMoved:

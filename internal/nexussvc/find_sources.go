@@ -3,14 +3,20 @@ package nexussvc
 import (
 	"context"
 	"errors"
+	"net/url"
 	"slices"
+	"strconv"
 	"strings"
 	"sync"
 	"unicode"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
+	"github.com/Rethunk-Tech/mortar/internal/metadata"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
+	"github.com/Rethunk-Tech/mortar/internal/nexus"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
+	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
 // pageFetches bounds the dataset pages read at once while telling candidate pages apart.
@@ -96,6 +102,42 @@ func (s *Service) FindSources(ctx context.Context, gameID, profileID string) (Fo
 		}
 	}
 	return FoundSources{Profile: p, Found: len(found), Left: left}, nil
+}
+
+// SetNexusPage records the Nexus page the player pasted the address of as the source of one entry, with the file
+// the address names (file_id) or, failing that, the one the mod dataset matches to what is installed.
+func (s *Service) SetNexusPage(ctx context.Context, gameID, profileID, key, link string) (profile.Profile, error) {
+	if s.Profiles == nil {
+		return profile.Profile{}, errors.New("profiles are unavailable")
+	}
+	domain, modID, ok := nexus.ParseModURL(link)
+	if !ok {
+		return profile.Profile{}, usererr.Wrap(usererr.Invalid, errors.New("that is not the address of a Nexus mod page"))
+	}
+	info, _ := components.Game(gameID)
+	if !strings.EqualFold(info.NexusDomain(), domain) {
+		return profile.Profile{}, usererr.Wrap(usererr.OtherGame, errors.New("that Nexus page is for another game"))
+	}
+	fileID := 0
+	if u, err := url.Parse(strings.TrimSpace(link)); err == nil {
+		fileID, _ = strconv.Atoi(u.Query().Get("file_id"))
+	}
+	if fileID <= 0 {
+		fileID = 0
+	}
+	if fileID == 0 && info.HasMetadata(metadata.StardewDataset) {
+		p, err := s.profileByID(gameID, profileID)
+		if err != nil {
+			return profile.Profile{}, err
+		}
+		if i := slices.IndexFunc(p.Entries, func(e profile.Entry) bool { return e.Key == key }); i >= 0 {
+			// A page the dataset does not list leaves the file unknown.
+			if page, err := s.meta.Page(ctx, modID); err == nil {
+				fileID = installedFile(p.Entries[i].Mods, page)
+			}
+		}
+	}
+	return s.Profiles.SetNexusFile(gameID, profileID, key, profile.NexusFile{ModID: modID, FileID: fileID})
 }
 
 // installedFile is the page's file whose mods are the listed ones at their installed versions, or 0 when no file
