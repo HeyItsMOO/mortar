@@ -4628,7 +4628,7 @@ msgid "Needs a CurseForge key, or the file from its page"
 msgstr "Needs a CurseForge key, or the file from its page"
 
 #: src/mods/AuthorDialog.tsx:135
-#: src/mods/listRows.ts:140
+#: src/mods/listRows.ts:139
 #: src/mods/ModDependencyTree.tsx:104
 #: src/mods/OptionalFileRows.tsx:123
 #: src/mods/PreviewPick.tsx:23
@@ -5845,7 +5845,7 @@ msgstr "Profile settings, mod lists and configs are written here and offered to 
 msgid "Duplicate plugins"
 msgstr "Duplicate plugins"
 
-#: src/mods/listRows.ts:126
+#: src/mods/listRows.ts:125
 #: src/mods/useListHeading.ts:11
 msgid "Unknown source"
 msgstr "Unknown source"
@@ -10869,7 +10869,7 @@ msgid "Auto-enable requirements"
 msgstr "Auto-enable requirements"
 
 #: src/mods/AuthorDialog.tsx:134
-#: src/mods/listRows.ts:140
+#: src/mods/listRows.ts:139
 #: src/mods/ModDependencyTree.tsx:102
 #: src/mods/Sidebar.tsx:322
 #: src/mods/Sidebar.tsx:335
@@ -14345,7 +14345,7 @@ msgstr "{0} of {1} requests left · resets {2}"
 msgid "Focus the previous mod"
 msgstr "Focus the previous mod"
 
-#: src/mods/listRows.ts:125
+#: src/mods/listRows.ts:124
 msgid "Nexus Mods, file unknown"
 msgstr "Nexus Mods, file unknown"
 
