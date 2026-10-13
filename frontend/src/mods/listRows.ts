@@ -120,7 +120,9 @@ function toListRow(
     github: i18n._(msg`GitHub`),
     thunderstore: i18n._(msg`Thunderstore`),
   })
-  const source = pageless ? i18n._(msg`Unknown source`) : known
+  const fileless = entry?.source.kind === 'nexus' && !pageless && (entry.source.fileId ?? 0) <= 0
+  const unknownFile = fileless ? i18n._(msg`Nexus Mods, file unknown`) : known
+  const source = pageless ? i18n._(msg`Unknown source`) : unknownFile
   const nexusId = entry?.source.kind === 'nexus' ? (entry.source.modId ?? 0) : 0
   const details = byId[nexusId]?.details
   const categoryLabel = resolvedCategoryLabel(
@@ -133,7 +135,7 @@ function toListRow(
     added: entry?.added ?? '',
     pinned: Boolean(entry?.pinned),
     source,
-    unsourced: pageless || entry?.source.kind === 'local',
+    unsourced: pageless || fileless || entry?.source.kind === 'local',
     status: m.enabled ? i18n._(msg`Enabled`) : i18n._(msg`Disabled`),
     note: entry?.note ?? '',
     tags: [...(entry?.tags ?? [])],

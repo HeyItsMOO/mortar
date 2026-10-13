@@ -90,7 +90,7 @@ interface ListRow {
   mod: Mod
   added: string
   source: string
-  /** The entry records no page it can be got from again. */
+  /** The entry records no page, or no file on its page, to get it from again. */
   unsourced?: boolean
   status: string
   note: string

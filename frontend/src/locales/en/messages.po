@@ -2415,6 +2415,10 @@ msgstr "Stop comparing"
 msgid "Skip tour"
 msgstr "Skip tour"
 
+#: src/share/Included.tsx:108
+msgid "Its Nexus file is not known. Group the Mods list by Source and choose Find on Nexus."
+msgstr "Its Nexus file is not known. Group the Mods list by Source and choose Find on Nexus."
+
 #: src/shell/TypedFolder.tsx:20
 msgid "Use folder"
 msgstr "Use folder"
@@ -3715,7 +3719,7 @@ msgstr "Help"
 msgid "L{0}"
 msgstr "L{0}"
 
-#: src/share/Included.tsx:127
+#: src/share/Included.tsx:129
 msgid "Included"
 msgstr "Included"
 
@@ -3743,7 +3747,7 @@ msgstr "config.json, changed from the mod's own"
 #: src/game/FarmMenuItem.tsx:97
 #: src/launch/SaveWarnDialog.tsx:62
 #: src/mods/updateReview/Row.tsx:35
-#: src/share/Included.tsx:108
+#: src/share/Included.tsx:110
 msgid "Disabled in this profile"
 msgstr "Disabled in this profile"
 
@@ -4624,7 +4628,7 @@ msgid "Needs a CurseForge key, or the file from its page"
 msgstr "Needs a CurseForge key, or the file from its page"
 
 #: src/mods/AuthorDialog.tsx:135
-#: src/mods/listRows.ts:137
+#: src/mods/listRows.ts:140
 #: src/mods/ModDependencyTree.tsx:104
 #: src/mods/OptionalFileRows.tsx:123
 #: src/mods/PreviewPick.tsx:23
@@ -5841,7 +5845,7 @@ msgstr "Profile settings, mod lists and configs are written here and offered to 
 msgid "Duplicate plugins"
 msgstr "Duplicate plugins"
 
-#: src/mods/listRows.ts:123
+#: src/mods/listRows.ts:126
 #: src/mods/useListHeading.ts:11
 msgid "Unknown source"
 msgstr "Unknown source"
@@ -6227,7 +6231,7 @@ msgstr "Allow cleanup before deleting."
 msgid "Starter templates"
 msgstr "Starter templates"
 
-#: src/share/Included.tsx:118
+#: src/share/Included.tsx:120
 msgid "{local, plural, one {# mod you added from an archive can't be linked} other {# mods you added from archives can't be linked}}"
 msgstr "{local, plural, one {# mod you added from an archive can't be linked} other {# mods you added from archives can't be linked}}"
 
@@ -7022,7 +7026,7 @@ msgstr "The log does not name a mod."
 msgid "Create a profile first."
 msgstr "Create a profile first."
 
-#: src/share/Included.tsx:156
+#: src/share/Included.tsx:158
 msgid "Which?"
 msgstr "Which?"
 
@@ -9292,7 +9296,7 @@ msgstr "What Mortar shows when it opens."
 
 #: src/console/PerformanceComparison.tsx:57
 #: src/console/StartupTable.tsx:295
-#: src/share/Included.tsx:136
+#: src/share/Included.tsx:138
 msgid "Change"
 msgstr "Change"
 
@@ -9361,7 +9365,7 @@ msgstr "Mod or event"
 msgid "Untrack every {gameName} mod on Nexus"
 msgstr "Untrack every {gameName} mod on Nexus"
 
-#: src/share/Included.tsx:122
+#: src/share/Included.tsx:124
 msgid "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 msgstr "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 
@@ -10449,7 +10453,7 @@ msgstr "Open download page"
 
 #: src/profiles/HistoryEventRow.tsx:108
 #: src/profiles/MergeDialog.tsx:60
-#: src/share/Included.tsx:144
+#: src/share/Included.tsx:146
 msgid "Show mods"
 msgstr "Show mods"
 
@@ -10865,7 +10869,7 @@ msgid "Auto-enable requirements"
 msgstr "Auto-enable requirements"
 
 #: src/mods/AuthorDialog.tsx:134
-#: src/mods/listRows.ts:137
+#: src/mods/listRows.ts:140
 #: src/mods/ModDependencyTree.tsx:102
 #: src/mods/Sidebar.tsx:322
 #: src/mods/Sidebar.tsx:335
@@ -11468,7 +11472,7 @@ msgstr "Your profiles have {0}. Update replaces each profile's copy."
 msgid "Done ({0}): {1}"
 msgstr "Done ({0}): {1}"
 
-#: src/share/Included.tsx:114
+#: src/share/Included.tsx:116
 msgid "{local, plural, one {# mod you added from an archive can't go in the file} other {# mods you added from archives can't go in the file}}"
 msgstr "{local, plural, one {# mod you added from an archive can't go in the file} other {# mods you added from archives can't go in the file}}"
 
@@ -12281,7 +12285,7 @@ msgstr "{0, plural, one {Last run: {list}} other {Last # runs: {list}}}"
 msgid "You can roll back the completed updates from the profile history."
 msgstr "You can roll back the completed updates from the profile history."
 
-#: src/share/Included.tsx:110
+#: src/share/Included.tsx:112
 msgid "Its source is not known."
 msgstr "Its source is not known."
 
@@ -14340,6 +14344,10 @@ msgstr "{0} of {1} requests left · resets {2}"
 #: src/settings/shortcutLabels.ts:15
 msgid "Focus the previous mod"
 msgstr "Focus the previous mod"
+
+#: src/mods/listRows.ts:125
+msgid "Nexus Mods, file unknown"
+msgstr "Nexus Mods, file unknown"
 
 #: src/settings/sections/NexusMods.tsx:82
 msgid "Untrack mods?"

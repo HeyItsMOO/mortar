@@ -396,7 +396,7 @@ export async function skipSourceMany(groups: ReadonlyMap<string, Mod[]>, skip: b
   }
 }
 
-// Gives the open profile's source-less mods their Nexus page and says how many it found.
+// Gives the open profile's mods that lack one their Nexus page or file and says how many it found.
 export async function findSources() {
   const target = openTarget()
   if (!target) {

@@ -173,7 +173,8 @@ func (s *Service) emit(name string, data any) {
 
 // --- Share ---
 
-// Omitted is an enabled or switched-off mod a link cannot carry. Reason is "local", "off" or "unknown".
+// Omitted is an enabled or switched-off mod a link cannot carry. Reason is "local", "off", "file" (its
+// page is known, the file on it is not) or "unknown".
 type Omitted struct {
 	Name   string `json:"name"`
 	Reason string `json:"reason"`
@@ -234,6 +235,9 @@ func displayName(e profile.Entry) string {
 func reasonOf(e profile.Entry) string {
 	if e.Source.Kind == profile.KindLocal {
 		return "local"
+	}
+	if e.Source.Kind == profile.KindNexus && e.Source.ModID > 0 && e.Source.FileID == 0 {
+		return "file"
 	}
 	return "unknown"
 }

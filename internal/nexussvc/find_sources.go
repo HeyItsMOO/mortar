@@ -16,8 +16,8 @@ import (
 // pageFetches bounds the dataset pages read at once while telling candidate pages apart.
 const pageFetches = 8
 
-// FoundSources is the profile after FindSources, with how many source-less entries got a Nexus page and how many
-// were left as they were.
+// FoundSources is the profile after FindSources, with how many entries got a Nexus page or file and how many
+// source-less ones were left as they were.
 type FoundSources struct {
 	Profile profile.Profile `json:"profile"`
 	Found   int             `json:"found"`
@@ -25,7 +25,8 @@ type FoundSources struct {
 }
 
 // FindSources gives each entry of the profile that has no source the Nexus page that publishes its mods, so mods
-// copied in from a folder or another manager get their page and update checks back. Where the mod dataset lists
+// copied in from a folder or another manager get their page and update checks back, and gives each entry on a
+// Nexus page with no file recorded the file it was installed from, which a share needs. Where the mod dataset lists
 // several pages for an entry (reuploads, translations), the page is taken only when the installed version and the
 // author single one out.
 func (s *Service) FindSources(ctx context.Context, gameID, profileID string) (FoundSources, error) {
@@ -59,23 +60,88 @@ func (s *Service) FindSources(ctx context.Context, gameID, profileID string) (Fo
 	}
 	listed := s.datasetPages(ctx, unsure)
 	pages := map[string]int{}
+	var fileless []int
 	for _, e := range p.Entries {
 		ids := candidates[e.Key]
 		if len(ids) > 1 {
 			ids = narrowPages(e.Mods, ids, listed)
 		}
-		if len(ids) == 1 {
+		switch {
+		case len(ids) == 1:
 			pages[e.Key] = ids[0]
-		} else if len(ids) > 1 {
+		case len(ids) > 1:
 			left++
+		case e.Source.Kind == profile.KindNexus && e.Source.ModID > 0 && e.Source.FileID == 0 && !e.IsOverlay():
+			pages[e.Key] = e.Source.ModID
+		}
+		if id, ok := pages[e.Key]; ok {
+			fileless = append(fileless, id)
 		}
 	}
-	if len(pages) > 0 {
-		if p, err = s.Profiles.SetNexusPages(gameID, profileID, pages); err != nil {
+	listed = s.datasetPages(ctx, fileless)
+	found := map[string]profile.NexusFile{}
+	for _, e := range p.Entries {
+		id, ok := pages[e.Key]
+		if !ok {
+			continue
+		}
+		f := profile.NexusFile{ModID: id, FileID: installedFile(e.Mods, listed[id])}
+		if e.Source.Unsourced() || f.FileID > 0 {
+			found[e.Key] = f
+		}
+	}
+	if len(found) > 0 {
+		if p, err = s.Profiles.SetNexusFiles(gameID, profileID, found); err != nil {
 			return FoundSources{}, err
 		}
 	}
-	return FoundSources{Profile: p, Found: len(pages), Left: left}, nil
+	return FoundSources{Profile: p, Found: len(found), Left: left}, nil
+}
+
+// installedFile is the page's file whose mods are the listed ones at their installed versions, or 0 when no file
+// or several fit equally. A file that holds a listed mod at another version is not it; of the rest, the one holding
+// the most listed mods wins, then the one holding the fewest others.
+func installedFile(mods []profile.Component, p meta.Page) int {
+	best, bestHeld, bestOthers, tied := 0, 0, 0, false
+	for _, f := range p.Downloads {
+		held, differs := 0, false
+		for _, published := range f.Mods {
+			i := slices.IndexFunc(mods, func(m profile.Component) bool {
+				return m.ID.Format() == mod.FormatSMAPI && strings.EqualFold(m.ID.Local(), published.UniqueID)
+			})
+			if i < 0 {
+				continue
+			}
+			if !sameVersion(mods[i].Version, published.Version) {
+				differs = true
+				break
+			}
+			held++
+		}
+		if differs || held == 0 {
+			continue
+		}
+		others := len(f.Mods) - held
+		switch {
+		case held > bestHeld || (held == bestHeld && others < bestOthers):
+			best, bestHeld, bestOthers, tied = int(f.ID), held, others, false
+		case held == bestHeld && others == bestOthers:
+			tied = true
+		}
+	}
+	if tied {
+		return 0
+	}
+	return best
+}
+
+// sameVersion treats a manifest's "1.2" and the dataset's "1.2.0" as one version.
+func sameVersion(a, b string) bool {
+	if a == b {
+		return true
+	}
+	c, ok := meta.CompareVersions(a, b)
+	return ok && c == 0
 }
 
 // datasetPages reads the dataset's record of each page; one that cannot be read is left out.

@@ -104,6 +104,8 @@ export function Included({
     switch (id) {
       case 'local':
         return t`Added from an archive, so it only exists on this computer.`
+      case 'file':
+        return t`Its Nexus file is not known. Group the Mods list by Source and choose Find on Nexus.`
       case 'off':
         return t`Disabled in this profile`
       default:

@@ -21,16 +21,25 @@ func (s Source) withOwnFile(mods []Component) Source {
 	return s
 }
 
-// SetNexusPages records the Nexus page of each named entry that has no source of its own, which gives it that
-// page's links and update checks. pages maps entry keys to page ids.
-func (s *Store) SetNexusPages(game, id string, pages map[string]int) (Profile, error) {
-	return s.updateEntries(game, id, slices.Sorted(maps.Keys(pages)), func(e *Entry, key string) error {
-		if !e.Source.Unsourced() {
-			return nil
+// NexusFile names a Nexus page and, where known, the file on it; FileID is 0 for an unknown file.
+type NexusFile struct {
+	ModID, FileID int
+}
+
+// SetNexusFiles records the Nexus page of each named entry that has no source of its own, which gives it that
+// page's links and update checks, and the file of each that is on that page without one, which lets a share carry
+// it. found maps entry keys to what was found.
+func (s *Store) SetNexusFiles(game, id string, found map[string]NexusFile) (Profile, error) {
+	return s.updateEntries(game, id, slices.Sorted(maps.Keys(found)), func(e *Entry, key string) error {
+		f := found[key]
+		if e.Source.Unsourced() {
+			e.Source.Kind, e.Source.ModID = KindNexus, f.ModID
+			if len(e.Mods) > 0 {
+				e.Source.Version = e.Mods[0].Version
+			}
 		}
-		e.Source.Kind, e.Source.ModID = KindNexus, pages[key]
-		if len(e.Mods) > 0 {
-			e.Source.Version = e.Mods[0].Version
+		if e.Source.Kind == KindNexus && e.Source.ModID == f.ModID && e.Source.FileID == 0 {
+			e.Source.FileID = f.FileID
 		}
 		return nil
 	})

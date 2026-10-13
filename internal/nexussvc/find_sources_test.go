@@ -63,3 +63,34 @@ func TestNarrowPagesPrefersTheInstalledVersionThenTheAuthor(t *testing.T) {
 		}
 	}
 }
+
+func TestInstalledFileIsTheOneHoldingEveryModAtItsVersion(t *testing.T) {
+	at := func(version string, ids ...string) []meta.Mod {
+		out := make([]meta.Mod, len(ids))
+		for i, id := range ids {
+			out[i] = meta.Mod{UniqueID: id, Version: version}
+		}
+		return out
+	}
+	page := meta.Page{Downloads: []meta.File{
+		{ID: 1, Mods: at("1.0.0", "A.One")},
+		{ID: 2, Mods: at("1.2.0", "A.One")},
+		{ID: 3, Mods: at("1.2.0", "A.One", "a.extra")},
+		{ID: 4, Mods: at("2.0.0", "a.twice")},
+		{ID: 5, Mods: at("2.0.0", "a.twice")},
+	}}
+	for name, tc := range map[string]struct {
+		id, version string
+		want        int
+	}{
+		"the file with nothing else":       {"a.one", "1.2.0", 2},
+		"an older version":                 {"a.one", "1.0.0", 1},
+		"a version the page does not have": {"a.one", "9.9.9", 0},
+		"two files alike":                  {"a.twice", "2.0.0", 0},
+	} {
+		mods := []profile.Component{{ID: mod.SMAPI(tc.id), Version: tc.version}}
+		if got := installedFile(mods, page); got != tc.want {
+			t.Errorf("%s: file %d, want %d", name, got, tc.want)
+		}
+	}
+}
