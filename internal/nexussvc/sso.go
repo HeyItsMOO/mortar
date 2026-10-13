@@ -14,12 +14,10 @@ import (
 // SSOEvent carries an SSOState for each stage of a browser sign-in.
 const SSOEvent = "nexus:sso"
 
-// SSO sign-in stages sent in SSOState.State.
+// SSO sign-in stages sent in SSOState.State after the ones nexussso.State names.
 const (
-	SSOWaitingBrowser = "waiting-browser"
-	SSOConnected      = "connected"
-	SSODone           = "done"
-	SSOFailed         = "failed"
+	SSODone   = "done"
+	SSOFailed = "failed"
 )
 
 // SSOState is one stage of a sign-in; Error is set with SSOFailed, and Cancelled when the user ended it.

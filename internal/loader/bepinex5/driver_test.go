@@ -73,14 +73,13 @@ func TestLoaderContract(t *testing.T) {
 		t.Fatalf("findings %+v", found)
 	}
 	cfg, isCfg := l.(loader.WithConfig)
-	if _, ok := l.(loader.WinHTTPLoader); !ok || !isCfg || cfg.ConfigDirs()[0] != "BepInEx/config" {
+	if !isCfg || cfg.ConfigDirs()[0] != "BepInEx/config" {
 		t.Fatal("capabilities")
 	}
 }
 
 func TestQueryReadsTheProfilesStateFile(t *testing.T) {
 	l := Loader{}
-	var _ loader.Querier = l
 	var _ loader.WithCompanion = l
 	p := loader.ProfileView{Dir: t.TempDir()}
 	if _, err := l.Query(t.Context(), loader.Target{}, p, "status"); !errors.Is(err, bridge.ErrNotReady) {

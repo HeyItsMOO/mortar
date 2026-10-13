@@ -11,9 +11,8 @@ import (
 
 // Pref scopes: app (global), source (ScopeSource), loader (ScopeLoader), game (under Settings.Games[gameID]) and profile overrides.
 const (
-	ScopeApp     = "app"
-	ScopeGame    = "game"
-	ScopeProfile = "profile"
+	ScopeApp  = "app"
+	ScopeGame = "game"
 
 	TypeBool   = "bool"
 	TypeInt    = "int"

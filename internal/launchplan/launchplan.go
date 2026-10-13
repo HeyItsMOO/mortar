@@ -17,8 +17,6 @@ const (
 	ModeProfile Mode = "profile"
 	// ModeVanilla starts the game without mods.
 	ModeVanilla Mode = "vanilla"
-	// ModeTool starts a modding tool (xEdit, BodySlide) with the profile's files deployed.
-	ModeTool Mode = "tool"
 )
 
 // RuntimeReq is something the runtime must provide before the game starts.

@@ -2,7 +2,6 @@ package loader
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/Rethunk-Tech/mortar/internal/bridge"
 	"github.com/Rethunk-Tech/mortar/internal/components"
@@ -202,18 +201,10 @@ type WithCompanion interface {
 	Companion() bridge.Companion
 }
 
-// Querier is a loader whose running game answers questions (status, plugins) through its companion.
-type Querier interface {
-	Query(ctx context.Context, t Target, p ProfileView, what string) (json.RawMessage, error)
-}
-
 // Console is a loader whose running game takes commands.
 type Console interface {
 	Send(ctx context.Context, t Target, p ProfileView, command string) (string, error)
 }
-
-// WinHTTPLoader is a loader that injects through winhttp.dll, which Wine only loads when the prefix overrides it.
-type WinHTTPLoader interface{ NeedsWinHTTPOverride() bool }
 
 // Releases is a loader whose releases Mortar looks up and downloads. g is the game's catalog entry, for a loader
 // that finds its releases through the game's sources.

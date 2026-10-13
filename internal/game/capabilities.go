@@ -15,8 +15,6 @@ import (
 const (
 	PathSaves              = "saves"
 	PathStartupPreferences = "startupPreferences"
-	// PathUnityLog is the Unity player log of a game built on Unity.
-	PathUnityLog = "unityLog"
 )
 
 // HasPath reports whether the catalog gives game id a path for role: a game has a save folder or startup
