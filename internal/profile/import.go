@@ -101,7 +101,7 @@ func bundledFolder(name string) string {
 func sourceFromMods(mods []manifest.Mod, folder string) Source {
 	for _, m := range mods {
 		for _, k := range m.UpdateKeys {
-			if n, ok := manifest.NexusUpdateKey(k); ok {
+			if n, ok := manifest.NexusUpdateKey(k); ok && n > 0 {
 				return Source{Kind: KindNexus, Name: folder, ModID: n, Version: m.Version}
 			}
 		}

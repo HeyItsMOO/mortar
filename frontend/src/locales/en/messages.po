@@ -122,7 +122,7 @@ msgstr "Auto-track installed mods"
 msgid "Sidebar badge counts"
 msgstr "Sidebar badge counts"
 
-#: src/mods/storeEntries.ts:222
+#: src/mods/storeEntries.ts:223
 msgid "Could not switch the selected mods"
 msgstr "Could not switch the selected mods"
 
@@ -204,7 +204,7 @@ msgstr "Revert {name} to the installed copy?"
 msgid "Skip this profile"
 msgstr "Skip this profile"
 
-#: src/mods/storeEntries.ts:403
+#: src/mods/storeEntries.ts:432
 msgid "Updated categories"
 msgstr "Updated categories"
 
@@ -286,8 +286,8 @@ msgstr "Could not queue the downloads"
 msgid "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 msgstr "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 
-#: src/mods/storeEntries.ts:71
-#: src/mods/storeEntries.ts:109
+#: src/mods/storeEntries.ts:72
+#: src/mods/storeEntries.ts:110
 #: src/profiles/historyRevert.ts:119
 #: src/toasts/history.ts:38
 msgid "That profile is gone."
@@ -1205,7 +1205,7 @@ msgstr "Keep this profile's saves separate?"
 msgid "{0}'s {1} is {2}, made for {3}, which this profile lacks."
 msgstr "{0}'s {1} is {2}, made for {3}, which this profile lacks."
 
-#: src/mods/storeEntries.ts:402
+#: src/mods/storeEntries.ts:431
 msgid "Could not set the category for the selected mods"
 msgstr "Could not set the category for the selected mods"
 
@@ -1923,7 +1923,7 @@ msgstr "{errors} with errors"
 msgid "Mortar does not have permission to do that."
 msgstr "Mortar does not have permission to do that."
 
-#: src/mods/storeEntries.ts:391
+#: src/mods/storeEntries.ts:392
 msgid "Could not ignore updates from {source}"
 msgstr "Could not ignore updates from {source}"
 
@@ -2748,8 +2748,8 @@ msgstr "A mod you enabled needs another mod that is not in this profile, or is d
 #: src/mods/problemFix/WinFix.tsx:66
 #: src/mods/problemFixButtons.tsx:116
 #: src/mods/SplitCombineItems.tsx:41
-#: src/mods/storeEntries.ts:58
-#: src/mods/storeEntries.ts:96
+#: src/mods/storeEntries.ts:59
+#: src/mods/storeEntries.ts:97
 #: src/profiles/collectionUnlink.ts:36
 #: src/profiles/CompareDialog.tsx:45
 #: src/profiles/historyRevert.ts:111
@@ -2931,6 +2931,10 @@ msgstr "Mods and profiles"
 #: src/share/useImportFlow.ts:151
 msgid "Imported {name}"
 msgstr "Imported {name}"
+
+#: src/mods/ModsGroupHeader.tsx:98
+msgid "Find on Nexus"
+msgstr "Find on Nexus"
 
 #: src/share/DestinationGrid.tsx:95
 msgid "Local archives can't go here"
@@ -3243,7 +3247,7 @@ msgstr "Before this change"
 msgid "Import from {manager}"
 msgstr "Import from {manager}"
 
-#: src/mods/listRows.ts:117
+#: src/mods/listRows.ts:118
 #: src/mods/Sidebar.tsx:561
 msgid "Archive"
 msgstr "Archive"
@@ -3420,7 +3424,7 @@ msgstr "Host {0}, yours {1}"
 msgid "Keep my changes"
 msgstr "Keep my changes"
 
-#: src/mods/storeEntries.ts:323
+#: src/mods/storeEntries.ts:324
 msgid "Unpinned selected mods"
 msgstr "Unpinned selected mods"
 
@@ -3574,7 +3578,7 @@ msgstr "Licence"
 msgid "Unreachable"
 msgstr "Unreachable"
 
-#: src/mods/storeEntries.ts:412
+#: src/mods/storeEntries.ts:441
 msgid "Updated tags"
 msgstr "Updated tags"
 
@@ -3625,6 +3629,10 @@ msgstr "Only in {name}"
 msgid "Open files page"
 msgstr "Open files page"
 
+#: src/mods/storeEntries.ts:419
+msgid "{left, plural, one {# mod has no page, or more than one} other {# mods have no page, or more than one}}"
+msgstr "{left, plural, one {# mod has no page, or more than one} other {# mods have no page, or more than one}}"
+
 #: src/saves/backups.ts:97
 #: src/settings/prefCopy.ts:380
 msgid "Manual"
@@ -3642,7 +3650,7 @@ msgstr "From the first scene to the main menu. Plugins' work in Start, coroutine
 msgid "History events kept"
 msgstr "History events kept"
 
-#: src/mods/storeEntries.ts:392
+#: src/mods/storeEntries.ts:393
 msgid "Could not stop ignoring {source} updates"
 msgstr "Could not stop ignoring {source} updates"
 
@@ -3774,6 +3782,10 @@ msgstr "Found in {path}"
 #: src/firstrunTour/TourPopover.tsx:47
 msgid "Enable and disable mods, and update them for the open profile."
 msgstr "Enable and disable mods, and update them for the open profile."
+
+#: src/mods/storeEntries.ts:409
+msgid "None of these mods is listed on Nexus"
+msgstr "None of these mods is listed on Nexus"
 
 #: src/game/detailStates.tsx:17
 #: src/games/ProfileCards.tsx:54
@@ -4370,7 +4382,7 @@ msgstr "{0, plural, one {The new version of {1} no longer includes # file. Keep 
 msgid "Custom command"
 msgstr "Custom command"
 
-#: src/mods/storeEntries.ts:322
+#: src/mods/storeEntries.ts:323
 msgid "Could not unpin the selected mods"
 msgstr "Could not unpin the selected mods"
 
@@ -4612,7 +4624,7 @@ msgid "Needs a CurseForge key, or the file from its page"
 msgstr "Needs a CurseForge key, or the file from its page"
 
 #: src/mods/AuthorDialog.tsx:135
-#: src/mods/listRows.ts:134
+#: src/mods/listRows.ts:137
 #: src/mods/ModDependencyTree.tsx:104
 #: src/mods/OptionalFileRows.tsx:123
 #: src/mods/PreviewPick.tsx:23
@@ -5825,6 +5837,7 @@ msgstr "Profile settings, mod lists and configs are written here and offered to 
 msgid "Duplicate plugins"
 msgstr "Duplicate plugins"
 
+#: src/mods/listRows.ts:123
 #: src/mods/useListHeading.ts:11
 msgid "Unknown source"
 msgstr "Unknown source"
@@ -6022,7 +6035,7 @@ msgstr "Remove {0} from {1}"
 #. placeholder {0}: row.label
 #. placeholder {0}: tool.name
 #: src/mods/overlayActions.ts:90
-#: src/mods/storeEntries.ts:254
+#: src/mods/storeEntries.ts:255
 #: src/tools/ToolsManageDialog.tsx:100
 msgid "Could not remove {0}"
 msgstr "Could not remove {0}"
@@ -6618,7 +6631,7 @@ msgid "Home"
 msgstr "Home"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:436
+#: src/mods/storeEntries.ts:465
 msgid "Could not open config.json of {0}"
 msgstr "Could not open config.json of {0}"
 
@@ -6726,7 +6739,7 @@ msgstr "Moved {folder} to Mortar's trash"
 msgid "{queued, plural, one {# already queued} other {# already queued}}"
 msgstr "{queued, plural, one {# already queued} other {# already queued}}"
 
-#: src/mods/storeEntries.ts:234
+#: src/mods/storeEntries.ts:235
 msgid "Could not remove the selected mods"
 msgstr "Could not remove the selected mods"
 
@@ -6777,7 +6790,7 @@ msgstr "Stamina"
 #. placeholder {0}: first.mods[0].name
 #. placeholder {0}: row.label
 #: src/mods/overlayActions.ts:98
-#: src/mods/storeEntries.ts:93
+#: src/mods/storeEntries.ts:94
 #: src/profiles/historyLabel.ts:20
 msgid "Removed {0}"
 msgstr "Removed {0}"
@@ -7316,7 +7329,7 @@ msgid "Auto-retry failed downloads"
 msgstr "Auto-retry failed downloads"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:296
+#: src/mods/storeEntries.ts:297
 msgid "Could not switch {0}"
 msgstr "Could not switch {0}"
 
@@ -7634,6 +7647,10 @@ msgstr "Only settings and options differ."
 #: src/firstrun/ProfileStep.tsx:58
 msgid "From another mod manager"
 msgstr "From another mod manager"
+
+#: src/mods/ModsGroupHeader.tsx:96
+msgid "Could not look these mods up on Nexus"
+msgstr "Could not look these mods up on Nexus"
 
 #: src/queue/QueueBody.tsx:357
 msgid "Skip all"
@@ -8023,6 +8040,10 @@ msgstr "Remove {0} from other profiles"
 msgid "All sources"
 msgstr "All sources"
 
+#: src/mods/storeEntries.ts:411
+msgid "{found, plural, one {Found # mod on Nexus} other {Found # mods on Nexus}}"
+msgstr "{found, plural, one {Found # mod on Nexus} other {Found # mods on Nexus}}"
+
 #: src/toasts/HistoryButton.tsx:129
 msgid "Notification history"
 msgstr "Notification history"
@@ -8320,7 +8341,7 @@ msgid "{total, plural, one {# mod · about {size} to download} other {# mods · 
 msgstr "{total, plural, one {# mod · about {size} to download} other {# mods · about {size} to download}}"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:339
+#: src/mods/storeEntries.ts:340
 msgid "Could not skip the update for {0}"
 msgstr "Could not skip the update for {0}"
 
@@ -8837,7 +8858,7 @@ msgid "{0, plural, one { · # error} other { · # errors}}"
 msgstr "{0, plural, one { · # error} other { · # errors}}"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:424
+#: src/mods/storeEntries.ts:453
 msgid "Could not open the folder of {0}"
 msgstr "Could not open the folder of {0}"
 
@@ -8888,7 +8909,7 @@ msgid "This archive has no {loader} mod where Mortar expects one. Pick the folde
 msgstr "This archive has no {loader} mod where Mortar expects one. Pick the folder that holds the mod."
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:338
+#: src/mods/storeEntries.ts:339
 msgid "Could not show the skipped update for {0}"
 msgstr "Could not show the skipped update for {0}"
 
@@ -8939,7 +8960,7 @@ msgstr "Retention"
 msgid "Patreon post {0}"
 msgstr "Patreon post {0}"
 
-#: src/mods/storeEntries.ts:177
+#: src/mods/storeEntries.ts:178
 msgid "Could not remove from the group"
 msgstr "Could not remove from the group"
 
@@ -9116,7 +9137,7 @@ msgstr "{stars, plural, one {# star} other {# stars}}"
 msgid "Before playing"
 msgstr "Before playing"
 
-#: src/mods/storeEntries.ts:370
+#: src/mods/storeEntries.ts:371
 msgid "Could not skip updates for the selected mods"
 msgstr "Could not skip updates for the selected mods"
 
@@ -9153,7 +9174,7 @@ msgid "No backups yet"
 msgstr "No backups yet"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:310
+#: src/mods/storeEntries.ts:311
 msgid "Could not pin {0}"
 msgstr "Could not pin {0}"
 
@@ -9271,7 +9292,7 @@ msgstr "What Mortar shows when it opens."
 msgid "Change"
 msgstr "Change"
 
-#: src/mods/storeEntries.ts:460
+#: src/mods/storeEntries.ts:489
 msgid "Could not switch the group"
 msgstr "Could not switch the group"
 
@@ -9791,7 +9812,7 @@ msgstr "Mortar stays on screen beside the game."
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/mods/storeEntries.ts:182
+#: src/mods/storeEntries.ts:183
 msgid "Could not rename the group"
 msgstr "Could not rename the group"
 
@@ -9848,7 +9869,7 @@ msgstr "Open a profile to install mods"
 msgid "What the person opening the link sees"
 msgstr "What the person opening the link sees"
 
-#: src/mods/storeEntries.ts:371
+#: src/mods/storeEntries.ts:372
 msgid "Skipped updates for selected mods"
 msgstr "Skipped updates for selected mods"
 
@@ -10361,7 +10382,7 @@ msgstr "Pin"
 msgid "Could not send to {0}"
 msgstr "Could not send to {0}"
 
-#: src/mods/storeEntries.ts:323
+#: src/mods/storeEntries.ts:324
 msgid "Pinned selected mods"
 msgstr "Pinned selected mods"
 
@@ -10611,7 +10632,7 @@ msgid "{0} has a {1} setting for {installed}; it is {2}, so those patches are of
 msgstr "{0} has a {1} setting for {installed}; it is {2}, so those patches are off."
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:355
+#: src/mods/storeEntries.ts:356
 msgid "Could not set the update channel for {0}"
 msgstr "Could not set the update channel for {0}"
 
@@ -10639,7 +10660,7 @@ msgstr "Error in a patch"
 msgid "Report it so it can be fixed."
 msgstr "Report it so it can be fixed."
 
-#: src/mods/listRows.ts:119
+#: src/mods/listRows.ts:120
 #: src/mods/Sidebar.tsx:563
 #: src/settings/sections/Accounts.tsx:17
 msgid "GitHub"
@@ -10675,7 +10696,7 @@ msgstr "Add from game presets…"
 msgid "Include notes"
 msgstr "Include notes"
 
-#: src/mods/storeEntries.ts:322
+#: src/mods/storeEntries.ts:323
 msgid "Could not pin the selected mods"
 msgstr "Could not pin the selected mods"
 
@@ -10840,7 +10861,7 @@ msgid "Auto-enable requirements"
 msgstr "Auto-enable requirements"
 
 #: src/mods/AuthorDialog.tsx:134
-#: src/mods/listRows.ts:134
+#: src/mods/listRows.ts:137
 #: src/mods/ModDependencyTree.tsx:102
 #: src/mods/Sidebar.tsx:322
 #: src/mods/Sidebar.tsx:335
@@ -10862,7 +10883,7 @@ msgid "The crash check could not finish."
 msgstr "The crash check could not finish."
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:310
+#: src/mods/storeEntries.ts:311
 msgid "Could not unpin {0}"
 msgstr "Could not unpin {0}"
 
@@ -12937,11 +12958,11 @@ msgid "Run crashed"
 msgstr "Run crashed"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:266
+#: src/mods/storeEntries.ts:267
 msgid "Could not save the note and tags for {0}"
 msgstr "Could not save the note and tags for {0}"
 
-#: src/mods/storeEntries.ts:448
+#: src/mods/storeEntries.ts:477
 msgid "Could not add to the group"
 msgstr "Could not add to the group"
 
@@ -12988,7 +13009,7 @@ msgid "{0} was installed from another site. Updating installs {1} from {2} inste
 msgstr "{0} was installed from another site. Updating installs {1} from {2} instead and keeps your settings."
 
 #: src/firstrun/GameSetup.tsx:78
-#: src/mods/listRows.ts:118
+#: src/mods/listRows.ts:119
 #: src/mods/Sidebar.tsx:562
 #: src/settings/sections/NexusMods.tsx:310
 #: src/share/DestinationGrid.tsx:57
@@ -13159,8 +13180,8 @@ msgstr "Soft and warm"
 
 #: src/mods/overlayActions.ts:50
 #: src/mods/overlayActions.ts:112
-#: src/mods/storeEntries.ts:75
-#: src/mods/storeEntries.ts:114
+#: src/mods/storeEntries.ts:76
+#: src/mods/storeEntries.ts:115
 #: src/profiles/historyRevert.ts:124
 msgid "This is no longer the latest change."
 msgstr "This is no longer the latest change."
@@ -13173,7 +13194,7 @@ msgstr "Collapse or expand the sidebar"
 msgid "Compare with…"
 msgstr "Compare with…"
 
-#: src/mods/storeEntries.ts:411
+#: src/mods/storeEntries.ts:440
 msgid "Could not update tags for the selected mods"
 msgstr "Could not update tags for the selected mods"
 
@@ -13337,7 +13358,7 @@ msgstr "Leaf"
 msgid "After each check"
 msgstr "After each check"
 
-#: src/mods/storeEntries.ts:94
+#: src/mods/storeEntries.ts:95
 #: src/profiles/historyTimeline.ts:63
 msgid "{removed, plural, one {Removed # mod} other {Removed # mods}}"
 msgstr "{removed, plural, one {Removed # mod} other {Removed # mods}}"
@@ -14026,7 +14047,7 @@ msgstr "Leave out"
 msgid "No saves yet"
 msgstr "No saves yet"
 
-#: src/mods/listRows.ts:120
+#: src/mods/listRows.ts:121
 #: src/mods/Sidebar.tsx:564
 #: src/share/DestinationGrid.tsx:62
 #: src/share/ShareDialog.tsx:43
@@ -14108,7 +14129,7 @@ msgstr "Search all mod sites"
 msgid "Not downloaded yet: {0}"
 msgstr "Not downloaded yet: {0}"
 
-#: src/mods/storeEntries.ts:185
+#: src/mods/storeEntries.ts:186
 msgid "Could not delete the group"
 msgstr "Could not delete the group"
 

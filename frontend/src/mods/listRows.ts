@@ -113,12 +113,14 @@ function toListRow(
   { groupName, order }: { groupName: string; order: number },
   { byId, customById, sizes, costs, wins }: Parameters<typeof toListRows>[2],
 ): ListRow {
-  const source = kindLabel(entry?.source.kind ?? '', {
+  const pageless = entry?.source.kind === 'nexus' && (entry.source.modId ?? 0) <= 0
+  const known = kindLabel(entry?.source.kind ?? '', {
     archive: i18n._(msg`Archive`),
     nexus: i18n._(msg`Nexus Mods`),
     github: i18n._(msg`GitHub`),
     thunderstore: i18n._(msg`Thunderstore`),
   })
+  const source = pageless ? i18n._(msg`Unknown source`) : known
   const nexusId = entry?.source.kind === 'nexus' ? (entry.source.modId ?? 0) : 0
   const details = byId[nexusId]?.details
   const categoryLabel = resolvedCategoryLabel(
@@ -131,6 +133,7 @@ function toListRow(
     added: entry?.added ?? '',
     pinned: Boolean(entry?.pinned),
     source,
+    unsourced: pageless || entry?.source.kind === 'local',
     status: m.enabled ? i18n._(msg`Enabled`) : i18n._(msg`Disabled`),
     note: entry?.note ?? '',
     tags: [...(entry?.tags ?? [])],

@@ -1,5 +1,6 @@
 import type { MessageDescriptor } from '@lingui/core'
 import { msg, plural } from '@lingui/core/macro'
+import { FindSources } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexussvc/service.ts'
 import type {
   Mod,
   Profile,
@@ -393,6 +394,34 @@ export async function skipSourceMany(groups: ReadonlyMap<string, Mod[]>, skip: b
       ),
     )
   }
+}
+
+// Gives the open profile's source-less mods their Nexus page and says how many it found.
+export async function findSources() {
+  const target = openTarget()
+  if (!target) {
+    return
+  }
+  const { profile, found, left } = await FindSources(target.game, target.id)
+  if (profile) {
+    useProfiles.getState().replace(profile)
+  }
+  const none = i18n._(msg`None of these mods is listed on Nexus`)
+  const some = i18n._(
+    msg`${plural(found, { one: 'Found # mod on Nexus', other: 'Found # mods on Nexus' })}`,
+  )
+  useToasts.getState().push({
+    kind: found > 0 ? 'success' : 'info',
+    title: found > 0 ? some : none,
+    ...(found > 0 && left > 0
+      ? {
+          body: i18n._(
+            msg`${plural(left, { one: '# mod has no page, or more than one', other: '# mods have no page, or more than one' })}`,
+          ),
+        }
+      : {}),
+  })
+  await useUpdates.getState().load()
 }
 
 export function setCategoryMany(mods: Mod[], category: string) {

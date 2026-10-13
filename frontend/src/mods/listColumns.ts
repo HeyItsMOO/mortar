@@ -71,7 +71,7 @@ const LIST_COLUMN_WIDTH: Record<ListColumnId, string> = {
   latest: '110px',
   id: '140px',
   author: '130px',
-  source: '100px',
+  source: '128px',
   category: '130px',
   endorsements: '88px',
   downloads: '88px',
@@ -90,6 +90,8 @@ interface ListRow {
   mod: Mod
   added: string
   source: string
+  /** The entry records no page it can be got from again. */
+  unsourced?: boolean
   status: string
   note: string
   tags: string[]

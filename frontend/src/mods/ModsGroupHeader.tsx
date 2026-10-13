@@ -1,15 +1,17 @@
-import { Box, Switch, Typography } from '@mui/material'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { useLingui } from '@lingui/react/macro'
+import { Box, Button, Switch, Typography } from '@mui/material'
+import { ChevronDown, ChevronRight, Search } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { CoverButton } from '../shell/CoverButton.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
+import { usePending } from '../toasts/usePending.ts'
 import { GroupMenu } from './GroupMenu.tsx'
 import { toggleCollapsed } from './group.ts'
 import { LockedReason } from './LockedReason.tsx'
 import type { ListRow } from './listColumns.ts'
 import { useMods } from './store.ts'
-import { setGroupEnabled } from './storeEntries.ts'
+import { findSources, setGroupEnabled } from './storeEntries.ts'
 import { useLocked } from './useLocked.ts'
 
 function ModsGroupHeader({
@@ -57,24 +59,45 @@ function ModsGroupHeader({
       <Box component="span" sx={{ fontSize: 12, color: 'text.secondary' }}>
         {count}
       </Box>
-      {onEnabled ? (
+      {menu || onEnabled ? (
         <Box
           data-control={true}
           sx={{ ml: 'auto', position: 'relative', display: 'flex', alignItems: 'center' }}
         >
           {menu}
-          <LockedReason locked={locked}>
-            <Switch
-              size="small"
-              checked={enabled === true}
-              disabled={locked}
-              onChange={(_, on) => onEnabled(on)}
-              slotProps={{ input: { 'aria-label': label } }}
-            />
-          </LockedReason>
+          {onEnabled ? (
+            <LockedReason locked={locked}>
+              <Switch
+                size="small"
+                checked={enabled === true}
+                disabled={locked}
+                onChange={(_, on) => onEnabled(on)}
+                slotProps={{ input: { 'aria-label': label } }}
+              />
+            </LockedReason>
+          ) : null}
         </Box>
       ) : null}
     </Box>
+  )
+}
+
+// The button on a source group that holds mods with no recorded site: looks each one up on Nexus.
+function FindSourcesButton() {
+  const { t } = useLingui()
+  const locked = useLocked()
+  const [pending, run] = usePending()
+  return (
+    <LockedReason locked={locked}>
+      <Button
+        size="small"
+        disabled={locked || pending}
+        startIcon={<Search size={14} aria-hidden={true} />}
+        onClick={() => run(findSources, { errorTitle: t`Could not look these mods up on Nexus` })}
+      >
+        {t`Find on Nexus`}
+      </Button>
+    </LockedReason>
   )
 }
 
@@ -118,6 +141,10 @@ function GroupHeaderRow({
                 .catch(reportUnexpected)
             },
           }
+        : {})}
+      {...(groupBy === 'source' &&
+      groups.find((g) => g.key === groupKey)?.items.some((r) => r.unsourced === true) === true
+        ? { menu: <FindSourcesButton /> }
         : {})}
     />
   )

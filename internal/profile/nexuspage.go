@@ -1,0 +1,27 @@
+package profile
+
+import (
+	"maps"
+	"slices"
+)
+
+// Unsourced is whether the source names no page to get the entry from again: a file the user picked, or a Nexus
+// entry with no page id.
+func (s Source) Unsourced() bool {
+	return s.Kind == KindLocal || (s.Kind == KindNexus && s.ModID <= 0)
+}
+
+// SetNexusPages records the Nexus page of each named entry that has no source of its own, which gives it that
+// page's links and update checks. pages maps entry keys to page ids.
+func (s *Store) SetNexusPages(game, id string, pages map[string]int) (Profile, error) {
+	return s.updateEntries(game, id, slices.Sorted(maps.Keys(pages)), func(e *Entry, key string) error {
+		if !e.Source.Unsourced() {
+			return nil
+		}
+		e.Source.Kind, e.Source.ModID = KindNexus, pages[key]
+		if len(e.Mods) > 0 {
+			e.Source.Version = e.Mods[0].Version
+		}
+		return nil
+	})
+}
