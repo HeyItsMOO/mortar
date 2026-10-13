@@ -151,17 +151,21 @@ SectionEnd
 
 Var mortar.nexusLinks
 Var mortar.thunderstoreLinks
+Var mortar.curseforgeLinks
 
 !macro mortar.linkBox VAR TOP TEXT
     ${NSD_CreateCheckbox} 120u ${TOP}u 195u 10u "${TEXT}"
     Pop ${VAR}
     SetCtlColors ${VAR} "${MUI_TEXTCOLOR}" "${MUI_BGCOLOR}"
-    ${NSD_Check} ${VAR}
 !macroend
 
 Function mortar.finishShow
     !insertmacro mortar.linkBox $mortar.nexusLinks 102 "Open Nexus Mods download links with Mortar"
+    ${NSD_Check} $mortar.nexusLinks
     !insertmacro mortar.linkBox $mortar.thunderstoreLinks 115 "Open Thunderstore mod links with Mortar"
+    ${NSD_Check} $mortar.thunderstoreLinks
+    # Left clear: these links belong to the CurseForge app, which keeps the games Mortar does not manage.
+    !insertmacro mortar.linkBox $mortar.curseforgeLinks 128 "Open CurseForge Install links with Mortar"
 FunctionEnd
 
 !macro mortar.claimLinks SOURCE
@@ -176,6 +180,10 @@ Function mortar.finishLeave
     ${NSD_GetState} $mortar.thunderstoreLinks $0
     ${If} $0 == ${BST_CHECKED}
         !insertmacro mortar.claimLinks thunderstore
+    ${EndIf}
+    ${NSD_GetState} $mortar.curseforgeLinks $0
+    ${If} $0 == ${BST_CHECKED}
+        !insertmacro mortar.claimLinks curseforge
     ${EndIf}
 FunctionEnd
 
