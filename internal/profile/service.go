@@ -87,13 +87,14 @@ func (s *Service) PreviewGameMods(gameID string) (GameModsPreview, error) {
 	return s.store.PreviewGameMods(gameID, dir)
 }
 
-// ImportGameMods copies the game's Mods folder into a new profile without changing that folder.
-func (s *Service) ImportGameMods(ctx context.Context, gameID string) (GameModsResult, error) {
+// ImportGameMods copies the game's Mods folder into a new profile; move also takes the mods out of that folder,
+// for a game whose preview says it can.
+func (s *Service) ImportGameMods(ctx context.Context, gameID string, move bool) (GameModsResult, error) {
 	dir, err := s.importModsDir(gameID)
 	if err != nil {
 		return GameModsResult{}, err
 	}
-	return s.store.ImportGameMods(ctx, gameID, dir)
+	return s.store.ImportGameMods(ctx, gameID, dir, move)
 }
 
 func (s *Service) List(game string) ([]Profile, error) { return s.store.List(game) }

@@ -80,7 +80,7 @@ func TestImportGameModsCopiesIntoAProfileAndLeavesTheGameFolderUnchanged(t *test
 		t.Fatalf("preview = %+v", preview.Mods)
 	}
 
-	res, err := e.ImportGameMods(t.Context(), "stardew", mods)
+	res, err := e.ImportGameMods(t.Context(), "stardew", mods, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -129,7 +129,7 @@ func TestImportGameModsCopiesIntoAProfileAndLeavesTheGameFolderUnchanged(t *test
 		t.Fatalf("quiet config = %q %v", body, err)
 	}
 
-	again, err := e.ImportGameMods(t.Context(), "stardew", mods)
+	again, err := e.ImportGameMods(t.Context(), "stardew", mods, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -177,7 +177,7 @@ func TestImportGameModsPrefersEnabledDuplicateAndOmitsBundled(t *testing.T) {
 		t.Fatalf("preview = %+v", preview.Mods)
 	}
 
-	res, err := e.ImportGameMods(t.Context(), "stardew", mods)
+	res, err := e.ImportGameMods(t.Context(), "stardew", mods, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -228,7 +228,7 @@ func TestImportGameModsPicksNewestWhenBothCopiesAreOff(t *testing.T) {
 		t.Fatalf("preview = %+v", preview.Mods)
 	}
 
-	res, err := e.ImportGameMods(t.Context(), "stardew", mods)
+	res, err := e.ImportGameMods(t.Context(), "stardew", mods, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -315,7 +315,7 @@ func TestImportGameModsCopiesVortexLinkedFiles(t *testing.T) {
 	if len(preview.Mods) != 2 {
 		t.Fatalf("preview = %+v", preview.Mods)
 	}
-	res, err := e.ImportGameMods(t.Context(), "stardew", mods)
+	res, err := e.ImportGameMods(t.Context(), "stardew", mods, false)
 	if err != nil {
 		t.Fatal(err)
 	}

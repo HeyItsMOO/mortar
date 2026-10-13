@@ -600,7 +600,7 @@ func TestFolderGameRestoreWithAMissingStoreItemKeepsEntriesReportsThemAndLeavesT
 	}
 }
 
-func TestFolderGameImportsThePlayersModsFolderWhereEachFileSat(t *testing.T) {
+func TestFolderGameMovesThePlayersModsFolderInWhereEachFileSat(t *testing.T) {
 	t.Parallel()
 	e := newEnv(t)
 	mods := t.TempDir()
@@ -635,7 +635,7 @@ func TestFolderGameImportsThePlayersModsFolderWhereEachFileSat(t *testing.T) {
 	if !slices.Equal(names, []string{"Hair", "Old", "Tool", "asleep.packageoff", "loose.package"}) {
 		t.Fatalf("preview = %v", names)
 	}
-	res, err := e.ImportGameMods(t.Context(), folderGame, mods)
+	res, err := e.ImportGameMods(t.Context(), folderGame, mods, true)
 	if err != nil || res.Imported != 5 || res.Failed != 0 {
 		t.Fatalf("import = %+v, %v", res, err)
 	}
@@ -660,7 +660,15 @@ func TestFolderGameImportsThePlayersModsFolderWhereEachFileSat(t *testing.T) {
 	if !slices.ContainsFunc(res.Profile.Entries, func(en Entry) bool { return en.File == "" && en.Mods[0].Name == "Tool" }) {
 		t.Fatalf("the script folder is not one entry named for it: %v", keysOf(res.Profile))
 	}
-	if _, err := os.Stat(filepath.Join(mods, "loose.package")); err != nil {
-		t.Fatalf("the player's folder was changed: %v", err)
+	left, err := os.ReadDir(mods)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var leftNames []string
+	for _, it := range left {
+		leftNames = append(leftNames, it.Name())
+	}
+	if !slices.Equal(leftNames, []string{"Notes", "Resource.cfg"}) {
+		t.Fatalf("a move left %v in the game's folder", leftNames)
 	}
 }

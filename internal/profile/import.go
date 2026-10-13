@@ -17,6 +17,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/manifest"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
+	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
 const importedProfileName = "Imported mods"
@@ -46,6 +47,9 @@ type GameModPreview struct {
 // GameModsPreview is the list PreviewGameMods returns, including skips and failures.
 type GameModsPreview struct {
 	Mods []GameModPreview `json:"mods"`
+	// CanMove is whether ImportGameMods can also take the mods out of the game's folder: a game that reads loose
+	// files there would otherwise go on loading the originals whatever the profile says.
+	CanMove bool `json:"canMove,omitempty"`
 }
 
 // GameModOutcome is one top-level folder after ImportGameMods.
@@ -358,7 +362,9 @@ func (s *Store) PreviewGameMods(game, modsDir string) (GameModsPreview, error) {
 	if err != nil {
 		return GameModsPreview{}, err
 	}
-	return previewFrom(slots), nil
+	pv := previewFrom(slots)
+	_, pv.CanMove = looseModKinds(game)
+	return pv, nil
 }
 
 func carryConfig(srcRoot, destDir, folder string) error {
@@ -428,8 +434,15 @@ func (s *Store) importFolder(ctx context.Context, game, id string, f gameModFold
 }
 
 // ImportGameMods copies each importable folder under modsDir into the store and a new "Imported mods" profile.
-// It never writes to modsDir.
-func (s *Store) ImportGameMods(ctx context.Context, game, modsDir string) (GameModsResult, error) {
+// It never writes to modsDir, unless move is set for a game that reads loose files there (GameModsPreview.CanMove):
+// each mod that came in is then removed from modsDir, as MoveGameMods removes a folder.
+func (s *Store) ImportGameMods(ctx context.Context, game, modsDir string, move bool) (GameModsResult, error) {
+	if _, loose := looseModKinds(game); !loose {
+		move = false
+	}
+	if move && s.GameRunning != nil && s.GameRunning(game) {
+		return GameModsResult{}, usererr.Wrap(usererr.Busy, errors.New("the game is running: close it before moving mods out of its Mods folder"))
+	}
 	slots, err := scanModsOf(game, modsDir)
 	if err != nil {
 		return GameModsResult{}, err
@@ -483,6 +496,11 @@ func (s *Store) ImportGameMods(ctx context.Context, game, modsDir string) (GameM
 			res.Failed++
 		} else {
 			res.Imported++
+			if move {
+				if err := s.removeFromGameMods(game, created.ID, slot.folder.dir); err != nil {
+					outcome.Reason = "added, but it could not be removed from the game's Mods folder: " + err.Error()
+				}
+			}
 		}
 		res.Outcomes = append(res.Outcomes, outcome)
 	}
@@ -495,7 +513,11 @@ func (s *Store) ImportGameMods(ctx context.Context, game, modsDir string) (GameM
 		res.Outcomes = []GameModOutcome{}
 	}
 	if res.Imported > 0 {
-		if res.Profile.LastChange, err = s.recordSnapshot(game, created.ID, historyImported, HistoryEvent{Change: ChangeImported}, res.Imported); err != nil {
+		kind := ChangeImported
+		if move {
+			kind = ChangeMoved
+		}
+		if res.Profile.LastChange, err = s.recordSnapshot(game, created.ID, historyImported, HistoryEvent{Change: kind}, res.Imported); err != nil {
 			return res, err
 		}
 		if err := s.RecordModsSnapshot(game, created.ID); err != nil {

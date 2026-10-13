@@ -1538,7 +1538,7 @@ msgstr "At most once a day"
 #. placeholder {0}: res.failed
 #. placeholder {0}: result.failed
 #: src/mods/GameModsReviewDialog.tsx:195
-#: src/profiles/GameModsDialog.tsx:107
+#: src/profiles/GameModsDialog.tsx:164
 msgid "{0, plural, one {# failed} other {# failed}}"
 msgstr "{0, plural, one {# failed} other {# failed}}"
 
@@ -1852,7 +1852,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/mods/ModsTab.tsx:107
 #: src/mods/typedConfig/ConfigPane.tsx:285
 #: src/mods/updateReview/updateAll.ts:65
-#: src/profiles/GameModsDialog.tsx:138
+#: src/profiles/GameModsDialog.tsx:195
 #: src/profiles/HealthDialog.tsx:245
 #: src/profiles/LaunchPreview.tsx:82
 #: src/queue/QueueBody.tsx:259
@@ -3514,6 +3514,10 @@ msgstr "And {0} more on the Nexus page"
 msgid "Neither profile has a mod that matches the filter."
 msgstr "Neither profile has a mod that matches the filter."
 
+#: src/profiles/GameModsDialog.tsx:48
+msgid "{count, plural, one {# mod will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.} other {# mods will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.}}"
+msgstr "{count, plural, one {# mod will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.} other {# mods will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.}}"
+
 #: src/browse/BrowseMenu.tsx:42
 #: src/console/StartupTable.tsx:188
 msgid "Show details"
@@ -4347,7 +4351,7 @@ msgstr "Mortar already named the likely mod for the last crash."
 #: src/mods/SelectionBarDialogs.tsx:87
 #: src/mods/SelectionBarDialogs.tsx:137
 #: src/profiles/EditProfileDialog.tsx:487
-#: src/profiles/GameModsDialog.tsx:168
+#: src/profiles/GameModsDialog.tsx:225
 #: src/profiles/ImportWizard.tsx:139
 #: src/profiles/LaunchPresetDialog.tsx:91
 #: src/profiles/MergeDialog.tsx:238
@@ -4637,7 +4641,7 @@ msgstr "Needs a CurseForge key, or the file from its page"
 #: src/mods/Toolbar.tsx:62
 #: src/mods/useListHeading.ts:19
 #: src/profiles/CompareTable.tsx:76
-#: src/profiles/GameModsDialog.tsx:39
+#: src/profiles/GameModsDialog.tsx:92
 #: src/profiles/PackImportDialog.tsx:112
 #: src/profiles/ProfilesPage.tsx:268
 #: src/profiles/ProfilesPage.tsx:277
@@ -4937,6 +4941,10 @@ msgstr "Back up to a file…"
 #: src/game/FarmMenuItem.tsx:99
 msgid "Host {0}"
 msgstr "Host {0}"
+
+#: src/profiles/GameModsDialog.tsx:53
+msgid "{count, plural, one {# mod will be copied into a new profile. The game folder is left as it is.} other {# mods will be copied into a new profile. The game folder is left as it is.}}"
+msgstr "{count, plural, one {# mod will be copied into a new profile. The game folder is left as it is.} other {# mods will be copied into a new profile. The game folder is left as it is.}}"
 
 #: src/console/LogActions.tsx:118
 msgid "Jump to previous error"
@@ -6739,7 +6747,7 @@ msgstr "Archives"
 #. placeholder {0}: res.skipped
 #. placeholder {0}: result.skipped
 #: src/mods/GameModsReviewDialog.tsx:194
-#: src/profiles/GameModsDialog.tsx:106
+#: src/profiles/GameModsDialog.tsx:163
 msgid "{0, plural, one {# skipped} other {# skipped}}"
 msgstr "{0, plural, one {# skipped} other {# skipped}}"
 
@@ -7182,7 +7190,7 @@ msgstr "{0} is installed twice, and only one of them loads."
 msgid "Decline"
 msgstr "Decline"
 
-#: src/profiles/GameModsDialog.tsx:170
+#: src/profiles/GameModsDialog.tsx:227
 msgid "Nothing to import"
 msgstr "Nothing to import"
 
@@ -7988,7 +7996,7 @@ msgid "Four Corners farm"
 msgstr "Four Corners farm"
 
 #: src/commandPalette/paletteLabels.ts:10
-#: src/profiles/GameModsDialog.tsx:176
+#: src/profiles/GameModsDialog.tsx:233
 #: src/profiles/PackImportDialog.tsx:174
 #: src/profiles/ProfileMenu.tsx:196
 #: src/profiles/ProfilesPage.tsx:337
@@ -8336,7 +8344,7 @@ msgstr "Recently played"
 #: src/bundles/dialogs.tsx:142
 #: src/game/NewProfileDialog.tsx:154
 #: src/mods/SelectionBar.tsx:46
-#: src/profiles/GameModsDialog.tsx:103
+#: src/profiles/GameModsDialog.tsx:160
 msgid "Created {name}"
 msgstr "Created {name}"
 
@@ -10254,6 +10262,10 @@ msgstr "Every Play"
 msgid "Reset game install"
 msgstr "Reset game install"
 
+#: src/profiles/GameModsDialog.tsx:69
+msgid "Move them out of the game's Mods folder"
+msgstr "Move them out of the game's Mods folder"
+
 #: src/profiles/HistoryToolbar.tsx:56
 msgid "Pick two entries ({picked} of 2)"
 msgstr "Pick two entries ({picked} of 2)"
@@ -11304,6 +11316,10 @@ msgstr "Mortar menu"
 msgid "Kept forever"
 msgstr "Kept forever"
 
+#: src/profiles/GameModsDialog.tsx:72
+msgid "If they stay there, the game goes on loading them even when a profile switches them off."
+msgstr "If they stay there, the game goes on loading them even when a profile switches them off."
+
 #. placeholder {0}: profile.name
 #: src/profiles/CompareDialog.tsx:40
 msgid "{0} is in use by the running game. Close the game to change its mods."
@@ -11546,10 +11562,6 @@ msgstr "Regenerate…"
 #: src/console/PerformancePanelParts.tsx:93
 msgid "Average ms"
 msgstr "Average ms"
-
-#: src/profiles/GameModsDialog.tsx:149
-msgid "{importable, plural, one {# mod will be copied into a new profile. The game folder is left as it is.} other {# mods will be copied into a new profile. The game folder is left as it is.}}"
-msgstr "{importable, plural, one {# mod will be copied into a new profile. The game folder is left as it is.} other {# mods will be copied into a new profile. The game folder is left as it is.}}"
 
 #: src/launch/PrePlayDialog.tsx:148
 msgid "Don't check before Play"
@@ -11940,7 +11952,7 @@ msgstr "{shared} of {total} mods"
 msgid "Could not add the bundle"
 msgstr "Could not add the bundle"
 
-#: src/profiles/GameModsDialog.tsx:143
+#: src/profiles/GameModsDialog.tsx:200
 msgid "Reading the Mods folder…"
 msgstr "Reading the Mods folder…"
 
@@ -13357,7 +13369,7 @@ msgid "Share log and continue"
 msgstr "Share log and continue"
 
 #: src/firstrun/ProfileStep.tsx:145
-#: src/profiles/GameModsDialog.tsx:130
+#: src/profiles/GameModsDialog.tsx:187
 msgid "Import from the game's Mods folder"
 msgstr "Import from the game's Mods folder"
 
@@ -13473,7 +13485,7 @@ msgstr "Could not check for mod updates"
 #. placeholder {0}: res.imported
 #. placeholder {0}: result.imported
 #: src/mods/GameModsReviewDialog.tsx:193
-#: src/profiles/GameModsDialog.tsx:105
+#: src/profiles/GameModsDialog.tsx:162
 msgid "{0, plural, one {# imported} other {# imported}}"
 msgstr "{0, plural, one {# imported} other {# imported}}"
 

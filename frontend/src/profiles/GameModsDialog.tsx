@@ -2,10 +2,12 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   Typography,
 } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -24,6 +26,57 @@ import { formatOutcomeDetail, formatPreviewRow, willImport } from './gameModsFor
 import { useProfiles } from './store.ts'
 import { useGameModsProgress } from './useGameModsProgress.ts'
 
+// What the import will do, and for a game that reads loose files from its folder the choice to move them out.
+function Plan({
+  count,
+  canMove,
+  move,
+  busy,
+  onMove,
+}: {
+  count: number
+  canMove: boolean
+  move: boolean
+  busy: boolean
+  onMove: (on: boolean) => void
+}) {
+  const { t } = useLingui()
+  return (
+    <>
+      <Typography sx={{ mb: 1.5, color: 'text.secondary' }}>
+        {canMove && move
+          ? plural(count, {
+              one: "# mod will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.",
+              other:
+                "# mods will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.",
+            })
+          : plural(count, {
+              one: '# mod will be copied into a new profile. The game folder is left as it is.',
+              other: '# mods will be copied into a new profile. The game folder is left as it is.',
+            })}
+      </Typography>
+      {canMove ? (
+        <>
+          <FormControlLabel
+            control={
+              <Checkbox
+                size="small"
+                checked={move}
+                disabled={busy}
+                onChange={(_, on) => onMove(on)}
+              />
+            }
+            label={t`Move them out of the game's Mods folder`}
+          />
+          <Typography sx={{ mb: 1.5, fontSize: 13, color: 'text.secondary' }}>
+            {t`If they stay there, the game goes on loading them even when a profile switches them off.`}
+          </Typography>
+        </>
+      ) : null}
+    </>
+  )
+}
+
 export function GameModsDialog({
   open,
   game,
@@ -39,6 +92,8 @@ export function GameModsDialog({
   const switchedOff = t`Disabled`.toLowerCase()
   const load = useProfiles((s) => s.load)
   const [mods, setMods] = useState<GameModPreview[]>([])
+  const [canMove, setCanMove] = useState(false)
+  const [move, setMove] = useState(false)
   const [error, setError] = useState<InlineError | null>(null)
   const [busy, setBusy] = useState(false)
   const [previewing, setPreviewing] = useState(false)
@@ -57,6 +112,7 @@ export function GameModsDialog({
           return
         }
         setMods(p.mods ?? [])
+        setCanMove(p.canMove === true)
         setPreviewing(false)
       })
       .catch((e: unknown) => {
@@ -73,6 +129,7 @@ export function GameModsDialog({
       live.current = false
       gen.current += 1
       setMods([])
+      setMove(false)
       setError(null)
       setBusy(false)
       setPreviewing(false)
@@ -89,7 +146,7 @@ export function GameModsDialog({
     const token = gen.current
     setBusy(true)
     try {
-      const res = await ImportGameMods(game)
+      const res = await ImportGameMods(game, canMove && move)
       if (token !== gen.current || !live.current) {
         return
       }
@@ -142,16 +199,10 @@ export function GameModsDialog({
         {error === null && previewing ? (
           <LoadingRow>{t`Reading the Mods folder…`}</LoadingRow>
         ) : null}
-        {busy ? <GameModsProgressLine progress={progress} moving={false} /> : null}
+        {busy ? <GameModsProgressLine progress={progress} moving={canMove && move} /> : null}
         {error === null && !previewing ? (
           <>
-            <Typography sx={{ mb: 1.5, color: 'text.secondary' }}>
-              {plural(importable, {
-                one: '# mod will be copied into a new profile. The game folder is left as it is.',
-                other:
-                  '# mods will be copied into a new profile. The game folder is left as it is.',
-              })}
-            </Typography>
+            <Plan count={importable} canMove={canMove} move={move} busy={busy} onMove={setMove} />
             {mods.map((m) => (
               <Typography
                 key={`${m.name}-${m.version}-${m.source}-${m.status}-${m.reason}`}
