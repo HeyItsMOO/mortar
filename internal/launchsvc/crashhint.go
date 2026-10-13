@@ -2,12 +2,12 @@ package launchsvc
 
 import (
 	"strings"
-	"unicode"
 
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
 
@@ -134,7 +134,7 @@ func (s *Service) stackBlames(gameID, profileID string) []loader.Blame {
 // dropped.
 func pickCulprit(found []loader.Finding, mods []profile.Mod) (profile.Mod, loader.Finding, bool) {
 	for _, f := range found {
-		plugin := fold(f.Plugin)
+		plugin := mod.LooseName(f.Plugin)
 		if len(plugin) < 3 {
 			continue
 		}
@@ -143,7 +143,7 @@ func pickCulprit(found []loader.Finding, mods []profile.Mod) (profile.Mod, loade
 				continue
 			}
 			for _, name := range []string{m.Name, string(m.ID), m.Key} {
-				n := fold(name)
+				n := mod.LooseName(name)
 				if len(n) >= 3 && (n == plugin || strings.Contains(n, plugin) || strings.Contains(plugin, n)) {
 					return m, f, true
 				}
@@ -151,15 +151,6 @@ func pickCulprit(found []loader.Finding, mods []profile.Mod) (profile.Mod, loade
 		}
 	}
 	return profile.Mod{}, loader.Finding{}, false
-}
-
-func fold(s string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsLetter(r) || unicode.IsDigit(r) {
-			return unicode.ToLower(r)
-		}
-		return -1
-	}, s)
 }
 
 func firstLine(s string) string {

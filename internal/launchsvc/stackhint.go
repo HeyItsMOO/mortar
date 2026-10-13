@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
 
@@ -45,12 +46,12 @@ func blameScore(b loader.Blame, m profile.Installed) int {
 		}
 		return 0
 	}
-	assembly := fold(strings.TrimSuffix(filepath.Base(m.EntryDll), filepath.Ext(m.EntryDll)))
-	last := fold(id[strings.LastIndex(id, ".")+1:])
-	name := fold(m.Name)
+	assembly := mod.LooseName(strings.TrimSuffix(filepath.Base(m.EntryDll), filepath.Ext(m.EntryDll)))
+	last := mod.LooseName(id[strings.LastIndex(id, ".")+1:])
+	name := mod.LooseName(m.Name)
 	score := 0
 	for seg := range strings.SplitSeq(b.Namespace, ".") {
-		s := fold(seg)
+		s := mod.LooseName(seg)
 		if len(s) < 4 || genericSegments[s] {
 			continue
 		}

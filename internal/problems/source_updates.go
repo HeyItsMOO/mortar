@@ -13,6 +13,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/github"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
+	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/nexus"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/source"
@@ -360,7 +361,7 @@ func sameMod(x framework.Mod, it source.Item) bool {
 	case x.SourceRepo != "" && it.Repo != "":
 		return strings.EqualFold(it.Repo, x.SourceRepo)
 	}
-	return looseName(it.Name) != "" && looseName(it.Name) == looseName(x.Name) && looseName(it.Author) != "" && looseName(it.Author) == looseName(x.Author)
+	return mod.LooseName(it.Name) != "" && mod.LooseName(it.Name) == mod.LooseName(x.Name) && mod.LooseName(it.Author) != "" && mod.LooseName(it.Author) == mod.LooseName(x.Author)
 }
 
 func coveredBy(have []Update, key, version string) bool {

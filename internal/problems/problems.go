@@ -13,7 +13,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"unicode"
 
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 
@@ -512,7 +511,7 @@ func listedRequirements(ctx context.Context, m Meta, reqs RequirementsOf, domain
 // ("JsonAssets" for Json Assets, "BusLocations" met by its continuation "BusLocations Continued"), so case, spaces and
 // punctuation are ignored, a name may carry a suffix, and the last part of the unique id counts too.
 func installedByName(all []framework.Mod, name string) bool {
-	want := looseName(name)
+	want := mod.LooseName(name)
 	if want == "" {
 		return false
 	}
@@ -520,23 +519,14 @@ func installedByName(all []framework.Mod, name string) bool {
 		if !x.Enabled {
 			return false
 		}
-		got := looseName(x.Name)
+		got := mod.LooseName(x.Name)
 		idName := x.UniqueID[strings.LastIndex(x.UniqueID, ".")+1:]
-		return got == want || (len(want) >= minNamePrefix && strings.HasPrefix(got, want)) || looseName(idName) == want
+		return got == want || (len(want) >= minNamePrefix && strings.HasPrefix(got, want)) || mod.LooseName(idName) == want
 	})
 }
 
 // minNamePrefix keeps a short requirement name ("UI", "Core") from matching every mod that starts with it.
 const minNamePrefix = 6
-
-func looseName(s string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsLetter(r) || unicode.IsDigit(r) {
-			return unicode.ToLower(r)
-		}
-		return -1
-	}, s)
-}
 
 // isLoader reports a requirement that is the game's loader, which Mortar installs itself and never as a profile entry:
 // its Nexus page, or an outside link (its own site, its releases) named as the loader, "SMAPI 4.1.6" included.
@@ -608,7 +598,7 @@ func manifestHasRequirement(all []framework.Mod, entryKey string, page meta.Page
 // manifest declares dependencies, none of them is named like the requirement, so the page lists it for a sibling
 // file of the mod rather than this one.
 func manifestOmits(all []framework.Mod, entryKey, name string) bool {
-	want := looseName(name)
+	want := mod.LooseName(name)
 	declared := false
 	for _, d := range all {
 		if !d.Enabled || !strings.EqualFold(d.Key, entryKey) {
@@ -616,7 +606,7 @@ func manifestOmits(all []framework.Mod, entryKey, name string) bool {
 		}
 		for _, dep := range d.Dependencies {
 			declared = true
-			if got := looseName(dep.UniqueID); got == want || len(want) >= minNamePrefix && strings.Contains(got, want) {
+			if got := mod.LooseName(dep.UniqueID); got == want || len(want) >= minNamePrefix && strings.Contains(got, want) {
 				return false
 			}
 		}

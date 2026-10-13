@@ -144,7 +144,7 @@ func dropCovered(rows, reported []Missing) []Missing {
 			name := e.ID.Local()
 			_, short, _ := strings.Cut(name, "-")
 			last := guid[strings.LastIndex(guid, ".")+1:]
-			return mod.Equal(e.ID, d.ID) || looseName(name) == looseName(guid) || looseName(short) == looseName(last)
+			return mod.Equal(e.ID, d.ID) || mod.LooseName(name) == mod.LooseName(guid) || mod.LooseName(short) == mod.LooseName(last)
 		})
 	})
 }

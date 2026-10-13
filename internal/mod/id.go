@@ -1,7 +1,10 @@
 // Package mod identifies mods across games: an ID names a mod by the format that defines it and the id that format uses.
 package mod
 
-import "strings"
+import (
+	"strings"
+	"unicode"
+)
 
 // Mod formats. SMAPI is the only one with a reader today.
 const (
@@ -80,4 +83,15 @@ func Locals(ids []ID) []string {
 		out[i] = id.Local()
 	}
 	return out
+}
+
+// LooseName keeps only s's letters and digits, lower-cased, so two names that differ in case, spacing or punctuation
+// compare equal.
+func LooseName(s string) string {
+	return strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			return unicode.ToLower(r)
+		}
+		return -1
+	}, s)
 }

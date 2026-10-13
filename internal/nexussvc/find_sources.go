@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"unicode"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
@@ -280,21 +279,12 @@ func publishesInstalled(p meta.Page, mods []profile.Component) bool {
 // writtenBy matches names loosely, since a manifest's author is free text ("A, B (original author)") and a page's
 // is an account name.
 func writtenBy(p meta.Page, mods []profile.Component) bool {
-	page := lettersOf(p.Author)
+	page := mod.LooseName(p.Author)
 	if page == "" {
 		return false
 	}
 	return slices.ContainsFunc(mods, func(m profile.Component) bool {
-		author := lettersOf(m.Author)
+		author := mod.LooseName(m.Author)
 		return author != "" && (strings.Contains(author, page) || strings.Contains(page, author))
 	})
-}
-
-func lettersOf(s string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsLetter(r) || unicode.IsDigit(r) {
-			return unicode.ToLower(r)
-		}
-		return -1
-	}, s)
 }

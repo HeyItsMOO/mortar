@@ -12,6 +12,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/crashdump"
 	"github.com/Rethunk-Tech/mortar/internal/game"
+	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
 
@@ -84,7 +85,7 @@ const (
 // classifyFault says whose code a faulting module is: an enabled mod's assembly (its EntryDll, or a DLL or shared
 // library of that name in its folder), the game's own executable, Unity or Mono.
 func classifyFault(module string, exes []string, mods []profile.Installed) (faultKind, profile.Installed) {
-	name := fold(strings.TrimSuffix(module, filepath.Ext(module)))
+	name := mod.LooseName(strings.TrimSuffix(module, filepath.Ext(module)))
 	if name == "" {
 		return faultUnknown, profile.Installed{}
 	}
@@ -94,7 +95,7 @@ func classifyFault(module string, exes []string, mods []profile.Installed) (faul
 		}
 	}
 	for _, exe := range exes {
-		if fold(strings.TrimSuffix(exe, filepath.Ext(exe))) == name {
+		if mod.LooseName(strings.TrimSuffix(exe, filepath.Ext(exe))) == name {
 			return faultGame, profile.Installed{}
 		}
 	}
