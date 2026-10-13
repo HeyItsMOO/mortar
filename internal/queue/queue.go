@@ -447,6 +447,7 @@ func Run(ctx context.Context, s *Service, assigned <-chan nxmsvc.Assignment) (wa
 				r := Request{
 					Kind: KindInstall, Game: a.Game, Profile: a.Profile, ModID: a.Link.ModID, FileID: a.Link.FileID,
 					key: a.Link.Key, expires: a.Link.Expires, Package: a.Package, Version: a.Version,
+					Source: a.Source, PackageFile: a.File,
 				}
 				items, err := s.add(ctx, []Request{r})
 				if err != nil {

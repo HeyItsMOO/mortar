@@ -159,8 +159,8 @@ func nameParam(a []string, _ *cmd) (control.Params, error) { return control.Para
 
 // linkParams: links are toggled per source that has a link scheme.
 func linkParams(_ []string, c *cmd) (control.Params, error) {
-	if c.sourceFlag != "nexus" && c.sourceFlag != "thunderstore" {
-		return control.Params{}, usageError{"links " + c.args[1] + " needs --source nexus or thunderstore"}
+	if !slices.Contains([]string{"nexus", "thunderstore", "curseforge"}, c.sourceFlag) {
+		return control.Params{}, usageError{"links " + c.args[1] + " needs --source nexus, thunderstore or curseforge"}
 	}
 	return control.Params{Source: c.sourceFlag}, nil
 }

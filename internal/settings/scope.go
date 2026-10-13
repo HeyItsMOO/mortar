@@ -25,6 +25,7 @@ const (
 // name, or "name=local" when the key is stored in the source's block under a shorter local name.
 var sourceFields = map[string][]string{
 	"thunderstore": {"thunderstoreHandleLinks=handleLinks"},
+	"curseforge":   {"curseforgeHandleLinks=handleLinks"},
 	"itch":         {"itchName=name"},
 	"nexus": {
 		"nexusUserId=userId", "nexusName=name", "nexusPremium=premium",

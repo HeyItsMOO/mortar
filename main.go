@@ -1346,5 +1346,8 @@ func applyLinkChoices(s settings.Settings) {
 	if s.ThunderstoreHandleLinks != nil {
 		choice["thunderstore"] = *s.ThunderstoreHandleLinks
 	}
+	if s.CurseForgeHandleLinks != nil {
+		choice["curseforge"] = *s.CurseForgeHandleLinks
+	}
 	source.SetHandleLinks(choice)
 }

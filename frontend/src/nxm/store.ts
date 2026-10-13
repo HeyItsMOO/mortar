@@ -62,7 +62,7 @@ async function install(arrival: Arrival, profile: Profile) {
     await Assign(arrival.id, arrivalGame(arrival, openGame()), profile.id)
   } catch (e) {
     // Nothing downloads, so the prompt keeps the link for another profile to take.
-    toastError(i18n._(msg`Could not start the Nexus download`), e)
+    toastError(i18n._(msg`Could not start the download`), e)
     useNxm.getState().add(arrival)
     return
   }
@@ -78,8 +78,23 @@ async function install(arrival: Arrival, profile: Profile) {
 const arrivalGame = (a: Arrival, open?: string): string =>
   a.link.game || (open && a.games?.includes(open) ? open : (a.games?.[0] ?? ''))
 
+// The site a link came from, by its own name.
+const arrivalSite = (a: Arrival): string => {
+  if (a.source === 'curseforge') {
+    return 'CurseForge'
+  }
+  return a.package ? 'Thunderstore' : 'Nexus'
+}
+
+// What a package arrival is called: a Thunderstore id names the package; a CurseForge link carries only a project
+// number, so its name is the one Mortar read from the site, when it could.
+const packageName = (a: Arrival): string => {
+  const id = a.package ?? ''
+  return a.source === 'curseforge' ? a.name || i18n._(msg`CurseForge mod ${id}`) : id
+}
+
 const arrivalName = (a: Arrival): Promise<string> =>
-  a.package ? Promise.resolve(a.package) : modName(a.link.game, a.link.modId)
+  a.package ? Promise.resolve(packageName(a)) : modName(a.link.game, a.link.modId)
 
 const fallbackName = (modId: number) => i18n._(msg`Nexus mod ${{ id: modId }}`)
 
@@ -128,7 +143,7 @@ async function initNxm(): Promise<void> {
       seen.add(r.id)
       useToasts.getState().push({
         kind: 'error',
-        title: i18n._(msg`Nexus link not used`),
+        title: i18n._(msg`Mod link not used`),
         body: rejectionText(r.reason),
         action: logAction(),
       })
@@ -170,4 +185,4 @@ async function initNxm(): Promise<void> {
   }
 }
 
-export { arrivalGame, arrivalName, fallbackName, initNxm, useNxm }
+export { arrivalGame, arrivalName, arrivalSite, fallbackName, initNxm, packageName, useNxm }

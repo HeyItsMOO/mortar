@@ -1,6 +1,7 @@
 package nxmsvc
 
 import (
+	"context"
 	"errors"
 	"slices"
 	"strings"
@@ -9,9 +10,11 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/testenv/testfs"
 
+	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/nxm"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/source"
+	"github.com/Rethunk-Tech/mortar/internal/source/curseforge"
 )
 
 type fakeHandler struct {
@@ -276,13 +279,21 @@ func TestOptInSourceLinksAreEnabledAndReleasedPerSource(t *testing.T) {
 	h := &fakeHandler{owner: nxm.Owner{ID: "other.desktop", Name: "Other"}}
 	s := newService(t, h)
 	t.Cleanup(func() { source.SetHandleLink("thunderstore", false) })
-	if got := s.LinkSources(); len(got) != 1 || got[0].ID != "thunderstore" || got[0].Scheme != "ror2mm" || got[0].Handled {
+	thunderstoreLinks := func() LinkSource {
+		got := s.LinkSources()
+		i := slices.IndexFunc(got, func(l LinkSource) bool { return l.ID == "thunderstore" })
+		if i < 0 {
+			t.Fatalf("no Thunderstore link source in %+v", got)
+		}
+		return got[i]
+	}
+	if got := thunderstoreLinks(); got.Scheme != "ror2mm" || got.Handled {
 		t.Fatalf("link sources before enabling: %+v", got)
 	}
 	if err := s.EnableSource("thunderstore"); err != nil {
 		t.Fatal(err)
 	}
-	if got := s.LinkSources(); !got[0].Handled {
+	if got := thunderstoreLinks(); !got.Handled {
 		t.Fatalf("link sources after enabling: %+v", got)
 	}
 	got := s.store.Get()
@@ -369,5 +380,50 @@ func TestDisableKeepsAnotherClaimedSchemeRegistered(t *testing.T) {
 	}
 	if got := h.registry[len(h.registry)-1]; got != "release:nxm" {
 		t.Fatalf("registry calls %q", h.registry)
+	}
+}
+
+func TestACurseForgeLinkWaitsForItsOwnGameAndAnotherGamesGoesBack(t *testing.T) {
+	var stardew int
+	for _, g := range game.Catalog() {
+		for _, src := range g.Sources {
+			if g.ID == "stardew" && src.ID == "curseforge" {
+				stardew = src.GameID
+			}
+		}
+	}
+	if stardew == 0 {
+		t.Fatal("the catalog gives Stardew Valley no CurseForge game id")
+	}
+	h := &fakeHandler{}
+	s := newService(t, h)
+	if _, err := s.store.Update(func(v *settings.Settings) {
+		v.NxmPreviousHandlers = map[string]string{"curseforge": "curseforge.desktop"}
+	}); err != nil {
+		t.Fatal(err)
+	}
+	ref, err := curseforge.ParseLink("curseforge://install?addonId=309243&fileId=555")
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.CurseForgeProject = func(context.Context, int) (string, int, error) { return "Content Patcher", stardew, nil }
+	s.receiveCurseForge("curseforge://install?addonId=309243&fileId=555", ref)
+	in := s.Inbox()
+	if len(in.Arrivals) != 1 || in.Arrivals[0].Name != "Content Patcher" || !slices.Equal(in.Arrivals[0].Games, []string{"stardew"}) {
+		t.Fatalf("inbox %+v", in)
+	}
+	if err := s.Assign(in.Arrivals[0].ID, "stardew", "p1"); err != nil {
+		t.Fatal(err)
+	}
+	if got := <-s.Assigned; got.Source != "curseforge" || got.Package != "309243" || got.File != 555 {
+		t.Fatalf("assigned %+v", got)
+	}
+	s.CurseForgeProject = func(context.Context, int) (string, int, error) { return "A WoW addon", 1, nil }
+	s.receiveCurseForge("curseforge://install?addonId=7&fileId=8", curseforge.Ref{Project: 7, File: 8})
+	if in := s.Inbox(); len(in.Arrivals) != 0 || len(in.Rejections) != 0 {
+		t.Fatalf("another game's link stayed in the inbox: %+v", in)
+	}
+	if want := "forward:curseforge.desktop:curseforge://install?addonId=7&fileId=8"; !slices.Contains(h.registry, want) {
+		t.Fatalf("another game's link was not handed back: %v", h.registry)
 	}
 }

@@ -168,6 +168,7 @@ const maxWindow = 10000
 type modResp struct {
 	ID                   int    `json:"id"`
 	Name                 string `json:"name"`
+	GameID               int    `json:"gameId"`
 	Summary              string `json:"summary"`
 	DownloadCount        int    `json:"downloadCount"`
 	ThumbsUpCount        int    `json:"thumbsUpCount"`

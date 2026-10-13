@@ -16,7 +16,9 @@ import { useSettings } from '../store.ts'
 export function NxmReclaim() {
   const { t } = useLingui()
   const nexus = useSettings((s) => s.nxmHandled)
-  const thunderstore = useSettings((s) => s.thunderstoreHandleLinks === true)
+  const thunderstore = useSettings(
+    (s) => s.thunderstoreHandleLinks === true || s.curseforgeHandleLinks === true,
+  )
   const [taken, setTaken] = useState<Takeover[]>([])
   useEffect(() => {
     if (!(nexus || thunderstore)) {
@@ -32,11 +34,14 @@ export function NxmReclaim() {
     return () => globalThis.removeEventListener('focus', check)
   }, [nexus, thunderstore])
   const fail = (e: unknown) => toastError(t`Could not change how mod links open`, e)
-  const lines = taken.map(({ source, name }) =>
-    source === 'nexus'
-      ? t`${name} now opens Nexus "Mod Manager Download" links.`
-      : t`${name} now opens Thunderstore "Install with Mod Manager" links.`,
-  )
+  const lines = taken.map(({ source, name }) => {
+    if (source === 'nexus') {
+      return t`${name} now opens Nexus "Mod Manager Download" links.`
+    }
+    return source === 'curseforge'
+      ? t`${name} now opens CurseForge "Install" links.`
+      : t`${name} now opens Thunderstore "Install with Mod Manager" links.`
+  })
   const names = listNames([...new Set(taken.map((x) => x.name))])
   return (
     <ConfirmDialog

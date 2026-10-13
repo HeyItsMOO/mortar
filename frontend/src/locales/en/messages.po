@@ -760,7 +760,7 @@ msgstr "All profiles"
 msgid "Mods in this profile"
 msgstr "Mods in this profile"
 
-#: src/nxm/ArrivalDialog.tsx:135
+#: src/nxm/ArrivalDialog.tsx:142
 msgid "Apply this profile to all waiting"
 msgstr "Apply this profile to all waiting"
 
@@ -769,7 +769,7 @@ msgstr "Apply this profile to all waiting"
 msgid "Open"
 msgstr "Open"
 
-#: src/nxm/ArrivalDialog.tsx:90
+#: src/nxm/ArrivalDialog.tsx:97
 msgid "You started this download on {site}. Create a profile to put it in first."
 msgstr "You started this download on {site}. Create a profile to put it in first."
 
@@ -998,7 +998,7 @@ msgstr "gone"
 #. placeholder {1}: formatKb(file.sizeKb)
 #: src/console/SearchRunsDialog.tsx:137
 #: src/mods/ConflictWhy.tsx:99
-#: src/nxm/ArrivalDialog.tsx:107
+#: src/nxm/ArrivalDialog.tsx:114
 #: src/profiles/CompareTop.tsx:85
 #: src/saves/BackupsDialog.tsx:72
 msgid "{0} · {1}"
@@ -1359,7 +1359,7 @@ msgstr "Scheduled"
 msgid "Mod Manager Download on Nexus Mods only works in Mortar when you are signed in."
 msgstr "Mod Manager Download on Nexus Mods only works in Mortar when you are signed in."
 
-#: src/settings/sections/NxmReclaim.tsx:45
+#: src/settings/sections/NxmReclaim.tsx:50
 msgid "Take them back for Mortar?"
 msgstr "Take them back for Mortar?"
 
@@ -1508,7 +1508,7 @@ msgstr "Notify when updates are found"
 msgid "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
 msgstr "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
 
-#: src/settings/store.ts:131
+#: src/settings/store.ts:132
 msgid "Your settings could not be read"
 msgstr "Your settings could not be read"
 
@@ -2098,7 +2098,7 @@ msgstr "Launch presets"
 msgid "{pickedName} is used after Save."
 msgstr "{pickedName} is used after Save."
 
-#: src/settings/sections/NxmReclaim.tsx:37
+#: src/settings/sections/NxmReclaim.tsx:39
 msgid "{name} now opens Nexus \"Mod Manager Download\" links."
 msgstr "{name} now opens Nexus \"Mod Manager Download\" links."
 
@@ -2550,7 +2550,7 @@ msgstr "Dependency cycle"
 #: src/commandPalette/paletteLabels.ts:16
 #: src/firstrun/ProfileStep.tsx:194
 #: src/game/NewProfileDialog.tsx:208
-#: src/nxm/ArrivalDialog.tsx:160
+#: src/nxm/ArrivalDialog.tsx:167
 #: src/share/ImportFooter.tsx:38
 msgid "New profile"
 msgstr "New profile"
@@ -2827,10 +2827,6 @@ msgstr "{0, plural, one {# mod needs this} other {# mods need this}}: {1}"
 msgid "{0, plural, one {Replaces # file · adds {added}} other {Replaces # files · adds {added}}}"
 msgstr "{0, plural, one {Replaces # file · adds {added}} other {Replaces # files · adds {added}}}"
 
-#: src/nxm/store.ts:65
-msgid "Could not start the Nexus download"
-msgstr "Could not start the Nexus download"
-
 #: src/settings/prefCopy.ts:295
 msgid "Scan the mods folder for changes Mortar did not make"
 msgstr "Scan the mods folder for changes Mortar did not make"
@@ -3012,7 +3008,7 @@ msgstr "No enabled mods"
 msgid "Cleanup"
 msgstr "Cleanup"
 
-#: src/settings/sections/NxmReclaim.tsx:38
+#: src/settings/sections/NxmReclaim.tsx:43
 msgid "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 msgstr "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 
@@ -3026,7 +3022,7 @@ msgid "Change shortcut for {label}, currently {shown}"
 msgstr "Change shortcut for {label}, currently {shown}"
 
 #. placeholder {0}: open.name
-#: src/nxm/ArrivalDialog.tsx:155
+#: src/nxm/ArrivalDialog.tsx:162
 msgid "Install into {0}"
 msgstr "Install into {0}"
 
@@ -3119,7 +3115,7 @@ msgid "Last played with {profile}"
 msgstr "Last played with {profile}"
 
 #. placeholder {0}: arrivals.length - 1
-#: src/nxm/ArrivalDialog.tsx:112
+#: src/nxm/ArrivalDialog.tsx:119
 msgid "{0} more waiting"
 msgstr "{0} more waiting"
 
@@ -4178,7 +4174,7 @@ msgstr "The game started without errors"
 msgid "Hidden"
 msgstr "Hidden"
 
-#: src/nxm/store.ts:153
+#: src/nxm/store.ts:168
 msgid "Mortar · Install {name}?"
 msgstr "Mortar · Install {name}?"
 
@@ -4873,7 +4869,7 @@ msgstr "Folder chosen by you"
 msgid "Choose a profile…"
 msgstr "Choose a profile…"
 
-#: src/nxm/ArrivalDialog.tsx:91
+#: src/nxm/ArrivalDialog.tsx:98
 msgid "You started this download on {site}, but you have no {gameName} profile yet."
 msgstr "You started this download on {site}, but you have no {gameName} profile yet."
 
@@ -5511,7 +5507,7 @@ msgstr "Filter by level or mod, and use Save log or Copy log to pass this run on
 msgid "Later"
 msgstr "Later"
 
-#: src/nxm/ArrivalDialog.tsx:85
+#: src/nxm/ArrivalDialog.tsx:92
 msgid "You started this download on {site}. Choose the profile it goes into."
 msgstr "You started this download on {site}. Choose the profile it goes into."
 
@@ -5554,6 +5550,10 @@ msgstr "Downloads"
 #: src/profiles/LaunchPresetsBlock.tsx:140
 msgid "The fields above are the Standard preset. Play uses the default preset; the Play menu can launch with another one once. Templates are game-wide and copied in."
 msgstr "The fields above are the Standard preset. Play uses the default preset; the Play menu can launch with another one once. Templates are game-wide and copied in."
+
+#: src/settings/sections/NxmReclaim.tsx:42
+msgid "{name} now opens CurseForge \"Install\" links."
+msgstr "{name} now opens CurseForge \"Install\" links."
 
 #: src/mods/ModUpdateControls.tsx:18
 msgid "Beta / prerelease"
@@ -5878,7 +5878,7 @@ msgstr "Uploading…"
 msgid "Changed profile settings"
 msgstr "Changed profile settings"
 
-#: src/nxm/ArrivalDialog.tsx:141
+#: src/nxm/ArrivalDialog.tsx:148
 msgid "Ignore"
 msgstr "Ignore"
 
@@ -5938,7 +5938,7 @@ msgstr "Start minimised to tray"
 msgid "{0, plural, one {# change} other {# changes}}"
 msgstr "{0, plural, one {# change} other {# changes}}"
 
-#: src/nxm/store.ts:155
+#: src/nxm/store.ts:170
 msgid "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 msgstr "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 
@@ -5993,7 +5993,7 @@ msgstr "Could not start measuring"
 msgid "Rose"
 msgstr "Rose"
 
-#: src/settings/sections/NxmReclaim.tsx:44
+#: src/settings/sections/NxmReclaim.tsx:49
 msgid "{names} took over mod links"
 msgstr "{names} took over mod links"
 
@@ -6148,6 +6148,10 @@ msgstr "Import a shared profile…"
 #: src/settings/startupChecks.ts:35
 msgid "Mortar closed unexpectedly last time"
 msgstr "Mortar closed unexpectedly last time"
+
+#: src/nxm/store.ts:65
+msgid "Could not start the download"
+msgstr "Could not start the download"
 
 #. placeholder {0}: formatBytes(usage.sharedSaved)
 #: src/settings/sections/DataUsage.tsx:148
@@ -6816,7 +6820,7 @@ msgstr "There is not enough free space at the destination."
 msgid "A multiplayer host's list…"
 msgstr "A multiplayer host's list…"
 
-#: src/settings/store.ts:133
+#: src/settings/store.ts:134
 msgid "Mortar started with default settings. The damaged file was kept at {path}."
 msgstr "Mortar started with default settings. The damaged file was kept at {path}."
 
@@ -8349,7 +8353,7 @@ msgstr "Could not skip the update for {0}"
 msgid "Plugins load"
 msgstr "Plugins load"
 
-#: src/nxm/store.ts:84
+#: src/nxm/store.ts:99
 #: src/queue/totals.ts:121
 #: src/settings/sections/DataStoreReport.tsx:124
 #: src/share/arrivals.ts:55
@@ -8917,7 +8921,7 @@ msgstr "Could not show the skipped update for {0}"
 msgid "Share switched-off mods"
 msgstr "Share switched-off mods"
 
-#: src/settings/sections/NxmReclaim.tsx:47
+#: src/settings/sections/NxmReclaim.tsx:52
 msgid "Take back"
 msgstr "Take back"
 
@@ -8969,7 +8973,7 @@ msgstr "Could not remove from the group"
 msgid "This session"
 msgstr "This session"
 
-#: src/nxm/ArrivalDialog.tsx:150
+#: src/nxm/ArrivalDialog.tsx:157
 msgid "Other profile…"
 msgstr "Other profile…"
 
@@ -9120,10 +9124,6 @@ msgstr "These mods require each other."
 #: src/mods/useListHeading.ts:12
 msgid "Untagged"
 msgstr "Untagged"
-
-#: src/nxm/store.ts:131
-msgid "Nexus link not used"
-msgstr "Nexus link not used"
 
 #: src/shell/offlineText.ts:38
 msgid "nothing saved yet from {name}"
@@ -10361,7 +10361,7 @@ msgstr "Retry all failed"
 msgid "Add it"
 msgstr "Add it"
 
-#: src/settings/sections/NxmReclaim.tsx:34
+#: src/settings/sections/NxmReclaim.tsx:36
 msgid "Could not change how mod links open"
 msgstr "Could not change how mod links open"
 
@@ -11109,7 +11109,7 @@ msgstr "Overrides"
 msgid "Import…"
 msgstr "Import…"
 
-#: src/nxm/ArrivalDialog.tsx:103
+#: src/nxm/ArrivalDialog.tsx:110
 msgid "Install {name}?"
 msgstr "Install {name}?"
 
@@ -11270,7 +11270,7 @@ msgstr "Bottles"
 msgid "Hourly count resets {0} · daily count resets {1}"
 msgstr "Hourly count resets {0} · daily count resets {1}"
 
-#: src/settings/store.ts:136
+#: src/settings/store.ts:137
 #: src/share/MethodPanes.tsx:235
 #: src/shell/saveDiagnostics.ts:27
 msgid "Show file"
@@ -11300,6 +11300,10 @@ msgstr "Kept forever"
 #: src/profiles/CompareDialog.tsx:40
 msgid "{0} is in use by the running game. Close the game to change its mods."
 msgstr "{0} is in use by the running game. Close the game to change its mods."
+
+#: src/nxm/store.ts:146
+msgid "Mod link not used"
+msgstr "Mod link not used"
 
 #: src/share/IncludeOptions.tsx:23
 msgid "Only a paired computer gets it."
@@ -12028,6 +12032,10 @@ msgstr "Automatic port"
 #: src/settings/sections/StreamOverlay.tsx:80
 msgid "Health"
 msgstr "Health"
+
+#: src/nxm/store.ts:93
+msgid "CurseForge mod {id}"
+msgstr "CurseForge mod {id}"
 
 #: src/bundles/BundlesSection.tsx:101
 msgid "Could not rename the bundle"
@@ -13017,7 +13025,7 @@ msgstr "{0} was installed from another site. Updating installs {1} from {2} inst
 msgid "Nexus Mods"
 msgstr "Nexus Mods"
 
-#: src/settings/sections/NxmReclaim.tsx:46
+#: src/settings/sections/NxmReclaim.tsx:51
 msgid "Leave them"
 msgstr "Leave them"
 
@@ -13294,7 +13302,7 @@ msgstr "Mortar tidied up {0, plural, one {# thing} other {# things}}"
 msgid "Show adult mods in browse"
 msgstr "Show adult mods in browse"
 
-#: src/nxm/ArrivalDialog.tsx:87
+#: src/nxm/ArrivalDialog.tsx:94
 msgid "Loading profiles…"
 msgstr "Loading profiles…"
 

@@ -26,13 +26,20 @@ import { LoadingRow } from '../shell/LoadingRow.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { useLoaded } from '../shell/useLoaded.ts'
 import { type InlineError, inlineError, reportUnexpected } from '../toasts/report.ts'
-import { arrivalGame, arrivalName, fallbackName, useNxm } from './store.ts'
+import {
+  arrivalGame,
+  arrivalName,
+  arrivalSite,
+  fallbackName,
+  packageName,
+  useNxm,
+} from './store.ts'
 
 function useModName(arrival: Arrival): string {
   const { data: name } = useLoaded(
     () => arrivalName(arrival),
     [arrival],
-    arrival.package || fallbackName(arrival.link.modId),
+    packageName(arrival) || fallbackName(arrival.link.modId),
     reportUnexpected,
   )
   return name
@@ -42,7 +49,7 @@ function ArrivalPrompt({ arrival }: { arrival: Arrival }) {
   const { t } = useLingui()
   const openGameId = useProfiles((s) => s.game?.id)
   const game = arrivalGame(arrival, openGameId)
-  const site = arrival.package ? 'Thunderstore' : 'Nexus'
+  const site = arrivalSite(arrival)
   const choose = useNxm((s) => s.choose)
   const arrivals = useNxm((s) => s.arrivals)
   const dismiss = useNxm((s) => s.dismiss)

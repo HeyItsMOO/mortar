@@ -27,6 +27,7 @@ const defaults: Settings = {
   loaders: {},
   dismissed: {},
   thunderstoreHandleLinks: null,
+  curseforgeHandleLinks: null,
   nexusUserId: 0,
   nexusName: '',
   itchName: '',

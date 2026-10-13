@@ -2,6 +2,7 @@
 package nxmsvc
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -19,6 +20,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/source"
 	_ "github.com/Rethunk-Tech/mortar/internal/source/all"
+	"github.com/Rethunk-Tech/mortar/internal/source/curseforge"
 	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
 	"github.com/Rethunk-Tech/mortar/internal/winhost"
 )
@@ -36,7 +38,13 @@ type Arrival struct {
 	// Package and Version name the Thunderstore package of a ror2mm link, whose Link is empty.
 	Package string `json:"package,omitempty"`
 	Version string `json:"version,omitempty"`
-	// Games are the games with a Thunderstore community: the link names none, so the window picks from these.
+	// Source is the site of a Package other than Thunderstore ("curseforge"), where Package is the project id and
+	// File the file the link names.
+	Source string `json:"source,omitempty"`
+	File   int    `json:"file,omitempty"`
+	// Name is the project's name on its site, when a Source link's project could be read.
+	Name string `json:"name,omitempty"`
+	// Games are the games the package's site serves: the link names none, so the window picks from these.
 	Games []string `json:"games,omitempty"`
 }
 
@@ -57,6 +65,8 @@ type Assignment struct {
 	Link    nxm.Link `json:"link"`
 	Package string   `json:"package,omitempty"`
 	Version string   `json:"version,omitempty"`
+	Source  string   `json:"source,omitempty"`
+	File    int      `json:"file,omitempty"`
 	Game    string   `json:"game"`
 	Profile string   `json:"profile"`
 }
@@ -75,6 +85,8 @@ type Service struct {
 	now     func() time.Time
 	// App is set after application.New so arrivals can reach the window.
 	App winhost.Host
+	// CurseForgeProject reads a project's name and the site's game id; nil asks CurseForge.
+	CurseForgeProject func(ctx context.Context, id int) (name string, gameID int, err error)
 	// Assigned carries links the user matched to a profile.
 	Assigned chan Assignment
 	// Route is offered every accepted link first and reports whether the download queue was waiting for it; nil
@@ -90,8 +102,11 @@ type Service struct {
 }
 
 func NewService(store *settings.Store, handler nxm.Handler) *Service {
-	if on := store.Get().ThunderstoreHandleLinks; on != nil {
-		source.SetHandleLink("thunderstore", *on)
+	cur := store.Get()
+	for _, id := range optInSources {
+		if on := *handleLinksOf(&cur, id); on != nil {
+			source.SetHandleLink(id, *on)
+		}
 	}
 	return &Service{store: store, handler: handler, now: time.Now, Assigned: make(chan Assignment, assignedBuffer)}
 }
@@ -135,11 +150,15 @@ func (s *Service) Receive(args []string) bool {
 		if ref, err := thunderstore.ParseLink(arg); err == nil {
 			s.mu.Lock()
 			s.nextID++
-			a := Arrival{ID: s.nextID, Package: ref.Namespace + "-" + ref.Name, Version: ref.Version, Games: thunderstoreGames()}
+			a := Arrival{ID: s.nextID, Package: ref.Namespace + "-" + ref.Name, Version: ref.Version, Games: gamesWith("thunderstore")}
 			log.Printf("nxm: link %d arrived: package %s", a.ID, a.Package)
 			s.arrivals = append(s.arrivals, a)
 			s.mu.Unlock()
 			s.emit(ArrivedEvent, a)
+			continue
+		}
+		if ref, err := curseforge.ParseLink(arg); err == nil {
+			go s.receiveCurseForge(arg, ref)
 			continue
 		}
 		if domain, gerr := nxm.LinkGame(arg); gerr == nil && !isMortarGame(domain) {
@@ -181,10 +200,68 @@ func (s *Service) Receive(args []string) bool {
 	return found
 }
 
-func thunderstoreGames() []string {
+// curseforgeLookup bounds the wait for the project a link names.
+const curseforgeLookup = 10 * time.Second
+
+// receiveCurseForge asks the site which game the link's project is for, since the link names none. A project of a
+// game Mortar does not manage goes back to the app that had these links; when the site cannot be asked, the link
+// waits for any game CurseForge serves.
+func (s *Service) receiveCurseForge(raw string, ref curseforge.Ref) {
+	project := s.CurseForgeProject
+	if project == nil {
+		project = curseforge.Driver{}.Project
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), curseforgeLookup)
+	name, gameID, err := project(ctx, ref.Project)
+	cancel()
+	games := gamesWith("curseforge")
+	if err != nil {
+		log.Printf("nxm: curseforge project %d not read: %v", ref.Project, err)
+	} else {
+		games = nil
+		for _, g := range game.Catalog() {
+			if slices.ContainsFunc(g.Sources, func(src components.GameSource) bool {
+				return src.ID == "curseforge" && src.GameID == gameID
+			}) {
+				games = append(games, g.ID)
+			}
+		}
+	}
+	s.mu.Lock()
+	s.nextID++
+	id := s.nextID
+	s.mu.Unlock()
+	if len(games) == 0 {
+		if previous := s.store.Get().NxmPreviousHandlers[linkScheme(raw)]; previous != "" {
+			if err := s.handler.ForwardOther(raw, previous); err == nil {
+				log.Printf("nxm: curseforge project %d forwarded to the previous handler", ref.Project)
+				return
+			} else {
+				log.Printf("nxm: forward curseforge project %d: %v", ref.Project, err)
+			}
+		}
+		s.forget(raw)
+		r := Rejection{ID: id, Reason: nxm.ReasonGame}
+		log.Printf("nxm: link %d rejected: %s", id, r.Reason)
+		s.mu.Lock()
+		s.rejections = append(s.rejections, r)
+		s.mu.Unlock()
+		s.emit(RejectedEvent, r)
+		return
+	}
+	a := Arrival{ID: id, Source: "curseforge", Package: strconv.Itoa(ref.Project), Name: name, File: ref.File, Games: games}
+	log.Printf("nxm: link %d arrived: curseforge project %s file %d", a.ID, a.Package, a.File)
+	s.mu.Lock()
+	s.arrivals = append(s.arrivals, a)
+	s.mu.Unlock()
+	s.emit(ArrivedEvent, a)
+}
+
+// gamesWith lists the games the source serves.
+func gamesWith(sourceID string) []string {
 	var out []string
 	for _, g := range game.Catalog() {
-		if slices.ContainsFunc(g.Sources, func(src components.GameSource) bool { return src.ID == "thunderstore" }) {
+		if slices.ContainsFunc(g.Sources, func(src components.GameSource) bool { return src.ID == sourceID }) {
 			out = append(out, g.ID)
 		}
 	}
@@ -260,7 +337,10 @@ func (s *Service) Assign(id int, game, profile string) error {
 		return fmt.Errorf("link %d is no longer waiting", id)
 	}
 	select {
-	case s.Assigned <- Assignment{Link: s.arrivals[i].Link, Package: s.arrivals[i].Package, Version: s.arrivals[i].Version, Game: game, Profile: profile}:
+	case s.Assigned <- Assignment{
+		Link: s.arrivals[i].Link, Package: s.arrivals[i].Package, Version: s.arrivals[i].Version,
+		Source: s.arrivals[i].Source, File: s.arrivals[i].File, Game: game, Profile: profile,
+	}:
 		log.Printf("nxm: link %d assigned to profile %s", id, profile)
 		s.arrivals = slices.Delete(s.arrivals, i, i+1)
 		return nil
@@ -429,12 +509,22 @@ func ClaimLinks(store *settings.Store, handler nxm.Handler, id string) error {
 	})
 }
 
-// hasOptInSetting says whether the source's choice is stored; only Thunderstore's is.
-func hasOptInSetting(id string) bool { return id == "thunderstore" }
+// optInSources are the sources whose link choice is stored.
+var optInSources = []string{"thunderstore", "curseforge"}
+
+func hasOptInSetting(id string) bool { return slices.Contains(optInSources, id) }
+
+// handleLinksOf is the stored link choice of an opt-in source.
+func handleLinksOf(v *settings.Settings, id string) **bool {
+	if id == "curseforge" {
+		return &v.CurseForgeHandleLinks
+	}
+	return &v.ThunderstoreHandleLinks
+}
 
 func setHandleLinks(v *settings.Settings, id string, on bool) {
-	if id == "thunderstore" {
-		v.ThunderstoreHandleLinks = &on
+	if hasOptInSetting(id) {
+		*handleLinksOf(v, id) = &on
 	}
 }
 
@@ -493,8 +583,10 @@ func claimed(v settings.Settings) map[string][]string {
 	if v.NxmHandled {
 		out["nexus"] = []string{nxmScheme}
 	}
-	if on := v.ThunderstoreHandleLinks; on != nil && *on {
-		out["thunderstore"] = source.SchemesOf("thunderstore")
+	for _, id := range optInSources {
+		if on := *handleLinksOf(&v, id); on != nil && *on {
+			out[id] = source.SchemesOf(id)
+		}
 	}
 	return out
 }
