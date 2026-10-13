@@ -91,6 +91,8 @@ function FindSourcesButton() {
     <LockedReason locked={locked}>
       <Button
         size="small"
+        // The list gives every group header one fixed height, which a small button's own padding overflows.
+        sx={{ height: 20, minHeight: 0, py: 0 }}
         disabled={locked || pending}
         startIcon={<Search size={14} aria-hidden={true} />}
         onClick={() => run(findSources, { errorTitle: t`Could not look these mods up on Nexus` })}
