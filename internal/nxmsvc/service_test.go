@@ -406,7 +406,9 @@ func TestACurseForgeLinkWaitsForItsOwnGameAndAnotherGamesGoesBack(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	s.CurseForgeProject = func(context.Context, int) (string, int, error) { return "Content Patcher", stardew, nil }
+	s.CurseForgeProject = func(context.Context, int) (curseforge.Project, error) {
+		return curseforge.Project{Name: "Content Patcher", GameID: stardew}, nil
+	}
 	s.receiveCurseForge("curseforge://install?addonId=309243&fileId=555", ref)
 	in := s.Inbox()
 	if len(in.Arrivals) != 1 || in.Arrivals[0].Name != "Content Patcher" || !slices.Equal(in.Arrivals[0].Games, []string{"stardew"}) {
@@ -418,12 +420,21 @@ func TestACurseForgeLinkWaitsForItsOwnGameAndAnotherGamesGoesBack(t *testing.T) 
 	if got := <-s.Assigned; got.Source != "curseforge" || got.Package != "309243" || got.File != 555 {
 		t.Fatalf("assigned %+v", got)
 	}
-	s.CurseForgeProject = func(context.Context, int) (string, int, error) { return "A WoW addon", 1, nil }
+	s.CurseForgeProject = func(context.Context, int) (curseforge.Project, error) {
+		return curseforge.Project{Name: "A WoW addon", GameID: 1}, nil
+	}
 	s.receiveCurseForge("curseforge://install?addonId=7&fileId=8", curseforge.Ref{Project: 7, File: 8})
 	if in := s.Inbox(); len(in.Arrivals) != 0 || len(in.Rejections) != 0 {
 		t.Fatalf("another game's link stayed in the inbox: %+v", in)
 	}
 	if want := "forward:curseforge.desktop:curseforge://install?addonId=7&fileId=8"; !slices.Contains(h.registry, want) {
 		t.Fatalf("another game's link was not handed back: %v", h.registry)
+	}
+	s.CurseForgeProject = func(context.Context, int) (curseforge.Project, error) {
+		return curseforge.Project{Name: "Shut", GameID: stardew, Restricted: true}, nil
+	}
+	s.receiveCurseForge("curseforge://install?addonId=9&fileId=10", curseforge.Ref{Project: 9, File: 10})
+	if in := s.Inbox(); len(in.Arrivals) != 0 || len(in.Rejections) != 1 || in.Rejections[0].Reason != nxm.ReasonRestricted || in.Rejections[0].Name != "Shut" {
+		t.Fatalf("a mod Mortar may not download was not refused by name: %+v", in)
 	}
 }

@@ -40,8 +40,18 @@ func ParseLink(raw string) (Ref, error) {
 	return Ref{Project: project, File: file}, nil
 }
 
-// Project names a project and gives the site's id of the game it is for.
-func (d Driver) Project(ctx context.Context, id int) (name string, gameID int, err error) {
+// Project is what a link's project is: its name, the site's id of its game, and whether its author forbids
+// downloads outside CurseForge's own page.
+type Project struct {
+	Name       string
+	GameID     int
+	Restricted bool
+}
+
+// Project reads the project a link names.
+func (d Driver) Project(ctx context.Context, id int) (Project, error) {
 	m, err := d.mod(ctx, strconv.Itoa(id))
-	return m.Name, m.GameID, err
+	return Project{
+		Name: m.Name, GameID: m.GameID, Restricted: m.AllowModDistribution != nil && !*m.AllowModDistribution,
+	}, err
 }

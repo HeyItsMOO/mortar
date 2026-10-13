@@ -52,6 +52,8 @@ type Arrival struct {
 type Rejection struct {
 	ID     int    `json:"id"`
 	Reason string `json:"reason"`
+	// Name is the mod the link was for, when the reason is about that mod.
+	Name string `json:"name,omitempty"`
 }
 
 // Inbox is what arrived before the window listened, or is still unanswered.
@@ -86,7 +88,7 @@ type Service struct {
 	// App is set after application.New so arrivals can reach the window.
 	App winhost.Host
 	// CurseForgeProject reads a project's name and the site's game id; nil asks CurseForge.
-	CurseForgeProject func(ctx context.Context, id int) (name string, gameID int, err error)
+	CurseForgeProject func(ctx context.Context, id int) (curseforge.Project, error)
 	// Assigned carries links the user matched to a profile.
 	Assigned chan Assignment
 	// Route is offered every accepted link first and reports whether the download queue was waiting for it; nil
@@ -212,7 +214,8 @@ func (s *Service) receiveCurseForge(raw string, ref curseforge.Ref) {
 		project = curseforge.Driver{}.Project
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), curseforgeLookup)
-	name, gameID, err := project(ctx, ref.Project)
+	found, err := project(ctx, ref.Project)
+	name, gameID := found.Name, found.GameID
 	cancel()
 	games := gamesWith("curseforge")
 	if err != nil {
@@ -242,6 +245,17 @@ func (s *Service) receiveCurseForge(raw string, ref curseforge.Ref) {
 		}
 		s.forget(raw)
 		r := Rejection{ID: id, Reason: nxm.ReasonGame}
+		log.Printf("nxm: link %d rejected: %s", id, r.Reason)
+		s.mu.Lock()
+		s.rejections = append(s.rejections, r)
+		s.mu.Unlock()
+		s.emit(RejectedEvent, r)
+		return
+	}
+	if found.Restricted {
+		// Mortar may not fetch this file, so the link is refused here instead of failing in the queue.
+		s.forget(raw)
+		r := Rejection{ID: id, Reason: nxm.ReasonRestricted, Name: name}
 		log.Printf("nxm: link %d rejected: %s", id, r.Reason)
 		s.mu.Lock()
 		s.rejections = append(s.rejections, r)

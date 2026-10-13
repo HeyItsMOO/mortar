@@ -1055,6 +1055,10 @@ msgstr "Join our Discord"
 msgid "Make a pack win"
 msgstr "Make a pack win"
 
+#: src/nxm/store.ts:32
+msgid "{name}'s author only allows downloads from its CurseForge page. Choose Download there instead of Install, then drop the file on Mortar."
+msgstr "{name}'s author only allows downloads from its CurseForge page. Choose Download there instead of Install, then drop the file on Mortar."
+
 #: src/mods/useListHeading.ts:20
 msgid "{loaderName} mods"
 msgstr "{loaderName} mods"
@@ -1127,7 +1131,7 @@ msgstr "Turn on sharing nearby?"
 msgid "Dismiss {name}"
 msgstr "Dismiss {name}"
 
-#: src/nxm/store.ts:31
+#: src/nxm/store.ts:35
 msgid "Mortar does not manage mods for that game."
 msgstr "Mortar does not manage mods for that game."
 
@@ -2473,7 +2477,7 @@ msgstr "Show the first-run tips again"
 #: src/mods/Toolbar.tsx:141
 #: src/mods/Toolbar.tsx:160
 #: src/mods/typedConfig/ConfigTab.tsx:113
-#: src/nxm/store.ts:53
+#: src/nxm/store.ts:57
 #: src/profiles/CompareDialog.tsx:185
 #: src/profiles/LaunchPresetDialog.tsx:85
 #: src/queue/actions.ts:97
@@ -3654,7 +3658,7 @@ msgstr "Could not stop ignoring {source} updates"
 msgid "First updates"
 msgstr "First updates"
 
-#: src/nxm/store.ts:35
+#: src/nxm/store.ts:39
 msgid "The link was made for another Nexus account than the one signed in."
 msgstr "The link was made for another Nexus account than the one signed in."
 
@@ -4174,7 +4178,7 @@ msgstr "The game started without errors"
 msgid "Hidden"
 msgstr "Hidden"
 
-#: src/nxm/store.ts:168
+#: src/nxm/store.ts:172
 msgid "Mortar · Install {name}?"
 msgstr "Mortar · Install {name}?"
 
@@ -5938,7 +5942,7 @@ msgstr "Start minimised to tray"
 msgid "{0, plural, one {# change} other {# changes}}"
 msgstr "{0, plural, one {# change} other {# changes}}"
 
-#: src/nxm/store.ts:170
+#: src/nxm/store.ts:174
 msgid "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 msgstr "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 
@@ -6149,7 +6153,7 @@ msgstr "Import a shared profile…"
 msgid "Mortar closed unexpectedly last time"
 msgstr "Mortar closed unexpectedly last time"
 
-#: src/nxm/store.ts:65
+#: src/nxm/store.ts:69
 msgid "Could not start the download"
 msgstr "Could not start the download"
 
@@ -8143,7 +8147,7 @@ msgstr "Send it to the people joining you."
 msgid "Free space at destination: {0}"
 msgstr "Free space at destination: {0}"
 
-#: src/nxm/store.ts:33
+#: src/nxm/store.ts:37
 msgid "The link has expired. Click Mod Manager Download on Nexus again."
 msgstr "The link has expired. Click Mod Manager Download on Nexus again."
 
@@ -8353,7 +8357,7 @@ msgstr "Could not skip the update for {0}"
 msgid "Plugins load"
 msgstr "Plugins load"
 
-#: src/nxm/store.ts:99
+#: src/nxm/store.ts:103
 #: src/queue/totals.ts:121
 #: src/settings/sections/DataStoreReport.tsx:124
 #: src/share/arrivals.ts:55
@@ -8628,7 +8632,7 @@ msgstr "See startup"
 msgid "No answer {0}: {reason}"
 msgstr "No answer {0}: {reason}"
 
-#: src/nxm/store.ts:71
+#: src/nxm/store.ts:75
 msgid "Downloading {name} into {profileName}"
 msgstr "Downloading {name} into {profileName}"
 
@@ -9493,7 +9497,7 @@ msgstr "Steam was not found"
 msgid "These mods may add the same item: {0}."
 msgstr "These mods may add the same item: {0}."
 
-#: src/nxm/store.ts:37
+#: src/nxm/store.ts:41
 msgid "Sign in to Nexus Mods in Settings before downloading from a link."
 msgstr "Sign in to Nexus Mods in Settings before downloading from a link."
 
@@ -11301,7 +11305,7 @@ msgstr "Kept forever"
 msgid "{0} is in use by the running game. Close the game to change its mods."
 msgstr "{0} is in use by the running game. Close the game to change its mods."
 
-#: src/nxm/store.ts:146
+#: src/nxm/store.ts:150
 msgid "Mod link not used"
 msgstr "Mod link not used"
 
@@ -12033,7 +12037,7 @@ msgstr "Automatic port"
 msgid "Health"
 msgstr "Health"
 
-#: src/nxm/store.ts:93
+#: src/nxm/store.ts:97
 msgid "CurseForge mod {id}"
 msgstr "CurseForge mod {id}"
 
@@ -12807,7 +12811,7 @@ msgstr "Closing the window hides Mortar instead of quitting."
 msgid "Free accounts click Download on Nexus for each file; Mortar opens each page in turn."
 msgstr "Free accounts click Download on Nexus for each file; Mortar opens each page in turn."
 
-#: src/nxm/store.ts:39
+#: src/nxm/store.ts:43
 msgid "This is not a Mod Manager Download link from Nexus."
 msgstr "This is not a Mod Manager Download link from Nexus."
 

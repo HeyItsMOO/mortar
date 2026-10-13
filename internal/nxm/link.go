@@ -21,11 +21,13 @@ type Link struct {
 
 // Why a link was refused. The frontend words each in the user's language.
 const (
-	ReasonForm     = "form"
-	ReasonGame     = "game"
-	ReasonExpired  = "expired"
-	ReasonUser     = "user"
-	ReasonSignedIn = "signedIn"
+	ReasonForm = "form"
+	ReasonGame = "game"
+	// ReasonRestricted is a mod whose author forbids downloads outside its site's own page.
+	ReasonRestricted = "restricted"
+	ReasonExpired    = "expired"
+	ReasonUser       = "user"
+	ReasonSignedIn   = "signedIn"
 )
 
 // RejectError says why a link was refused.

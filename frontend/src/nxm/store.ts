@@ -25,8 +25,12 @@ import { useToasts } from '../toasts/store.ts'
 import { nxmShowCategory, nxmShowWithIcon } from './minimisedNotice.ts'
 import { directProfile } from './route.ts'
 
-const rejectionText = (reason: string): string => {
+const rejectionText = ({ reason, name = '' }: Rejection): string => {
   switch (reason) {
+    case 'restricted':
+      return i18n._(
+        msg`${name}'s author only allows downloads from its CurseForge page. Choose Download there instead of Install, then drop the file on Mortar.`,
+      )
     case 'game':
       return i18n._(msg`Mortar does not manage mods for that game.`)
     case 'expired':
@@ -144,7 +148,7 @@ async function initNxm(): Promise<void> {
       useToasts.getState().push({
         kind: 'error',
         title: i18n._(msg`Mod link not used`),
-        body: rejectionText(r.reason),
+        body: rejectionText(r),
         action: logAction(),
       })
     }
