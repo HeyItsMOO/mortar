@@ -41,25 +41,15 @@ runs:
 
     # Without the app's compile there is no build cache worth restoring (1.4 GB), so only the module cache is kept.
     - name: Setup Go (no build cache)
-      id: setup-go-light
       if: inputs.native != 'true'
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: Rethunk-Tech/gh-actions/setup-go@bc5fa5b1004205c9c9399fc941d79d5ada53c59b # v1.16
       with:
         go-version-file: go.mod
-        cache: false
+        cache-build: "false"
 
     - name: Go cache paths
       shell: bash
-      run: |
-        echo "MORTAR_GOBIN=$(go env GOPATH)/bin" >>"$GITHUB_ENV"
-        echo "MORTAR_GOMOD=$(go env GOMODCACHE)" >>"$GITHUB_ENV"
-
-    - name: Cache Go modules
-      if: inputs.native != 'true'
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: ${{ env.MORTAR_GOMOD }}
-        key: mortar-gomod-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('go.sum') }}
+      run: echo "MORTAR_GOBIN=$(go env GOPATH)/bin" >>"$GITHUB_ENV"
 
     # The wails3, nfpm and lint binaries are compiled from source on every run otherwise. The key names everything
     # that decides their content: the dependency graph (the fork pin), this file (tool versions) and the tool set.
