@@ -9,10 +9,10 @@ require (
 	github.com/coder/websocket v1.8.15
 	github.com/fsnotify/fsnotify v1.10.1
 	github.com/go-ole/go-ole v1.3.0
-	github.com/godbus/dbus/v5 v5.2.3
+	github.com/godbus/dbus/v5 v5.2.4
 	github.com/hashicorp/mdns v1.0.7
 	github.com/klauspost/compress v1.20.3
-	github.com/nwaples/rardecode/v2 v2.4.4
+	github.com/nwaples/rardecode/v2 v2.4.5
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/ulikunitz/xz v0.5.17
 	github.com/wailsapp/wails/v3 v3.0.0-beta.28
