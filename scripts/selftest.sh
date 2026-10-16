@@ -817,22 +817,24 @@ regress_lc() {
   ln -sfn "$SANDBOX_STEAM/linux64" "$SANDBOX_HOME/.steam/sdk64"
   ln -sfn "$SANDBOX_STEAM/linux32" "$SANDBOX_HOME/.steam/sdk32"
 
-  # Profiles get a local build of the bridge checkout beside this repo (MORTAR_REGRESS_BRIDGE_REPO names another), handed
-  # to the server through MORTAR_LOCAL_BRIDGES, so a run tests the bridge as it is before its release; without a
-  # checkout they get the catalog's published bridge, which an offline run cannot download.
-  local splash='' bridge=expected bridge_repo=${MORTAR_REGRESS_BRIDGE_REPO:-$REPO/../mortar-bepinex-bridge}
+  # Profiles get the catalog's published bridge, the asset users install (an offline run cannot download it). A bridge
+  # change before its release is tested with MORTAR_REGRESS_LOCAL_BRIDGE=1 or MORTAR_REGRESS_BRIDGE_REPO: the checkout
+  # beside this repo (or the one named) is built and handed to the server through MORTAR_LOCAL_BRIDGES.
+  local splash='' bridge=expected bridge_from=published bridge_repo=${MORTAR_REGRESS_BRIDGE_REPO:-$REPO/../mortar-bepinex-bridge}
   [ -n "${MORTAR_REGRESS_OFFLINE:-}" ] && bridge=skipped
-  if [ -x "$bridge_repo/scripts/package.sh" ]; then
+  if [ -z "${MORTAR_REGRESS_LOCAL_BRIDGE:-}${MORTAR_REGRESS_BRIDGE_REPO:-}" ]; then
+    :
+  elif [ -x "$bridge_repo/scripts/package.sh" ]; then
     local bridge_dir=$ROOT/bridge built
     mkdir -p "$bridge_dir"
     if built=$(DIST="$ROOT/bridge-dist" "$bridge_repo/scripts/package.sh" 2>"$ROOT/bridge-build.log" | tail -1) && [ -f "$built" ]; then
       cp "$built" "$bridge_dir/lethal-company.zip"
       export MORTAR_LOCAL_BRIDGES=$bridge_dir
-      bridge=expected
+      bridge=expected bridge_from=local
     else
       failures+=("the bridge did not build; see $ROOT/bridge-build.log")
     fi
-  elif [ -n "${MORTAR_REGRESS_BRIDGE_REPO:-}" ]; then
+  else
     failures+=("no bridge checkout at $bridge_repo")
   fi
   mkdir -p "$ROOT"
@@ -1026,7 +1028,7 @@ PY
   echo "profile        $profile"
   echo "BepInEx        $bepinex"
   echo "plugins loaded $loaded of ${#plugins[@]} (${plugins[*]})"
-  echo "bridge         $bridge"
+  echo "bridge         $bridge ($bridge_from)"
   echo "intro skip     ${splash:-the bridge logged no splash line}"
   echo "game entries   $(wc -l <"$ROOT/game-before.txt") hashed, $diff_lines differing after purge"
   echo "r2 code        ${code:-none}: $r2 into ${r2_profile:-none}, $r2_listed listed, $r2_mods mods installed, BepInEx counted ${r2_plugins:-?} plugins and logged $r2_loading Loading lines, $r2_errors error lines"
