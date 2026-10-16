@@ -152,13 +152,13 @@ func (s *Service) SteamStatus() steam.Status {
 	return st
 }
 
-func artFor(home, appID string) string {
-	for _, st := range steam.LocateAll(home) {
-		if st.HeroArt(appID) != "" {
-			return ArtURL(appID)
-		}
+// artFor is where a game's art loads from: ArtMiddleware serves Steam's cached copy, else Steam's public one, so a
+// game shows its art before any launcher is found.
+func artFor(appID string) string {
+	if appID == "" {
+		return ""
 	}
-	return ""
+	return ArtURL(appID)
 }
 
 // List returns every listed game with its install state and art URL.
@@ -194,7 +194,7 @@ func List(home string, cur settings.Settings) ([]GameInfo, error) {
 				}
 			}
 		}
-		info.ArtURL = artFor(home, info.AppID)
+		info.ArtURL = artFor(info.AppID)
 		out = append(out, info)
 	}
 	return out, nil

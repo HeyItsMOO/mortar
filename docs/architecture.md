@@ -137,7 +137,7 @@ The store keeps every item a profile names as `key` or `previousKey` and deletes
 
 1. The picked cover, served by `CoverMiddleware` at `/profile-cover/<game>/<id>` (validated game and id; only the three fixed file names).
 2. The `picture` of the profile's Nexus entry with the highest `endorsementCount` as stored at install (no new call).
-3. Steam's art at `/steam-art/<appid>`.
+3. Steam's art at `/steam-art/<appid>` (`game.ArtMiddleware`): Steam's cached hero, else the public `library_hero.jpg`, else, for newer games whose art sits under hashed paths, the library hero or header that Steam's `IStoreBrowseService/GetItems` names.
 
 The frontend moves on when one fails to load and shows a solid tone after the last.
 

@@ -4,13 +4,16 @@ package game
 import (
 	"cmp"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
@@ -298,7 +301,11 @@ func ArtMiddleware(home string) func(http.Handler) http.Handler {
 				}
 			}
 			if path == "" {
-				serveRemoteArt(w, r, fmt.Sprintf(heroCDN, listed))
+				if !serveRemoteArt(w, r, fmt.Sprintf(heroCDN, listed)) {
+					if hero := storeHero(r.Context(), listed); hero == "" || !serveRemoteArt(w, r, hero) {
+						http.NotFound(w, r)
+					}
+				}
 				return
 			}
 			art, err := fsx.Open(path)
@@ -318,25 +325,83 @@ func ArtMiddleware(home string) func(http.Handler) http.Handler {
 	}
 }
 
-func serveRemoteArt(w http.ResponseWriter, r *http.Request, url string) {
+// serveRemoteArt copies the image at src to w, and reports false, having written nothing, when it cannot be fetched.
+func serveRemoteArt(w http.ResponseWriter, r *http.Request, src string) bool {
 	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 	defer cancel()
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, src, nil)
 	if err != nil {
-		http.NotFound(w, r)
-		return
+		return false
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		http.NotFound(w, r)
-		return
+		return false
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
-		http.NotFound(w, r)
-		return
+		return false
 	}
 	w.Header().Set("Content-Type", "image/jpeg")
 	w.Header().Set("Cache-Control", "max-age=86400")
 	_, _ = io.Copy(w, io.LimitReader(resp.Body, maxHero))
+	return true
+}
+
+// Steam keeps newer games' art under hashed paths that only its store names, so the fixed hero URL misses them.
+var (
+	storeBrowse = "https://api.steampowered.com/IStoreBrowseService/GetItems/v1"
+	storeAssets = "https://shared.steamstatic.com/store_item_assets/"
+	storeHeroes sync.Map
+)
+
+// storeHero is the library hero (else the header) Steam's store names for appID, "" when it names none; answers
+// are kept for the session.
+func storeHero(ctx context.Context, appID string) string {
+	if v, ok := storeHeroes.Load(appID); ok {
+		if hero, ok := v.(string); ok {
+			return hero
+		}
+	}
+	hero := lookupStoreHero(ctx, appID)
+	storeHeroes.Store(appID, hero)
+	return hero
+}
+
+func lookupStoreHero(ctx context.Context, appID string) string {
+	id, err := strconv.Atoi(appID)
+	if err != nil {
+		return ""
+	}
+	input := fmt.Sprintf(`{"ids":[{"appid":%d}],"context":{"country_code":"US"},"data_request":{"include_assets":true}}`, id)
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, storeBrowse+"?input_json="+url.QueryEscape(input), nil)
+	if err != nil {
+		return ""
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return ""
+	}
+	defer func() { _ = resp.Body.Close() }()
+	var body struct {
+		Response struct {
+			StoreItems []struct {
+				Assets struct {
+					Format      string `json:"asset_url_format"`
+					LibraryHero string `json:"library_hero"`
+					Header      string `json:"header"`
+				} `json:"assets"`
+			} `json:"store_items"`
+		} `json:"response"`
+	}
+	if resp.StatusCode != http.StatusOK || json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&body) != nil || len(body.Response.StoreItems) == 0 {
+		return ""
+	}
+	a := body.Response.StoreItems[0].Assets
+	file := cmp.Or(a.LibraryHero, a.Header)
+	if file == "" || !strings.Contains(a.Format, "${FILENAME}") {
+		return ""
+	}
+	return storeAssets + strings.Replace(a.Format, "${FILENAME}", file, 1)
 }

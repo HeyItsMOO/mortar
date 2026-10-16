@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/testenv/testfs"
@@ -55,26 +56,31 @@ func TestListAndArt(t *testing.T) {
 	if g := list[0]; g.ID != "stardew" || !g.Installed || g.ArtURL != "/steam-art/413150" || !g.Available || g.Store != StoreSteam {
 		t.Fatalf("stardew = %+v", g)
 	}
-	if g := list[1]; g.Installed || g.ArtURL != "" || !g.Available {
+	if g := list[1]; g.Installed || g.ArtURL != "/steam-art/1966720" || !g.Available {
 		t.Fatalf("lethal = %+v", g)
 	}
 
+	// Valheim (892970) is a newer game whose hero only the store's hashed asset path holds.
 	cdn := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/1966720" {
+		switch {
+		case r.URL.Path == "/1966720" || r.URL.Path == "/assets/steam/apps/892970/abc/library_hero.jpg":
+			_, _ = w.Write([]byte("hero"))
+		case r.URL.Path == "/store" && strings.Contains(r.URL.Query().Get("input_json"), "892970"):
+			_, _ = w.Write([]byte(`{"response":{"store_items":[{"assets":{"asset_url_format":"steam/apps/892970/${FILENAME}?t=1","library_hero":"abc/library_hero.jpg"}}]}}`))
+		default:
 			http.NotFound(w, r)
-			return
 		}
-		_, _ = w.Write([]byte("hero"))
 	}))
 	defer cdn.Close()
-	was := heroCDN
-	heroCDN = cdn.URL + "/%s"
-	defer func() { heroCDN = was }()
+	was, wasStore, wasAssets := heroCDN, storeBrowse, storeAssets
+	heroCDN, storeBrowse, storeAssets = cdn.URL+"/%s", cdn.URL+"/store", cdn.URL+"/assets/"
+	defer func() { heroCDN, storeBrowse, storeAssets = was, wasStore, wasAssets }()
 
 	h := ArtMiddleware(h0)(http.NotFoundHandler())
 	for path, want := range map[string]int{
 		"/steam-art/413150":  http.StatusOK,
 		"/steam-art/1966720": http.StatusOK,
+		"/steam-art/892970":  http.StatusOK,
 		"/steam-art/999":     http.StatusNotFound,
 		"/steam-art/../etc":  http.StatusNotFound,
 	} {
