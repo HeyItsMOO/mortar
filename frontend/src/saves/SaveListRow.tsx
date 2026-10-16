@@ -10,7 +10,7 @@ import { visuallyHidden } from '../shell/visuallyHidden.ts'
 import { space } from '../theme/density.ts'
 import { SaveGapLine } from './SaveGapLine.tsx'
 import { FitStatus, SaveButtons } from './SaveRow.tsx'
-import { saveKind, saveName } from './saveName.ts'
+import { playStyleName, saveKind, saveName } from './saveName.ts'
 
 // The last column holds up to four icon buttons; a fixed width keeps it aligned when a save has fewer. Season and fit
 // columns appear only for games whose saves record a calendar and their mods (SMAPI's).
@@ -115,7 +115,7 @@ function SaveListRow({
     when = t`Unknown`
   }
   const label = saveName(fit)
-  const kind = saveKind(fit.folder)
+  const kind = saveKind(fit.folder) || playStyleName(fit.playStyle)
   return (
     <TableRow
       role="row"

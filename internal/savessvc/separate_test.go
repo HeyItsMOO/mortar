@@ -52,7 +52,7 @@ func TestSeparateSavesListOnlyTheProfilesOwn(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		infos, err := sc.Scan(nil)
+		infos, err := sc.Scan(t.Context(), nil)
 		if err != nil || len(infos) != 1 || infos[0].Folder != c.want {
 			t.Fatalf("profile %s lists %+v, %v; want only %s", c.profile, infos, err, c.want)
 		}
@@ -61,16 +61,16 @@ func TestSeparateSavesListOnlyTheProfilesOwn(t *testing.T) {
 
 func TestSeparateSavesBackupRestoreAndOpenActOnTheProfilesOwn(t *testing.T) {
 	s, shared, ownDir, own, plain := separateEnv(t)
-	if made, err := s.CreateBackup("stardew", own.ID, "Farm_1"); made || err != nil {
+	if made, err := s.CreateBackup(t.Context(), "stardew", own.ID, "Farm_1"); made || err != nil {
 		t.Fatalf("backed up the shared Farm_1 for the separate profile: %v, %v", made, err)
 	}
-	if made, err := s.CreateBackup("stardew", own.ID, "Farm_2"); !made || err != nil {
+	if made, err := s.CreateBackup(t.Context(), "stardew", own.ID, "Farm_2"); !made || err != nil {
 		t.Fatalf("backup of own Farm_2 = %v, %v", made, err)
 	}
-	if made, err := s.CreateBackup("stardew", plain.ID, "Farm_2"); made || err != nil {
+	if made, err := s.CreateBackup(t.Context(), "stardew", plain.ID, "Farm_2"); made || err != nil {
 		t.Fatalf("backed up the separate Farm_2 for the shared profile: %v, %v", made, err)
 	}
-	if made, err := s.CreateBackup("stardew", plain.ID, "Farm_1"); !made || err != nil {
+	if made, err := s.CreateBackup(t.Context(), "stardew", plain.ID, "Farm_1"); !made || err != nil {
 		t.Fatalf("backup of shared Farm_1 = %v, %v", made, err)
 	}
 

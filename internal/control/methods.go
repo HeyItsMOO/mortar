@@ -490,7 +490,7 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 		if err != nil {
 			return nil, err
 		}
-		made, err := s.Saves.CreateBackup(p.Game, id, p.Name)
+		made, err := s.Saves.CreateBackup(ctx, p.Game, id, p.Name)
 		if err == nil && !made {
 			err = backup.ErrNoSaves
 		}

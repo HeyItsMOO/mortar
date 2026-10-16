@@ -5,6 +5,7 @@ package saves
 import (
 	"bytes"
 	"cmp"
+	"context"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -50,9 +51,14 @@ type Info struct {
 	Used               []mod.ID `json:"used"`
 	// Unrecorded means the save's format names no mods, so an empty Used says nothing about what it needs.
 	Unrecorded bool `json:"unrecorded"`
+	// Name is the save's own title where its format holds one (a Vintage Story world's name).
+	Name string `json:"name,omitempty"`
+	// PlayStyle is a Vintage Story world's play style code and GameVersion the game version that last saved it.
+	PlayStyle   string `json:"playStyle,omitempty"`
+	GameVersion string `json:"gameVersion,omitempty"`
 }
 
-const scanRev = 4
+const scanRev = 5
 
 // stamp is what a cached result was computed from; any change recomputes it. Index is the dataset index's size,
 // because a newer index can recognise IDs an older one missed. Rev is this parser's shape, so a new field
@@ -87,7 +93,7 @@ func (s *Scanner) Layout() Layout {
 
 // Scan returns every save in Dir, newest first. A save that cannot be read is left out and reported in the
 // error, which accompanies the readable ones.
-func (s *Scanner) Scan(index map[string][]meta.Ref) ([]Info, error) {
+func (s *Scanner) Scan(ctx context.Context, index map[string][]meta.Ref) ([]Info, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	entries, err := s.Layout().Names()
@@ -116,7 +122,7 @@ func (s *Scanner) Scan(index map[string][]meta.Ref) ([]Info, error) {
 				results[i].c, results[i].ok = c, true
 				return
 			}
-			info, err := s.read(e, index)
+			info, err := s.read(ctx, e, index)
 			results[i].c, results[i].ok, results[i].err = cached{Stamp: st, Info: info}, err == nil, err
 		})
 	}
@@ -143,7 +149,7 @@ func (s *Scanner) Scan(index map[string][]meta.Ref) ([]Info, error) {
 
 // Newest reads only the save folder most recently written. It is used by the launch warning, where the other saves
 // and their mod names are not needed until the user opens the Saves tab.
-func (s *Scanner) Newest(index map[string][]meta.Ref) (Info, error) {
+func (s *Scanner) Newest(ctx context.Context, index map[string][]meta.Ref) (Info, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	entries, err := s.Layout().Names()
@@ -169,7 +175,7 @@ func (s *Scanner) Newest(index map[string][]meta.Ref) (Info, error) {
 	if newest == "" {
 		return Info{}, nil
 	}
-	return s.read(newest, index)
+	return s.read(ctx, newest, index)
 }
 
 // Layout is a saves folder and how a save sits in it: a file matching one of Files, or, without Files, a folder
@@ -363,7 +369,7 @@ func (s *Scanner) stampOf(folder string, index int) (st stamp, ok bool, err erro
 	return st, true, nil
 }
 
-func (s *Scanner) read(folder string, index map[string][]meta.Ref) (Info, error) {
+func (s *Scanner) read(ctx context.Context, folder string, index map[string][]meta.Ref) (Info, error) {
 	info := Info{Folder: folder, WhichFarm: -1, Used: []mod.ID{}}
 	if len(s.Files) > 0 {
 		// A save kept as one file (Lethal Company's encrypted ES3) names no mods, so its fit is unknown.
@@ -373,6 +379,10 @@ func (s *Scanner) read(folder string, index map[string][]meta.Ref) (Info, error)
 			return info, err
 		}
 		info.Played = mtime.UnixMilli()
+		if strings.EqualFold(path.Ext(folder), ".vcdbs") {
+			// A world whose game data cannot be read only loses the details it holds.
+			_ = readWorld(ctx, filepath.Join(s.Dir, filepath.FromSlash(folder)), &info)
+		}
 		return info, nil
 	}
 	dir := filepath.Join(s.Dir, folder)

@@ -35,12 +35,12 @@ func contentMissingCount(recorded []PlayedMod, missing []Lack) int {
 	return n
 }
 
-func (s *Service) farmOf(gameID, folder string) string {
+func (s *Service) farmOf(ctx context.Context, gameID, folder string) string {
 	scanner := s.scanners[gameID]
 	if scanner == nil || folder == "" {
 		return folder
 	}
-	infos, err := scanner.Scan(nil)
+	infos, err := scanner.Scan(ctx, nil)
 	if err != nil {
 		return folder
 	}
@@ -75,13 +75,13 @@ func (s *Service) Check(ctx context.Context, game, saveFolder, profileID string)
 		return SaveCheck{}, errors.New("a save is required")
 	}
 	if s.last == nil {
-		return SaveCheck{Folder: saveFolder, Farm: s.farmOf(game, saveFolder)}, nil
+		return SaveCheck{Folder: saveFolder, Farm: s.farmOf(ctx, game, saveFolder)}, nil
 	}
 	rec, ok, err := s.last.Get(game, saveFolder)
 	if err != nil {
 		return SaveCheck{}, err
 	}
-	out := SaveCheck{Folder: saveFolder, Farm: s.farmOf(game, saveFolder)}
+	out := SaveCheck{Folder: saveFolder, Farm: s.farmOf(ctx, game, saveFolder)}
 	if !ok {
 		return out, nil
 	}

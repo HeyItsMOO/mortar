@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Link, Typography } from '@mui/material'
-import { CalendarDays, Clock, Coins } from 'lucide-react'
+import { CalendarDays, Clock, Coins, Tag } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import type { Fit } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savessvc/models.ts'
@@ -65,6 +65,9 @@ export function SaveDetails({
         ) : null}
         {hours > 0 ? <Stat icon={<Clock size={14} />}>{t`${hours}h played`}</Stat> : null}
         {fit.money ? <Stat icon={<Coins size={14} />}>{goldText(fit.money)}</Stat> : null}
+        {fit.gameVersion ? (
+          <Stat icon={<Tag size={14} />}>{t`Saved on version ${fit.gameVersion}`}</Stat>
+        ) : null}
       </Box>
       <Box
         sx={{

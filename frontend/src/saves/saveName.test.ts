@@ -9,7 +9,7 @@ mock.module('@lingui/core/macro', () => ({
 i18n.load('en', {})
 i18n.activate('en')
 
-const { saveKind, saveName } = await import('./saveName.ts')
+const { playStyleName, saveKind, saveName } = await import('./saveName.ts')
 
 test('a save is named by its farm, its Lethal Company slot, or its folder or file', () => {
   expect(saveName({ farm: 'Sunny', folder: 'Farm_1' })).toBe('Sunny')
@@ -18,6 +18,13 @@ test('a save is named by its farm, its Lethal Company slot, or its folder or fil
   expect(saveName({ farm: '', folder: 'LCChallengeFile' })).toBe('Challenge moon')
   expect(saveName({ farm: '', folder: 'Ragnar.fch' })).toBe('Ragnar')
   expect(saveName({ farm: '', folder: 'worlds_local/Midgard.fwl' })).toBe('Midgard')
+  expect(saveName({ farm: '', folder: 'Bjornheim-1.vcdbs', name: 'Bjornheim' })).toBe('Bjornheim')
+})
+
+test("a Vintage Story world's play style is named, and a new code shows as itself", () => {
+  expect(playStyleName('wildernesssurvival')).toBe('Wilderness Survival')
+  expect(playStyleName('newstyle')).toBe('newstyle')
+  expect(playStyleName(undefined)).toBe('')
 })
 
 test('a Valheim save is a character or a world by its folder', () => {

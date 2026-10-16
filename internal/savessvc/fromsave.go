@@ -105,7 +105,7 @@ func (s *Service) FromSave(ctx context.Context, game, saveFolder string) (FromSa
 	if err != nil {
 		return FromSaveResult{}, err
 	}
-	created, err := s.profiles.Create(game, profile.UniqueName(takenNames(all), s.farmOf(game, saveFolder)))
+	created, err := s.profiles.Create(game, profile.UniqueName(takenNames(all), s.farmOf(ctx, game, saveFolder)))
 	if err != nil {
 		return FromSaveResult{}, err
 	}

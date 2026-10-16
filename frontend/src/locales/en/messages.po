@@ -631,7 +631,7 @@ msgid "Notes"
 msgstr "Notes"
 
 #: src/game/Home.tsx:80
-#: src/saves/SaveDetails.tsx:83
+#: src/saves/SaveDetails.tsx:86
 msgid "Last played {when}"
 msgstr "Last played {when}"
 
@@ -1971,7 +1971,7 @@ msgstr "{a} and {b} each depend on the other, so BepInEx stops before loading an
 msgid "Could not add the download"
 msgstr "Could not add the download"
 
-#: src/saves/saveName.ts:17
+#: src/saves/saveName.ts:18
 msgid "Save file {slot}"
 msgstr "Save file {slot}"
 
@@ -3135,7 +3135,7 @@ msgstr "No mod settings yet"
 msgid "The console fills when the game runs."
 msgstr "The console fills when the game runs."
 
-#: src/saves/SaveRow.tsx:201
+#: src/saves/SaveRow.tsx:203
 msgid "Last played with {profile}"
 msgstr "Last played with {profile}"
 
@@ -4489,7 +4489,7 @@ msgstr "List copied"
 msgid "Added by you"
 msgstr "Added by you"
 
-#: src/saves/saveName.ts:34
+#: src/saves/saveName.ts:35
 msgid "Save slot"
 msgstr "Save slot"
 
@@ -5357,6 +5357,10 @@ msgstr "Log copied"
 msgid "Play without mods"
 msgstr "Play without mods"
 
+#: src/saves/saveName.ts:52
+msgid "Homo Sapiens"
+msgstr "Homo Sapiens"
+
 #. placeholder {0}: counts.skipped
 #: src/share/importCompletion.ts:26
 msgid "{0} skipped"
@@ -5490,7 +5494,7 @@ msgstr "Disable all"
 msgid "{plugin} failed to load."
 msgstr "{plugin} failed to load."
 
-#: src/saves/saveName.ts:38
+#: src/saves/saveName.ts:39
 msgid "Character"
 msgstr "Character"
 
@@ -6508,6 +6512,11 @@ msgstr "Downloaded versions stay in the store for re-use."
 msgid "Skip for now"
 msgstr "Skip for now"
 
+#. placeholder {0}: fit.gameVersion
+#: src/saves/SaveDetails.tsx:69
+msgid "Saved on version {0}"
+msgstr "Saved on version {0}"
+
 #: src/mods/typedConfig/ConfigPane.tsx:172
 #: src/share/ImportPreview.tsx:369
 #: src/share/Included.tsx:94
@@ -6564,7 +6573,7 @@ msgstr "This profile has no mods to download"
 msgid "Relative"
 msgstr "Relative"
 
-#: src/saves/SaveRow.tsx:200
+#: src/saves/SaveRow.tsx:202
 msgid "a deleted profile"
 msgstr "a deleted profile"
 
@@ -7717,7 +7726,7 @@ msgstr "Badge checks for other profiles"
 msgid "Hide mods of {0}"
 msgstr "Hide mods of {0}"
 
-#: src/saves/saveName.ts:29
+#: src/saves/saveName.ts:30
 msgid "Weekly challenge"
 msgstr "Weekly challenge"
 
@@ -9796,6 +9805,10 @@ msgstr "Tips will show again"
 msgid "Open the page of {name}"
 msgstr "Open the page of {name}"
 
+#: src/saves/saveName.ts:50
+msgid "Exploration"
+msgstr "Exploration"
+
 #: src/settings/sections/GameSettings.tsx:261
 #: src/shell/FlatpakGrant.tsx:87
 msgid "Grant access"
@@ -9813,7 +9826,7 @@ msgstr "Press Play when the downloads finish."
 msgid "Install Mortar updates automatically"
 msgstr "Install Mortar updates automatically"
 
-#: src/saves/saveName.ts:20
+#: src/saves/saveName.ts:21
 msgid "Challenge moon"
 msgstr "Challenge moon"
 
@@ -11328,6 +11341,10 @@ msgstr "Already in this profile."
 msgid "When a mod is on several sites, its card installs from the first one here."
 msgstr "When a mod is on several sites, its card installs from the first one here."
 
+#: src/saves/saveName.ts:53
+msgid "Creative Building"
+msgstr "Creative Building"
+
 #: src/profiles/AppearancePickers.tsx:69
 msgid "Sparkles"
 msgstr "Sparkles"
@@ -11584,6 +11601,10 @@ msgstr "Mod"
 msgid "Pending updates ({0})"
 msgstr "Pending updates ({0})"
 
+#: src/saves/saveName.ts:51
+msgid "Wilderness Survival"
+msgstr "Wilderness Survival"
+
 #. placeholder {0}: diff.profileOnly
 #: src/mods/GameModsReviewDialog.tsx:108
 msgid "{0, plural, one {# profile mod has no copy in the game folder.} other {# profile mods have no copy in the game folder.}}"
@@ -11695,6 +11716,7 @@ msgstr "Keep Mortar in the tray"
 #: src/profiles/LaunchPresetsBlock.tsx:143
 #: src/profiles/LaunchPresetsBlock.tsx:147
 #: src/profiles/LoaderLaunchSettings.tsx:21
+#: src/saves/saveName.ts:49
 msgid "Standard"
 msgstr "Standard"
 
@@ -12073,7 +12095,7 @@ msgstr "Saved to {0}"
 msgid "{shared} of {total} mods"
 msgstr "{shared} of {total} mods"
 
-#: src/saves/saveName.ts:35
+#: src/saves/saveName.ts:36
 msgid "Extra slot added by a mod"
 msgstr "Extra slot added by a mod"
 
@@ -12371,7 +12393,7 @@ msgstr "Templates are shared by every profile of this game. Adding one copies it
 msgid "Saves"
 msgstr "Saves"
 
-#: src/saves/saveName.ts:41
+#: src/saves/saveName.ts:42
 #: src/settings/sections/StreamOverlay.tsx:153
 msgid "World"
 msgstr "World"

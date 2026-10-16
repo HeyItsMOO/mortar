@@ -63,6 +63,10 @@ type Fit struct {
 	LastMissing        []Lack      `json:"lastMissing"`
 	// Unrecorded means the save names no mods (a Lethal Company save), so an empty Missing is no promise it fits.
 	Unrecorded bool `json:"unrecorded"`
+	// Name, PlayStyle and GameVersion are what a Vintage Story world records of itself.
+	Name        string `json:"name,omitempty"`
+	PlayStyle   string `json:"playStyle,omitempty"`
+	GameVersion string `json:"gameVersion,omitempty"`
 }
 
 // Service exposes the save scan to the frontend.
@@ -165,7 +169,7 @@ func (s *Service) FarmTypes(ctx context.Context, game, profileID string) []probl
 	if err != nil {
 		return nil
 	}
-	infos, _ := scanner.Scan(index)
+	infos, _ := scanner.Scan(ctx, index)
 	var out []problems.SaveFarm
 	for _, in := range infos {
 		if in.WhichFarm >= 0 {
@@ -194,7 +198,7 @@ func (s *Service) Saves(ctx context.Context, game, profileID string) ([]Fit, err
 		return nil, err
 	}
 	present, enabled := haveMaps(mods)
-	infos, err := scanner.Scan(index)
+	infos, err := scanner.Scan(ctx, index)
 	if err != nil {
 		log.Printf("save scan: %v", err)
 	}
@@ -206,6 +210,7 @@ func (s *Service) Saves(ctx context.Context, game, profileID string) ([]Fit, err
 		fits[i] = Fit{
 			Folder: in.Folder, Farm: in.Farm, Farmer: in.Farmer, Season: in.Season, Day: in.Day, Year: in.Year,
 			Played: in.Played, WhichFarm: in.WhichFarm, MillisecondsPlayed: in.MillisecondsPlayed, Money: in.Money,
+			Name: in.Name, PlayStyle: in.PlayStyle, GameVersion: in.GameVersion,
 			Missing: make([]Lack, len(lacks)), Unrecorded: in.Unrecorded,
 		}
 		for j, l := range lacks {
@@ -238,6 +243,7 @@ func fitFor(in saves.Info, have map[string]bool, dismissed []mod.ID) (Fit, bool)
 	fit := Fit{
 		Folder: in.Folder, Farm: in.Farm, Farmer: in.Farmer, Season: in.Season, Day: in.Day, Year: in.Year,
 		Played: in.Played, WhichFarm: in.WhichFarm, MillisecondsPlayed: in.MillisecondsPlayed, Money: in.Money,
+		Name: in.Name, PlayStyle: in.PlayStyle, GameVersion: in.GameVersion,
 		Missing: make([]Lack, len(lacks)), Unrecorded: in.Unrecorded,
 	}
 	for i, l := range lacks {
@@ -308,7 +314,7 @@ func (s *Service) LastSaveGap(ctx context.Context, game, profileID string) (fit 
 		return Fit{}, false, err
 	}
 	present, enabled := haveMaps(mods)
-	info, err := scanner.Newest(index)
+	info, err := scanner.Newest(ctx, index)
 	if err != nil {
 		return Fit{}, false, err
 	}

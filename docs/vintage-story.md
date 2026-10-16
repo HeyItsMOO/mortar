@@ -14,7 +14,7 @@ Catalog id `vintage-story`. Sold outside any store app by Anego Studios; native 
 - The data folder is .NET's ApplicationData plus `VintagestoryData`: `%APPDATA%\VintagestoryData`, `$XDG_CONFIG_HOME/VintagestoryData` (wiki: [VintagestoryData folder](https://wiki.vintagestory.at/VintagestoryData_folder)).
 - Mods go in `VintagestoryData/Mods`. The install's own `Mods` folder holds the base game's modules (`VSSurvivalMod.dll` and others, beside `do_not_add_mods_here.txt`).
 - A mod is a zip whose root holds `modinfo.json` (`modid`, `version`, `dependencies`), a folder holding one, or a bare `.cs` or `.dll`. The `mods` target's `modRoot` is `modinfo.json`, so an archive is laid out as one folder named after its store item, and a bare file stays loose.
-- Saves are `Saves/<name>.vcdbs` (SQLite) with `-shm` and `-wal` companions.
+- Saves are `Saves/<name>.vcdbs` (SQLite) with `-shm` and `-wal` companions; a restore deletes the companions the restored copy lacks, since SQLite replays a leftover `-wal` over the restored file. Each world's one `gamedata` row is a protobuf `SaveGame` ([vs-proto](https://github.com/bluelightning32/vs-proto)'s generated schema: `WorldName` 13, `TotalSecondsPlayed` 14, `LastSavedGameVersion` 21, `PlayStyle` 29); Saves reads it read-only and immutable for the world's name, play style (`surviveandbuild`, `exploration`, `wildernesssurvival`, `homosapiens`, `creativebuilding`, the codes `vssurvivalmod` tests), play time and version.
 - The game takes `--addModPath` and `--dataPath`; Mortar uses neither, since the folder deployer fills and empties the Mods folder for each launch.
 
 ## Sources

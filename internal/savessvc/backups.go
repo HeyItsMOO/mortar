@@ -2,6 +2,7 @@ package savessvc
 
 import (
 	"cmp"
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -165,7 +166,7 @@ func (s *Service) OpenBackupsFolder(game string) error {
 // CreateBackup zips one save of the saves folder profile reads, named by its folder or by the name the app shows for
 // it, and marks the zip kept, with cause kind manual. It reports false, with no backup made, when the folder holds no
 // save.
-func (s *Service) CreateBackup(game, profile, folder string) (bool, error) {
+func (s *Service) CreateBackup(ctx context.Context, game, profile, folder string) (bool, error) {
 	id, err := s.saveGame(game)
 	if err != nil {
 		return false, err
@@ -179,7 +180,7 @@ func (s *Service) CreateBackup(game, profile, folder string) (bool, error) {
 		return false, err
 	}
 	now := uniqueBackupTime(target.Reads, time.Now())
-	folder = saveFolder(sc, folder)
+	folder = saveFolder(ctx, sc, folder)
 	_, err = backup.Folder(sc.Layout(), target.Dir, folder, target.Keep, now, backup.Cause{Kind: backup.KindManual, Pinned: true})
 	if errors.Is(err, backup.ErrNoSaves) {
 		return false, nil
@@ -189,8 +190,8 @@ func (s *Service) CreateBackup(game, profile, folder string) (bool, error) {
 
 // saveFolder is the folder of the save name names: a save's own folder, else the one save the app shows by that name;
 // anything else is returned as it is.
-func saveFolder(sc *saves.Scanner, name string) string {
-	infos, _ := sc.Scan(nil)
+func saveFolder(ctx context.Context, sc *saves.Scanner, name string) string {
+	infos, _ := sc.Scan(ctx, nil)
 	var match []string
 	for _, in := range infos {
 		if in.Folder == name {
