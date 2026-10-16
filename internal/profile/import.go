@@ -11,6 +11,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/Rethunk-Tech/mortar/internal/bridge"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
@@ -162,7 +163,7 @@ func vortexLeftover(dir string) bool {
 
 func classifyFolder(dir, name string) (gameModSlot, bool) {
 	label := strings.TrimLeft(name, ".")
-	if bundledFolder(name) != "" || strings.EqualFold(label, "smapi-internal") {
+	if bundledFolder(name) != "" || strings.EqualFold(label, "smapi-internal") || bridge.IsOwnListing(label) {
 		return gameModSlot{}, false
 	}
 	failed := func(reason string) (gameModSlot, bool) {

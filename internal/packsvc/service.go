@@ -11,6 +11,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/Rethunk-Tech/mortar/internal/bridge"
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
@@ -184,6 +185,9 @@ func (s *Service) Import(ctx context.Context, src Source, gameID, profileID stri
 	res := Result{Game: gameID, Unsupported: []string{}, Disabled: []string{}}
 	var reqs []queue.Request
 	for _, r := range d.Packages {
+		if bridge.IsOwnListing(r.Native) {
+			continue
+		}
 		if r.Source != "thunderstore" {
 			res.Unsupported = append(res.Unsupported, r.Native)
 			continue

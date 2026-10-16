@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Rethunk-Tech/mortar/internal/bridge"
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
 	"github.com/Rethunk-Tech/mortar/internal/problems"
@@ -54,6 +55,7 @@ func (h Holdings) holdLoader(info components.GameInfo, loaderID string) {
 
 // applyModes drops the hits the filter hides and counts them in Hidden.
 func (c *Client) applyModes(p *Page, f Filter) {
+	p.Items = slices.DeleteFunc(p.Items, func(it Item) bool { return bridge.IsOwnListing(it.Name) })
 	before := len(p.Items)
 	p.Items = slices.DeleteFunc(p.Items, func(it Item) bool {
 		return (f.Installed == ModeHide && it.Installed) ||

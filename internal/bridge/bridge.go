@@ -33,6 +33,17 @@ var SMAPI = Companion{ModFolder: "MortarSmapiBridge", ID: "Rethunk.MortarSmapiBr
 // BepInEx is the Mortar BepInEx Bridge, whose state file sits in BepInEx's config folder.
 var BepInEx = Companion{ModFolder: "MortarBepInExBridge", ID: "Rethunk.MortarBepInExBridge", StateFile: "BepInEx/config/mortar-bepinex-bridge.json", Package: "Rethunk-MortarBepInExBridge"}
 
+// IsOwnListing reports whether name is one of the bridges as a mod site or a folder spells it ("Mortar SMAPI Bridge",
+// "MortarBepInExBridge", "Mortar-MortarBepInExBridge"): Mortar installs its own copy, so a second one from a site or
+// an import would load the bridge twice.
+func IsOwnListing(name string) bool {
+	n := strings.ToLower(strings.NewReplacer(" ", "", "_", "").Replace(name))
+	if _, after, ok := strings.Cut(n, "-"); ok {
+		n = after
+	}
+	return n == strings.ToLower(SMAPI.ModFolder) || n == strings.ToLower(BepInEx.ModFolder)
+}
+
 // maxReply bounds the reply read: a status answer is one line of JSON.
 const maxReply = 1 << 20
 
