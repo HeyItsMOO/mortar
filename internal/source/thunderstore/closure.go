@@ -85,7 +85,7 @@ func parseDependency(s string) (Ref, error) {
 
 // Closure resolves roots and everything they depend on from the community's cached index. Each package appears once,
 // at the highest version anything in the closure asks for, and dependencies come before the packages that need them,
-// in a deterministic order. A missing package, a loader other than BepInEx 5.4.x or a dependency cycle is an error
+// in a deterministic order. A missing package, a loader pack outside the series Mortar runs it as or a dependency cycle is an error
 // naming the chain of requests that led to it.
 func (d Driver) Closure(ctx context.Context, key string, roots []Ref, mortarVersion string) ([]Resolved, error) {
 	list, err := d.packages(ctx, key, source.UserAgentWithSite(mortarVersion))
