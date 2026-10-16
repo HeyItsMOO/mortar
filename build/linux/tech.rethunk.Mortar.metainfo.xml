@@ -50,23 +50,44 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
-    <release version="0.3.2" date="2026-10-15">
+    <release version="0.3.2" date="2026-10-16">
       <description>
         <p>New</p>
         <ul>
-          <li>Animated backgrounds: an animated GIF, WebP or PNG plays behind Mortar, and holds still when Reduce motion is on</li>
-          <li>What's new groups each release's changes by area, with a New or Fixed label on every line</li>
+          <li>Animated backgrounds: an animated GIF, WebP or PNG plays behind Mortar, and holds still when Reduce motion is on or while a game is running</li>
+          <li>Settings › Appearance says when a background image is large enough to cost memory and GPU, and suggests WebP</li>
+          <li>What's new groups each release's changes by area, with a New or Fixed label on every line, and after an update that skipped versions it also shows each release you missed</li>
+          <li>Bottles shows its own icon in Settings › Launchers</li>
+          <li>A save's backups also list the copies the game keeps itself, Valheim's automatic world backups and The Sims 4's rollback copies, and restore them like Mortar's own</li>
+          <li>Games installed through the Epic Games Launcher on Windows are found, and Play starts them through the launcher: Risk of Rain 2, Enter the Gungeon, Outward and Totally Accurate Battle Simulator</li>
+          <li>On Linux, Mortar also lists those games when Heroic installed them from Epic</li>
+          <li>Games installed through the Xbox app on Windows are found: Valheim, Inscryption and Bomb Rush Cyberfunk</li>
+          <li>Setting up a game that no launcher found offers any copy Mortar finds in your Desktop, Downloads or Games folders before you pick a folder yourself</li>
+          <li>A bug report names the build beside the version, and mortar.log starts with the version, build and platform</li>
           <li>Browse cards can show downloads, endorsements, likes or stars, file size, version and last updated under the summary: tick the ones you want under Show › Card details</li>
+          <li>Card details show file size for Nexus Mods and Modrinth mods too, as for Thunderstore and CurseForge</li>
+          <li>The Mods tab's cards show the same Card details: endorsements, downloads, size on disk and last updated</li>
         </ul>
         <p>Fixed</p>
         <ul>
           <li>Creating a Lethal Company or Valheim profile no longer fails with "does not say who published it"</li>
           <li>Newer Steam games, such as Super Battle Golf, show their art in Game select and the game menu</li>
-          <li>When Mortar cannot start, it says why in a message instead of closing without a word</li>
+          <li>The Sims 4 played in German, French, Spanish or Dutch finds its Mods, saves and Options.ini, which the game keeps in a folder named in that language</li>
+          <li>A catalog update holding a game this version cannot read no longer sends Mortar back to its built-in catalog; it leaves out only that game</li>
+          <li>When Mortar cannot start, it says why in a message instead of closing without a word, with a button that opens the folder holding its log; on Linux without zenity or kdialog the message arrives as a desktop notification</li>
+          <li>Starting Mortar while it is already open brings its window back even when the page inside had stopped responding</li>
+          <li>A Mortar that has frozen no longer swallows the next start: that start offers to end it and open a fresh one</li>
           <li>Windows: the installer installs the WebView2 Runtime when it is missing or was removed, says so if that fails, and Mortar asks before starting without it</li>
+          <li>What's new no longer shows an error when GitHub cannot serve a release's notes; it waits for the next update instead</li>
+          <li>Browse and imports leave out Mortar's own bridges, which Mortar installs itself, so a profile can no longer load a second copy</li>
           <li>Lethal Company's Saves lists each slot once: the backup and temporary files the game writes beside a slot belong to it, and each save says whether it is a save slot, an extra slot added by a mod, or the weekly challenge</li>
+          <li>Saves leaves out the Season and Fits columns for games whose saves record neither, such as Lethal Company</li>
           <li>Menus are wide enough for their longest item, so Check mods and Mortar for updates is no longer cut off</li>
+          <li>A menu item still cut off at the menu's widest, such as a long profile name, shows its full text on hover</li>
           <li>Game select's letter rail spreads down the whole window, with letters that grow with it</li>
+          <li>Game select lists the games found on this computer right after the ones you played recently, ahead of the rest of the catalog, and the game menu in the title bar lists only those, with All games for the rest</li>
+          <li>Saves no longer scrolls sideways in the list view</li>
+          <li>An error message names what went wrong instead of "Something went wrong"</li>
         </ul>
       </description>
     </release>
