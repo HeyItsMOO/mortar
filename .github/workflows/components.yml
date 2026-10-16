@@ -41,6 +41,13 @@ jobs:
           printf '%s\n' "$UPDATE_KEY" >"$key"
           GOTMPDIR=/var/tmp TMPDIR=/var/tmp MORTAR_UPDATE_KEY="$key" go run ./cmd/components
 
+      # A catalog the last two released versions cannot read leaves their users on the bundled copy, so it is not
+      # published.
+      - name: Check the last two releases read it
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: GOTMPDIR=/var/tmp TMPDIR=/var/tmp scripts/catalog-compat.sh components.json
+
       # Published releases are immutable, so each signed manifest is its own components-v2-<serial> release, created
       # once with both files; Mortar reads the newest one. The prefix is the schema's: tagPrefix in internal/components.
       - name: Publish components release
