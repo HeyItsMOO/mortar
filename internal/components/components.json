@@ -1,5 +1,5 @@
 {
-  "serial": 1792131787,
+  "serial": 1792145673,
   "components": [
     {
       "game": "stardew",
@@ -39,10 +39,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "tag": "v0.2.2",
-      "asset": "MortarBepInExBridge-0.2.2.zip",
-      "version": "0.2.2",
-      "sha256": "a0df331e00f5e18ed51f6d467c4ac66ce87cac5ea274dd11270f015508726d4d"
+      "tag": "v0.2.4",
+      "asset": "MortarBepInExBridge-0.2.4.zip",
+      "version": "0.2.4",
+      "sha256": "3d134d31dd4d5ba773af7addc7f2ad0692ace17782a6e751d46663c18d301dfa"
     },
     {
       "game": "valheim",
@@ -53,10 +53,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "tag": "v0.2.2",
-      "asset": "MortarBepInExBridge-0.2.2.zip",
-      "version": "0.2.2",
-      "sha256": "a0df331e00f5e18ed51f6d467c4ac66ce87cac5ea274dd11270f015508726d4d"
+      "tag": "v0.2.4",
+      "asset": "MortarBepInExBridge-0.2.4.zip",
+      "version": "0.2.4",
+      "sha256": "3d134d31dd4d5ba773af7addc7f2ad0692ace17782a6e751d46663c18d301dfa"
     }
   ],
   "games": [
@@ -258,11 +258,11 @@
         }
       ],
       "stores": {
-        "xbox": {
-          "package": "CoffeeStainStudios.Valheim"
-        },
         "steam": {
           "appId": "892970"
+        },
+        "xbox": {
+          "package": "CoffeeStainStudios.Valheim"
         }
       },
       "loaders": [
@@ -356,11 +356,11 @@
         }
       ],
       "stores": {
-        "epic": {
-          "appNames": ["4b3dcc5723454a47a9112d8fe8fd5f5c"]
-        },
         "steam": {
           "appId": "632360"
+        },
+        "epic": {
+          "appNames": ["4b3dcc5723454a47a9112d8fe8fd5f5c"]
         }
       },
       "loaders": [
@@ -499,11 +499,11 @@
         }
       ],
       "stores": {
-        "xbox": {
-          "package": "DevolverDigital.Inscryption"
-        },
         "steam": {
           "appId": "1092790"
+        },
+        "xbox": {
+          "package": "DevolverDigital.Inscryption"
         }
       },
       "loaders": [
@@ -782,11 +782,11 @@
         }
       ],
       "stores": {
-        "xbox": {
-          "package": "TeamReptile.BombRushCyberfunk"
-        },
         "steam": {
           "appId": "1353230"
+        },
+        "xbox": {
+          "package": "TeamReptile.BombRushCyberfunk"
         }
       },
       "loaders": [
@@ -976,11 +976,11 @@
         }
       ],
       "stores": {
-        "epic": {
-          "appNames": ["Garlic"]
-        },
         "steam": {
           "appId": "311690"
+        },
+        "epic": {
+          "appNames": ["Garlic"]
         }
       },
       "loaders": [
@@ -1384,11 +1384,11 @@
         }
       ],
       "stores": {
-        "epic": {
-          "appNames": ["Viola", "f07a51af8ac845ea96f792fb485e04a3"]
-        },
         "steam": {
           "appId": "794260"
+        },
+        "epic": {
+          "appNames": ["Viola", "f07a51af8ac845ea96f792fb485e04a3"]
         }
       },
       "loaders": [
@@ -1815,11 +1815,11 @@
         }
       ],
       "stores": {
-        "epic": {
-          "appNames": ["Driftfish"]
-        },
         "steam": {
           "appId": "508440"
+        },
+        "epic": {
+          "appNames": ["Driftfish"]
         }
       },
       "loaders": [
@@ -2126,7 +2126,9 @@
       },
       "saveFiles": ["Slot_*.save"],
       "saveCopies": ["{name}.ver?"],
-      "folderNames": { "The Sims 4": ["Die Sims 4", "Les Sims 4", "Los Sims 4", "De Sims 4"] },
+      "folderNames": {
+        "The Sims 4": ["Die Sims 4", "Les Sims 4", "Los Sims 4", "De Sims 4"]
+      },
       "requiredSettings": [
         {
           "path": "options",
