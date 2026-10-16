@@ -1504,10 +1504,10 @@ harness_check() {
 }
 
 # curseforge_scenario proves CurseForge end to end in its own throwaway sandbox, with no game launched: a Stardew
-# profile, a search for Content Patcher, the top hit installed through the queue, an update check on it, and a mod whose
-# author disallows third-party distribution, which must not be downloaded. MORTAR_CURSEFORGE_KEY is the app key; it is
-# built into this sandbox's server only, and sent to the API through a config file descriptor, never on a command line
-# or in output. Unset, the scenario skips.
+# profile, a search for Content Patcher, the top hit's second-newest file installed through the queue, an update check
+# that must find the newer one, and a mod whose author disallows third-party distribution, which must not be downloaded.
+# MORTAR_CURSEFORGE_KEY is the app key; it is built into this sandbox's server only, and sent to the API through a
+# config file descriptor, never on a command line or in output. Unset, the scenario skips.
 curseforge_scenario() {
   if [ -z "${MORTAR_CURSEFORGE_KEY:-}" ]; then
     echo "SKIP curseforge: MORTAR_CURSEFORGE_KEY is not set"
@@ -1540,8 +1540,17 @@ curseforge_scenario() {
   top=$(python3 -c 'import json,sys; i=json.load(open(sys.argv[1]))["items"]; print(i[0]["id"] if i and i[0]["source"]=="curseforge" else "")' "$ROOT/cf-browse.json" 2>/dev/null || true)
   [ -n "$top" ] || failures+=("the search returned no CurseForge hit for Content Patcher")
 
+  # The second-newest release file is installed, so the update check has a newer one to find.
+  local older=""
   if [ -n "$top" ]; then
-    cli queue add stardew "$profile" "$top" --source curseforge >"$ROOT/cf-add.txt" 2>&1 ||
+    curl -fsS --config <(printf 'header = "x-api-key: %s"\n' "$MORTAR_CURSEFORGE_KEY") \
+      "https://api.curseforge.com/v1/mods/$top/files?pageSize=50" >"$ROOT/cf-files.json" 2>/dev/null || true
+    older=$(python3 -c 'import json,sys; f=sorted((x for x in json.load(open(sys.argv[1]))["data"] if x.get("releaseType")==1), key=lambda x: x["fileDate"], reverse=True); print(f[1]["id"] if len(f)>1 else "")' "$ROOT/cf-files.json" 2>/dev/null || true)
+    [ -n "$older" ] || failures+=("no older CurseForge release file of $top to install")
+  fi
+
+  if [ -n "$older" ]; then
+    cli queue add stardew "$profile" "$top" --source curseforge --file "$older" >"$ROOT/cf-add.txt" 2>&1 ||
       failures+=("queue add failed: $(head -c 300 "$ROOT/cf-add.txt")")
     cf_wait_queue "$profile" >"$ROOT/cf-wait.txt"
     [ -s "$ROOT/cf-wait.txt" ] && failures+=("download did not finish: $(head -c 300 "$ROOT/cf-wait.txt")")
@@ -1567,8 +1576,11 @@ for d, _, files in os.walk(root):
 PY
 )
     [ -n "$fileid" ] || failures+=("the profile records no CurseForge file id")
+    [ "$fileid" = "$older" ] || failures+=("the profile records file $fileid, not the requested $older")
     cli updates stardew "$profile" --json >"$ROOT/cf-updates.json" 2>&1 ||
       failures+=("update check failed: $(head -c 300 "$ROOT/cf-updates.json")")
+    python3 -c 'import json,sys; sys.exit(0 if any(u["source"].lower()=="curseforge" for u in json.load(open(sys.argv[1]))["updates"]) else 1)' "$ROOT/cf-updates.json" 2>/dev/null ||
+      failures+=("the update check found no CurseForge update for the older file: $(head -c 300 "$ROOT/cf-updates.json")")
   fi
 
   # Mods whose authors disallow third-party distribution have allowModDistribution false in the API.
