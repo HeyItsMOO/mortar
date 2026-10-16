@@ -37,6 +37,8 @@ type Install struct {
 	Store, Dir, AppID string
 	// Prefix is the Bottles bottle folder a Windows build runs in.
 	Prefix string
+	// FlatpakApp is the Flatpak app id of a game installed as one, whose own folders live in its sandbox.
+	FlatpakApp string
 	// Platform is the OS the install's build is for: "windows", "linux" or "darwin".
 	Platform string
 	// Home is the user's home folder.
@@ -157,6 +159,11 @@ func nativeTokens(inst Install) (map[string]string, error) {
 		tokens["xdgData"] = tokens["xdgConfig"]
 	default:
 		switch {
+		case inst.FlatpakApp != "":
+			// Flatpak points an app's XDG_CONFIG_HOME and XDG_DATA_HOME into its folder under ~/.var/app.
+			sandbox := filepath.Join(home, ".var", "app", inst.FlatpakApp)
+			tokens["xdgConfig"] = filepath.Join(sandbox, "config")
+			tokens["xdgData"] = filepath.Join(sandbox, "data")
 		case inst.Store == storeFlatpakSteam:
 			sandbox := filepath.Join(home, ".var", "app", "com.valvesoftware.Steam")
 			tokens["xdgConfig"] = filepath.Join(sandbox, ".config")

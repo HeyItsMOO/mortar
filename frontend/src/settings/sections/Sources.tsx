@@ -19,7 +19,15 @@ import { NexusMeter } from '../NexusMeter.tsx'
 import { useNexus } from '../nexus.ts'
 import { SettingRow, SettingsSection } from '../SettingsSection.tsx'
 
-const SOURCES = ['nexus', 'github', 'thunderstore', 'modrinth', 'curseforge', 'itch'] as const
+const SOURCES = [
+  'nexus',
+  'github',
+  'thunderstore',
+  'modrinth',
+  'curseforge',
+  'itch',
+  'vsmoddb',
+] as const
 type SourceId = (typeof SOURCES)[number]
 
 // Go's zero time.

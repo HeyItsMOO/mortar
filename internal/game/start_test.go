@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
+	"github.com/Rethunk-Tech/mortar/internal/gamestore"
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/sandbox"
@@ -484,5 +485,21 @@ func TestEpicCopyStartsThroughTheEpicLauncher(t *testing.T) {
 		if components.PlainAppName(bad) {
 			t.Fatalf("%q passed as a plain AppName", bad)
 		}
+	}
+}
+
+func TestDirectCommandStartsAFlatpakCopyThroughFlatpakAndALinuxBuildThroughItsStartFile(t *testing.T) {
+	plan := &launchplan.Plan{Mode: launchplan.ModeProfile, Args: []string{"-o", "w"}, Env: map[string]string{"A": "1"}}
+	c, err := Starter{}.command("linux", Install{Game: "vintage-story", Store: StoreFlatpak, Platform: "linux"}, plan, StartEnv{Direct: true}, "", "/usr/bin/flatpak")
+	if err != nil || c.Name != "/usr/bin/flatpak" || !slices.Equal(c.Args, []string{"run", "--env=A=1", "at.vintagestory.VintageStory", "-o", "w"}) {
+		t.Fatalf("flatpak = %+v, %v", c, err)
+	}
+	if _, err := (Starter{}).command("linux", Install{Game: "vintage-story", Store: StoreFlatpak, Platform: "linux"}, plan, StartEnv{Direct: true}, "", ""); err == nil {
+		t.Fatal("a Flatpak copy started without flatpak")
+	}
+	dir := filepath.FromSlash("/games/vintagestory")
+	c, err = Starter{}.Command("linux", Install{Game: "vintage-story", Store: gamestore.StoreStandalone, Dir: dir, Platform: "linux"}, plan)
+	if err != nil || c.Name != filepath.Join(dir, "run.sh") {
+		t.Fatalf("native = %+v, %v", c, err)
 	}
 }

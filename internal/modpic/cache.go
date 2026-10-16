@@ -39,6 +39,7 @@ const workers = 4
 var allowedHosts = []string{
 	"staticdelivery.nexusmods.com", "images.nexusmods.com", "ccdn.thunderstore.io", "gcdn.thunderstore.io",
 	"cdn.modrinth.com", "media.forgecdn.net", "avatars.githubusercontent.com", "img.itch.zone",
+	"moddbcdn.vintagestory.at",
 }
 
 var imageTypes = map[string]struct{}{

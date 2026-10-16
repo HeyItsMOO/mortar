@@ -40,6 +40,8 @@ type Target struct {
 	MaxDepth map[string]int
 	// KeepWhole lists the lower-case extensions that make a folder-loader archive one unit (components.TargetDef.KeepWhole).
 	KeepWhole []string
+	// ModRoot is the file name that marks a mod's own folder (components.TargetDef.ModRoot).
+	ModRoot string
 	// Extensions are the lower-case extensions of the files a folder-loader archive lays out here, not in mods.
 	Extensions []string
 	// Shared marks a target whose files are placed at install in a folder every profile uses (components.TargetDef.Role).
@@ -67,9 +69,10 @@ func (g Game) Splits(l Layout) bool {
 	if ti < 0 {
 		return false
 	}
-	keep := g.Targets[ti].KeepWhole
+	keep, root := g.Targets[ti].KeepWhole, g.Targets[ti].ModRoot
 	return !slices.ContainsFunc(l.Files, func(f File) bool {
-		return f.Target == TargetMods && slices.Contains(keep, strings.ToLower(strings.TrimPrefix(path.Ext(f.Rel), ".")))
+		return f.Target == TargetMods && (slices.Contains(keep, strings.ToLower(strings.TrimPrefix(path.Ext(f.Rel), "."))) ||
+			root != "" && strings.EqualFold(path.Base(f.Rel), root))
 	})
 }
 

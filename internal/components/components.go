@@ -128,6 +128,9 @@ type GameInfo struct {
 	// LinuxMarker is the executable of the game's native Linux build where the store ships one beside the build Marker
 	// names: an install holding it and not Marker is that build, started natively rather than under Proton.
 	LinuxMarker string `json:"linuxMarker,omitempty"`
+	// LinuxStart is the slash path below the install of the file the native Linux build is started through, where
+	// that is not LinuxMarker (a script that sets the build's environment first).
+	LinuxStart string `json:"linuxStart,omitempty"`
 	// R2modmanFolder is r2modman's own folder name for the game (the Thunderstore schema's internalFolderName), the
 	// parent of its profiles folder.
 	R2modmanFolder string `json:"r2modmanFolder,omitempty"`
@@ -293,6 +296,10 @@ type TargetDef struct {
 	// out a file with one installs as a single entry holding every file it laid out, since such files only work
 	// beside their siblings. An archive with none splits into one entry per file.
 	KeepWhole []string `json:"keepWhole,omitempty"`
+	// ModRoot is the file name that marks a mod's own folder in a folder-loader archive (Vintage Story's
+	// modinfo.json): the folder holding it is laid out whole as one folder below the target, and the archive is one
+	// entry. An archive without it is laid out as loose files.
+	ModRoot string `json:"modRoot,omitempty"`
 	// Role names a path role instead of a profile folder: the target's files are placed at install in that folder of
 	// the game, shared by every profile, and Mortar records which it placed. Root is empty then.
 	Role string `json:"role,omitempty"`
@@ -332,7 +339,29 @@ type GameStores struct {
 	EA      *EAStore      `json:"ea,omitempty"`
 	Epic    *EpicStore    `json:"epic,omitempty"`
 	Xbox    *XboxStore    `json:"xbox,omitempty"`
+	// Standalone and Flatpak find a game sold outside any store app: in the folders its own installer uses, or as a
+	// Flatpak app.
+	Standalone *StandaloneStore `json:"standalone,omitempty"`
+	Flatpak    *FlatpakStore    `json:"flatpak,omitempty"`
 }
+
+// StandaloneStore names the folders a game's own installer puts it in, each a path template per platform.
+type StandaloneStore struct {
+	Folders []PathTemplate `json:"folders"`
+}
+
+// FlatpakStore names a game installed as a Flatpak app: the app id and the slash path below the app's files folder
+// that holds the game.
+type FlatpakStore struct {
+	App    string `json:"app"`
+	Folder string `json:"folder"`
+}
+
+var flatpakApp = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_-]*(\.[A-Za-z0-9_-]+){2,}$`)
+
+// PlainFlatpakApp reports whether app is a Flatpak application id: three or more dot-separated parts of letters,
+// digits, "_" and "-".
+func PlainFlatpakApp(app string) bool { return len(app) <= 255 && flatpakApp.MatchString(app) }
 
 // XboxStore names a game to the Xbox app: the Name of the Windows app package it installs (Get-AppxPackage -Name).
 type XboxStore struct {
@@ -524,6 +553,24 @@ func (g GameInfo) Validate() error {
 	}
 	if g.MarkerDir != "" && (strings.Contains(g.MarkerDir, "\\") || !fs.ValidPath(g.MarkerDir) || g.MarkerDir == ".") {
 		return fmt.Errorf("game %q has an unsafe marker folder %q", g.ID, g.MarkerDir)
+	}
+	if g.LinuxStart != "" && (strings.Contains(g.LinuxStart, "\\") || !fs.ValidPath(g.LinuxStart) || g.LinuxStart == ".") {
+		return fmt.Errorf("game %q has an unsafe Linux start file %q", g.ID, g.LinuxStart)
+	}
+	if f := g.Stores.Flatpak; f != nil && (!PlainFlatpakApp(f.App) || strings.Contains(f.Folder, "\\") || !fs.ValidPath(f.Folder) || f.Folder == ".") {
+		return fmt.Errorf("game %q has an unusable Flatpak app %q or folder %q", g.ID, f.App, f.Folder)
+	}
+	if st := g.Stores.Standalone; st != nil {
+		if len(st.Folders) == 0 {
+			return fmt.Errorf("game %q names a standalone install without folders", g.ID)
+		}
+		for _, t := range st.Folders {
+			for _, p := range []string{t.Windows, t.Linux, t.Darwin} {
+				if p != "" && !strings.HasPrefix(p, "{") {
+					return fmt.Errorf("game %q standalone folder %q must start with a token", g.ID, p)
+				}
+			}
+		}
 	}
 	for _, r := range g.RequiredSettings {
 		if _, ok := g.Paths[r.Path]; !ok || r.Key == "" || r.Value == "" || r.Message == "" {

@@ -9,4 +9,5 @@ import (
 	_ "github.com/Rethunk-Tech/mortar/internal/source/nexus"
 	_ "github.com/Rethunk-Tech/mortar/internal/source/patreon"
 	_ "github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
+	_ "github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
 )

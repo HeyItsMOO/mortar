@@ -13,10 +13,11 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/source/curseforge"
 	"github.com/Rethunk-Tech/mortar/internal/source/itch"
 	"github.com/Rethunk-Tech/mortar/internal/source/modrinth"
+	"github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
-// DirectFile is what a Modrinth, CurseForge or itch.io download needs: the file's address, size and digest, and the projects the
+// DirectFile is what a Modrinth, CurseForge, itch.io or Vintage Story Mod DB download needs: the file's address, size and digest, and the projects the
 // version requires.
 type DirectFile struct {
 	ID, Name, Version, FileName, URL string
@@ -149,6 +150,12 @@ func ResolveDirect(ctx context.Context, src, id, version string, loaders []strin
 			return DirectFile{}, err
 		}
 		return DirectFile{ID: id, Version: r.UploadID, FileName: r.FileName, URL: r.URL, SizeKB: r.Size >> 10}, nil
+	case "vsmoddb":
+		r, err := vsmoddb.Driver{}.Resolve(ctx, id, version)
+		if err != nil {
+			return DirectFile{}, err
+		}
+		return DirectFile{ID: r.ID, Name: r.Name, Version: r.Version, FileID: r.ReleaseID, FileName: r.FileName, URL: r.URL}, nil
 	}
 	return DirectFile{}, fmt.Errorf("unknown source %q", src)
 }

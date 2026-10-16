@@ -194,3 +194,26 @@ func TestFolderGameSplitsUnlessAKeepWholeFileIsLaidOut(t *testing.T) {
 		t.Fatal("a game with another loader never splits")
 	}
 }
+
+func TestFolderGameLaysAModRootFolderOutWholeAsOneEntry(t *testing.T) {
+	t.Parallel()
+	g := Game{Loaders: []string{"folder"}, Targets: []Target{{ID: TargetMods, ModRoot: "modinfo.json"}}}
+	l, err := (plain{}).Layout(extracted(t, "k", map[string]string{
+		"CarryOn/modinfo.json": "{}", "CarryOn/assets/a.json": "{}", "CarryOn/x/modinfo.json": "{}", "readme.txt": "x",
+	}), g, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := map[string]bool{}
+	for _, f := range l.Files {
+		got[f.Rel] = true
+	}
+	// The shallowest folder holding the marker is the mod; a file beside it is not the mod's.
+	if len(got) != 3 || !got["k/modinfo.json"] || !got["k/assets/a.json"] || !got["k/x/modinfo.json"] || g.Splits(l) {
+		t.Fatalf("layout = %v, splits %v", got, g.Splits(l))
+	}
+	loose, err := (plain{}).Layout(extracted(t, "k", map[string]string{"Mod.cs": "x"}), g, nil)
+	if err != nil || len(loose.Files) != 1 || loose.Files[0].Rel != "Mod.cs" {
+		t.Fatalf("loose = %+v, %v", loose, err)
+	}
+}

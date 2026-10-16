@@ -1958,6 +1958,77 @@
       ]
     },
     {
+      "id": "vintage-story",
+      "name": "Vintage Story",
+      "enabled": false,
+      "marker": "Vintagestory.exe",
+      "linuxMarker": "Vintagestory",
+      "linuxStart": "run.sh",
+      "metadata": [],
+      "paths": {
+        "mods": {
+          "windows": "{appData}/VintagestoryData/Mods",
+          "linux": "{xdgConfig}/VintagestoryData/Mods"
+        },
+        "saves": {
+          "windows": "{appData}/VintagestoryData/Saves",
+          "linux": "{xdgConfig}/VintagestoryData/Saves"
+        },
+        "userData": {
+          "windows": "{appData}/VintagestoryData",
+          "linux": "{xdgConfig}/VintagestoryData"
+        }
+      },
+      "saveFiles": ["*.vcdbs"],
+      "saveCompanions": [".vcdbs-shm", ".vcdbs-wal"],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "mods",
+          "root": "{profile}/Mods",
+          "modRoot": "modinfo.json"
+        }
+      ],
+      "stores": {
+        "standalone": {
+          "folders": [
+            {
+              "windows": "{appData}/Vintagestory",
+              "linux": "{xdgData}/vintagestory"
+            },
+            {
+              "linux": "{home}/ApplicationData/vintagestory"
+            }
+          ]
+        },
+        "flatpak": {
+          "app": "at.vintagestory.VintageStory",
+          "folder": "extra/vintagestory"
+        }
+      },
+      "loaders": [
+        {
+          "id": "folder",
+          "name": ""
+        }
+      ],
+      "sources": [
+        {
+          "id": "vsmoddb",
+          "key": "vintagestory"
+        },
+        {
+          "id": "nexus",
+          "key": "vintagestory",
+          "gameId": 3576
+        },
+        {
+          "id": "github",
+          "key": "vintagestory-mod"
+        }
+      ]
+    },
+    {
       "id": "void-crew",
       "name": "Void Crew",
       "enabled": true,

@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -12,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
+	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	gameruntime "github.com/Rethunk-Tech/mortar/internal/runtime"
@@ -134,10 +136,18 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 	}
 	// A loader that replaces the executable cannot be reproduced by a store's relay.
 	if env.Direct || plan.Exe != "" || steamSkipsLoader(goos, inst, plan, env) {
+		if inst.Store == StoreFlatpak {
+			return flatpakAppCommand(inst, plan, flatpakPath)
+		}
 		exe := cmp.Or(plan.Exe, plan.Entry)
 		// A loader that injects into the game (BepInEx) names no executable of its own: the game's is the start.
-		if info, ok := catalogGame(inst.Game); ok && exe == "" && strings.HasSuffix(strings.ToLower(info.Marker), ".exe") {
-			exe = filepath.Join(inst.Dir, info.MarkerPath())
+		if info, ok := catalogGame(inst.Game); ok && exe == "" {
+			switch {
+			case inst.Platform == "linux" && info.LinuxMarker != "":
+				exe = filepath.Join(inst.Dir, filepath.FromSlash(cmp.Or(info.LinuxStart, info.LinuxMarker)))
+			case strings.HasSuffix(strings.ToLower(info.Marker), ".exe"):
+				exe = filepath.Join(inst.Dir, info.MarkerPath())
+			}
 		}
 		if exe == "" {
 			return launch.Command{}, errors.New("the game has no executable to start")
@@ -164,6 +174,9 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 			name, args = plan.Prefix[0], append(slices.Clone(plan.Prefix[1:]), append([]string{exe}, args...)...)
 		}
 		env := append(environ(plan.Env), protonEnv...)
+		if goos == "linux" && inst.Platform == "linux" {
+			env = append(env, dotnetRoot(plan.Env)...)
+		}
 		// Wine prints its errors only when asked; without them a launch that stalls on one says nothing.
 		if (inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton) && plan.Env["WINEDEBUG"] == "" {
 			env = append(env, "WINEDEBUG=err+all")
@@ -191,6 +204,36 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 		return launch.Command{}, launch.ErrNoSteam
 	}
 	return launch.Command{Name: steamPath, Args: args, Failure: launch.HintSteam, Relay: true}, nil
+}
+
+// flatpakAppCommand starts a game installed as a Flatpak app through `flatpak run`, which stays until the game exits.
+func flatpakAppCommand(inst Install, plan *launchplan.Plan, flatpakPath string) (launch.Command, error) {
+	info, _ := catalogGame(inst.Game)
+	if info.Stores.Flatpak == nil {
+		return launch.Command{}, errors.New("the game has no Flatpak app")
+	}
+	if flatpakPath == "" {
+		return launch.Command{}, errors.New("flatpak is not installed, and this copy of the game is a Flatpak app")
+	}
+	args := []string{"run"}
+	for _, kv := range environ(plan.Env) {
+		args = append(args, "--env="+kv)
+	}
+	args = append(append(args, info.Stores.Flatpak.App), plan.Args...)
+	return launch.Command{Name: flatpakPath, Args: args}, nil
+}
+
+// dotnetRoot points a .NET build at the runtime the .NET install script puts in ~/.dotnet, which a game started from
+// the desktop does not otherwise find: the script sets DOTNET_ROOT only in the shell's profile.
+func dotnetRoot(planEnv map[string]string) []string {
+	if os.Getenv("DOTNET_ROOT") != "" || planEnv["DOTNET_ROOT"] != "" {
+		return nil
+	}
+	home, err := os.UserHomeDir()
+	if err != nil || !fsx.IsFile(filepath.Join(home, ".dotnet", "dotnet")) {
+		return nil
+	}
+	return []string{"DOTNET_ROOT=" + filepath.Join(home, ".dotnet")}
 }
 
 func (st Starter) flatpakCanReadMods() bool {

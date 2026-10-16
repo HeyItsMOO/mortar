@@ -9,6 +9,7 @@ export type PageHost =
   | 'modrinth'
   | 'itch'
   | 'patreon'
+  | 'vsmoddb'
   | 'web'
   | ''
 export type ModAction = 'toggle' | 'details' | 'page' | 'files' | 'pin' | 'skip' | 'remove'
@@ -46,6 +47,9 @@ export const hostOf = (url: string | undefined): PageHost => {
   if (on('patreon.com')) {
     return 'patreon'
   }
+  if (on('mods.vintagestory.at')) {
+    return 'vsmoddb'
+  }
   return on('itch.io') ? 'itch' : 'web'
 }
 
@@ -60,6 +64,7 @@ export const openPageLabel = (i18n: I18n, host: PageHost): string =>
       modrinth: msg`Open on Modrinth`,
       itch: msg`Open on itch.io`,
       patreon: msg`Open on Patreon`,
+      vsmoddb: msg`Open on the Mod DB`,
       web: msg`Open page`,
       '': msg`Open page`,
     }[host],

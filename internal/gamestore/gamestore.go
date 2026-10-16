@@ -23,6 +23,9 @@ const (
 	// StoreEpicHeroic is an Epic Games copy Heroic installed through legendary.
 	StoreEpicHeroic = "epic-heroic"
 	StoreXbox       = "xbox"
+	// StoreStandalone is a copy the game's own installer put in a folder it always uses; StoreFlatpak a Flatpak app.
+	StoreStandalone = "standalone"
+	StoreFlatpak    = "flatpak"
 )
 
 // Launcher ids, each the source of one or more stores' installs and the key of the user's added folders.
@@ -67,7 +70,7 @@ type Store interface {
 
 // All returns the drivers in discovery order.
 func All() []Store {
-	return []Store{steamStore{}, gogStore{}, lutrisStore{}, bottlesStore{}, eaStore{}, epicStore{}, xboxStore{}}
+	return []Store{steamStore{}, gogStore{}, lutrisStore{}, bottlesStore{}, eaStore{}, epicStore{}, xboxStore{}, standaloneStore{}, flatpakStore{}}
 }
 
 // Has reports whether g's catalog entry names the store key.
@@ -87,6 +90,10 @@ func Has(g components.GameInfo, key string) bool {
 		return g.Stores.Epic != nil
 	case xboxKey:
 		return g.Stores.Xbox != nil
+	case standaloneKey:
+		return g.Stores.Standalone != nil
+	case flatpakKey:
+		return g.Stores.Flatpak != nil
 	}
 	return false
 }
@@ -110,7 +117,7 @@ func Discover(home string, roots map[string][]string, g components.GameInfo) []I
 	return all
 }
 
-var storeOrder = []string{StoreSteam, StoreFlatpakSteam, StoreGOG, StoreGOGHeroic, StoreMinigalaxy, StoreEA, StoreEpic, StoreEpicHeroic, StoreXbox, StoreLutris, StoreBottles}
+var storeOrder = []string{StoreSteam, StoreFlatpakSteam, StoreGOG, StoreGOGHeroic, StoreMinigalaxy, StoreEA, StoreEpic, StoreEpicHeroic, StoreXbox, StoreStandalone, StoreFlatpak, StoreLutris, StoreBottles}
 
 // Rank orders stores for choosing a default install, lowest first; an unknown store ties with Steam.
 func Rank(store string) int { return max(slices.Index(storeOrder, store), 0) }

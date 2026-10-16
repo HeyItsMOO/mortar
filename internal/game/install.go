@@ -29,6 +29,7 @@ const (
 	StoreBottles      = gamestore.StoreBottles
 	StoreEA           = gamestore.StoreEA
 	StoreEpic         = gamestore.StoreEpic
+	StoreFlatpak      = gamestore.StoreFlatpak
 )
 
 // Install origins.
@@ -78,7 +79,11 @@ func platformOf(info components.GameInfo, dir string) string {
 }
 
 func (in Install) runtime(info components.GameInfo, home string) runtime.Install {
-	return runtime.Install{Game: info.ID, Store: in.Store, Dir: in.Dir, AppID: info.SteamAppID(), Platform: in.Platform, Prefix: in.Prefix, Home: home}
+	ri := runtime.Install{Game: info.ID, Store: in.Store, Dir: in.Dir, AppID: info.SteamAppID(), Platform: in.Platform, Prefix: in.Prefix, Home: home}
+	if in.Store == StoreFlatpak && info.Stores.Flatpak != nil {
+		ri.FlatpakApp = info.Stores.Flatpak.App
+	}
+	return ri
 }
 
 // readVersion is the game's version in the install, "" when nothing names one.
