@@ -23,6 +23,13 @@ export const bundledArtwork = [
       'Bundled launcher icon (frontend/src/brand/vendor/bottles.svg) from Bottles, licensed under the GNU General Public License v3.0: https://www.gnu.org/licenses/gpl-3.0.html',
   },
   {
+    name: 'Vintage Story Mod DB icon',
+    licence: 'MIT',
+    url: 'https://github.com/anegostudios/vsmoddb',
+    notice:
+      'Bundled source icon (frontend/src/brand/vendor/vsmoddb.png) from the Vintage Story Mod DB, Copyright (c) 2021-2025 Anego Studios, licensed under the MIT License: https://opensource.org/license/mit',
+  },
+  {
     name: 'Nexus Mods logo (from Vortex)',
     licence: 'GPL-3.0',
     url: 'https://github.com/Nexus-Mods/Vortex',

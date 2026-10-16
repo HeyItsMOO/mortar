@@ -1035,7 +1035,7 @@ msgstr "Add to {targetName}"
 msgid "Enable mods in the Mods tab to see the order {loader} loads them."
 msgstr "Enable mods in the Mods tab to see the order {loader} loads them."
 
-#: src/settings/sections/Sources.tsx:108
+#: src/settings/sections/Sources.tsx:116
 msgid "No login, so the lower rate limit applies. Run gh auth login to raise it."
 msgstr "No login, so the lower rate limit applies. Run gh auth login to raise it."
 
@@ -1256,7 +1256,7 @@ msgstr "Revert this mod"
 msgid "Could not export the collection draft"
 msgstr "Could not export the collection draft"
 
-#: src/settings/sections/Sources.tsx:68
+#: src/settings/sections/Sources.tsx:76
 msgid "Recheck"
 msgstr "Recheck"
 
@@ -1584,7 +1584,7 @@ msgstr "Skip this version"
 msgid "None of {0} are in Saves yet; they will be added. The current Saves folder is backed up first."
 msgstr "None of {0} are in Saves yet; they will be added. The current Saves folder is backed up first."
 
-#: src/settings/sections/Sources.tsx:41
+#: src/settings/sections/Sources.tsx:49
 msgid "the connection failed"
 msgstr "the connection failed"
 
@@ -1722,7 +1722,7 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:523
+#: src/games/GameSelect.tsx:528
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -1826,7 +1826,7 @@ msgid "Repair all"
 msgstr "Repair all"
 
 #. placeholder {0}: sourceLabel(id)
-#: src/settings/sections/Sources.tsx:33
+#: src/settings/sections/Sources.tsx:41
 msgid "Mortar has not asked {0} this session."
 msgstr "Mortar has not asked {0} this session."
 
@@ -2949,7 +2949,7 @@ msgid "Local archives can't go here"
 msgstr "Local archives can't go here"
 
 #: src/settings/sections/ItchAccount.tsx:53
-#: src/settings/sections/Sources.tsx:134
+#: src/settings/sections/Sources.tsx:142
 msgid "Account"
 msgstr "Account"
 
@@ -3098,7 +3098,7 @@ msgstr "{0, plural, one {# update for {1, plural, one {# profile} other {# profi
 msgid "Could not add the mods to {targetName}"
 msgstr "Could not add the mods to {targetName}"
 
-#: src/settings/sections/Sources.tsx:101
+#: src/settings/sections/Sources.tsx:109
 msgid "Not signed in. Add your API key in Accounts."
 msgstr "Not signed in. Add your API key in Accounts."
 
@@ -3595,7 +3595,7 @@ msgstr "Storage"
 msgid "Licence"
 msgstr "Licence"
 
-#: src/settings/sections/Sources.tsx:35
+#: src/settings/sections/Sources.tsx:43
 msgid "Unreachable"
 msgstr "Unreachable"
 
@@ -3615,7 +3615,7 @@ msgstr "Update mods before Play on new profiles"
 msgid "Not downloadable here"
 msgstr "Not downloadable here"
 
-#: src/settings/sections/Sources.tsx:114
+#: src/settings/sections/Sources.tsx:122
 msgid "API key set for {itch}"
 msgstr "API key set for {itch}"
 
@@ -3945,7 +3945,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:507
+#: src/games/GameSelect.tsx:512
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4158,7 +4158,7 @@ msgstr "Signed in to Nexus Mods"
 msgid "In Mortar's updates"
 msgstr "In Mortar's updates"
 
-#: src/share/ImportInput.tsx:21
+#: src/share/ImportInput.tsx:22
 msgid "Open a .mortar file someone sent you. You see what it holds before anything downloads."
 msgstr "Open a .mortar file someone sent you. You see what it holds before anything downloads."
 
@@ -4312,11 +4312,11 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:526
+#: src/games/GameSelect.tsx:531
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
-#: src/games/GameSelect.tsx:268
+#: src/games/GameSelect.tsx:273
 msgid "Set up"
 msgstr "Set up"
 
@@ -5225,7 +5225,7 @@ msgid "Library"
 msgstr "Library"
 
 #: src/settings/sections/Downloads.tsx:101
-#: src/settings/sections/Sources.tsx:55
+#: src/settings/sections/Sources.tsx:63
 msgid "Connection"
 msgstr "Connection"
 
@@ -5285,7 +5285,7 @@ msgstr "None of this profile's mods are marked broken for the new version."
 msgid "One argument per line. Placeholders: {placeholders}."
 msgstr "One argument per line. Placeholders: {placeholders}."
 
-#: src/settings/sections/Sources.tsx:116
+#: src/settings/sections/Sources.tsx:124
 msgid "API key not set. Itch.io search is off until you add one."
 msgstr "API key not set. Itch.io search is off until you add one."
 
@@ -5504,7 +5504,7 @@ msgstr "{0} of {1}"
 msgid "Files of {name} changed outside Mortar"
 msgstr "Files of {name} changed outside Mortar"
 
-#: src/settings/sections/Sources.tsx:120
+#: src/settings/sections/Sources.tsx:128
 msgid "No account needed"
 msgstr "No account needed"
 
@@ -5667,7 +5667,7 @@ msgid "{dependentName} needs {dep}, which this profile lacks."
 msgstr "{dependentName} needs {dep}, which this profile lacks."
 
 #: src/profiles/PackImportDialog.tsx:165
-#: src/share/ImportInput.tsx:32
+#: src/share/ImportInput.tsx:33
 msgid "Choose a file…"
 msgstr "Choose a file…"
 
@@ -6385,7 +6385,7 @@ msgstr "Conflict scan depth"
 msgid "No release is published yet."
 msgstr "No release is published yet."
 
-#: src/share/ImportInput.tsx:73
+#: src/share/ImportInput.tsx:75
 msgid "Paste from clipboard"
 msgstr "Paste from clipboard"
 
@@ -6616,7 +6616,7 @@ msgid "No profiles found."
 msgstr "No profiles found."
 
 #. placeholder {0}: game.name
-#: src/games/GameSelect.tsx:204
+#: src/games/GameSelect.tsx:209
 msgid "Open {0}"
 msgstr "Open {0}"
 
@@ -6645,7 +6645,7 @@ msgstr "Could not move the old files to trash"
 msgid "No profiles yet"
 msgstr "No profiles yet"
 
-#: src/games/GameSelect.tsx:160
+#: src/games/GameSelect.tsx:165
 #: src/games/ProfileCards.tsx:48
 #: src/profiles/store.ts:261
 #: src/profiles/store.ts:342
@@ -7426,7 +7426,7 @@ msgstr "Could not switch {0}"
 msgid "Asset map"
 msgstr "Asset map"
 
-#: src/games/GameSelect.tsx:421
+#: src/games/GameSelect.tsx:426
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
@@ -7882,7 +7882,7 @@ msgstr "From r2modman or Gale on this computer"
 msgid "Default mods view"
 msgstr "Default mods view"
 
-#: src/settings/sections/Sources.tsx:51
+#: src/settings/sections/Sources.tsx:59
 msgid "Reachable"
 msgstr "Reachable"
 
@@ -7923,7 +7923,7 @@ msgstr "{0}: {1}"
 msgid "Sync folder"
 msgstr "Sync folder"
 
-#: src/settings/sections/Sources.tsx:127
+#: src/settings/sections/Sources.tsx:135
 msgid "No account"
 msgstr "No account"
 
@@ -8041,7 +8041,7 @@ msgstr "Could not read the saved change {change} from {when}"
 msgid "Days to keep downloaded mods that no profile uses. 0 keeps them forever."
 msgstr "Days to keep downloaded mods that no profile uses. 0 keeps them forever."
 
-#: src/settings/sections/Sources.tsx:148
+#: src/settings/sections/Sources.tsx:156
 msgid "Request counts appear after Mortar talks to GitHub."
 msgstr "Request counts appear after Mortar talks to GitHub."
 
@@ -8421,7 +8421,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:109
-#: src/games/GameSelect.tsx:503
+#: src/games/GameSelect.tsx:508
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -8489,7 +8489,7 @@ msgstr "Minutes between background update checks"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/games/GameSelect.tsx:145
+#: src/games/GameSelect.tsx:150
 msgid "{playtime} played"
 msgstr "{playtime} played"
 
@@ -8724,7 +8724,7 @@ msgid "See startup"
 msgstr "See startup"
 
 #. placeholder {0}: formatWhen(state.lastFail)
-#: src/settings/sections/Sources.tsx:46
+#: src/settings/sections/Sources.tsx:54
 msgid "No answer {0}: {reason}"
 msgstr "No answer {0}: {reason}"
 
@@ -9561,7 +9561,7 @@ msgstr "Set default preset…"
 msgid "Mods with problems"
 msgstr "Mods with problems"
 
-#: src/settings/sections/Sources.tsx:37
+#: src/settings/sections/Sources.tsx:45
 msgid "its address could not be looked up"
 msgstr "its address could not be looked up"
 
@@ -9642,7 +9642,7 @@ msgstr "Remove SMAPI from Steam's launch options"
 msgid "Check later"
 msgstr "Check later"
 
-#: src/share/ImportInput.tsx:85
+#: src/share/ImportInput.tsx:87
 msgid "Opened the itch.io page. Save the file from it; Mortar offers it from your Downloads folder."
 msgstr "Opened the itch.io page. Save the file from it; Mortar offers it from your Downloads folder."
 
@@ -9857,7 +9857,7 @@ msgstr "Browse for mods, add an archive, or paste a share or collection link wit
 msgid "From this file"
 msgstr "From this file"
 
-#: src/share/ImportInput.tsx:39
+#: src/share/ImportInput.tsx:40
 msgid "Paste a share link, a collection link, a Patreon post link, an itch.io page link, or (Premium) a Nexus mod link with Ctrl+V."
 msgstr "Paste a share link, a collection link, a Patreon post link, an itch.io page link, or (Premium) a Nexus mod link with Ctrl+V."
 
@@ -9924,7 +9924,7 @@ msgstr "Mortar stays on screen beside the game."
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:512
+#: src/games/GameSelect.tsx:517
 msgid "Other games"
 msgstr "Other games"
 
@@ -10018,10 +10018,6 @@ msgstr "Plain text"
 msgid "BepInEx patches"
 msgstr "BepInEx patches"
 
-#: src/games/storeName.ts:16
-msgid "Own installer"
-msgstr "Own installer"
-
 #: src/profiles/LaunchPresetsBlock.tsx:47
 msgid "Set as default"
 msgstr "Set as default"
@@ -10111,8 +10107,8 @@ msgstr "Dark"
 msgid "Open folder"
 msgstr "Open folder"
 
-#: src/settings/sections/Sources.tsx:150
-#: src/settings/sections/Sources.tsx:167
+#: src/settings/sections/Sources.tsx:158
+#: src/settings/sections/Sources.tsx:175
 msgid "Requests"
 msgstr "Requests"
 
@@ -10124,7 +10120,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
 #: src/game/ProfileWorkspace.tsx:39
-#: src/games/GameSelect.tsx:459
+#: src/games/GameSelect.tsx:464
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -10227,7 +10223,7 @@ msgstr "Their folders are removed from this profile. You can undo this."
 msgid "Clear filter"
 msgstr "Clear filter"
 
-#: src/settings/sections/Sources.tsx:129
+#: src/settings/sections/Sources.tsx:137
 msgid "Signed in"
 msgstr "Signed in"
 
@@ -10695,7 +10691,7 @@ msgid "{0} of {1} · {2}/s"
 msgstr "{0} of {1} · {2}/s"
 
 #: src/profiles/PackImportDialog.tsx:182
-#: src/share/ImportInput.tsx:76
+#: src/share/ImportInput.tsx:78
 msgid "Preview"
 msgstr "Preview"
 
@@ -10744,7 +10740,7 @@ msgid "Show conflicts"
 msgstr "Show conflicts"
 
 #: src/games/useGameTiles.ts:86
-#: src/settings/sections/Sources.tsx:131
+#: src/settings/sections/Sources.tsx:139
 msgid "Not set up"
 msgstr "Not set up"
 
@@ -11535,7 +11531,7 @@ msgid "Stop the game to test a launch."
 msgstr "Stop the game to test a launch."
 
 #: src/firstrunTour/TourPopover.tsx:42
-#: src/games/GameSelect.tsx:255
+#: src/games/GameSelect.tsx:260
 #: src/launch/PlayControl.tsx:175
 #: src/mods/typedConfig/ConfigTab.tsx:299
 #: src/settings/GameSettingsPage.tsx:95
@@ -11656,7 +11652,7 @@ msgstr "Reading startup reports…"
 msgid "Place here"
 msgstr "Place here"
 
-#: src/settings/sections/Sources.tsx:39
+#: src/settings/sections/Sources.tsx:47
 msgid "the connection was refused"
 msgstr "the connection was refused"
 
@@ -11854,7 +11850,7 @@ msgstr "Dependency"
 msgid "Could not check the profile"
 msgstr "Could not check the profile"
 
-#: src/settings/sections/Sources.tsx:32
+#: src/settings/sections/Sources.tsx:40
 msgid "Not contacted yet"
 msgstr "Not contacted yet"
 
@@ -12094,7 +12090,7 @@ msgid "Diagnostics saved"
 msgstr "Diagnostics saved"
 
 #: src/firstrun/ProfileStep.tsx:215
-#: src/share/ImportInput.tsx:59
+#: src/share/ImportInput.tsx:60
 msgid "Share link"
 msgstr "Share link"
 
@@ -12335,11 +12331,11 @@ msgstr "Updated fixable mods"
 msgid "Order"
 msgstr "Order"
 
-#: src/games/GameSelect.tsx:400
+#: src/games/GameSelect.tsx:405
 msgid "Jump to a letter"
 msgstr "Jump to a letter"
 
-#: src/settings/sections/Sources.tsx:38
+#: src/settings/sections/Sources.tsx:46
 msgid "it took too long to answer"
 msgstr "it took too long to answer"
 
@@ -12352,7 +12348,7 @@ msgstr "Sort: newest"
 msgid "Could not roll back {0}"
 msgstr "Could not roll back {0}"
 
-#: src/games/GameSelect.tsx:250
+#: src/games/GameSelect.tsx:255
 msgid "Play {playName}"
 msgstr "Play {playName}"
 
@@ -12804,7 +12800,7 @@ msgstr "Could not save the mod list"
 msgid "Only on {value}."
 msgstr "Only on {value}."
 
-#: src/share/ImportInput.tsx:84
+#: src/share/ImportInput.tsx:86
 msgid "Opened the Patreon post. Save the file from it; Mortar offers it from your Downloads folder."
 msgstr "Opened the Patreon post. Save the file from it; Mortar offers it from your Downloads folder."
 
@@ -12956,7 +12952,7 @@ msgstr "Show mod"
 msgid "Closing the window hides Mortar instead of quitting."
 msgstr "Closing the window hides Mortar instead of quitting."
 
-#: src/settings/sections/Sources.tsx:171
+#: src/settings/sections/Sources.tsx:179
 msgid "Free accounts click Download on Nexus for each file; Mortar opens each page in turn."
 msgstr "Free accounts click Download on Nexus for each file; Mortar opens each page in turn."
 
@@ -12991,7 +12987,7 @@ msgstr "Mark current as known good"
 
 #: src/firstrun/NexusStep.tsx:26
 #: src/settings/sections/NexusMods.tsx:152
-#: src/settings/sections/Sources.tsx:98
+#: src/settings/sections/Sources.tsx:106
 msgid "Signed in as {name}"
 msgstr "Signed in as {name}"
 
@@ -13407,7 +13403,7 @@ msgstr "Command-line control"
 msgid "Could not repair this profile"
 msgstr "Could not repair this profile"
 
-#: src/games/GameSelect.tsx:158
+#: src/games/GameSelect.tsx:163
 #: src/games/ProfileCards.tsx:46
 #: src/games/ProfileCards.tsx:59
 #: src/games/useOpenGame.ts:42
@@ -13587,7 +13583,7 @@ msgstr "See which mods slow the game"
 
 #. placeholder {0}: game.name
 #: src/firstrun/GameSetup.tsx:176
-#: src/games/GameSelect.tsx:263
+#: src/games/GameSelect.tsx:268
 msgid "Set up {0}"
 msgstr "Set up {0}"
 
@@ -14354,7 +14350,7 @@ msgid "Start with a copy of my current saves"
 msgstr "Start with a copy of my current saves"
 
 #. placeholder {0}: formatWhen(state.lastOK)
-#: src/settings/sections/Sources.tsx:52
+#: src/settings/sections/Sources.tsx:60
 msgid "Last answered {0}"
 msgstr "Last answered {0}"
 
@@ -14413,7 +14409,7 @@ msgstr "For r2modman and other Thunderstore managers: a code anyone can enter, o
 msgid "Measure while you play, then report the mods that take the most time per frame."
 msgstr "Measure while you play, then report the mods that take the most time per frame."
 
-#: src/settings/sections/Sources.tsx:47
+#: src/settings/sections/Sources.tsx:55
 msgid "Could not be reached: {reason}"
 msgstr "Could not be reached: {reason}"
 
@@ -14426,7 +14422,7 @@ msgstr "Set category…"
 msgid "Choose an archive first."
 msgstr "Choose an archive first."
 
-#: src/settings/sections/Sources.tsx:107
+#: src/settings/sections/Sources.tsx:115
 msgid "Using your gh login"
 msgstr "Using your gh login"
 
@@ -14447,6 +14443,10 @@ msgstr "Could not set it in Steam"
 #: src/settings/sections/DataUsage.tsx:231
 msgid "Disk space"
 msgstr "Disk space"
+
+#: src/games/storeName.ts:16
+msgid "Default folder"
+msgstr "Default folder"
 
 #. placeholder {0}: dropped.length
 #. placeholder {1}: names(dropped)
@@ -14511,7 +14511,7 @@ msgstr "Nothing to trim yet."
 #. placeholder {0}: rate.remaining
 #. placeholder {1}: rate.limit
 #. placeholder {2}: formatWhen(rate.reset)
-#: src/settings/sections/Sources.tsx:147
+#: src/settings/sections/Sources.tsx:155
 msgid "{0} of {1} requests left · resets {2}"
 msgstr "{0} of {1} requests left · resets {2}"
 
@@ -14548,7 +14548,7 @@ msgid "{enabled, plural, one {Enabled # mod} other {Enabled # mods}}"
 msgstr "{enabled, plural, one {Enabled # mod} other {Enabled # mods}}"
 
 #. placeholder {0}: sourceLabel(id)
-#: src/settings/sections/Sources.tsx:64
+#: src/settings/sections/Sources.tsx:72
 msgid "Could not recheck {0}"
 msgstr "Could not recheck {0}"
 

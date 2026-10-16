@@ -330,6 +330,12 @@ func run() error {
 			Handler: application.AssetFileServerFS(assets),
 			Middleware: application.ChainMiddleware(
 				game.ArtMiddleware(home),
+				game.InstallArtMiddleware(home, func() settings.Settings {
+					if store == nil {
+						return settings.Defaults()
+					}
+					return store.Get()
+				}),
 				profile.CoverMiddleware(func() *profile.Store { return profiles }),
 				modpic.Middleware(func() *modpic.Cache { return pictures }),
 				backdrop.Middleware(func() settings.Settings {

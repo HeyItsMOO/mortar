@@ -1964,6 +1964,7 @@
       "marker": "Vintagestory.exe",
       "linuxMarker": "Vintagestory",
       "linuxStart": "run.sh",
+      "art": "assets/game/textures/gui/backgrounds/mainmenu1.png",
       "metadata": [],
       "paths": {
         "mods": {

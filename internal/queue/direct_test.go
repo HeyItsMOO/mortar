@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/source/curseforge"
+	"github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
@@ -96,5 +97,12 @@ func TestExpandDirectKeepsThePicturePerEntryOnlyForTheRoot(t *testing.T) {
 	got, err := s.expandDirect(context.Background(), Request{Kind: KindInstall, Source: "curseforge", Package: "root", Picture: "https://img/p.png"})
 	if err != nil || len(got) != 2 || got[0].Picture != "" || got[1].Picture != "https://img/p.png" {
 		t.Fatalf("got %+v, err %v", got, err)
+	}
+}
+
+func TestAModDBIDIsAValidDirectPackage(t *testing.T) {
+	r := Request{Game: "vintage-story", Profile: "p", Source: "vsmoddb", Package: vsmoddb.ID(890, 4405)}
+	if !r.valid() {
+		t.Fatalf("%q was refused", r.Package)
 	}
 }

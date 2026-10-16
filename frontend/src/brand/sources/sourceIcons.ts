@@ -18,7 +18,8 @@ const ICONS: Record<string, { path: string; fill: string }> = {
   patreon: { path: siPatreon.path, fill: 'var(--mortar-ink)' },
 }
 
-// Nexus's logo is artwork rather than a vector mark, so SourceLogo draws it apart from ICONS.
-const hasSourceLogo = (id: string) => id === 'nexus' || id in ICONS
+// Nexus's and the Vintage Story Mod DB's logos are artwork rather than vector marks, so SourceLogo draws them apart
+// from ICONS.
+const hasSourceLogo = (id: string) => id === 'nexus' || id === 'vsmoddb' || id in ICONS
 
 export { hasSourceLogo, ICONS }

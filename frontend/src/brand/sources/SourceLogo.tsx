@@ -1,5 +1,6 @@
 import { BrandMark } from '../BrandMark.tsx'
 import nexusmods from '../vendor/nexusmods.svg'
+import vsmoddb from '../vendor/vsmoddb.png'
 import { ICONS } from './sourceIcons.ts'
 
 // The Nexus artwork leaves a margin inside its square that the vector marks do not, so it is drawn larger to match.
@@ -17,6 +18,9 @@ function SourceLogo({ id, size }: { id: string; size: number }) {
         style={{ margin: (size - drawn) / 2 }}
       />
     )
+  }
+  if (id === 'vsmoddb') {
+    return <img src={vsmoddb} alt="" width={size} height={size} />
   }
   const icon = ICONS[id]
   if (!icon) {

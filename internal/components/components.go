@@ -131,6 +131,8 @@ type GameInfo struct {
 	// LinuxStart is the slash path below the install of the file the native Linux build is started through, where
 	// that is not LinuxMarker (a script that sets the build's environment first).
 	LinuxStart string `json:"linuxStart,omitempty"`
+	// Art is the slash path below the install of an image the game ships, shown as its art where no store has any.
+	Art string `json:"art,omitempty"`
 	// R2modmanFolder is r2modman's own folder name for the game (the Thunderstore schema's internalFolderName), the
 	// parent of its profiles folder.
 	R2modmanFolder string `json:"r2modmanFolder,omitempty"`
@@ -554,8 +556,10 @@ func (g GameInfo) Validate() error {
 	if g.MarkerDir != "" && (strings.Contains(g.MarkerDir, "\\") || !fs.ValidPath(g.MarkerDir) || g.MarkerDir == ".") {
 		return fmt.Errorf("game %q has an unsafe marker folder %q", g.ID, g.MarkerDir)
 	}
-	if g.LinuxStart != "" && (strings.Contains(g.LinuxStart, "\\") || !fs.ValidPath(g.LinuxStart) || g.LinuxStart == ".") {
-		return fmt.Errorf("game %q has an unsafe Linux start file %q", g.ID, g.LinuxStart)
+	for _, p := range []string{g.LinuxStart, g.Art} {
+		if p != "" && (strings.Contains(p, "\\") || !fs.ValidPath(p) || p == ".") {
+			return fmt.Errorf("game %q has an unsafe install file %q", g.ID, p)
+		}
 	}
 	if f := g.Stores.Flatpak; f != nil && (!PlainFlatpakApp(f.App) || strings.Contains(f.Folder, "\\") || !fs.ValidPath(f.Folder) || f.Folder == ".") {
 		return fmt.Errorf("game %q has an unusable Flatpak app %q or folder %q", g.ID, f.App, f.Folder)

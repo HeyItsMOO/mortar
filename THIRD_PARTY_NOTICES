@@ -5920,6 +5920,14 @@ THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
+Vintage Story Mod DB icon
+licence: MIT
+https://github.com/anegostudios/vsmoddb
+
+Bundled source icon (frontend/src/brand/vendor/vsmoddb.png) from the Vintage Story Mod DB, Copyright (c) 2021-2025 Anego Studios, licensed under the MIT License: https://opensource.org/license/mit
+
+--------------------------------------------------------------------------------
+
 zustand@5.0.15
 licence: MIT
 https://github.com/pmndrs/zustand

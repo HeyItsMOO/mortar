@@ -15,6 +15,10 @@ func fake(t *testing.T) Driver {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/mods":
+			if r.URL.Query().Get("text") != "" && r.URL.Query().Get("orderby") != "downloads" {
+				http.Error(w, "a search with text and no sort must order by downloads", http.StatusBadRequest)
+				return
+			}
 			limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 			mods := `{"modid":1,"assetid":11,"name":"A","tags":["Library"],"lastreleased":"2026-10-16 08:25:06"}`
 			for i := 1; i < limit; i++ {
@@ -44,8 +48,8 @@ func TestSearchKeepsTheLastPageOfTheLimitAndDropsExcludedTags(t *testing.T) {
 	if first.Total != source.PageSize+1 || first.Hidden != 1 || first.Items[0].URL != siteURL+"/bee" || first.Items[0].Endorsements != 7 {
 		t.Fatalf("first page = %+v", first)
 	}
-	second, err := d.Search(context.Background(), source.Query{Page: source.FirstPage + 1})
-	if err != nil || len(second.Items) != source.PageSize || second.Items[0].ID != "2:22" {
+	second, err := d.Search(context.Background(), source.Query{Page: source.FirstPage + 1, Text: "b"})
+	if err != nil || len(second.Items) != source.PageSize || second.Items[0].ID != "2-22" {
 		t.Fatalf("second page = %+v, %v", second, err)
 	}
 }
@@ -53,19 +57,19 @@ func TestSearchKeepsTheLastPageOfTheLimitAndDropsExcludedTags(t *testing.T) {
 func TestResolvePrefersTheNewestStableReleaseAndMatchesAReleaseID(t *testing.T) {
 	d := fake(t)
 	for _, tc := range []struct{ version, want string }{{"", "1.14.3"}, {"3", "2.0.0-rc.1"}, {"1.14.3", "1.14.3"}} {
-		r, err := d.Resolve(context.Background(), "890:4405", tc.version)
-		if err != nil || r.Version != tc.want || r.ID != "890:4405" {
+		r, err := d.Resolve(context.Background(), "890-4405", tc.version)
+		if err != nil || r.Version != tc.want || r.ID != "890-4405" {
 			t.Fatalf("Resolve(%q) = %+v, %v", tc.version, r, err)
 		}
 	}
 	if _, err := d.Resolve(context.Background(), "890", "9.9"); err == nil {
 		t.Fatal("a release the mod lacks resolved")
 	}
-	items, err := d.Items(context.Background(), "", "", []string{"890:4405", "nope"})
-	if err != nil || items["890:4405"].Version != "1.14.3" || len(items) != 1 {
+	items, err := d.Items(context.Background(), "", "", []string{"890-4405", "nope"})
+	if err != nil || items["890-4405"].Version != "1.14.3" || len(items) != 1 {
 		t.Fatalf("items = %+v, %v", items, err)
 	}
-	if got := (Driver{}).ModPageURL("", "890:4405"); got != siteURL+"/show/mod/4405" || (Driver{}).ModPageURL("", "890") != "" {
+	if got := (Driver{}).ModPageURL("", "890-4405"); got != siteURL+"/show/mod/4405" || (Driver{}).ModPageURL("", "890") != "" {
 		t.Fatalf("page = %q", got)
 	}
 }

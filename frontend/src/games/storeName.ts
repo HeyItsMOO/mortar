@@ -13,7 +13,7 @@ const NAMES: Record<string, MessageDescriptor> = {
   epic: msg`Epic Games`,
   'epic-heroic': msg`Epic via Heroic`,
   xbox: msg`Xbox`,
-  standalone: msg`Own installer`,
+  standalone: msg`Default folder`,
   flatpak: msg`Flatpak`,
 }
 

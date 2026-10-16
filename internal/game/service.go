@@ -195,6 +195,9 @@ func List(home string, cur settings.Settings) ([]GameInfo, error) {
 			}
 		}
 		info.ArtURL = artFor(info.AppID)
+		if info.ArtURL == "" && c.Art != "" && info.Installed {
+			info.ArtURL = installArtPrefix + c.ID
+		}
 		out = append(out, info)
 	}
 	return out, nil

@@ -1,5 +1,5 @@
 // Package vsmoddb is the Vintage Story Mod DB source driver, over the site's public API
-// (https://mods.vintagestory.at/api). A mod's id is "<modid>:<assetid>": the API reads a mod by its modid, and its page
+// (https://mods.vintagestory.at/api). A mod's id is "<modid>-<assetid>": the API reads a mod by its modid, and its page
 // is addressed by its assetid, and neither answers to the other.
 package vsmoddb
 
@@ -43,11 +43,11 @@ func (Driver) Modes() []source.Acquire { return []source.Acquire{source.Download
 func (Driver) Hosts() []string { return []string{"mods.vintagestory.at"} }
 
 // ID joins a mod's modid and assetid into the id Mortar keeps.
-func ID(modID, assetID int) string { return strconv.Itoa(modID) + ":" + strconv.Itoa(assetID) }
+func ID(modID, assetID int) string { return strconv.Itoa(modID) + "-" + strconv.Itoa(assetID) }
 
 // splitID is the modid and assetid of id; an id without an assetid still names its mod.
 func splitID(id string) (modID, assetID string, ok bool) {
-	modID, assetID, _ = strings.Cut(id, ":")
+	modID, assetID, _ = strings.Cut(id, "-")
 	if _, err := strconv.Atoi(modID); err != nil {
 		return "", "", false
 	}
@@ -131,7 +131,13 @@ func (d Driver) Search(ctx context.Context, q source.Query) (source.Page, error)
 	if q.Text != "" {
 		params.Set("text", q.Text)
 	}
-	if by := orderBy(q.Sort); by != "" {
+	by := orderBy(q.Sort)
+	if by == "" && q.Text != "" {
+		// The site has no relevance order, and its own order puts a word found in any description ahead of the mod
+		// named by the search; the most downloaded matches come first instead.
+		by = "downloads"
+	}
+	if by != "" {
 		params.Set("orderby", by)
 		params.Set("orderdirection", "desc")
 	}

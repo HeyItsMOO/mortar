@@ -24,7 +24,7 @@ func FuzzDecoders(f *testing.F) {
 	f.Fuzz(func(t *testing.T, body []byte) {
 		d := Driver{HTTP: &http.Client{Transport: canned(body)}, URL: "http://moddb.test"}
 		_, _ = d.Search(t.Context(), source.Query{Page: source.FirstPage + 1})
-		_, _ = d.Resolve(t.Context(), "1:2", "")
-		_, _ = d.Items(t.Context(), "", "", []string{"1:2"})
+		_, _ = d.Resolve(t.Context(), "1-2", "")
+		_, _ = d.Items(t.Context(), "", "", []string{"1-2"})
 	})
 }

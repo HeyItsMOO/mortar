@@ -30,7 +30,10 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
-const artPrefix = "/steam-art/"
+const (
+	artPrefix        = "/steam-art/"
+	installArtPrefix = "/install-art/"
+)
 
 // ArtURL is where the frontend loads Steam's hero art for appID from; ArtMiddleware serves it.
 func ArtURL(appID string) string { return artPrefix + appID }
@@ -321,6 +324,42 @@ func ArtMiddleware(home string) func(http.Handler) http.Handler {
 			}
 			w.Header().Set("Content-Type", "image/jpeg")
 			http.ServeContent(w, r, "", info.ModTime(), art)
+		})
+	}
+}
+
+// InstallArtMiddleware serves /install-art/<game>: the image the catalog's art names in the game's selected install, so
+// a game no store has art for shows its own, read from the player's copy.
+func InstallArtMiddleware(home string, current func() settings.Settings) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			id, ok := strings.CutPrefix(r.URL.Path, installArtPrefix)
+			if !ok {
+				next.ServeHTTP(w, r)
+				return
+			}
+			info, listed := catalogGame(id)
+			if r.Method != http.MethodGet || !listed || info.Art == "" {
+				http.NotFound(w, r)
+				return
+			}
+			dir, _, _, err := Resolve(home, current(), id)
+			if err != nil || dir == "" {
+				http.NotFound(w, r)
+				return
+			}
+			art, err := fsx.Open(filepath.Join(dir, filepath.FromSlash(info.Art)))
+			if err != nil {
+				http.NotFound(w, r)
+				return
+			}
+			defer func() { _ = art.Close() }()
+			st, err := art.Stat()
+			if err != nil || !st.Mode().IsRegular() {
+				http.NotFound(w, r)
+				return
+			}
+			http.ServeContent(w, r, info.Art, st.ModTime(), art)
 		})
 	}
 }

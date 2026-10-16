@@ -10,6 +10,7 @@ import {
   SetLastProfile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
+import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
 import { sourceLabel } from '../brand/sources/sourceLabel.ts'
 import { formatWhen } from '../i18n/formatWhen.ts'
 import { useNow } from '../i18n/useNow.ts'
@@ -95,7 +96,8 @@ function Art({ src, openable }: { src: string; openable: boolean }) {
   )
 }
 
-// Logos only: the names are well known, and the tooltip carries them for anyone who is not sure.
+// Logos where a source has one: the names are well known, and the tooltip carries them for anyone who is not sure. A
+// source with no logo shows its name in the same badge.
 function SourceBadges({ sources }: { sources: string[] }) {
   return (
     <Box sx={{ display: 'flex', gap: '6px' }}>
@@ -108,15 +110,18 @@ function SourceBadges({ sources }: { sources: string[] }) {
             tabIndex={0}
             sx={{
               pointerEvents: 'auto',
-              width: 36,
+              minWidth: 36,
               height: 36,
+              px: hasSourceLogo(id) ? 0 : 1,
               display: 'grid',
               placeItems: 'center',
               bgcolor: 'var(--mortar-game-dim)',
               borderRadius: '6px',
+              typography: 'caption',
+              fontWeight: 600,
             }}
           >
-            <SourceLogo id={id} size={22} />
+            {hasSourceLogo(id) ? <SourceLogo id={id} size={22} /> : sourceLabel(id)}
           </Box>
         </Tooltip>
       ))}
