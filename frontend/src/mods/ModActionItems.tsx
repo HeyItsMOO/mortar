@@ -48,14 +48,14 @@ function OtherProfilesGroup({
         <Box sx={{ pl: space.pad }}>
           <MenuAction
             disabled={locked}
-            tooltip={tooltip}
+            reason={tooltip}
             icon={<CopyPlus size={ICON_SIZE} />}
             label={labels.alsoAdd}
             onClick={closeThen(onAlsoAdd)}
           />
           <MenuAction
             disabled={locked}
-            tooltip={tooltip}
+            reason={tooltip}
             icon={<Trash2 size={ICON_SIZE} />}
             label={t`Remove from other profiles…`}
             onClick={closeThen(onRemoveOther)}
@@ -83,7 +83,7 @@ function RemoveMenuItem({
       tone="error"
       icon={item.icon}
       label={item.label}
-      tooltip={locked ? tooltip : undefined}
+      reason={locked ? tooltip : undefined}
       onClick={() => {
         close()
         item.run()
@@ -132,7 +132,7 @@ function ModActionItems({
     <MenuAction
       key={action}
       disabled={disabled}
-      tooltip={lockedTip}
+      reason={lockedTip}
       icon={items[action].icon}
       label={items[action].label}
       onClick={closeThen(items[action].run)}
@@ -178,7 +178,7 @@ function ModActionItems({
       <MenuAction
         key="add-bundle"
         disabled={locked}
-        tooltip={lockedTip}
+        reason={lockedTip}
         icon={<PackagePlus size={ICON_SIZE} />}
         label={labels.addBundle}
         onClick={closeThen(onAddBundle)}

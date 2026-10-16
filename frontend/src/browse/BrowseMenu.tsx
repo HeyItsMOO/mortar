@@ -55,7 +55,7 @@ function Items({
         icon={opensFiles ? <ExternalLink size={16} /> : <Plus size={16} />}
         label={opensFiles ? t`Open files page` : t`Add`}
         disabled={addWhy !== undefined}
-        tooltip={addWhy}
+        reason={addWhy}
         onClick={run(add)}
       />
     ),

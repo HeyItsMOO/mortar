@@ -53,7 +53,7 @@ function ProfileMenuItem({
   onClick: () => void
 }) {
   return (
-    <MenuAction icon={icon} label={label} disabled={disabled} tooltip={tooltip} onClick={onClick} />
+    <MenuAction icon={icon} label={label} disabled={disabled} reason={tooltip} onClick={onClick} />
   )
 }
 
