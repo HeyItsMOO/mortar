@@ -19,8 +19,7 @@
     "vuln": "govulncheck ./...",
     "site:games": "bun scripts/site-games.ts --check",
     "site:downloads": "bun scripts/site-downloads.ts",
-    "i18n:dupes": "bun scripts/i18n-dupes.ts",
-    "changelog": "bun scripts/changelog.ts"
+    "i18n:dupes": "bun scripts/i18n-dupes.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # notes.sh [--metainfo FILE] TAG [REF]: user-facing release notes for TAG from the Conventional Commits between the
 # previous v* tag and REF (default TAG; a dry run passes HEAD before the tag exists). Only feat, fix and perf commits
-# outside internal scopes are kept, as sentence-case lines without the type or scope, grouped New and Fixed and
-# capped at $NOTES_CAP lines each, with the full changelog linked. With --metainfo, the same lines replace the
+# outside internal scopes are kept, as sentence-case lines without the type or scope, grouped New and Fixed, each
+# under the area its scope belongs to, and capped at $NOTES_CAP lines each, with the full changelog linked. With --metainfo, the same lines replace the
 # <description> of TAG's <release> in the AppStream FILE instead of printing Markdown.
 set -euo pipefail
 metainfo=""
@@ -22,20 +22,46 @@ subjects="$(git log --no-merges --format=%s "${prev:+$prev..}$ref")"
 internal='^([a-z-]*svc|main|release|gate|lint|deps|build|ci|tests?|selftest|regress|e2e|dotnet|taskfile|scripts|server|control|doctor|dev|fsx|datadir|data|meta|usererr|github|site|sampler|notices|credits|migrate|config|components|nativehost|errors|logs?|cli)$'
 codeish='[a-z][A-Z]|[A-Z]+_[A-Z]|[a-z]_[a-z]|`|(^|[^a-z])(selftest|gate|lint|biome|knip|golangci|gui-design|frontend build|api types)([^a-z]|$)'
 
-lines() { # types regex -> one sentence-case line per user-facing subject
+# The areas the app's What's new groups a release by, in the order it shows them.
+areas=(Games 'Mods and browsing' 'Profiles and sharing' 'Launching and loaders' 'Problems and diagnostics' 'Downloads and updates' Saves 'Interface and settings' Other)
+area_of() { # scope -> area
+  case "$1" in
+    game | games | steam | catalog | store | stores) echo Games ;;
+    browse | mods | mod | source | sources | templates | bundles | thunderstore | modrinth | nexus | curseforge) echo 'Mods and browsing' ;;
+    profile | profiles | share | packs | pack | import | history | sync | lan) echo 'Profiles and sharing' ;;
+    launch | loader | smapi | bepinex | bepinex5 | deploy) echo 'Launching and loaders' ;;
+    problems | diag | console | support) echo 'Problems and diagnostics' ;;
+    queue | updates | update | watch | nxm) echo 'Downloads and updates' ;;
+    saves | backup | backups) echo Saves ;;
+    settings | ui | ux | theme | shell | frontend | firstrun | tour | i18n | a11y) echo 'Interface and settings' ;;
+    *) echo Other ;;
+  esac
+}
+
+lines() { # types regex -> one "area<US>sentence-case line" per user-facing subject
   printf '%s\n' "$subjects" | sed -nE "s/^($1)(\(([^)]*)\))?!?: (.+)\$/\3\x1f\4/p" |
     while IFS=$'\x1f' read -r scope text; do
       if { [ -n "$scope" ] && [[ "$scope" =~ $internal ]]; } || [[ "$text" =~ $codeish ]]; then
         continue
       fi
       text="${text%.}"
-      printf '%s\n' "${text^}"
+      printf '%s\x1f%s\n' "$(area_of "$scope")" "${text^}"
     done
 }
 
-new="$(lines feat)"
+by_area() { # "area<US>line" lines -> each area's heading (RS-marked, as a notes file's "### Area") and its lines
+  local a body
+  for a in "${areas[@]}"; do
+    body="$(printf '%s\n' "$1" | awk -F'\037' -v a="$a" '$1 == a { print $2 }')"
+    if [ -n "$body" ]; then
+      printf '\x1e%s\n%s\n' "$a" "$body"
+    fi
+  done
+}
+
+new="$(by_area "$(lines feat)")"
 changed=""
-fixed="$(lines 'fix|perf')"
+fixed="$(by_area "$(lines 'fix|perf')")"
 # A release with notes written for players (build/release/notes/TAG.md: "## New", "## Changed" and "## Fixed" lists)
 # uses them whole instead of commit subjects, which cannot rank a large release's headlines first. A "### Area"
 # heading inside a list groups the lines under it: the release page keeps it (the app's What's new groups by it) and
@@ -54,13 +80,11 @@ else
   changelog="https://github.com/$repo/commits/$tag"
 fi
 
-capped() { # lines -> at most $cap of them, then a count of the rest
-  local n
-  n="$(printf '%s\n' "$1" | wc -l)"
-  printf '%s\n' "$1" | head -n "$cap"
-  if [ "$n" -gt "$cap" ]; then
-    printf '…and %d more\n' "$((n - cap))"
-  fi
+capped() { # lines -> at most $cap of them (area headings not counted), then a count of the rest
+  printf '%s\n' "$1" | awk -v cap="$cap" '
+    index($0, "\036") == 1 { if (n < cap) print; next }
+    { n++; if (n <= cap) print }
+    END { if (n > cap) printf "…and %d more\n", n - cap }'
 }
 
 group() { # title -> its lines

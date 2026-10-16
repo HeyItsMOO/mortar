@@ -42,18 +42,28 @@ beforeAll(() => {
 afterAll(() => rmSync(repo, { recursive: true, force: true }))
 
 describe('notes.sh', () => {
-  test('keeps user-facing feat, fix and perf since the previous v* tag, in sentence case', () => {
+  test('keeps user-facing feat, fix and perf since the previous v* tag, in sentence case under their areas', () => {
     const out = run([script, 'v0.2.0', 'HEAD'], { GITHUB_REPOSITORY: 'o/r' })
     expect(out).toBe(
       [
         '## New',
         '',
-        '- Back up <saves> & restore',
+        '### Mods and browsing',
+        '',
         '- Search matches category names',
+        '',
+        '### Saves',
+        '',
+        '- Back up <saves> & restore',
         '',
         '## Fixed',
         '',
+        '### Profiles and sharing',
+        '',
         '- Faster profile switch',
+        '',
+        '### Other',
+        '',
         '- A crash on start',
         '',
         'The Linux AppImage and portable program need glibc 2.38 or newer (Ubuntu 24.04, Debian 13, Fedora 39 or later); older systems use the Flatpak.',
@@ -66,7 +76,10 @@ describe('notes.sh', () => {
 
   test('caps each group and counts the rest', () => {
     const out = run([script, 'v0.2.0', 'HEAD'], { NOTES_CAP: '1' })
-    expect(out).toContain('- Back up <saves> & restore\n- …and 1 more\n')
+    expect(out).toContain(
+      '### Mods and browsing\n\n- Search matches category names\n- …and 1 more\n',
+    )
+    expect(out).not.toContain('### Saves')
   })
 
   test('a release notes file replaces the commit subjects, uncapped, with a Changed group', () => {
