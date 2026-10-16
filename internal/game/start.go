@@ -150,13 +150,22 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 			}
 			return launch.Command{Dir: inst.Dir, Name: argv[0], Args: argv[1:], Env: environ(plan.Env)}, nil
 		}
+		var protonEnv []string
+		if goos != "windows" && inst.Runtime == gameruntime.MortarProton {
+			info, _ := catalogGame(inst.Game)
+			argv, penv, err := gameruntime.ProtonCommand(inst.runtime(info, ""), exe, args...)
+			if err != nil {
+				return launch.Command{}, err
+			}
+			exe, args, protonEnv = argv[0], argv[1:], penv
+		}
 		name := exe
 		if goos != "windows" && len(plan.Prefix) > 0 {
 			name, args = plan.Prefix[0], append(slices.Clone(plan.Prefix[1:]), append([]string{exe}, args...)...)
 		}
-		env := environ(plan.Env)
+		env := append(environ(plan.Env), protonEnv...)
 		// Wine prints its errors only when asked; without them a launch that stalls on one says nothing.
-		if inst.Runtime == gameruntime.Proton && plan.Env["WINEDEBUG"] == "" {
+		if (inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton) && plan.Env["WINEDEBUG"] == "" {
 			env = append(env, "WINEDEBUG=err+all")
 		}
 		return launch.Command{Dir: inst.Dir, Name: name, Args: args, Env: env}, nil

@@ -103,7 +103,7 @@ func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.Prof
 	if p.Platform == "linux" {
 		return contributeLinux(plan, p, m)
 	}
-	proton := p.Runtime == "proton"
+	proton := p.Runtime == "proton" || p.Runtime == "mortar-proton"
 	plan.AddArgs(LaunchArgs(p.Dir, m.Doorstop, proton)...)
 	for _, f := range DoorstopFiles(p.Dir) {
 		src := filepath.Join(p.Dir, filepath.FromSlash(f))

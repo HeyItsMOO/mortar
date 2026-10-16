@@ -78,7 +78,7 @@ func platformOf(info components.GameInfo, dir string) string {
 }
 
 func (in Install) runtime(info components.GameInfo, home string) runtime.Install {
-	return runtime.Install{Store: in.Store, Dir: in.Dir, AppID: info.SteamAppID(), Platform: in.Platform, Prefix: in.Prefix, Home: home}
+	return runtime.Install{Game: info.ID, Store: in.Store, Dir: in.Dir, AppID: info.SteamAppID(), Platform: in.Platform, Prefix: in.Prefix, Home: home}
 }
 
 // readVersion is the game's version in the install, "" when nothing names one.
@@ -215,13 +215,22 @@ func (in Install) StoreStarts() bool {
 	return in.Store == StoreSteam || in.Store == StoreFlatpakSteam || in.Store == StoreEpic
 }
 
-// RunError says why the install cannot be started on this computer, or is nil. On Linux a Windows build runs only
-// through Proton (a Steam copy) or a Bottles bottle; any other copy would be executed as a Linux program.
+// RunError says why the install cannot be started on this computer, or is nil. On Linux a Windows build runs through
+// Proton (Steam's own for a Steam copy, else a Proton build Steam has, in Mortar's prefix) or a Bottles bottle.
 func (in Install) RunError(name string) error {
-	if goruntime.GOOS == "windows" || in.Dir == "" || in.Platform != "windows" || in.Runtime != runtime.Native {
+	if goruntime.GOOS == "windows" || in.Dir == "" || in.Platform != "windows" {
 		return nil
 	}
-	return usererr.Wrap(usererr.Invalid, fmt.Errorf("%s in %s is the Windows build, and on Linux Mortar runs Windows games only through Steam or a Bottles bottle: add the game to one of them, then choose that copy in the game's settings", name, in.Dir))
+	switch in.Runtime {
+	case runtime.MortarProton:
+		if _, ok := runtime.FindProton(""); !ok {
+			return usererr.Wrap(usererr.Invalid, fmt.Errorf("%s in %s is the Windows build, and Mortar runs it through Proton: install any Proton version in Steam (Library, Tools), then press Play again", name, in.Dir))
+		}
+		return nil
+	case runtime.Native:
+		return usererr.Wrap(usererr.Invalid, fmt.Errorf("%s in %s is the Windows build, and on Linux Mortar runs Windows games only through Steam, Proton or a Bottles bottle", name, in.Dir))
+	}
+	return nil
 }
 
 // RunsInBottle reports whether the install runs through a Bottles bottle.

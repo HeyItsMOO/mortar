@@ -98,7 +98,7 @@ func (s *Service) launchPlan(ctx context.Context, g game.Game, inst game.Install
 		k, v, _ := strings.Cut(pair, "=")
 		plan.SetEnv(k, v)
 	}
-	if inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.WinePrefix {
+	if inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton || inst.Runtime == gameruntime.WinePrefix {
 		plan.ApplyDLLOverrides()
 	}
 	return plan, nil

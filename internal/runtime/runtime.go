@@ -32,6 +32,8 @@ const (
 
 // Install is the part of a game install a runtime needs.
 type Install struct {
+	// Game is the catalog id; Mortar's own Proton prefix is named after it.
+	Game              string
 	Store, Dir, AppID string
 	// Prefix is the Bottles bottle folder a Windows build runs in.
 	Prefix string
@@ -69,7 +71,7 @@ type Runtime interface {
 }
 
 // drivers are tried in order; native runs whatever no other runtime claims.
-var drivers = []Runtime{proton{}, winePrefix{}, native{}}
+var drivers = []Runtime{proton{}, winePrefix{}, mortarProton{}, native{}}
 
 // IDOf is the id of the runtime that runs inst.
 func IDOf(inst Install) string {
