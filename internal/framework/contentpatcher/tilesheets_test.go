@@ -115,3 +115,20 @@ func TestRetextureOfVanillaSheetIsNotUnusedTilesheets(t *testing.T) {
 
 // cleanup is the cleanup hints of mods analyzed as one profile.
 func cleanup(mods []framework.Mod) []framework.Cleanup { return check(mods).Cleanup }
+
+// A pack that loads its own sheets supports other mods even when it also redraws them for a season or registers chair
+// tiles; one that edits a map or only recolours existing sheets is a choice.
+func TestSupportingPacks(t *testing.T) {
+	for _, c := range []struct {
+		id, content string
+		want        bool
+	}{
+		{"Sheets.Own", `{"Changes":[{"Action":"Load","Target":"Maps/spring_own, Mods/own/extra"},{"Action":"EditImage","Target":"Maps/fall_own","FromFile":"fall.png"},{"Action":"EditData","Target":"Data/ChairTiles","Entries":{"own/0/0":"1/1/down/default/-1/true"}}]}`, true},
+		{"Sheets.Recolour", `{"Changes":[{"Action":"EditImage","Target":"Maps/springobjects","FromFile":"a.png"}]}`, false},
+		{"Sheets.MapEdit", `{"Changes":[{"Action":"Load","Target":"Maps/own"},{"Action":"EditMap","Target":"Maps/Saloon","FromFile":"saloon.tmx"}]}`, false},
+	} {
+		if got := isSupportingPack(tilesheetPack(t, c.id, c.content)); got != c.want {
+			t.Errorf("%s: supporting = %v, want %v", c.id, got, c.want)
+		}
+	}
+}

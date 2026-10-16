@@ -61,8 +61,8 @@ export function LegacyReasonsCallout({ profile, mods }: { profile: Profile; mods
   return (
     <ListCallout
       text={plural(keys.length, {
-        one: '# mod looks like a library and was added before Mortar kept install reasons',
-        other: '# mods look like libraries and were added before Mortar kept install reasons',
+        one: 'Mortar identified # mod as a library or supporting mod',
+        other: 'Mortar identified # mods as libraries or supporting mods',
       })}
       actions={
         <>

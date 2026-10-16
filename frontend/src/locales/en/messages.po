@@ -2617,7 +2617,7 @@ msgstr "Copy load order"
 msgid "Try a different search."
 msgstr "Try a different search."
 
-#: src/mods/Sidebar.tsx:586
+#: src/mods/Sidebar.tsx:585
 msgid "Installed as a dependency"
 msgstr "Installed as a dependency"
 
@@ -3298,7 +3298,7 @@ msgid "Import from {manager}"
 msgstr "Import from {manager}"
 
 #: src/mods/listRows.ts:124
-#: src/mods/Sidebar.tsx:562
+#: src/mods/Sidebar.tsx:563
 msgid "Archive"
 msgstr "Archive"
 
@@ -5886,6 +5886,11 @@ msgstr "Clear finished"
 msgid "Enable {0}"
 msgstr "Enable {0}"
 
+#. placeholder {0}: keys.length
+#: src/mods/LegacyReasonsCallout.tsx:63
+msgid "{0, plural, one {Mortar identified # mod as a library or supporting mod} other {Mortar identified # mods as libraries or supporting mods}}"
+msgstr "{0, plural, one {Mortar identified # mod as a library or supporting mod} other {Mortar identified # mods as libraries or supporting mods}}"
+
 #: src/saves/SavesTab.tsx:117
 msgid "Save backups…"
 msgstr "Save backups…"
@@ -6481,11 +6486,6 @@ msgstr "What happens to files the new version of a mod leaves out"
 msgid "No settings match"
 msgstr "No settings match"
 
-#. placeholder {0}: keys.length
-#: src/mods/LegacyReasonsCallout.tsx:63
-msgid "{0, plural, one {# mod looks like a library and was added before Mortar kept install reasons} other {# mods look like libraries and were added before Mortar kept install reasons}}"
-msgstr "{0, plural, one {# mod looks like a library and was added before Mortar kept install reasons} other {# mods look like libraries and were added before Mortar kept install reasons}}"
-
 #: src/settings/shortcutLabels.ts:8
 msgid "Open the command palette"
 msgstr "Open the command palette"
@@ -7021,7 +7021,7 @@ msgid "Modified outside Mortar"
 msgstr "Modified outside Mortar"
 
 #: src/browse/BrowseDetails.tsx:260
-#: src/mods/Sidebar.tsx:637
+#: src/mods/Sidebar.tsx:635
 msgid "Selected mod"
 msgstr "Selected mod"
 
@@ -10906,7 +10906,7 @@ msgid "Report it so it can be fixed."
 msgstr "Report it so it can be fixed."
 
 #: src/mods/listRows.ts:126
-#: src/mods/Sidebar.tsx:564
+#: src/mods/Sidebar.tsx:565
 #: src/settings/sections/Accounts.tsx:17
 msgid "GitHub"
 msgstr "GitHub"
@@ -11136,7 +11136,7 @@ msgstr "The crash check could not finish."
 msgid "Could not unpin {0}"
 msgstr "Could not unpin {0}"
 
-#: src/mods/Sidebar.tsx:597
+#: src/mods/Sidebar.tsx:595
 msgid "In the same download"
 msgstr "In the same download"
 
@@ -13324,7 +13324,7 @@ msgstr "{0} was installed from another site. Updating installs {1} from {2} inst
 
 #: src/firstrun/GameSetup.tsx:78
 #: src/mods/listRows.ts:125
-#: src/mods/Sidebar.tsx:563
+#: src/mods/Sidebar.tsx:564
 #: src/settings/sections/NexusMods.tsx:310
 #: src/share/DestinationGrid.tsx:57
 #: src/share/ShareDialog.tsx:42
@@ -14378,7 +14378,7 @@ msgid "No saves yet"
 msgstr "No saves yet"
 
 #: src/mods/listRows.ts:127
-#: src/mods/Sidebar.tsx:565
+#: src/mods/Sidebar.tsx:566
 #: src/share/DestinationGrid.tsx:62
 #: src/share/ShareDialog.tsx:43
 msgid "Thunderstore"

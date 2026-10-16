@@ -101,11 +101,36 @@ func isTilesheetPack(im framework.Mod) bool {
 	return named
 }
 
-// tilesheetPackKeys are the keys of the packs that only load tilesheets, switched on or off.
-func tilesheetPackKeys(mods []framework.Mod) []string {
+// isSupportingPack is a Content Patcher pack that supplies sheets for other mods: it loads at least one new map,
+// tilesheet or mod asset, and otherwise only redraws those sheets or registers chair tiles on them. A pack that edits
+// a map, or only recolours existing sheets, is something the player chose.
+func isSupportingPack(im framework.Mod) bool {
+	if !isContentPatcherPack(im) {
+		return false
+	}
+	sheet := func(target string) bool {
+		target = normalizeAsset(target)
+		return isTilesheetTarget(target) || strings.HasPrefix(target, "mods/")
+	}
+	loads := false
+	for _, patch := range readContentPack(im).patches {
+		switch {
+		case patch.kind == "load" && sheet(patch.target):
+			loads = true
+		case patch.action == kindEditImage && (patch.target == "" || sheet(patch.target)):
+		case patch.target == "data/chairtiles":
+		default:
+			return false
+		}
+	}
+	return loads
+}
+
+// supportingPackKeys are the keys of the packs that supply sheets for other mods, switched on or off.
+func supportingPackKeys(mods []framework.Mod) []string {
 	var out []string
 	for _, im := range mods {
-		if isTilesheetPack(im) && !slices.Contains(out, im.Key) {
+		if isSupportingPack(im) && !slices.Contains(out, im.Key) {
 			out = append(out, im.Key)
 		}
 	}
