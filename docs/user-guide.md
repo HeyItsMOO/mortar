@@ -89,7 +89,7 @@ The **Browse** tab searches every site the game's mods come from at once: for St
 
 1. Open the **Browse** tab. With nothing typed, each site lists its top mods, so the page is never empty.
 2. Type a name to search. Results update as you type.
-3. Choose **Add** (or **Download** on Nexus for a Premium account) on a card. The card shows the install's progress, then **In this profile**.
+3. Choose **Add** (or **Download** on Nexus for a Premium account) on a card. The card shows the install's progress, then **Added**. On Nexus with a free account the button is **Get**, which opens the mod's files page.
 
 - **Nexus Mods:** Premium accounts download straight into the profile. Free accounts open the mod's files page and use **Mod Manager Download**, which the browser extension or the nxm link hands to Mortar.
 - **GitHub:** **Add** puts the latest release in the profile. Mortar uses your GitHub CLI login (`gh auth login`) when it is present, which raises GitHub's rate limits; without it, it works anonymously.
@@ -104,7 +104,7 @@ Under the search row:
 - **Sort** orders each site's results: best match, most downloaded, most endorsed, recently updated or name. A site that cannot sort a given way keeps its own order.
 - **Show** has one row for each kind of mod you may not want in the way: **Mods in this profile**, **Obsolete** and **Broken**. Each is **Off** (shown as usual), **Gray out** (dimmed, still there) or **Hide** (left out, and counted as "N hidden" beside the result count). **Broken** needs the game to have a compatibility list, which Stardew Valley has.
 
-Mods Mortar already holds in the profile show **In this profile**, whichever site they came from, including a mod you installed from an archive when its manifest names the same Nexus or GitHub page. A loader's helper mod that Mortar installs for you shows **Installed by Mortar**.
+Mods Mortar already holds in the profile show **Added**, whichever site they came from, including a mod you installed from an archive when its manifest names the same Nexus or GitHub page. A loader's helper mod that Mortar installs for you shows **Built in**.
 
 ## Modrinth and itch.io
 
