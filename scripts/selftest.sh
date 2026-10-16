@@ -16,7 +16,7 @@
 #   scripts/selftest.sh ea-fixture FOLDER MARKER  add a fake Bottles bottle holding an EA App install of FOLDER (discovery only)
 #   scripts/selftest.sh regress --fake GAME_ID  launch regress for a game not installed here: a fake install and a dummy window (see regress_fake)
 #   scripts/selftest.sh regress --game sims4  stand-in The Sims 4 (see regress_sims4): per-profile Mods, saves and Options.ini; the player's files identical after
-#   scripts/selftest.sh regress [--game lethal-company]  one-shot regression run (Stardew, or Lethal Company through Proton) in its own throwaway sandbox (see below)
+#   scripts/selftest.sh regress [--game lethal-company|cat-mail-co]  one-shot regression run (Stardew, or a BepInEx game through Proton) in its own throwaway sandbox (see below)
 #   scripts/selftest.sh curseforge            CurseForge end to end in its own throwaway sandbox; needs MORTAR_CURSEFORGE_KEY, else skips
 #   scripts/selftest.sh harness-check         prove the launch harness with a dummy window instead of a game
 #
@@ -756,6 +756,27 @@ regress_launches() {
 }
 
 regress_lc() {
+  # The game under test: Lethal Company, or Cat Mail Co., for which the free Cat Mail Co. Demo is copied in as the full
+  # game (the same executable on the same IL2CPP BepInEx pack) and runs without a bridge, since none is built for it.
+  local rg_id=$1 rg_app rg_src_app rg_folder rg_bepinex rg_bridge=expected rg_plugins rg_packages rg_unity_data="" rg_timeout=240
+  case $rg_id in
+    lethal-company)
+      rg_app=$LC_APP_ID rg_src_app=$LC_APP_ID rg_folder=$LC_FOLDER rg_bepinex=5.4.2305
+      rg_plugins=(LethalConfig ShipLoot MoreCompany)
+      rg_packages=(AinaVT/LethalConfig/1.4.6 tinyhoot/ShipLoot/1.1.0 notnotnotswipez/MoreCompany/1.14.0)
+      ;;
+    cat-mail-co)
+      rg_app=4380490 rg_src_app=4622530 rg_folder=CatMailCoDemo rg_bepinex=6.0.788 rg_bridge=skipped
+      # The first start generates the interop assemblies before any plugin loads.
+      rg_unity_data=CatMailCo_Data rg_timeout=900
+      rg_plugins=(CatLib)
+      rg_packages=(CatLib/CrashWatcher/1.1.0 CatLib/CatLib/0.7.3)
+      if [ -n "${MORTAR_REGRESS_MATRIX:-}${MORTAR_REGRESS_R2_CODE:-}${MORTAR_REGRESS_MORTAR_PROTON:-}" ]; then
+        echo "the matrix, r2 codes and Mortar's own Proton run only with --game lethal-company" >&2
+        exit 2
+      fi
+      ;;
+  esac
   if [ -n "${MORTAR_REGRESS_R2_CODE:-}" ] && [ "$(regress_launches)" -gt "$LAUNCH_CAP" ]; then
     echo "refused: MORTAR_REGRESS_R2_CODE needs launch $(regress_launches), but a session allows $LAUNCH_CAP and the base run and the matrix use $(($(regress_launches) - 1)) of them; unset MORTAR_REGRESS_R2_CODE or MORTAR_REGRESS_MATRIX" >&2
     exit 3
@@ -773,23 +794,23 @@ regress_lc() {
   SANDBOX_HOME=$ROOT/home
   SANDBOX_STEAM=$SANDBOX_HOME/.local/share/Steam
   verdict=FAIL
-  game="$SANDBOX_STEAM/steamapps/common/$LC_FOLDER"
-  compat="$SANDBOX_STEAM/steamapps/compatdata/$LC_APP_ID"
+  game="$SANDBOX_STEAM/steamapps/common/$rg_folder"
+  compat="$SANDBOX_STEAM/steamapps/compatdata/$rg_app"
   local proton=${MORTAR_REGRESS_PROTON:-$STEAM/steamapps/common/Proton - Experimental}
-  local cache=${MORTAR_REGRESS_CACHE:-/var/tmp/mortar-regress-cache}/lc-data
+  local cache=${MORTAR_REGRESS_CACHE:-/var/tmp/mortar-regress-cache}/${rg_id/$rg_id/lc}-data
   local data=$SANDBOX_HOME/.local/share/mortar
-  local timeout=${MORTAR_REGRESS_TIMEOUT:-240} t0=$SECONDS
-  local bepinex=${MORTAR_REGRESS_BEPINEX:-5.4.2305}
+  local timeout=${MORTAR_REGRESS_TIMEOUT:-$rg_timeout} t0=$SECONDS
+  local bepinex=${MORTAR_REGRESS_BEPINEX:-$rg_bepinex}
   # MORTAR_REGRESS_MORTAR_PROTON=1 runs the copy as a folder Steam did not install, through Mortar's own Proton runtime
   # and prefix (made on the first start, so that start gets longer to finish).
   local mortar_proton=${MORTAR_REGRESS_MORTAR_PROTON:-}
   if [ -n "$mortar_proton" ]; then
-    compat=$data/prefixes/lethal-company
+    compat=$data/prefixes/$rg_id
     timeout=${MORTAR_REGRESS_TIMEOUT:-600}
   fi
-  local plugins=(LethalConfig ShipLoot MoreCompany)
+  local plugins=("${rg_plugins[@]}")
   # Pinned so the cached zips stay the ones the run was written against.
-  local packages=(AinaVT/LethalConfig/1.4.6 tinyhoot/ShipLoot/1.1.0 notnotnotswipez/MoreCompany/1.14.0)
+  local packages=("${rg_packages[@]}")
   local failures=() profile="" loaded=0 diff_lines=0 log="" killed=""
   local gdirs=(cache/thunderstore store)
 
@@ -817,7 +838,12 @@ regress_lc() {
   fi
 
   mkdir -p "$SANDBOX_STEAM/config"
-  copy_game "$LC_APP_ID" "$LC_FOLDER" || exit 1
+  copy_game "$rg_src_app" "$rg_folder" || exit 1
+  # The demo is listed as the full game, whose app id the catalog knows.
+  if [ "$rg_src_app" != "$rg_app" ] && [ -f "$SANDBOX_STEAM/steamapps/appmanifest_$rg_src_app.acf" ]; then
+    sed "s/\"$rg_src_app\"/\"$rg_app\"/" "$SANDBOX_STEAM/steamapps/appmanifest_$rg_src_app.acf" >"$SANDBOX_STEAM/steamapps/appmanifest_$rg_app.acf"
+    rm "$SANDBOX_STEAM/steamapps/appmanifest_$rg_src_app.acf"
+  fi
   [ -f "$STEAM/config/loginusers.vdf" ] && cp "$STEAM/config/loginusers.vdf" "$SANDBOX_STEAM/config/"
   write_library
   # Proton loads Steam's client library from the Steam folder it is told about, which is the sandbox's own.
@@ -832,7 +858,7 @@ regress_lc() {
   # Profiles get the catalog's published bridge, the asset users install (an offline run cannot download it). A bridge
   # change before its release is tested with MORTAR_REGRESS_LOCAL_BRIDGE=1 or MORTAR_REGRESS_BRIDGE_REPO: the checkout
   # beside this repo (or the one named) is built and handed to the server through MORTAR_LOCAL_BRIDGES.
-  local splash='' bridge=expected bridge_from=published bridge_repo=${MORTAR_REGRESS_BRIDGE_REPO:-$REPO/../mortar-bepinex-bridge}
+  local splash='' bridge=$rg_bridge bridge_from=published bridge_repo=${MORTAR_REGRESS_BRIDGE_REPO:-$REPO/../mortar-bepinex-bridge}
   [ -n "${MORTAR_REGRESS_OFFLINE:-}" ] && bridge=skipped
   if [ -z "${MORTAR_REGRESS_LOCAL_BRIDGE:-}${MORTAR_REGRESS_BRIDGE_REPO:-}" ]; then
     :
@@ -840,7 +866,7 @@ regress_lc() {
     local bridge_dir=$ROOT/bridge built
     mkdir -p "$bridge_dir"
     if built=$(DIST="$ROOT/bridge-dist" "$bridge_repo/scripts/package.sh" 2>"$ROOT/bridge-build.log" | tail -1) && [ -f "$built" ]; then
-      cp "$built" "$bridge_dir/lethal-company.zip"
+      cp "$built" "$bridge_dir/$rg_id.zip"
       export MORTAR_LOCAL_BRIDGES=$bridge_dir
       bridge=expected bridge_from=local
     else
@@ -854,7 +880,7 @@ regress_lc() {
 #!/bin/bash
 export STEAM_COMPAT_DATA_PATH='$compat'
 export STEAM_COMPAT_CLIENT_INSTALL_PATH='$SANDBOX_STEAM'
-export STEAM_COMPAT_APP_ID=$LC_APP_ID SteamAppId=$LC_APP_ID SteamGameId=$LC_APP_ID
+export STEAM_COMPAT_APP_ID=$rg_app SteamAppId=$rg_app SteamGameId=$rg_app
 exec bwrap --dev-bind / / --unshare-net -- '$proton/proton' run "\$@"
 EOF
   chmod +x "$ROOT/run-proton.sh"
@@ -863,15 +889,15 @@ EOF
     # and steam_appid.txt keeps Steamworks from handing the start to Steam, as a copy from outside Steam would.
     cat >"$ROOT/run-proton.sh" <<EOF
 #!/bin/bash
-export SteamAppId=$LC_APP_ID SteamGameId=$LC_APP_ID
+export SteamAppId=$rg_app SteamGameId=$rg_app
 exec bwrap --dev-bind / / --unshare-net -- "\$@"
 EOF
     # A copy Steam does not list: outside steamapps, with the sandbox Steam's manifest for it gone.
     mkdir -p "$ROOT/folder-game"
     mv "$game" "$ROOT/folder-game/"
-    game="$ROOT/folder-game/$LC_FOLDER"
-    rm -f "$SANDBOX_STEAM/steamapps/appmanifest_$LC_APP_ID.acf"
-    printf '%s\n' "$LC_APP_ID" >"$game/steam_appid.txt"
+    game="$ROOT/folder-game/$rg_folder"
+    rm -f "$SANDBOX_STEAM/steamapps/appmanifest_$rg_app.acf"
+    printf '%s\n' "$rg_app" >"$game/steam_appid.txt"
     ln -sfn "$proton" "$SANDBOX_STEAM/steamapps/common/$(basename "$proton")"
     display_up
   else
@@ -889,15 +915,15 @@ EOF
   if [ -n "$mortar_proton" ]; then
     # No CLI sets a game's folder, so the setting is written while the server is stopped.
     stop
-    python3 - "$data/settings.json" "$game" <<'PYEOF'
+    python3 - "$data/settings.json" "$game" "$rg_id" <<'PYEOF'
 import json, sys
-path, game = sys.argv[1], sys.argv[2]
+path, game, game_id = sys.argv[1], sys.argv[2], sys.argv[3]
 try:
     with open(path) as f:
         s = json.load(f)
 except FileNotFoundError:
     s = {}
-s.setdefault("global", {}).setdefault("gameFolders", {})["lethal-company"] = game
+s.setdefault("global", {}).setdefault("gameFolders", {})[game_id] = game
 with open(path, "w") as f:
     json.dump(s, f, indent=2)
 PYEOF
@@ -907,36 +933,47 @@ PYEOF
     local d
     for d in "${gdirs[@]}"; do [ -d "$cache/$d" ] && mkdir -p "$data/$(dirname "$d")" && cp -a "$cache/$d" "$data/$(dirname "$d")/"; done
   fi
-  cli settings set --game lethal-company defaultLaunchMethod direct >/dev/null
-  profile=$(cli profile create lethal-company "Regress LC" | cut -f1)
+  cli settings set --game "$rg_id" defaultLaunchMethod direct >/dev/null
+  profile=$(cli profile create "$rg_id" "Regress LC" | cut -f1)
   # The server may already be installing the loader for the new game; a second install waits its turn.
   for _ in $(seq 1 30); do
-    cli loader install lethal-company "$bepinex" >"$ROOT/loader.txt" 2>&1 && break
+    cli loader install "$rg_id" "$bepinex" >"$ROOT/loader.txt" 2>&1 && break
     grep -q 'already running' "$ROOT/loader.txt" || break
     sleep 2
   done
   grep -q "^Installed loader $bepinex" "$ROOT/loader.txt" || failures+=("BepInEx $bepinex did not install: $(head -c 300 "$ROOT/loader.txt")")
   local pkg
   # A pinned loader is not looked up again at launch.
-  cli loader pin lethal-company "$bepinex" >/dev/null 2>&1 || failures+=("pinning BepInEx $bepinex failed")
+  cli loader pin "$rg_id" "$bepinex" >/dev/null 2>&1 || failures+=("pinning BepInEx $bepinex failed")
   local zip
   mkdir -p "$cache/zips"
   for pkg in "${packages[@]}"; do
     zip=$cache/zips/${pkg//\//-}.zip
     [ -s "$zip" ] || curl -fsSL -o "$zip" "https://thunderstore.io/package/download/$pkg/" || failures+=("downloading $pkg failed")
-    cli install lethal-company "$profile" "$zip" >>"$ROOT/install.txt" 2>&1 || failures+=("installing $pkg failed: $(tail -c 200 "$ROOT/install.txt")")
+    cli install "$rg_id" "$profile" "$zip" >>"$ROOT/install.txt" 2>&1 || failures+=("installing $pkg failed: $(tail -c 200 "$ROOT/install.txt")")
   done
-  cli profile set lethal-company "$profile" launchPrefix "$ROOT/run-proton.sh" >/dev/null
+  cli profile set "$rg_id" "$profile" launchPrefix "$ROOT/run-proton.sh" >/dev/null
   if [ ! -d "$cache/store" ] && [ ${#failures[@]} -eq 0 ]; then
     for d in "${gdirs[@]}"; do [ -d "$data/$d" ] && mkdir -p "$cache/$(dirname "$d")" && cp -a "$data/$d" "$cache/$(dirname "$d")/"; done
+  fi
+  # BepInEx 6 on IL2CPP downloads the Unity base libraries for the game's engine on its first start, and takes a zip
+  # already in unity-libs instead; the game runs without the network here, so the run fetches it beforehand.
+  if [ -n "$rg_unity_data" ] && [ ${#failures[@]} -eq 0 ]; then
+    local unity libs
+    unity=$(grep -aoE -m1 '[0-9]{4}\.[0-9]+\.[0-9]+[abfp][0-9]+' "$game/$rg_unity_data/globalgamemanagers" | head -1)
+    unity=${unity%%[abfp]*}
+    libs=$cache/unity-libs/$unity.zip
+    mkdir -p "$cache/unity-libs" "$data/profiles/$rg_id/$profile/BepInEx/unity-libs"
+    [ -s "$libs" ] || curl -fsSL -o "$libs" "https://unity.bepinex.dev/libraries/$unity.zip" || failures+=("downloading the Unity $unity base libraries failed")
+    cp "$libs" "$data/profiles/$rg_id/$profile/BepInEx/unity-libs/"
   fi
   tree_hash "$game" >"$ROOT/game-before.txt"
 
   # lc_launch launches profile $1 and waits for BepInEx to finish loading; the run's log path is left in $log.
   lc_launch() {
-    log="$data/profiles/lethal-company/$1/BepInEx/LogOutput.log"
+    log="$data/profiles/$rg_id/$1/BepInEx/LogOutput.log"
     if [ ${#failures[@]} -eq 0 ]; then
-      cli launch lethal-company "$1" >"$ROOT/launch-$2.txt" 2>&1 || failures+=("$2 launch failed: $(head -c 300 "$ROOT/launch-$2.txt")")
+      cli launch "$rg_id" "$1" >"$ROOT/launch-$2.txt" 2>&1 || failures+=("$2 launch failed: $(head -c 300 "$ROOT/launch-$2.txt")")
     fi
     deadline=$((SECONDS + timeout))
     while [ ${#failures[@]} -eq 0 ] && [ "$SECONDS" -lt "$deadline" ]; do
@@ -944,17 +981,17 @@ PYEOF
       sleep 2
     done
     if [ ${#failures[@]} -eq 0 ] && ! grep -q 'Chainloader startup complete' "$log" 2>/dev/null; then
-      failures+=("$2: BepInEx never logged \"Chainloader startup complete\" within ${timeout}s ($(cli status lethal-company 2>&1 | head -c 200))")
+      failures+=("$2: BepInEx never logged \"Chainloader startup complete\" within ${timeout}s ($(cli status "$rg_id" 2>&1 | head -c 200))")
     fi
   }
   # lc_stop stops the game through Mortar, then reaps whatever is left of the prefix by verified pid, waits for Mortar
   # to go idle (which purges the deploy) and requires the game folder to hash as it did before the first launch.
   lc_stop() {
-    cli stop lethal-company >"$ROOT/stop-$1.txt" 2>&1 || failures+=("$1: mortar stop failed: $(head -c 300 "$ROOT/stop-$1.txt")")
+    cli stop "$rg_id" >"$ROOT/stop-$1.txt" 2>&1 || failures+=("$1: mortar stop failed: $(head -c 300 "$ROOT/stop-$1.txt")")
     killed="$killed $(reap_prefix "$compat")"
     local state=""
     for _ in $(seq 1 60); do
-      state=$(cli status lethal-company --json | python3 -c 'import json,sys; print(json.load(sys.stdin)["state"])')
+      state=$(cli status "$rg_id" --json | python3 -c 'import json,sys; print(json.load(sys.stdin)["state"])')
       [ "$state" = idle ] && break
       sleep 1
     done
@@ -1015,7 +1052,7 @@ PYEOF
     r2=run
     cli profile import "$code" --preview --json >"$ROOT/r2-preview.json" 2>&1 || failures+=("r2 preview failed: $(head -c 300 "$ROOT/r2-preview.json")")
     r2_listed=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["packages"]))' "$ROOT/r2-preview.json" 2>/dev/null || echo 0)
-    if cli profile import "$code" --game lethal-company --name "Regress R2" --json >"$ROOT/r2-import.json" 2>&1; then
+    if cli profile import "$code" --game "$rg_id" --name "Regress R2" --json >"$ROOT/r2-import.json" 2>&1; then
       r2_profile=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["profile"])' "$ROOT/r2-import.json")
     else
       failures+=("r2 import failed: $(head -c 300 "$ROOT/r2-import.json")")
@@ -1043,11 +1080,11 @@ PY
     if [ -n "$r2_profile" ]; then
       local off
       for off in ${MORTAR_REGRESS_R2_DISABLE:-}; do
-        cli mods disable lethal-company "$r2_profile" "thunderstore:$off" >>"$ROOT/r2-disable.txt" 2>&1 || failures+=("disabling $off failed: $(tail -c 200 "$ROOT/r2-disable.txt")")
+        cli mods disable "$rg_id" "$r2_profile" "thunderstore:$off" >>"$ROOT/r2-disable.txt" 2>&1 || failures+=("disabling $off failed: $(tail -c 200 "$ROOT/r2-disable.txt")")
       done
-      cli mods lethal-company "$r2_profile" --json >"$ROOT/r2-mods.json"
+      cli mods "$rg_id" "$r2_profile" --json >"$ROOT/r2-mods.json"
       r2_mods=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$ROOT/r2-mods.json")
-      cli profile set lethal-company "$r2_profile" launchPrefix "$ROOT/run-proton.sh" >/dev/null
+      cli profile set "$rg_id" "$r2_profile" launchPrefix "$ROOT/run-proton.sh" >/dev/null
       echo "launching profile $r2_profile ($r2_mods mods)"
       lc_launch "$r2_profile" r2
       r2_plugins=$(grep -oE 'BepInEx\] [0-9]+ plugins? to load' "$log" 2>/dev/null | grep -oE '[0-9]+' | head -1)
@@ -1074,7 +1111,7 @@ PY
   fi
 
   [ ${#failures[@]} -eq 0 ] && verdict=PASS
-  echo "---- regress lethal-company: $verdict ($((SECONDS - t0))s)"
+  echo "---- regress $rg_id: $verdict ($((SECONDS - t0))s)"
   echo "profile        $profile"
   echo "BepInEx        $bepinex"
   echo "plugins loaded $loaded of ${#plugins[@]} (${plugins[*]})"
@@ -1810,12 +1847,13 @@ case "${1:-}" in
   regress)
     case "${2:-}${3:-}" in
       "") regress ;;
-      --gamelethal-company) regress_lc ;;
+      --gamelethal-company) regress_lc lethal-company ;;
+      --gamecat-mail-co) regress_lc cat-mail-co ;;
       --gamestardew) regress ;;
       --gamesims4) regress_sims4 ;;
       --fake*) regress_fake "${3:-}" ;;
       *)
-        echo "regress takes --game stardew, --game lethal-company, --game sims4 or --fake GAME_ID" >&2
+        echo "regress takes --game stardew, --game lethal-company, --game cat-mail-co, --game sims4 or --fake GAME_ID" >&2
         exit 2
         ;;
     esac
