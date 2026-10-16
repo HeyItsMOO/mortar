@@ -50,6 +50,22 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
+    <release version="0.3.3" date="2026-10-16">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Vintage Story: Mortar finds your copy, installs mods from the Vintage Story Mod DB with the mods they require, and keeps each profile's mod settings</li>
+          <li>Vintage Story worlds show their details, list the mods they were played with that a profile lacks, and the game's own world backups restore from Mortar</li>
+          <li>A Screenshots tab shows the game's own screenshots and Steam's, newest first</li>
+        </ul>
+        <p>Fixed</p>
+        <ul>
+          <li>Restoring a save no longer leaves the current save's leftover files beside it</li>
+          <li>Mortar finds your Steam account on current Steam clients</li>
+          <li>Menu items no longer say "Stop the game to change mods." when no game is running</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.2" date="2026-10-16">
       <description>
         <p>New</p>
