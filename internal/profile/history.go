@@ -51,8 +51,11 @@ const (
 	ChangeDisabled HistoryChange = "disabled" // Name: a mod or a group
 	ChangePinned   HistoryChange = "pinned"   // Name
 	ChangeUnpinned HistoryChange = "unpinned" // Name
-	ChangeTagged   HistoryChange = "tagged"   // Name, Detail: the tag added
-	ChangeUntagged HistoryChange = "untagged" // Name, Detail: the tag removed
+	// ChangeMarkedExplicit and ChangeMarkedImplicit are mods the player marked: Name for one, else Count.
+	ChangeMarkedExplicit HistoryChange = "markedExplicit"
+	ChangeMarkedImplicit HistoryChange = "markedImplicit"
+	ChangeTagged         HistoryChange = "tagged"   // Name, Detail: the tag added
+	ChangeUntagged       HistoryChange = "untagged" // Name, Detail: the tag removed
 	// ChangeTags is any other edit of one mod's tags: Name.
 	ChangeTags HistoryChange = "tags"
 	// ChangeNote is one mod's note written, changed or cleared: Name.

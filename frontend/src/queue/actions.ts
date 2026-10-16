@@ -29,6 +29,7 @@ export type Want = Pick<Request, 'kind'> &
       | 'picture'
       | 'tag'
       | 'asset'
+      | 'implicit'
       | 'latest'
       | 'batchId'
     >

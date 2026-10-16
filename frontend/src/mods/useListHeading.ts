@@ -18,5 +18,7 @@ export function useListHeading(groupBy: GroupBy) {
     enabled: t`Enabled`,
     disabled: t`Disabled`,
     smapi: t`${loaderName} mods`,
+    explicit: t`Explicit`,
+    implicit: t`Implicit`,
   })
 }

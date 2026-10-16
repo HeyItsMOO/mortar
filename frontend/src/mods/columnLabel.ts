@@ -15,6 +15,7 @@ const COLUMN_LABELS: Record<ListColumnId, MessageDescriptor> = {
   downloads: msg`Downloads`,
   updated: msg`Updated on Nexus`,
   installed: msg`Installed`,
+  reason: msg`Install reason`,
   needs: msg`Needs`,
   status: msg`Status`,
   notes: msg`Notes and tags`,

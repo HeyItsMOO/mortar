@@ -580,6 +580,7 @@ function Inspector({ mod, profile }: { mod: Mod; profile: Profile }) {
           <>
             <AuthorLink authorField={mod.author} mod={mod} profile={profile} />
             {` · ${sourceName}`}
+            {entryOf(profile, mod.key)?.implicit ? ` · ${t`Installed as a dependency`}` : null}
           </>
         }
         controls={<ModSwitch mod={mod} />}

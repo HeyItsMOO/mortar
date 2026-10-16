@@ -118,7 +118,7 @@ function pushRemovedUndo(
   })
 }
 
-async function batchProfile(
+export async function batchProfile(
   mods: Mod[],
   call: (game: string, id: string, keys: string[]) => Promise<Profile>,
   title: string,

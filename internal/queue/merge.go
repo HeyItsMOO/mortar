@@ -66,6 +66,17 @@ func nexusSource(it Item, im nexus.Mod) profile.Source {
 	})
 }
 
+// withIntent carries why the item was queued into the entry it creates.
+func withIntent(it Item, source profile.Source) profile.Source {
+	switch {
+	case it.Implicit:
+		return source.WithImplicit(true)
+	case it.FromLink:
+		return source.WithFromLink()
+	}
+	return source
+}
+
 func sourceWithOptions(it Item, source profile.Source) profile.Source {
 	choices := it.fomod
 	if choices == nil {
@@ -83,6 +94,7 @@ func sourceWithOptions(it Item, source profile.Source) profile.Source {
 	if it.Overlay != nil {
 		source = source.WithOverlay(it.Overlay.From, it.Overlay.To).WithOverlayOff(it.Overlay.Off)
 	}
+	source = withIntent(it, source)
 	return source
 }
 

@@ -103,7 +103,11 @@ func (s *Store) MergeInto(game, fromID, toID string, newerWins bool) (Profile, e
 			continue
 		}
 		done = append(done, side.Key)
-		if _, err := s.AddEntry(game, toID, side.Key, side.Source); err != nil {
+		src := side.Source
+		if i := entryIndex(from.Entries, side.Key); i >= 0 {
+			src = src.WithImplicit(from.Entries[i].Implicit)
+		}
+		if _, err := s.AddEntry(game, toID, side.Key, src); err != nil {
 			if _, dup := errors.AsType[*DuplicateError](err); dup {
 				continue
 			}

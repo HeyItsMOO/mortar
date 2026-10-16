@@ -134,6 +134,8 @@ function toListRow(
     mod: m,
     added: entry?.added ?? '',
     pinned: Boolean(entry?.pinned),
+    implicit: Boolean(entry?.implicit),
+    reason: entry?.implicit ? i18n._(msg`Implicit`) : i18n._(msg`Explicit`),
     source,
     unsourced: pageless || fileless || entry?.source.kind === 'local',
     status: m.enabled ? i18n._(msg`Enabled`) : i18n._(msg`Disabled`),

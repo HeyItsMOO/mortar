@@ -33,6 +33,8 @@ export function useMenuState(mod: Mod): MenuState {
     pinned: Boolean(entry?.pinned),
     skipVersion: entry?.skipVersion ?? '',
     hasUpdate: Boolean(update),
+    bundled: entry?.source.kind === 'smapi' || entry?.source.kind === 'mortar',
+    implicit: Boolean(entry?.implicit),
   }
 }
 

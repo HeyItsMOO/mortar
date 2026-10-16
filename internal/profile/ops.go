@@ -275,7 +275,7 @@ func (s *Store) addToStaged(game string, p *Profile, dir, key string, source Sou
 		}
 		mods = entryMods(found)
 	}
-	e := Entry{Key: key, Source: source, Mods: mods, Disabled: []mod.ID{}, Added: time.Now().UTC(), Fomod: cloneFomod(source.fomodMap()), Package: isPackage}
+	e := Entry{Key: key, Source: source, Mods: mods, Disabled: []mod.ID{}, Added: time.Now().UTC(), Fomod: cloneFomod(source.fomodMap()), Package: isPackage, Implicit: newImplicit(p.Entries, source, mods)}
 	if source.disabled != nil {
 		disabled = append(disabled, source.disabled.ids...)
 	}
@@ -524,6 +524,7 @@ func applyRestoredMeta(p *Profile, want Entry) {
 		}
 		p.Entries[i].Disabled = slices.Clone(want.Disabled)
 		p.Entries[i].Pinned = want.Pinned
+		p.Entries[i].Implicit = want.Implicit
 		p.Entries[i].SkipVersion = want.SkipVersion
 		p.Entries[i].SkipSources = slices.Clone(want.SkipSources)
 		p.Entries[i].UpdateChannel = want.UpdateChannel

@@ -12,7 +12,15 @@ export type PageHost =
   | 'vsmoddb'
   | 'web'
   | ''
-export type ModAction = 'toggle' | 'details' | 'page' | 'files' | 'pin' | 'skip' | 'remove'
+export type ModAction =
+  | 'toggle'
+  | 'details'
+  | 'page'
+  | 'files'
+  | 'pin'
+  | 'skip'
+  | 'reason'
+  | 'remove'
 
 export interface MenuState {
   enabled: boolean
@@ -20,6 +28,9 @@ export interface MenuState {
   pinned: boolean
   skipVersion: string
   hasUpdate: boolean
+  // Mortar's own loader and bridge entries are always implicit, so they offer no Mark items.
+  bundled: boolean
+  implicit: boolean
 }
 
 // The site a mod's page is on, named when Mortar knows it.
@@ -80,6 +91,9 @@ export function modActions(s: MenuState): ModAction[] {
   out.push('pin')
   if (s.hasUpdate || s.skipVersion !== '') {
     out.push('skip')
+  }
+  if (!s.bundled) {
+    out.push('reason')
   }
   out.push('remove')
   return out

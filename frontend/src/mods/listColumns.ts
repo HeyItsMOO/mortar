@@ -13,7 +13,7 @@ import { isNewer } from './nexusFormat.ts'
 const LIST_COLUMN_GROUPS = [
   ['on', 'name', 'author', 'category', 'notes', 'id'],
   ['version', 'latest', 'status', 'needs'],
-  ['installed', 'updated', 'lastRun', 'size', 'startup', 'order'],
+  ['installed', 'reason', 'updated', 'lastRun', 'size', 'startup', 'order'],
   ['source', 'endorsements', 'downloads'],
 ] as const
 
@@ -41,6 +41,7 @@ const NARROW_HIDE_LIST_COLUMNS: readonly ListColumnId[] = [
   'downloads',
   'updated',
   'installed',
+  'reason',
   'needs',
   'notes',
   'lastRun',
@@ -77,6 +78,7 @@ const LIST_COLUMN_WIDTH: Record<ListColumnId, string> = {
   downloads: '88px',
   updated: '140px',
   installed: '140px',
+  reason: '100px',
   needs: '140px',
   status: '100px',
   notes: '160px',
@@ -108,6 +110,9 @@ interface ListRow {
   groupName?: string
   download?: string
   pinned?: boolean
+  implicit?: boolean
+  /** Explicit or Implicit, in the reader's language. */
+  reason: string
   details?: Details
 }
 
@@ -392,6 +397,9 @@ function compareListRows(a: ListRow, b: ListRow, sort: ListColumnSort): number {
     }
     case 'status':
       primary = missingLast(!a.status, !b.status, dir, cmpText(a.status, b.status))
+      break
+    case 'reason':
+      primary = missingLast(false, false, dir, cmpText(a.reason, b.reason))
       break
     case 'notes': {
       const av = notesText(a)

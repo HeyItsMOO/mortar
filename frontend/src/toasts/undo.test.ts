@@ -67,12 +67,20 @@ test('entryFieldsOf and entriesForKeys keep the previous bulk values', () => {
       skipVersion: '2.0',
       tags: ['farm'],
       categoryOverride: 'Crops',
+      implicit: true,
       source: { kind: 'nexus' },
     }),
     entry({ key: 'k2', source: { kind: 'nexus' } }),
   ]
   expect(entryFieldsOf(entries, ['k1'])).toEqual([
-    { key: 'k1', pinned: true, skipVersion: '2.0', tags: ['farm'], categoryOverride: 'Crops' },
+    {
+      key: 'k1',
+      pinned: true,
+      skipVersion: '2.0',
+      tags: ['farm'],
+      categoryOverride: 'Crops',
+      implicit: true,
+    },
   ])
   expect(entriesForKeys(entries, ['k2']).map((e) => e.key)).toEqual(['k2'])
 })

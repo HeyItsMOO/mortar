@@ -28,6 +28,7 @@ import {
   Tag,
   ToggleRight,
   User,
+  UserCheck,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { SetListGroupBy } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
@@ -219,6 +220,7 @@ function GroupByControl() {
           ...(downloads ? [{ id: 'download' as const, label: t`Download`, Icon: Download }] : []),
           { id: 'author' as const, label: t`Author`, Icon: User },
           { id: 'group' as const, label: t`Group`, Icon: FolderTree },
+          { id: 'reason' as const, label: t`Install reason`, Icon: UserCheck },
         ].map((item) => (
           <Tooltip key={item.id} title={item.hint ?? ''} placement="right">
             <MenuItem

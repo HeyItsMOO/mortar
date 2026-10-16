@@ -17,6 +17,7 @@ export interface UndoEntry {
   extraStoreKeys?: string[] | null
   previousExtraStoreKeys?: string[] | null
   pinned?: boolean
+  implicit?: boolean
   skipVersion?: string
   tags?: string[] | null
   categoryOverride?: string
@@ -39,10 +40,12 @@ export interface EntryFieldsPayload {
   skipVersion: string
   tags: string[]
   categoryOverride: string
+  implicit: boolean
 }
 
 export interface RevertWant {
   kind: 'install'
+  implicit?: boolean
   name: string
   version: string
   modId?: number
@@ -104,6 +107,7 @@ export function downloadWantsForEntries(entries: UndoEntry[]): RevertWant[] {
         version: source.version ?? '',
         modId: source.modId,
         fileId: source.fileId,
+        ...(entry.implicit ? { implicit: true } : {}),
       })
     } else if (source.kind === 'github' && source.repo) {
       wants.push({
@@ -111,6 +115,7 @@ export function downloadWantsForEntries(entries: UndoEntry[]): RevertWant[] {
         name: source.name ?? '',
         version: source.version ?? '',
         repo: source.repo,
+        ...(entry.implicit ? { implicit: true } : {}),
         ...(source.tag === undefined ? {} : { tag: source.tag }),
         ...(source.asset === undefined ? {} : { asset: source.asset }),
       })
@@ -134,6 +139,7 @@ export function entryFieldsOf(entries: UndoEntry[], keys: string[]): EntryFields
       skipVersion: entry.skipVersion ?? '',
       tags: [...(entry.tags ?? [])],
       categoryOverride: entry.categoryOverride ?? '',
+      implicit: entry.implicit ?? false,
     }))
 }
 
@@ -162,7 +168,7 @@ export function fieldsStillUndoable(
     if (!entry) {
       return false
     }
-    if ((entry.pinned ?? false) !== field.pinned) {
+    if ((entry.pinned ?? false) !== field.pinned || (entry.implicit ?? false) !== field.implicit) {
       return true
     }
     if ((entry.skipVersion ?? '') !== field.skipVersion) {

@@ -16,6 +16,8 @@ import {
   PowerOff,
   Settings2,
   Trash2,
+  UserCheck,
+  Workflow,
 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import type {
@@ -44,6 +46,7 @@ import { EverywhereMenuItem } from './EverywhereMenuItem.tsx'
 import { ModGroupItems } from './GroupMenu.tsx'
 import { modId, nexusIdOf, updateFor } from './lookup.ts'
 import { ModActionItems } from './ModActionItems.tsx'
+import { markImplicit } from './markImplicit.ts'
 import {
   extraFileArchive,
   extraFileLabel,
@@ -163,6 +166,11 @@ function ModMenuItems({
       label: state.pinned ? t`Unpin version` : t`Pin this version`,
       icon: state.pinned ? <PinOff size={ICON_SIZE} /> : <Pin size={ICON_SIZE} />,
       run: () => setPinned(mod, !state.pinned).catch(reportUnexpected),
+    },
+    reason: {
+      label: state.implicit ? t`Mark explicit` : t`Mark implicit`,
+      icon: state.implicit ? <UserCheck size={ICON_SIZE} /> : <Workflow size={ICON_SIZE} />,
+      run: () => markImplicit(acting, !state.implicit).catch(reportUnexpected),
     },
     skip: {
       label: update ? t`Skip this update` : t`Show skipped update`,

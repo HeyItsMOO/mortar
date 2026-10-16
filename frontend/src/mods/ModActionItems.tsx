@@ -190,6 +190,9 @@ function ModActionItems({
     if (has('skip')) {
       result.push(renderAction('skip'))
     }
+    if (has('reason')) {
+      result.push(renderAction('reason'))
+    }
   }
   result.push(<MenuRule key="other-profiles-divider" />)
   result.push(

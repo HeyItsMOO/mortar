@@ -28,9 +28,10 @@ export function historyLabel(ev: Worded): string {
     case HistoryChange.ChangeDisabled:
       return i18n._(msg`Disabled ${{ names: name }}`)
     case HistoryChange.ChangePinned:
-      return i18n._(msg`Pinned ${name} at its version`)
     case HistoryChange.ChangeUnpinned:
-      return i18n._(msg`Unpinned ${name}`)
+    case HistoryChange.ChangeMarkedExplicit:
+    case HistoryChange.ChangeMarkedImplicit:
+      return entryFlagLabel(ev.change, name, count)
     case HistoryChange.ChangeTagged:
       return i18n._(msg`Tagged ${name} with ${detail}`)
     case HistoryChange.ChangeUntagged:
@@ -117,4 +118,21 @@ export function historyLabel(ev: Worded): string {
     default:
       return i18n._(msg`Changed the profile`)
   }
+}
+
+// One mod's pin, or the install reason of one or more mods, changed.
+function entryFlagLabel(change: HistoryChange, name: string, count: number): string {
+  if (change === HistoryChange.ChangePinned) {
+    return i18n._(msg`Pinned ${name} at its version`)
+  }
+  if (change === HistoryChange.ChangeUnpinned) {
+    return i18n._(msg`Unpinned ${name}`)
+  }
+  const implicit = change === HistoryChange.ChangeMarkedImplicit
+  if (name) {
+    return implicit ? i18n._(msg`Marked ${name} implicit`) : i18n._(msg`Marked ${name} explicit`)
+  }
+  return implicit
+    ? plural(count, { one: 'Marked # mod implicit', other: 'Marked # mods implicit' })
+    : plural(count, { one: 'Marked # mod explicit', other: 'Marked # mods explicit' })
 }

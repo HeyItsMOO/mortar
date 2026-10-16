@@ -314,6 +314,9 @@ func TestUpdateKeepsEntrySettingsAndRollBackRestoresSource(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if p, err = e.SetImplicitMany("stardew", p.ID, []string{"a-1"}, true); err != nil {
+		t.Fatal(err)
+	}
 	first := p.Entries[0].Source
 	replacing := Source{Kind: KindLocal, Name: "a-newer.zip"}
 	got, err := e.moveTo("stardew", p.ID, "a-1", "a-2", &replacing)
@@ -321,7 +324,7 @@ func TestUpdateKeepsEntrySettingsAndRollBackRestoresSource(t *testing.T) {
 		t.Fatal(err)
 	}
 	en := got.Entries[0]
-	if en.Note != "keep me" || !slices.Equal(en.Tags, []string{"ui"}) || en.Source != replacing {
+	if en.Note != "keep me" || !slices.Equal(en.Tags, []string{"ui"}) || en.Source != replacing || !en.Implicit {
 		t.Fatalf("updated = %+v", en)
 	}
 	back, err := e.RollBack("stardew", p.ID, "a-2")
@@ -329,7 +332,7 @@ func TestUpdateKeepsEntrySettingsAndRollBackRestoresSource(t *testing.T) {
 		t.Fatal(err)
 	}
 	en = back.Entries[0]
-	if en.Key != "a-1" || en.Source != first || en.Note != "keep me" || en.PreviousSource == nil || *en.PreviousSource != replacing {
+	if en.Key != "a-1" || en.Source != first || en.Note != "keep me" || !en.Implicit || en.PreviousSource == nil || *en.PreviousSource != replacing {
 		t.Fatalf("rolled back = %+v", en)
 	}
 }
@@ -415,7 +418,7 @@ func TestPackageUpdatesBackUpSavesOncePerBatch(t *testing.T) {
 	b, _ := e.Create("lethal-company", "B")
 	v1 := Source{Kind: KindThunderstore, Name: "Ns-Mod", Version: "1.0.0"}
 	for _, p := range []Profile{a, b} {
-		if _, err := e.InstallSource(t.Context(), "lethal-company", p.ID, tsZip(t, "1.0.0"), v1); err != nil {
+		if _, err := e.InstallSource(t.Context(), "lethal-company", p.ID, tsZip(t, "1.0.0"), v1.WithImplicit(p.ID == a.ID)); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -429,13 +432,17 @@ func TestPackageUpdatesBackUpSavesOncePerBatch(t *testing.T) {
 	if n := zipsIn(t, backups); n != 1 {
 		t.Fatalf("a package update took %d backups, want 1", n)
 	}
+	// An update keeps the install reason in both directions, whatever the update's own request was.
+	if pa, _ := e.read("lethal-company", a.ID); !pa.Entries[0].Implicit {
+		t.Fatal("updating an implicit package made it explicit")
+	}
 	got, err := e.UpdateEverywhere("lethal-company", "thunderstore:Ns-Mod", latestStoreKey)
 	if err != nil || len(got.Updated) != 1 || got.Updated[0].ProfileID != b.ID {
 		t.Fatalf("everywhere = %+v, %v", got, err)
 	}
 	newKey := got.Updated[0].OldKey
 	pb, _ := e.read("lethal-company", b.ID)
-	if en := pb.Entries[0]; en.Source.Version != "1.1.0" || en.PreviousKey != newKey {
+	if en := pb.Entries[0]; en.Source.Version != "1.1.0" || en.PreviousKey != newKey || en.Implicit {
 		t.Fatalf("b's entry = %+v", en)
 	}
 	newKey = pb.Entries[0].Key

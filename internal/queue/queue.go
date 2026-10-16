@@ -132,8 +132,12 @@ type Item struct {
 	Fomod    map[string]map[string][]string `json:"fomod,omitempty"`
 	// Overlay is where an optional file without a manifest goes in its main file, from a share; nil asks the user.
 	Overlay *OverlayPlace `json:"overlay,omitempty"`
-	Speed   int64         `json:"speed"`
-	Error   string        `json:"error"`
+	// Implicit creates the entry as one brought in for another mod; FromLink marks a download the player started
+	// from a Nexus link, whose entry is implicit when it supplies a mod the profile lacks.
+	Implicit bool   `json:"implicit,omitempty"`
+	FromLink bool   `json:"fromLink,omitempty"`
+	Speed    int64  `json:"speed"`
+	Error    string `json:"error"`
 	// ErrorKind classes a failed item's Error: network, blocked, auth, disk, malware or other.
 	ErrorKind string `json:"errorKind,omitempty"`
 	// Detection is what the antivirus flagged when the item failed on it; InstallAnyway answers it.
@@ -249,9 +253,14 @@ type Request struct {
 	Disabled []mod.ID                       `json:"disabled,omitempty"`
 	Fomod    map[string]map[string][]string `json:"fomod,omitempty"`
 	Overlay  *OverlayPlace                  `json:"overlay,omitempty"`
+	// Implicit creates the entry as one brought in for another mod, for a request that copies an entry's flag
+	// (undo, a template, a share); a dependency request is implicit by its kind.
+	Implicit bool `json:"implicit,omitempty"`
 
 	key     string
 	expires int64
+	// fromLink is a download the player started from a Nexus link.
+	fromLink bool
 	// url and sizeKB are a resolved package's download, and picture and category its icon and site category, set by
 	// the closure expansion.
 	url      string
@@ -447,7 +456,7 @@ func Run(ctx context.Context, s *Service, assigned <-chan nxmsvc.Assignment) (wa
 				r := Request{
 					Kind: KindInstall, Game: a.Game, Profile: a.Profile, ModID: a.Link.ModID, FileID: a.Link.FileID,
 					key: a.Link.Key, expires: a.Link.Expires, Package: a.Package, Version: a.Version,
-					Source: a.Source, PackageFile: a.File,
+					Source: a.Source, PackageFile: a.File, fromLink: true,
 				}
 				items, err := s.add(ctx, []Request{r})
 				if err != nil {
@@ -700,6 +709,10 @@ func (s *Service) add(ctx context.Context, reqs []Request) ([]Item, error) {
 			if r.Overlay != nil {
 				it.Overlay = r.Overlay
 			}
+			// A request for the file itself makes a queued dependency an install; never the reverse.
+			if !r.implicit() && !r.fromLink {
+				it.Implicit = false
+			}
 			// The newest batch to want the file waits on it, and its install joins that batch's history.
 			if r.BatchID != "" {
 				it.BatchID = r.BatchID
@@ -712,6 +725,7 @@ func (s *Service) add(ctx context.Context, reqs []Request) ([]Item, error) {
 			ID: ids.New(), Kind: r.Kind, BatchID: r.BatchID, Game: r.Game, Profile: r.Profile, ModID: r.ModID, FileID: r.FileID,
 			Name: r.Name, FileName: r.FileName, Version: r.Version, State: StateQueued, key: r.key, expires: r.expires,
 			Package: r.Package, Source: r.Source, PackageFile: r.PackageFile, Digest: r.digest, URL: r.url, SizeKB: r.sizeKB, Picture: cmp.Or(r.picture, r.Picture), Category: r.category, Repo: r.Repo, Tag: r.Tag, Asset: r.Asset, FallbackRepo: r.FallbackRepo, FallbackID: r.FallbackID, Latest: r.Latest, Disabled: slices.Clone(r.Disabled), Fomod: r.Fomod, fomod: r.Fomod, Overlay: r.Overlay,
+			Implicit: r.implicit(), FromLink: r.fromLink,
 		}
 		if it.Repo != "" {
 			it.Name = cmp.Or(it.Name, it.Repo)
@@ -736,6 +750,9 @@ func (s *Service) add(ctx context.Context, reqs []Request) ([]Item, error) {
 	s.poke()
 	return out, nil
 }
+
+// implicit is whether the request creates its entry implicit.
+func (r Request) implicit() bool { return r.Implicit || r.Kind == KindDependency }
 
 // Route gives a link's download key to the waiting item for the same file. It reports whether one took it; when
 // none did, the link is a download the user started on their own.

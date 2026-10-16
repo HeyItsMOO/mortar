@@ -167,6 +167,7 @@ function cellsFor(id: ListColumnId, row: ListRow, locale: string, profile: Profi
     case 'category':
     case 'updated':
     case 'installed':
+    case 'reason':
     case 'notes': {
       const notes = [row.note, row.tags.join(', ')].filter((part) => part !== '').join(' · ')
       if (id === 'updated') {
@@ -180,6 +181,7 @@ function cellsFor(id: ListColumnId, row: ListRow, locale: string, profile: Profi
         author: dash(formatAuthors(m.author)),
         source: dash(row.source),
         category: dash(row.categoryLabel),
+        reason: row.reason,
         notes: dash(notes),
       }[id]
       return <ValueCell key={id} text={text} />

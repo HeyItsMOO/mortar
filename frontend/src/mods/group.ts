@@ -20,9 +20,12 @@ const GROUP_BY_IDS = [
   'download',
   'author',
   'group',
+  'reason',
 ] as const
 
 const STATUS_GROUP_ORDER = ['problems', 'update', 'enabled', 'disabled'] as const
+
+const REASON_GROUP_ORDER = ['explicit', 'implicit'] as const
 
 const SMAPI_MODS_GROUP = 'smapi'
 
@@ -247,6 +250,7 @@ interface GroupRow {
   groupName?: string
   // The archive a folder game's entry was cut from, by the name its source gives it.
   download?: string
+  implicit?: boolean
   mod: {
     id: string
     author: string
@@ -295,6 +299,9 @@ function rowGroupKey(
   if (by === 'download') {
     return row.download ?? ''
   }
+  if (by === 'reason') {
+    return row.implicit ? 'implicit' : 'explicit'
+  }
   return ''
 }
 
@@ -308,8 +315,13 @@ function groupHeading(
     enabled: string
     disabled: string
     smapi: string
+    explicit: string
+    implicit: string
   },
 ): string {
+  if (by === 'reason') {
+    return key === 'implicit' ? labels.implicit : labels.explicit
+  }
   if (by === 'status') {
     if (key === 'problems') {
       return labels.problems
@@ -331,6 +343,9 @@ function groupHeading(
 function orderedGroupKeys(by: GroupBy, keys: readonly string[]): string[] {
   if (by === 'status') {
     return STATUS_GROUP_ORDER.filter((k) => keys.includes(k))
+  }
+  if (by === 'reason') {
+    return REASON_GROUP_ORDER.filter((k) => keys.includes(k))
   }
   const named = keys.filter((k) => k !== '' && k !== SMAPI_MODS_GROUP).sort((a, b) => cmpText(a, b))
   const tail: string[] = []
@@ -355,6 +370,8 @@ interface HeadingCopy {
   enabled: string
   disabled: string
   smapi: string
+  explicit: string
+  implicit: string
 }
 
 function listHeadingFor(groupBy: GroupBy, copy: HeadingCopy) {
@@ -366,6 +383,8 @@ function listHeadingFor(groupBy: GroupBy, copy: HeadingCopy) {
       enabled: copy.enabled,
       disabled: copy.disabled,
       smapi: copy.smapi,
+      explicit: copy.explicit,
+      implicit: copy.implicit,
     })
 }
 

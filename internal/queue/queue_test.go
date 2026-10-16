@@ -893,3 +893,23 @@ func TestFinishedItemCarriesTheHistoryEventItRecorded(t *testing.T) {
 		t.Fatalf("history batch calls %q", calls)
 	}
 }
+
+// A request for the file itself makes a queued dependency an install; a dependency request or a Nexus link never
+// turns an install back.
+func TestJoiningRequestsOnlyPromoteTheInstallReason(t *testing.T) {
+	f := newFixture(t)
+	f.s.Pause()
+	dep := req(10)
+	dep.Kind = KindDependency
+	link := req(10)
+	link.fromLink = true
+	for _, step := range []struct {
+		r    Request
+		want bool
+	}{{dep, true}, {link, true}, {req(10), false}, {dep, false}} {
+		got, err := f.s.add(t.Context(), []Request{step.r})
+		if err != nil || len(got) != 1 || got[0].Implicit != step.want {
+			t.Fatalf("after %+v: %+v, %v; want implicit %v", step.r, got, err, step.want)
+		}
+	}
+}

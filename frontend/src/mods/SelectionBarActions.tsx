@@ -14,6 +14,8 @@ import {
   Share2,
   Tag,
   Trash2,
+  UserCheck,
+  Workflow,
   X,
 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
@@ -23,6 +25,7 @@ import { MenuAction } from '../shell/MenuAction.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { LockedReason } from './LockedReason.tsx'
+import { markImplicit } from './markImplicit.ts'
 import type { SourceGroups } from './skipSources.ts'
 
 export function SelectionBarActions({
@@ -45,7 +48,7 @@ export function SelectionBarActions({
   clear,
 }: {
   selected: Mod[]
-  profile: { entries?: { key: string; pinned?: boolean }[] | null } | undefined
+  profile: { entries?: { key: string; pinned?: boolean; implicit?: boolean }[] | null } | undefined
   latest: ReadonlyMap<string, string>
   locked: boolean
   count: string
@@ -67,6 +70,9 @@ export function SelectionBarActions({
   const pinned = selected.every(
     (mod) => profile?.entries?.find((entry) => entry.key === mod.key)?.pinned,
   )
+  const implicit = selected.every(
+    (mod) => profile?.entries?.find((entry) => entry.key === mod.key)?.implicit,
+  )
   const pick = (run: () => void) => () => {
     setMenu(null)
     run()
@@ -78,6 +84,12 @@ export function SelectionBarActions({
       label: pinned ? t`Unpin version` : t`Pin this version`,
       icon: pinned ? <PinOff size={16} /> : <Pin size={16} />,
       run: () => setPinnedMany(selected, !pinned).catch(reportUnexpected),
+      edits: true,
+    },
+    {
+      label: implicit ? t`Mark explicit` : t`Mark implicit`,
+      icon: implicit ? <UserCheck size={16} /> : <Workflow size={16} />,
+      run: () => markImplicit(selected, !implicit).catch(reportUnexpected),
       edits: true,
     },
     {

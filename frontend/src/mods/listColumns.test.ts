@@ -38,6 +38,7 @@ const row = (over: Partial<ListRow> & { name: string }): ListRow => {
     note: over.note ?? '',
     tags: over.tags ?? [],
     categoryLabel: over.categoryLabel ?? '',
+    reason: over.reason ?? '',
   }
   if (over.size !== undefined) {
     out.size = over.size

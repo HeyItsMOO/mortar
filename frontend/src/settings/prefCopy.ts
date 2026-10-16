@@ -142,6 +142,7 @@ function windowAndMods(i18n: I18n): Record<string, PrefCopy> {
         { value: 'download', label: i18n._(msg`Download`) },
         { value: 'author', label: i18n._(msg`Author`) },
         { value: 'group', label: i18n._(msg`Group`) },
+        { value: 'reason', label: i18n._(msg`Install reason`) },
       ],
     },
   }

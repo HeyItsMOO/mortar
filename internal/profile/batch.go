@@ -147,16 +147,17 @@ func (s *Store) SetSkipVersionMany(game, id string, refs []SkipVersionRef) (Prof
 	})
 }
 
-// EntryFields is the pin, skip, tag and category state of one profile entry.
+// EntryFields is the pin, skip, tag, category and install reason state of one profile entry.
 type EntryFields struct {
 	Key              string   `json:"key"`
 	Pinned           bool     `json:"pinned"`
 	SkipVersion      string   `json:"skipVersion"`
 	Tags             []string `json:"tags"`
 	CategoryOverride string   `json:"categoryOverride"`
+	Implicit         bool     `json:"implicit"`
 }
 
-// RestoreEntryFields writes each entry's previous pin, skip, tags and category in one profile write.
+// RestoreEntryFields writes each entry's previous pin, skip, tags, category and install reason in one profile write.
 func (s *Store) RestoreEntryFields(game, id string, fields []EntryFields) (Profile, error) {
 	if len(fields) == 0 {
 		p, err := s.read(game, id)
@@ -177,6 +178,9 @@ func (s *Store) RestoreEntryFields(game, id string, fields []EntryFields) (Profi
 				}
 				p.Entries[i].Tags = tags
 				p.Entries[i].CategoryOverride = field.CategoryOverride
+				if !p.Entries[i].Source.Bundled() {
+					p.Entries[i].Implicit = field.Implicit
+				}
 				found = true
 				break
 			}

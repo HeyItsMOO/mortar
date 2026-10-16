@@ -10,6 +10,7 @@ import {
   firstTag,
   frameworkGroupKey,
   groupSorted,
+  listHeadingFor,
   profileTags,
   resolvedCategoryLabel,
   rowGroupKey,
@@ -264,4 +265,40 @@ test('download grouping puts the files of one archive under its name', () => {
     ['', 1],
   ])
   expect(sanitizeListGroupBy('download')).toBe('download')
+})
+
+test('install reason groups explicit before implicit', () => {
+  const ctx = {
+    hasProblem: false,
+    hasUpdate: false,
+    names: new Map(),
+    customById: customCategoryById([]),
+  }
+  const row = { source: '', tags: [], mod: { id: 'A.B', author: '', enabled: true } }
+  expect(rowGroupKey('reason', row, ctx)).toBe('explicit')
+  expect(rowGroupKey('reason', { ...row, implicit: true }, ctx)).toBe('implicit')
+  const heading = listHeadingFor('reason', {
+    category: '',
+    source: '',
+    tag: '',
+    author: '',
+    group: '',
+    download: '',
+    problems: '',
+    update: '',
+    enabled: '',
+    disabled: '',
+    smapi: '',
+    explicit: 'Explicit',
+    implicit: 'Implicit',
+  })
+  expect(heading('implicit')).toBe('Implicit')
+  expect(
+    groupSorted(
+      [{ k: 'implicit' }, { k: 'explicit' }],
+      'reason',
+      (r) => r.k,
+      () => 0,
+    ).map((g) => g.key),
+  ).toEqual(['explicit', 'implicit'])
 })

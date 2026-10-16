@@ -838,6 +838,10 @@ func historySummary(ev profile.HistoryEvent) string {
 		return "Pinned " + ev.Name + " at its version"
 	case profile.ChangeUnpinned:
 		return "Unpinned " + ev.Name
+	case profile.ChangeMarkedExplicit:
+		return "Marked " + cmp.Or(ev.Name, mods(ev.Count)) + " explicit"
+	case profile.ChangeMarkedImplicit:
+		return "Marked " + cmp.Or(ev.Name, mods(ev.Count)) + " implicit"
 	case profile.ChangeTagged:
 		return fmt.Sprintf("Tagged %s with %s", ev.Name, ev.Detail)
 	case profile.ChangeUntagged:

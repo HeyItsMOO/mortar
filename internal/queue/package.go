@@ -105,7 +105,7 @@ func packageSource(it Item) profile.Source {
 	if len(it.Disabled) > 0 {
 		src = src.WithDisabled(it.Disabled)
 	}
-	return src
+	return withIntent(it, src)
 }
 
 // downloadPackage fetches a package archive and installs it into the item's profile.

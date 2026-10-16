@@ -58,13 +58,13 @@ func (s *Store) folderEntries(game, id, key string, source Source, whole []Compo
 			whole = []Component{whole[0]}
 			whole[0].Name = source.Name
 		}
-		return []Entry{{Key: key, Source: source, Mods: whole, Disabled: []mod.ID{}, Added: now, Package: true}}, tray, arch, nil
+		return []Entry{{Key: key, Source: source, Mods: whole, Disabled: []mod.ID{}, Added: now, Package: true, Implicit: source.startsImplicit()}}, tray, arch, nil
 	}
 	out := make([]Entry, 0, len(mods.Files))
 	for _, f := range mods.Files {
 		k := key + fileKeySep + f.Rel
 		out = append(out, Entry{
-			Key: k, Item: key, File: f.Rel, Source: source, Disabled: []mod.ID{}, Added: now, Package: true,
+			Key: k, Item: key, File: f.Rel, Source: source, Disabled: []mod.ID{}, Added: now, Package: true, Implicit: source.startsImplicit(),
 			Mods: []Component{{ID: mod.NewID(mod.FormatFolder, k), Name: f.Rel, Folder: "."}},
 		})
 	}
@@ -117,7 +117,7 @@ func (s *Store) placeFolderLocked(game, id, key string, source Source, whole []C
 		if held := placement.held; len(held) > 0 {
 			k := trayEntryKey(key)
 			fresh = append(fresh, Entry{
-				Key: k, Item: key, Source: source, Disabled: []mod.ID{}, Added: time.Now().UTC(), Package: true, Tray: true, TrayFiles: held,
+				Key: k, Item: key, Source: source, Disabled: []mod.ID{}, Added: time.Now().UTC(), Package: true, Tray: true, TrayFiles: held, Implicit: source.startsImplicit(),
 				Mods: []Component{{ID: mod.NewID(mod.FormatFolder, k), Name: "Tray files", Folder: "."}},
 			})
 		}

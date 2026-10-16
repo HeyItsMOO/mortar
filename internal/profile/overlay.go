@@ -462,7 +462,7 @@ func (s *Store) placeOverlayLocked(game, id, key string, source Source) (Profile
 			return s.relayBase(game, p, dir, base.Key, was)
 		}
 		p.Entries = append(p.Entries, Entry{
-			Key: key, Source: place, Mods: []Component{}, Disabled: []mod.ID{}, Added: time.Now().UTC(),
+			Key: key, Source: place, Mods: []Component{}, Disabled: []mod.ID{}, Added: time.Now().UTC(), Implicit: source.startsImplicit(),
 			OverlayOf: base.Key, OverlayFrom: from, OverlayTo: to, OverlayOff: off,
 		})
 		if !off {
