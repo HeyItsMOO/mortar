@@ -42,6 +42,8 @@ func contentType(path string) string {
 		return "image/jpeg"
 	case ".webp":
 		return "image/webp"
+	case ".gif":
+		return "image/gif"
 	case ".jxl":
 		if runtime.GOOS == "linux" {
 			return "image/jxl"
@@ -56,7 +58,7 @@ func open(path string) (*os.File, string, error) {
 	}
 	typ := contentType(path)
 	if typ == "" {
-		return nil, "", fmt.Errorf("%q is not a PNG, JPEG, WebP or JPEG XL image", path)
+		return nil, "", fmt.Errorf("%q is not a PNG, JPEG, GIF, WebP or JPEG XL image", path)
 	}
 	f, err := fsx.Open(path)
 	if err != nil {
@@ -139,10 +141,11 @@ const (
 )
 
 // serve writes the image as it is, or shrunk to the width the page asked for with ?w=, so the browser does not decode
-// a 4K wallpaper to fill a smaller window. JPEG XL cannot be decoded here and is served whole.
+// a 4K wallpaper to fill a smaller window. JPEG XL cannot be decoded here and an animation would lose its frames, so
+// both are served whole; the page freezes an animation itself when motion is reduced.
 func serve(w http.ResponseWriter, r *http.Request, src io.ReadSeeker, typ string) {
 	if px, err := strconv.Atoi(r.URL.Query().Get("w")); err == nil && px >= minWidthPx && px <= maxWidthPx && typ != "image/jxl" {
-		if b, err := modpic.ReadCapped(src, maxSourceBytes); err == nil {
+		if b, err := modpic.ReadCapped(src, maxSourceBytes); err == nil && !animated(b, typ) {
 			if out, outTyp, err := modpic.Shrink(b, typ, px); err == nil {
 				w.Header().Set("Content-Type", outTyp)
 				http.ServeContent(w, r, "", time.Time{}, bytes.NewReader(out))
@@ -159,3 +162,18 @@ func serve(w http.ResponseWriter, r *http.Request, src io.ReadSeeker, typ string
 }
 
 const maxSourceBytes = 64 << 20
+
+// animated reports an image that may hold frames: any GIF, a WebP whose VP8X header sets the animation flag, and an
+// APNG, whose acTL chunk comes before the first IDAT.
+func animated(b []byte, typ string) bool {
+	switch typ {
+	case "image/gif":
+		return true
+	case "image/webp":
+		return len(b) > 20 && string(b[12:16]) == "VP8X" && b[20]&0x02 != 0
+	case "image/png":
+		head, _, _ := bytes.Cut(b, []byte("IDAT"))
+		return bytes.Contains(head, []byte("acTL"))
+	}
+	return false
+}

@@ -3,6 +3,8 @@ package backdrop
 import (
 	"bytes"
 	"image"
+	"image/color"
+	"image/gif"
 	_ "image/jpeg"
 	"net/http"
 	"net/http/httptest"
@@ -210,5 +212,32 @@ func TestWidthParameterShrinksTheBackdrop(t *testing.T) {
 	}
 	if got := width("?w=100"); got != full {
 		t.Errorf("a width below the minimum must serve the original, got %dpx", got)
+	}
+}
+
+func TestAnimatedBackdropsKeepTheirFrames(t *testing.T) {
+	dir := t.TempDir()
+	// Two frames wider than the width asked for, which a still image would be shrunk to.
+	frame := image.NewPaletted(image.Rect(0, 0, 1400, 4), color.Palette{color.Black, color.White})
+	var anim bytes.Buffer
+	if err := gif.EncodeAll(&anim, &gif.GIF{Image: []*image.Paletted{frame, frame}, Delay: []int{10, 10}}); err != nil {
+		t.Fatal(err)
+	}
+	vp8x := "RIFF\x00\x00\x00\x00WEBPVP8X\x0a\x00\x00\x00\x02\x00\x00\x00anim"
+	for name, body := range map[string]string{
+		"a.webp": vp8x,
+		"a.png":  "\x89PNG\r\n\x1a\nacTL....IDAT",
+		"a.gif":  anim.String(),
+	} {
+		wall := write(t, dir, name, body)
+		cur := func() settings.Settings {
+			return settings.Settings{Background: settings.BackgroundImage, BackgroundImage: wall}
+		}
+		h := Middleware(cur, "", none)(http.NotFoundHandler())
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, httptest.NewRequestWithContext(t.Context(), http.MethodGet, Path+"?w=1280", nil))
+		if rec.Body.String() != body {
+			t.Errorf("%s: an animation was re-encoded instead of served whole", name)
+		}
 	}
 }

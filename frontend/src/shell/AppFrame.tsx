@@ -6,6 +6,7 @@ import { SweepDialog } from '../launch/SweepDialog.tsx'
 import { QueueSheet } from '../queue/QueueSheet.tsx'
 import { NxmReclaim } from '../settings/sections/NxmReclaim.tsx'
 import { useSettings } from '../settings/store.ts'
+import { BackdropImage } from './BackdropImage.tsx'
 import { OfflineBanner } from './OfflineBanner.tsx'
 import { TitleBar } from './TitleBar.tsx'
 import { win } from './win.ts'
@@ -53,10 +54,8 @@ export function AppFrame({ children }: { children: ReactNode }) {
     >
       {showBackdrop ? (
         <>
-          <Box
-            component="img"
+          <BackdropImage
             alt=""
-            draggable={false}
             src={`/backdrop?mode=${backdropMode}&w=${width}&v=${encodeURIComponent(backdropImage)}`}
             sx={{
               position: 'absolute',

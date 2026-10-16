@@ -59,7 +59,7 @@ The tab header is `--m-control` plus twice `--m-gap` tall (52px comfortable, 44p
   - When off, there is no tray icon and close quits.
   - **Start minimised** hides the window at launch (the tray Show brings it up).
   - **Remember window** restores the last size and position, clamped to a visible screen.
-  - **Image**: the chosen image, else the system Fedora wallpaper, else the bundled copy. Shows a preview with **Choose image…** (PNG, JPEG or WebP) and **Reset to default**.
+  - **Image**: the chosen image, else the system Fedora wallpaper, else the bundled copy. Shows a preview with **Choose image…** (PNG, JPEG, GIF or WebP) and **Reset to default**. An animated GIF, WebP or APNG plays, served whole rather than shrunk; under Reduce motion the window shows its first frame instead.
   - **Desktop:** the user's own desktop wallpaper, read at runtime (GNOME `org.gnome.desktop.background` `picture-uri-dark` under the dark colour scheme, else `picture-uri`; Windows the `HKCU\Control Panel\Desktop` `Wallpaper` value, measured on Windows 11 26H2; a wallpaper changed while Mortar is open shows at the next mode change), falling back to Image's choice when it cannot be read.
   - **Solid:** no image, the plain base.
   - The window loads the backdrop from `/background?mode=` with `mode` equal to the stored `background` value. The endpoint answers `Cache-Control: no-store`.

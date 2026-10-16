@@ -145,7 +145,7 @@ func (s *Service) SetBackgroundImage(path string) error {
 // ChooseBackgroundImage asks for an image and stores it as the wallpaper; cancelling changes nothing.
 func (s *Service) ChooseBackgroundImage() error {
 	path, err := s.App.OpenFile(winhost.Dialog{Title: "Choose background image", Filters: []winhost.Filter{
-		{Name: "Images (PNG, JPEG, WebP)", Pattern: "*.png;*.jpg;*.jpeg;*.webp"},
+		{Name: "Images (PNG, JPEG, GIF, WebP)", Pattern: "*.png;*.jpg;*.jpeg;*.gif;*.webp"},
 		{Name: "All files", Pattern: "*"},
 	}})
 	if err != nil || path == "" {

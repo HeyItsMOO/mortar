@@ -10,6 +10,7 @@ import {
 } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { columnLabel } from '../../mods/columnLabel.ts'
 import { LIST_COLUMN_IDS, sanitizeListSort } from '../../mods/listColumns.ts'
+import { BackdropImage } from '../../shell/BackdropImage.tsx'
 import { visuallyHidden } from '../../shell/visuallyHidden.ts'
 import { type AccentName, accents } from '../../theme/accents.ts'
 import { space } from '../../theme/density.ts'
@@ -152,8 +153,7 @@ export function Appearance() {
         {background === 'image' ? (
           <SettingRow label={t`Image`}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Box
-                component="img"
+              <BackdropImage
                 alt={t`Background preview`}
                 src={`/backdrop?mode=image&v=${encodeURIComponent(backgroundImage)}`}
                 sx={{ width: 160, height: 90, objectFit: 'cover', borderRadius: '6px' }}

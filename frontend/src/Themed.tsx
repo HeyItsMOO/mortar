@@ -4,18 +4,9 @@ import { useSettings } from './settings/store.ts'
 import { isAccent } from './settings/theme.ts'
 import { defaultAccent } from './theme/accents.ts'
 import { honourTheme } from './theme/palette.ts'
+import { honourReducedMotion } from './theme/reducedMotion.ts'
 import { useRoomy } from './theme/roomy.ts'
 import { createMortarTheme } from './theme/theme.ts'
-
-function honourReducedMotion(mode: string, os: boolean) {
-  if (mode === 'always') {
-    return true
-  }
-  if (mode === 'never') {
-    return false
-  }
-  return os
-}
 
 export function Themed({ children }: { children: React.ReactNode }) {
   const accent = useSettings((s) => s.accent)
