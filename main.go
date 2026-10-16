@@ -162,7 +162,7 @@ func main() {
 func runShowingFailures() error {
 	defer func() {
 		if r := recover(); r != nil {
-			showStartupError(fmt.Sprintf("Mortar stopped while starting:\n\n%v\n\nThe details are in crash.log in Mortar's data folder.", r))
+			showStartupError(fmt.Sprintf("Mortar stopped while starting:\n\n%v\n\nThe details are in crash.log in Mortar's data folder.", r), logFolder())
 			panic(r)
 		}
 	}()
@@ -170,7 +170,7 @@ func runShowingFailures() error {
 	if err != nil {
 		log.Print(err)
 		if _, shown := errors.AsType[shownError](err); !shown {
-			showStartupError(startupFailureText(err))
+			showStartupError(startupFailureText(err), logFolder())
 		}
 	}
 	return err

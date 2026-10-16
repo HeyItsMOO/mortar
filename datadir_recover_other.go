@@ -7,15 +7,20 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/Rethunk-Tech/mortar/internal/datadir"
+	"github.com/godbus/dbus/v5"
 )
 
 const (
 	labelDefault = "Use the default location"
 	labelChoose  = "Choose the data folder…"
 	labelQuit    = "Quit"
+	labelOpenLog = "Open the log folder"
 )
 
 // Wails has no window yet, so the pre-window dialogs go through zenity or kdialog when one is installed. Without
@@ -79,14 +84,55 @@ func askMissingLocation(path string) locationChoice {
 	return parseMissingLocation(tool, exit, out)
 }
 
-func showStartupError(msg string) {
+// showStartupError shows msg with a button that opens folder, the one holding the log ("" for none). Without a dialog
+// tool it becomes a desktop notification, which every desktop with a notification daemon shows.
+func showStartupError(msg, folder string) {
 	tool := findDialogTool()
-	switch tool {
-	case "":
-	case "kdialog":
-		runDialog(tool, []string{"--title", "Mortar", "--error", msg})
-	default:
-		runDialog(tool, []string{"--error", "--title", "Mortar", "--text", msg})
+	if tool == "" {
+		notifyStartupError(msg)
+		return
+	}
+	if exit, out := runDialog(tool, startupErrorArgs(tool, msg, folder)); folder != "" && opensLogFolder(tool, exit, out) {
+		if err := datadir.Open(folder); err != nil {
+			log.Printf("open %s: %v", folder, err)
+		}
+	}
+}
+
+func startupErrorArgs(tool, msg, folder string) []string {
+	switch {
+	case tool == "kdialog" && folder != "":
+		return []string{"--title", "Mortar", "--yes-label", labelOpenLog, "--no-label", "Close", "--warningyesno", msg}
+	case tool == "kdialog":
+		return []string{"--title", "Mortar", "--error", msg}
+	case folder != "":
+		return []string{"--error", "--title", "Mortar", "--text", msg, "--extra-button", labelOpenLog}
+	}
+	return []string{"--error", "--title", "Mortar", "--text", msg}
+}
+
+// opensLogFolder reads the answer: zenity prints an extra button's label, kdialog's Yes exits 0.
+func opensLogFolder(tool string, exit int, stdout string) bool {
+	if tool == "kdialog" {
+		return exit == 0
+	}
+	return strings.TrimSpace(stdout) == labelOpenLog
+}
+
+func notifyStartupError(msg string) {
+	conn, err := dbus.ConnectSessionBus()
+	if err != nil {
+		log.Printf("startup error notification: %v", err)
+		return
+	}
+	defer func() { _ = conn.Close() }()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	urgent := map[string]dbus.Variant{"urgency": dbus.MakeVariant(byte(2))}
+	call := conn.Object("org.freedesktop.Notifications", "/org/freedesktop/Notifications").CallWithContext(ctx,
+		"org.freedesktop.Notifications.Notify", 0, "Mortar", uint32(0), "dialog-error", "Mortar", msg, []string{}, urgent, int32(0))
+	if call.Err != nil {
+		log.Printf("startup error notification: %v", call.Err)
 	}
 }
 

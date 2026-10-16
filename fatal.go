@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -21,6 +22,14 @@ func startupFailureText(err error) string {
 	return fmt.Sprintf("Mortar could not start:\n\n%v\n\nThe details are in mortar.log in Mortar's data folder.", err)
 }
 
+// logFolder is the data folder holding mortar.log and crash.log, "" when it cannot be found (the failure may be that).
+func logFolder() string {
+	if dir, err := datadir.Dir(); err == nil {
+		return dir
+	}
+	return ""
+}
+
 // logAppError sends Wails runtime errors to Mortar's log; without a handler they only reach a logger that discards
 // its output in release builds.
 func logAppError(err error) {
@@ -33,7 +42,7 @@ func panicHandler(dataDir string) func(*application.PanicDetails) {
 	return func(d *application.PanicDetails) {
 		slog.Error("panic", "err", d.Error)
 		_ = appendCrash(dataDir, d)
-		showStartupError(fmt.Sprintf("Mortar stopped because of an error:\n\n%v\n\nThe details are in crash.log in %s.", d.Error, dataDir))
+		showStartupError(fmt.Sprintf("Mortar stopped because of an error:\n\n%v\n\nThe details are in crash.log in %s.", d.Error, dataDir), dataDir)
 		os.Exit(2)
 	}
 }

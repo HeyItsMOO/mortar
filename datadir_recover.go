@@ -36,7 +36,8 @@ func dataDirOrRecover() (string, error) {
 		logStartupFailure(err)
 		missing, ok := errors.AsType[*datadir.MissingLocationError](err)
 		if !ok {
-			showStartupError(err.Error())
+			def, _ := datadir.DefaultDir()
+			showStartupError(err.Error(), def)
 			return "", shownError{err}
 		}
 		switch askMissingLocation(missing.Path) {

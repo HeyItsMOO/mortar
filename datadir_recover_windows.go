@@ -4,6 +4,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+
+	"github.com/Rethunk-Tech/mortar/internal/datadir"
 
 	"github.com/wailsapp/wails/v3/pkg/w32"
 	"golang.org/x/sys/windows"
@@ -32,8 +35,19 @@ func askMissingLocation(path string) locationChoice {
 	return choiceQuit
 }
 
-func showStartupError(msg string) {
-	w32.MessageBox(0, msg, "Mortar", mbOK|mbIconError|mbTopmost)
+// showStartupError shows msg and offers to open folder, the one holding the log ("" for none). A message box copies
+// its text with Ctrl+C, which the prompt says, so the error can be pasted into a report.
+func showStartupError(msg, folder string) {
+	if folder == "" {
+		w32.MessageBox(0, msg, "Mortar", mbOK|mbIconError|mbTopmost)
+		return
+	}
+	text := msg + "\n\nOpen the folder that holds the log? (Ctrl+C copies this message.)"
+	if w32.MessageBox(0, text, "Mortar", mbYesNo|mbIconError|mbTopmost) == idYes {
+		if err := datadir.Open(folder); err != nil {
+			log.Printf("open %s: %v", folder, err)
+		}
+	}
 }
 
 // pickDataFolder shows the shell's folder browser; "" means cancelled.
