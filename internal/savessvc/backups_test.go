@@ -293,3 +293,11 @@ func TestCreateBackupTakesTheSavesDisplayName(t *testing.T) {
 		t.Fatalf("list = %+v, %v", listed, err)
 	}
 }
+
+// A game the Stardew mod dataset does not cover lists its saves without fetching the dataset, so offline too.
+func TestOnlyDatasetGamesFetchTheModIndex(t *testing.T) {
+	s := &Service{}
+	if index, err := s.index(t.Context(), "vintage-story"); len(index) != 0 || err != nil {
+		t.Fatalf("index = %v, %v; want none fetched", index, err)
+	}
+}

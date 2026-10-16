@@ -14,10 +14,12 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/launchsvc"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
+	"github.com/Rethunk-Tech/mortar/internal/metadata"
 	"github.com/Rethunk-Tech/mortar/internal/problems"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/queue"
@@ -165,7 +167,7 @@ func (s *Service) FarmTypes(ctx context.Context, game, profileID string) []probl
 		return nil
 	}
 	// The scan cache is stamped with the index it was read with; the same index keeps it warm for the Saves tab.
-	index, err := s.meta.Index(ctx)
+	index, err := s.index(ctx, game)
 	if err != nil {
 		return nil
 	}
@@ -179,6 +181,15 @@ func (s *Service) FarmTypes(ctx context.Context, game, profileID string) []probl
 	return out
 }
 
+// index is the mod dataset index a scan matches save keys against; empty for a game whose saves the dataset does not
+// cover, which then needs no network to list its saves.
+func (s *Service) index(ctx context.Context, gameID string) (map[string][]meta.Ref, error) {
+	if info, ok := components.Game(gameID); !ok || !info.HasMetadata(metadata.StardewDataset) {
+		return map[string][]meta.Ref{}, nil
+	}
+	return s.meta.Index(ctx)
+}
+
 // Saves scans the game's saves and compares each with the profile. Wails runs it off the UI thread; a first scan
 // of large saves takes well under a second, and later calls read the cache.
 func (s *Service) Saves(ctx context.Context, game, profileID string) ([]Fit, error) {
@@ -189,7 +200,7 @@ func (s *Service) Saves(ctx context.Context, game, profileID string) ([]Fit, err
 	if scanner == nil {
 		return []Fit{}, nil
 	}
-	index, err := s.meta.Index(ctx)
+	index, err := s.index(ctx, game)
 	if err != nil {
 		return nil, err
 	}
@@ -305,7 +316,7 @@ func (s *Service) LastSaveGap(ctx context.Context, game, profileID string) (fit 
 	if scanner == nil {
 		return Fit{}, false, nil
 	}
-	index, err := s.meta.Index(ctx)
+	index, err := s.index(ctx, game)
 	if err != nil {
 		return Fit{}, false, err
 	}
