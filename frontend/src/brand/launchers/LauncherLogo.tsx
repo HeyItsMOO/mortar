@@ -11,8 +11,9 @@ import {
 import { BrandMark } from '../BrandMark.tsx'
 import minigalaxy from '../vendor/minigalaxy.png'
 
-// simple-icons has no Bottles mark, so the tile carries a plain bottle.
+// simple-icons has no Bottles or Xbox mark, so those tiles carry a plain bottle and a plain X.
 const BOTTLE_PATH = 'M10 2h4v3l1.5 2.5V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V7.5L10 5z'
+const X_PATH = 'M4 3h4.5L12 8.6 15.5 3H20l-5.7 9L20 21h-4.5L12 15.4 8.5 21H4l5.7-9z'
 
 // Each launcher sits on a tile of its brand colour so every logo is the same size and reads in colour on dark and
 // light surfaces. Steam's brand mark is black, so it takes the Steam client's blue instead.
@@ -24,6 +25,7 @@ const TILES: Record<string, { path: string; bg: string }> = {
   bottles: { path: BOTTLE_PATH, bg: '#C0392B' },
   ea: { path: siEa.path, bg: `#${siEa.hex}` },
   epic: { path: siEpicgames.path, bg: `#${siEpicgames.hex}` },
+  xbox: { path: X_PATH, bg: '#107C10' },
   gog: { path: siGogdotcom.path, bg: `#${siGogdotcom.hex}` },
 }
 

@@ -9531,6 +9531,10 @@ msgstr "Arguments"
 msgid "Profile settings"
 msgstr "Profile settings"
 
+#: src/games/storeName.ts:15
+msgid "Xbox"
+msgstr "Xbox"
+
 #. placeholder {0}: profileA.name
 #. placeholder {0}: profileB.name
 #. placeholder {1}: profileA.name

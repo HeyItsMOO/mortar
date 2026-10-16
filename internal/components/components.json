@@ -258,6 +258,9 @@
         }
       ],
       "stores": {
+        "xbox": {
+          "package": "CoffeeStainStudios.Valheim"
+        },
         "steam": {
           "appId": "892970"
         }
@@ -496,6 +499,9 @@
         }
       ],
       "stores": {
+        "xbox": {
+          "package": "DevolverDigital.Inscryption"
+        },
         "steam": {
           "appId": "1092790"
         }
@@ -776,6 +782,9 @@
         }
       ],
       "stores": {
+        "xbox": {
+          "package": "TeamReptile.BombRushCyberfunk"
+        },
         "steam": {
           "appId": "1353230"
         }

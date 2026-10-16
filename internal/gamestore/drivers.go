@@ -1,17 +1,22 @@
 package gamestore
 
 import (
+	"cmp"
+	"context"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/gog"
 	"github.com/Rethunk-Tech/mortar/internal/lutris"
+	"github.com/Rethunk-Tech/mortar/internal/nowindow"
 	"github.com/Rethunk-Tech/mortar/internal/steam"
 )
 
@@ -289,4 +294,58 @@ func EpicAppName(dir string, names []string) string {
 		return ""
 	}
 	return names[0]
+}
+
+const xboxKey = "xbox"
+
+// appxLocation is the install folder of the Windows app package named pkg, as Gale finds an Xbox copy
+// (Get-AppxPackage), or "" when it is not installed or not on Windows. A test replaces it.
+var appxLocation = func(pkg string) string {
+	if runtime.GOOS != "windows" || !components.PlainPackage(pkg) {
+		return ""
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	// The name reaches the script as a variable, never as script text.
+	cmd := exec.CommandContext(ctx, "powershell.exe", "-NoProfile", "-NonInteractive", "-Command",
+		"Get-AppxPackage -Name $env:MORTAR_APPX_PACKAGE | Select-Object -First 1 -ExpandProperty InstallLocation")
+	cmd.Env = append(os.Environ(), "MORTAR_APPX_PACKAGE="+pkg)
+	nowindow.Set(cmd)
+	out, err := cmd.Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
+type xboxStore struct{}
+
+func (xboxStore) Key() string { return xboxKey }
+
+// Launchers lists the Xbox app on Windows; its library folder is C:\XboxGames unless the user added another.
+func (xboxStore) Launchers(goos string) []LauncherSpec {
+	if goos != "windows" {
+		return nil
+	}
+	return []LauncherSpec{{
+		ID: LauncherXbox, Name: "Xbox", Usable: fsx.IsDir,
+		Looked: func(_ string, added map[string][]string) []string {
+			return withCustom(added[LauncherXbox], filepath.Join(cmp.Or(os.Getenv("SystemDrive"), "C:")+`\`, "XboxGames"))
+		},
+	}}
+}
+
+// Discover finds the copy the Xbox app installed by its package; a game installed with mods allowed keeps its files
+// in that folder's Content subfolder.
+func (xboxStore) Discover(_ string, _ map[string][]string, g components.GameInfo) []Install {
+	dir := appxLocation(g.Stores.Xbox.Package)
+	if dir == "" {
+		return nil
+	}
+	for _, d := range []string{dir, filepath.Join(dir, "Content")} {
+		if found := gog.GameDir(d, g.MarkerPath()); found != "" {
+			return []Install{{Store: StoreXbox, Dir: found}}
+		}
+	}
+	return nil
 }

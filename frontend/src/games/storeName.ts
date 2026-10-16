@@ -12,6 +12,7 @@ const NAMES: Record<string, MessageDescriptor> = {
   ea: msg`EA App`,
   epic: msg`Epic Games`,
   'epic-heroic': msg`Epic via Heroic`,
+  xbox: msg`Xbox`,
 }
 
 // The store an install came from, as the window names it; "" for a folder the user chose.

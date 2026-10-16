@@ -331,7 +331,19 @@ type GameStores struct {
 	Bottles *BottlesStore `json:"bottles,omitempty"`
 	EA      *EAStore      `json:"ea,omitempty"`
 	Epic    *EpicStore    `json:"epic,omitempty"`
+	Xbox    *XboxStore    `json:"xbox,omitempty"`
 }
+
+// XboxStore names a game to the Xbox app: the Name of the Windows app package it installs (Get-AppxPackage -Name).
+type XboxStore struct {
+	Package string `json:"package"`
+}
+
+var plainPackage = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9.-]{0,99}$`)
+
+// PlainPackage reports whether name is an app package Name safe to put in a PowerShell query: letters, digits, "."
+// and "-".
+func PlainPackage(name string) bool { return plainPackage.MatchString(name) }
 
 var plainAppName = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
 
@@ -552,6 +564,9 @@ func (g GameInfo) Validate() error {
 				return fmt.Errorf("game %q has an unusable Epic AppName %q", g.ID, app)
 			}
 		}
+	}
+	if g.Stores.Xbox != nil && !PlainPackage(g.Stores.Xbox.Package) {
+		return fmt.Errorf("game %q has an unusable Xbox package %q", g.ID, g.Stores.Xbox.Package)
 	}
 	for name, alts := range g.FolderNames {
 		for _, n := range append([]string{name}, alts...) {
