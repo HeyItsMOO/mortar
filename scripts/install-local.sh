@@ -4,7 +4,7 @@
 #   scripts/install-local.sh [--windows]   --windows also builds the Windows installer and zips it into ~/Downloads
 #
 # Refuses a dirty tree, since the build stamps HEAD. Needs the CurseForge key in the keyring (secret-tool, service curseforge).
-# Superseded /var/tmp/mortar-pre-* snapshots and installer zips are listed at the end, not deleted.
+# Once the installed build reports HEAD, superseded /var/tmp/mortar-pre-* snapshots are deleted; older installer zips are listed.
 set -euo pipefail
 
 REPO=$(cd "$(dirname "$0")/.." && pwd)
@@ -53,9 +53,13 @@ case "$installed" in
     ;;
 esac
 
-echo "superseded (delete each by its literal path once this install is verified):"
-for old in /var/tmp/mortar-pre-*; do [ "$old" != "$snap" ] && [ -e "$old" ] && echo "  $old"; done
+for old in /var/tmp/mortar-pre-*; do
+  [ "$old" != "$snap" ] && [ -d "$old" ] || continue
+  rm -rf -- "$old"
+  echo "deleted superseded snapshot: $old"
+done
 if [ "$windows" = 1 ]; then
+  echo "superseded installer zips:"
   for old in "$HOME"/Downloads/mortar-*-windows-amd64-installer.zip; do
     case "$old" in *"-$sha-"*) ;; *) [ -e "$old" ] && echo "  $old" ;; esac
   done
