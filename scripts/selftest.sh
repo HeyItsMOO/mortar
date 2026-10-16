@@ -780,6 +780,13 @@ regress_lc() {
   local data=$SANDBOX_HOME/.local/share/mortar
   local timeout=${MORTAR_REGRESS_TIMEOUT:-240} t0=$SECONDS
   local bepinex=${MORTAR_REGRESS_BEPINEX:-5.4.2305}
+  # MORTAR_REGRESS_MORTAR_PROTON=1 runs the copy as a folder Steam did not install, through Mortar's own Proton runtime
+  # and prefix (made on the first start, so that start gets longer to finish).
+  local mortar_proton=${MORTAR_REGRESS_MORTAR_PROTON:-}
+  if [ -n "$mortar_proton" ]; then
+    compat=$data/prefixes/lethal-company
+    timeout=${MORTAR_REGRESS_TIMEOUT:-600}
+  fi
   local plugins=(LethalConfig ShipLoot MoreCompany)
   # Pinned so the cached zips stay the ones the run was written against.
   local packages=(AinaVT/LethalConfig/1.4.6 tinyhoot/ShipLoot/1.1.0 notnotnotswipez/MoreCompany/1.14.0)
@@ -851,16 +858,51 @@ export STEAM_COMPAT_APP_ID=$LC_APP_ID SteamAppId=$LC_APP_ID SteamGameId=$LC_APP_
 exec bwrap --dev-bind / / --unshare-net -- '$proton/proton' run "\$@"
 EOF
   chmod +x "$ROOT/run-proton.sh"
-  # The first Proton run creates the prefix; Mortar can only add its winhttp override to a prefix that exists.
-  echo "creating the Proton prefix"
-  mkdir -p "$compat"
-  display_up
-  (cd "$ROOT" && hidden env HOME="$SANDBOX_HOME" timeout 300 "$ROOT/run-proton.sh" wineboot -u >"$ROOT/wineboot.log" 2>&1) ||
-    failures+=("the Proton prefix could not be created; see $ROOT/wineboot.log")
-  reap_prefix "$compat" >/dev/null
+  if [ -n "$mortar_proton" ]; then
+    # Mortar starts Proton itself; the launch prefix only keeps the game off the network and away from a running Steam,
+    # and steam_appid.txt keeps Steamworks from handing the start to Steam, as a copy from outside Steam would.
+    cat >"$ROOT/run-proton.sh" <<EOF
+#!/bin/bash
+export SteamAppId=$LC_APP_ID SteamGameId=$LC_APP_ID
+exec bwrap --dev-bind / / --unshare-net -- "\$@"
+EOF
+    # A copy Steam does not list: outside steamapps, with the sandbox Steam's manifest for it gone.
+    mkdir -p "$ROOT/folder-game"
+    mv "$game" "$ROOT/folder-game/"
+    game="$ROOT/folder-game/$LC_FOLDER"
+    rm -f "$SANDBOX_STEAM/steamapps/appmanifest_$LC_APP_ID.acf"
+    printf '%s\n' "$LC_APP_ID" >"$game/steam_appid.txt"
+    ln -sfn "$proton" "$SANDBOX_STEAM/steamapps/common/$(basename "$proton")"
+    display_up
+  else
+    # The first Proton run creates the prefix; Mortar can only add its winhttp override to a prefix that exists.
+    echo "creating the Proton prefix"
+    mkdir -p "$compat"
+    display_up
+    (cd "$ROOT" && hidden env HOME="$SANDBOX_HOME" timeout 300 "$ROOT/run-proton.sh" wineboot -u >"$ROOT/wineboot.log" 2>&1) ||
+      failures+=("the Proton prefix could not be created; see $ROOT/wineboot.log")
+    reap_prefix "$compat" >/dev/null
+  fi
 
   build
   start
+  if [ -n "$mortar_proton" ]; then
+    # No CLI sets a game's folder, so the setting is written while the server is stopped.
+    stop
+    python3 - "$data/settings.json" "$game" <<'PYEOF'
+import json, sys
+path, game = sys.argv[1], sys.argv[2]
+try:
+    with open(path) as f:
+        s = json.load(f)
+except FileNotFoundError:
+    s = {}
+s.setdefault("global", {}).setdefault("gameFolders", {})["lethal-company"] = game
+with open(path, "w") as f:
+    json.dump(s, f, indent=2)
+PYEOF
+    start
+  fi
   if [ -d "$cache/store" ]; then
     local d
     for d in "${gdirs[@]}"; do [ -d "$cache/$d" ] && mkdir -p "$data/$(dirname "$d")" && cp -a "$cache/$d" "$data/$(dirname "$d")/"; done
@@ -940,6 +982,9 @@ EOF
 
   echo "launching profile $profile (${#plugins[@]} plugins)"
   lc_launch "$profile" base
+  if [ -n "$mortar_proton" ] && [ ! -f "$compat/pfx/user.reg" ]; then
+    failures+=("the game did not run in Mortar's own Proton prefix ($compat)")
+  fi
   local name
   for name in "${plugins[@]}"; do
     if [ ${#failures[@]} -gt 0 ]; then break; fi
