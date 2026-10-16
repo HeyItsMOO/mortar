@@ -19,6 +19,10 @@ msgstr "What to do"
 msgid "Allow shows Nexus pages what Mortar has. Off hides that; download links still arrive"
 msgstr "Allow shows Nexus pages what Mortar has. Off hides that; download links still arrive"
 
+#: src/launchers/LauncherList.tsx:78
+msgid "Windows only. On this computer its games come in through Heroic, Lutris or Bottles."
+msgstr "Windows only. On this computer its games come in through Heroic, Lutris or Bottles."
+
 #: src/console/PerformancePanelParts.tsx:194
 #: src/game/Sidebar.tsx:201
 msgid "Performance"
@@ -346,7 +350,7 @@ msgstr "Move data folder…"
 msgid "A template with this name already exists."
 msgstr "A template with this name already exists."
 
-#: src/launchers/LauncherList.tsx:109
+#: src/launchers/LauncherList.tsx:152
 msgid "Found, with no supported games yet"
 msgstr "Found, with no supported games yet"
 
@@ -1047,7 +1051,7 @@ msgstr "Send only links to {name}?"
 msgid "Open on Modrinth"
 msgstr "Open on Modrinth"
 
-#: src/firstrun/FirstRun.tsx:125
+#: src/firstrun/FirstRun.tsx:127
 #: src/shell/AppMenu.tsx:113
 msgid "Join our Discord"
 msgstr "Join our Discord"
@@ -1265,7 +1269,7 @@ msgid "Shorter animations. Honour the OS unless you override it."
 msgstr "Shorter animations. Honour the OS unless you override it."
 
 #: src/settings/prefCopy.ts:35
-#: src/settings/sections/Downloads.tsx:45
+#: src/settings/sections/Downloads.tsx:44
 msgid "Last opened profile"
 msgstr "Last opened profile"
 
@@ -1516,7 +1520,7 @@ msgstr "Notify when updates are found"
 msgid "Updated {0}"
 msgstr "Updated {0}"
 
-#: src/settings/sections/Downloads.tsx:124
+#: src/settings/sections/Downloads.tsx:125
 msgid "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
 msgstr "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
 
@@ -1535,7 +1539,7 @@ msgid "Update channel"
 msgstr "Update channel"
 
 #. placeholder {0}: source.scheme
-#: src/settings/sections/Downloads.tsx:182
+#: src/settings/sections/Downloads.tsx:178
 msgid "Opening a {0}:// link, such as Install with Mod Manager, installs the mod in Mortar."
 msgstr "Opening a {0}:// link, such as Install with Mod Manager, installs the mod in Mortar."
 
@@ -1883,7 +1887,7 @@ msgid "Copper"
 msgstr "Copper"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:81
+#: src/firstrun/FindStep.tsx:83
 msgid "found, without {0}"
 msgstr "found, without {0}"
 
@@ -1951,7 +1955,7 @@ msgstr "{count, plural, one {# mod in the game's Mods folder differs from this p
 msgid "{name} is missing from the store, and Mortar cannot download it again"
 msgstr "{name} is missing from the store, and Mortar cannot download it again"
 
-#: src/settings/sections/Downloads.tsx:110
+#: src/settings/sections/Downloads.tsx:109
 msgid "Not connected yet"
 msgstr "Not connected yet"
 
@@ -2308,7 +2312,7 @@ msgid "Replaced {mods} in {profileName}"
 msgstr "Replaced {mods} in {profileName}"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:83
+#: src/firstrun/FindStep.tsx:85
 msgid "has {0}"
 msgstr "has {0}"
 
@@ -2596,7 +2600,7 @@ msgstr "Not signed in"
 msgid "{game} profile"
 msgstr "{game} profile"
 
-#: src/firstrun/FindStep.tsx:222
+#: src/firstrun/FindStep.tsx:224
 #: src/firstrun/GameSetup.tsx:77
 #: src/settings/sections/GameSettings.tsx:194
 #: src/settings/sections/GameSettings.tsx:196
@@ -2655,7 +2659,7 @@ msgstr "Writes a zip with logs and settings, personal paths removed, to attach t
 msgid "Error while loading"
 msgstr "Error while loading"
 
-#: src/settings/sections/Downloads.tsx:284
+#: src/settings/sections/Downloads.tsx:280
 msgid "Downloading"
 msgstr "Downloading"
 
@@ -3365,7 +3369,7 @@ msgid "Installed file"
 msgstr "Installed file"
 
 #. placeholder {0}: contact.browser
-#: src/settings/sections/Downloads.tsx:106
+#: src/settings/sections/Downloads.tsx:105
 msgid "Connected from {0}, last seen "
 msgstr "Connected from {0}, last seen "
 
@@ -3373,7 +3377,7 @@ msgstr "Connected from {0}, last seen "
 msgid "Search all runs…"
 msgstr "Search all runs…"
 
-#: src/firstrun/FindStep.tsx:265
+#: src/firstrun/FindStep.tsx:267
 #: src/install/NeedsRootCallout.tsx:24
 #: src/profiles/VortexFolderPrompt.tsx:60
 #: src/settings/sections/GameSettings.tsx:370
@@ -3799,7 +3803,7 @@ msgstr "Check store files"
 msgid "Imported {0}: {1}"
 msgstr "Imported {0}: {1}"
 
-#: src/firstrun/FindStep.tsx:166
+#: src/firstrun/FindStep.tsx:168
 #: src/settings/sections/GameSettings.tsx:190
 msgid "Found in {path}"
 msgstr "Found in {path}"
@@ -3850,7 +3854,7 @@ msgstr "{size} in {path}"
 msgid "Skip sharing"
 msgstr "Skip sharing"
 
-#: src/mods/LockedNote.tsx:30
+#: src/mods/LockedNote.tsx:31
 msgid "The game is using this profile. Stop the game to change mods."
 msgstr "The game is using this profile. Stop the game to change mods."
 
@@ -3883,7 +3887,7 @@ msgstr "Open notification history"
 msgid "Past run"
 msgstr "Past run"
 
-#: src/settings/sections/Downloads.tsx:96
+#: src/settings/sections/Downloads.tsx:95
 msgid "The browser extension is too old for this Mortar"
 msgstr "The browser extension is too old for this Mortar"
 
@@ -4272,7 +4276,7 @@ msgstr "Review mod updates"
 msgid "Loader failed to start"
 msgstr "Loader failed to start"
 
-#: src/settings/sections/Downloads.tsx:127
+#: src/settings/sections/Downloads.tsx:131
 msgid "Download the extension"
 msgstr "Download the extension"
 
@@ -4469,7 +4473,7 @@ msgid "Only on {value} saves; none of yours is one."
 msgstr "Only on {value} saves; none of yours is one."
 
 #. placeholder {0}: launcher.name
-#: src/launchers/LauncherList.tsx:99
+#: src/launchers/LauncherList.tsx:139
 msgid "Choose a {0} folder"
 msgstr "Choose a {0} folder"
 
@@ -4481,7 +4485,7 @@ msgstr "time in its patches {ms}"
 msgid "List copied"
 msgstr "List copied"
 
-#: src/launchers/LauncherList.tsx:171
+#: src/launchers/LauncherList.tsx:214
 msgid "Added by you"
 msgstr "Added by you"
 
@@ -4503,7 +4507,7 @@ msgid "Reported by {0}"
 msgstr "Reported by {0}"
 
 #: src/settings/prefCopyAntivirus.ts:21
-#: src/settings/sections/Downloads.tsx:250
+#: src/settings/sections/Downloads.tsx:246
 msgid "Automatic"
 msgstr "Automatic"
 
@@ -4588,7 +4592,7 @@ msgid "In progress ({0})"
 msgstr "In progress ({0})"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:186
+#: src/firstrun/FindStep.tsx:188
 msgid "Choose your {0} folder"
 msgstr "Choose your {0} folder"
 
@@ -4808,7 +4812,7 @@ msgstr "Last scheduled backup {when} · next one is due"
 msgid "Just this mod"
 msgstr "Just this mod"
 
-#: src/settings/sections/Downloads.tsx:225
+#: src/settings/sections/Downloads.tsx:221
 msgid "Links for games Mortar does not manage open in the app that had them before."
 msgstr "Links for games Mortar does not manage open in the app that had them before."
 
@@ -4837,7 +4841,7 @@ msgstr "Every mod in this profile is already off, so there is nothing to turn of
 msgid "This save has no recorded mod list yet."
 msgstr "This save has no recorded mod list yet."
 
-#: src/settings/sections/Downloads.tsx:123
+#: src/settings/sections/Downloads.tsx:122
 msgid "Get the extension"
 msgstr "Get the extension"
 
@@ -4861,7 +4865,7 @@ msgid "Version"
 msgstr "Version"
 
 #: src/settings/sections/AboutDiagnostics.tsx:89
-#: src/settings/sections/Downloads.tsx:280
+#: src/settings/sections/Downloads.tsx:276
 msgid "Browser extension"
 msgstr "Browser extension"
 
@@ -4908,7 +4912,7 @@ msgstr "Apply a template…"
 msgid "Wheat"
 msgstr "Wheat"
 
-#: src/firstrun/FindStep.tsx:166
+#: src/firstrun/FindStep.tsx:168
 msgid "Folder chosen by you"
 msgstr "Folder chosen by you"
 
@@ -4960,7 +4964,7 @@ msgstr "Delete group {name}?"
 msgid "Update"
 msgstr "Update"
 
-#: src/settings/sections/Downloads.tsx:151
+#: src/settings/sections/Downloads.tsx:147
 msgid "Chrome, Edge or another Chromium browser: unzip the download, open chrome://extensions, turn on Developer mode and choose Load unpacked on the unzipped folder."
 msgstr "Chrome, Edge or another Chromium browser: unzip the download, open chrome://extensions, turn on Developer mode and choose Load unpacked on the unzipped folder."
 
@@ -5070,10 +5074,10 @@ msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 #: src/settings/PrefRow.tsx:39
 #: src/settings/sections/Appearance.tsx:66
 #: src/settings/sections/Appearance.tsx:83
-#: src/settings/sections/Downloads.tsx:53
-#: src/settings/sections/Downloads.tsx:230
-#: src/settings/sections/Downloads.tsx:261
-#: src/settings/sections/Downloads.tsx:273
+#: src/settings/sections/Downloads.tsx:52
+#: src/settings/sections/Downloads.tsx:226
+#: src/settings/sections/Downloads.tsx:257
+#: src/settings/sections/Downloads.tsx:269
 #: src/settings/sections/GameSettings.tsx:341
 #: src/settings/sections/GameSettings.tsx:355
 #: src/settings/sections/GameSettings.tsx:357
@@ -5199,7 +5203,7 @@ msgid "Include beta releases"
 msgstr "Include beta releases"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:278
+#: src/firstrun/FindStep.tsx:280
 msgid "{0} folder"
 msgstr "{0} folder"
 
@@ -5224,7 +5228,7 @@ msgstr " · {name} {0}"
 msgid "Library"
 msgstr "Library"
 
-#: src/settings/sections/Downloads.tsx:101
+#: src/settings/sections/Downloads.tsx:100
 #: src/settings/sections/Sources.tsx:63
 msgid "Connection"
 msgstr "Connection"
@@ -5260,7 +5264,7 @@ msgstr "Launch environment"
 msgid "Ask"
 msgstr "Ask"
 
-#: src/settings/sections/Downloads.tsx:162
+#: src/settings/sections/Downloads.tsx:158
 msgid "and open it in Firefox. If that release has none, unzip the download, open about:debugging, choose This Firefox, then Load Temporary Add-on and pick manifest.json; Firefox removes it when it restarts."
 msgstr "and open it in Firefox. If that release has none, unzip the download, open about:debugging, choose This Firefox, then Load Temporary Add-on and pick manifest.json; Firefox removes it when it restarts."
 
@@ -6046,7 +6050,7 @@ msgid "Could not add the archive"
 msgstr "Could not add the archive"
 
 #. placeholder {0}: copy.label
-#: src/settings/sections/Downloads.tsx:49
+#: src/settings/sections/Downloads.tsx:48
 msgid "{0} ({gameName})"
 msgstr "{0} ({gameName})"
 
@@ -6172,7 +6176,7 @@ msgstr "The automatic cover is used after Save."
 msgid "Mortar can start {name} directly instead, without the Steam overlay or Steam's playtime tracking."
 msgstr "Mortar can start {name} directly instead, without the Steam overlay or Steam's playtime tracking."
 
-#: src/settings/sections/NexusMods.tsx:268
+#: src/settings/sections/NexusMods.tsx:253
 msgid "Kept in your system keyring. Find it on Nexus under Settings, API Keys."
 msgstr "Kept in your system keyring. Find it on Nexus under Settings, API Keys."
 
@@ -6199,7 +6203,7 @@ msgid "This source has no categories to filter by"
 msgstr "This source has no categories to filter by"
 
 #: src/settings/prefCopy.ts:294
-#: src/settings/sections/Downloads.tsx:273
+#: src/settings/sections/Downloads.tsx:269
 msgid "Download folder"
 msgstr "Download folder"
 
@@ -6233,8 +6237,9 @@ msgstr "{0} lists itself as a dependency, so BepInEx stops before loading any pl
 msgid "Install yourself"
 msgstr "Install yourself"
 
-#: src/launchers/LauncherList.tsx:142
-#: src/launchers/LauncherList.tsx:160
+#: src/launchers/LauncherList.tsx:104
+#: src/launchers/LauncherList.tsx:185
+#: src/launchers/LauncherList.tsx:203
 msgid "Found"
 msgstr "Found"
 
@@ -6373,7 +6378,7 @@ msgstr "No notifications yet"
 msgid "Optional files"
 msgstr "Optional files"
 
-#: src/settings/sections/Downloads.tsx:160
+#: src/settings/sections/Downloads.tsx:156
 msgid "download the signed add-on"
 msgstr "download the signed add-on"
 
@@ -6631,7 +6636,7 @@ msgstr "Tag…"
 msgid "{0, plural, one {Added # mod to {1}} other {Added # mods to {2}}}"
 msgstr "{0, plural, one {Added # mod to {1}} other {Added # mods to {2}}}"
 
-#: src/firstrun/FirstRun.tsx:81
+#: src/firstrun/FirstRun.tsx:83
 msgid "Mortar finds games through their launchers. A game installed anywhere else works too: choose its folder when you set it up."
 msgstr "Mortar finds games through their launchers. A game installed anywhere else works too: choose its folder when you set it up."
 
@@ -6784,7 +6789,7 @@ msgstr "Slow startup"
 msgid "Pin {name}"
 msgstr "Pin {name}"
 
-#: src/settings/sections/Downloads.tsx:256
+#: src/settings/sections/Downloads.tsx:252
 msgid "Premium downloads come from this Nexus server when it offers the file."
 msgstr "Premium downloads come from this Nexus server when it offers the file."
 
@@ -6855,7 +6860,7 @@ msgstr "Reached the title screen"
 msgid "{optional, plural, one {# optional file will be re-applied; check it still fits this version} other {# optional files will be re-applied; check they still fit this version}}"
 msgstr "{optional, plural, one {# optional file will be re-applied; check it still fits this version} other {# optional files will be re-applied; check they still fit this version}}"
 
-#: src/firstrun/FirstRun.tsx:115
+#: src/firstrun/FirstRun.tsx:117
 msgid "Want help, news or a say in what comes next? Mortar has a Discord server."
 msgstr "Want help, news or a say in what comes next? Mortar has a Discord server."
 
@@ -6910,8 +6915,8 @@ msgstr "Mortar started with default settings. The damaged file was kept at {path
 msgid "Mod config"
 msgstr "Mod config"
 
-#: src/firstrun/FindStep.tsx:273
-#: src/launchers/LauncherList.tsx:187
+#: src/firstrun/FindStep.tsx:275
+#: src/launchers/LauncherList.tsx:230
 msgid "Rescan"
 msgstr "Rescan"
 
@@ -7314,7 +7319,7 @@ msgstr "Time in this start minus time in the one before"
 msgid "Search the log"
 msgstr "Search the log"
 
-#: src/settings/sections/Downloads.tsx:213
+#: src/settings/sections/Downloads.tsx:209
 msgid "{owner} opens these links now."
 msgstr "{owner} opens these links now."
 
@@ -7581,7 +7586,7 @@ msgstr "Updated {name} from {from} to {to}"
 #: src/launch/PlayControl.tsx:143
 #: src/launch/PlayControl.tsx:164
 #: src/launch/StopDialog.tsx:25
-#: src/mods/LockedNote.tsx:26
+#: src/mods/LockedNote.tsx:27
 msgid "Stop game"
 msgstr "Stop game"
 
@@ -7933,10 +7938,10 @@ msgstr "No account"
 msgid "{0} · {1} unique"
 msgstr "{0} · {1} unique"
 
-#: src/firstrun/FindStep.tsx:79
-#: src/launchers/LauncherList.tsx:107
-#: src/launchers/LauncherList.tsx:144
-#: src/launchers/LauncherList.tsx:164
+#: src/firstrun/FindStep.tsx:81
+#: src/launchers/LauncherList.tsx:150
+#: src/launchers/LauncherList.tsx:187
+#: src/launchers/LauncherList.tsx:207
 #: src/settings/sections/GameSettings.tsx:197
 msgid "Not found"
 msgstr "Not found"
@@ -8132,7 +8137,7 @@ msgstr "{store} in the store ({shared} shared with other profiles)"
 msgid "Remove {0} from other profiles"
 msgstr "Remove {0} from other profiles"
 
-#: src/firstrun/FindStep.tsx:120
+#: src/firstrun/FindStep.tsx:122
 msgid "Found a copy outside your launchers:"
 msgstr "Found a copy outside your launchers:"
 
@@ -8347,7 +8352,7 @@ msgstr "A download fails"
 msgid "{0} does not allow downloads outside its own page: get it there."
 msgstr "{0} does not allow downloads outside its own page: get it there."
 
-#: src/launchers/LauncherList.tsx:196
+#: src/launchers/LauncherList.tsx:239
 #: src/settings/sections/WatchFolders.tsx:46
 msgid "Add folder…"
 msgstr "Add folder…"
@@ -8767,7 +8772,7 @@ msgstr "Could not undo. Missing from the store: {list}"
 msgid "Nexus Mods · Not signed in"
 msgstr "Nexus Mods · Not signed in"
 
-#: src/firstrun/FirstRun.tsx:99
+#: src/firstrun/FirstRun.tsx:101
 msgid "No launchers found. Continue and choose each game's folder when you open it."
 msgstr "No launchers found. Continue and choose each game's folder when you open it."
 
@@ -8845,7 +8850,7 @@ msgstr "Replacement: {0}"
 msgid "A mod with a config file has an Edit config button in its details: a typed editor with presets and Reset all."
 msgstr "A mod with a config file has an Edit config button in its details: a typed editor with presets and Reset all."
 
-#: src/settings/sections/Downloads.tsx:154
+#: src/settings/sections/Downloads.tsx:150
 msgid "Firefox:"
 msgstr "Firefox:"
 
@@ -8903,7 +8908,7 @@ msgstr "Replace with {name}"
 msgid "Date"
 msgstr "Date"
 
-#: src/settings/sections/Downloads.tsx:97
+#: src/settings/sections/Downloads.tsx:96
 msgid "The browser extension is too new for this Mortar"
 msgstr "The browser extension is too new for this Mortar"
 
@@ -9469,7 +9474,7 @@ msgstr "Untrack every {gameName} mod on Nexus"
 msgid "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 msgstr "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 
-#: src/settings/sections/Downloads.tsx:212
+#: src/settings/sections/Downloads.tsx:208
 msgid "Clicking these links on Nexus starts the download in Mortar."
 msgstr "Clicking these links on Nexus starts the download in Mortar."
 
@@ -10237,7 +10242,7 @@ msgid "Search run logs"
 msgstr "Search run logs"
 
 #. placeholder {0}: game.loader
-#: src/firstrun/FindStep.tsx:198
+#: src/firstrun/FindStep.tsx:200
 msgid "{0} not installed yet"
 msgstr "{0} not installed yet"
 
@@ -10412,7 +10417,7 @@ msgid "When {0}"
 msgstr "When {0}"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:253
+#: src/firstrun/FindStep.tsx:255
 msgid "{0} was not found in your launchers"
 msgstr "{0} was not found in your launchers"
 
@@ -10449,7 +10454,7 @@ msgstr "Changed groups"
 msgid "Focus the search"
 msgstr "Focus the search"
 
-#: src/settings/sections/Downloads.tsx:213
+#: src/settings/sections/Downloads.tsx:209
 msgid "No app opens these links now."
 msgstr "No app opens these links now."
 
@@ -10769,7 +10774,7 @@ msgstr "Running"
 msgid "Keep the zip after installing"
 msgstr "Keep the zip after installing"
 
-#: src/settings/sections/Downloads.tsx:276
+#: src/settings/sections/Downloads.tsx:272
 msgid "Links"
 msgstr "Links"
 
@@ -11072,8 +11077,8 @@ msgstr "Game version"
 msgid "Maximise"
 msgstr "Maximise"
 
-#: src/settings/sections/Downloads.tsx:211
-#: src/settings/sections/Downloads.tsx:219
+#: src/settings/sections/Downloads.tsx:207
+#: src/settings/sections/Downloads.tsx:215
 msgid "Handle \"Mod Manager Download\" links"
 msgstr "Handle \"Mod Manager Download\" links"
 
@@ -11152,7 +11157,7 @@ msgstr "In {0}; turns off its edits here"
 msgid "Could not set the default launch preset"
 msgstr "Could not set the default launch preset"
 
-#: src/settings/sections/Downloads.tsx:295
+#: src/settings/sections/Downloads.tsx:291
 msgid "Files"
 msgstr "Files"
 
@@ -12025,8 +12030,8 @@ msgstr "{checked}. {0, plural, one {# could not be read.} other {# could not be 
 msgid "Dates"
 msgstr "Dates"
 
-#: src/settings/sections/Downloads.tsx:224
-#: src/settings/sections/Downloads.tsx:232
+#: src/settings/sections/Downloads.tsx:220
+#: src/settings/sections/Downloads.tsx:228
 msgid "Send other games' links to {redirectName}"
 msgstr "Send other games' links to {redirectName}"
 
@@ -12552,8 +12557,8 @@ msgstr "Quota"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/firstrun/FindStep.tsx:243
-#: src/settings/sections/Downloads.tsx:300
+#: src/firstrun/FindStep.tsx:245
+#: src/settings/sections/Downloads.tsx:296
 #: src/settings/sections/GameSettings.tsx:206
 #: src/settings/sections/GameSettings.tsx:398
 msgid "Change folder…"
@@ -12756,7 +12761,7 @@ msgstr "Check mods and Mortar for updates (F5)"
 msgid "Games"
 msgstr "Games"
 
-#: src/firstrun/FindStep.tsx:137
+#: src/firstrun/FindStep.tsx:139
 msgid "Use {folder}"
 msgstr "Use {folder}"
 
@@ -12851,7 +12856,7 @@ msgstr "Could not repair the profile"
 msgid "Empty profile"
 msgstr "Empty profile"
 
-#: src/firstrun/FindStep.tsx:197
+#: src/firstrun/FindStep.tsx:199
 #: src/firstrun/LoaderStep.tsx:372
 msgid "{loader} {version} installed"
 msgstr "{loader} {version} installed"
@@ -13371,8 +13376,8 @@ msgstr "Compare with…"
 msgid "Could not update tags for the selected mods"
 msgstr "Could not update tags for the selected mods"
 
-#: src/firstrun/FindStep.tsx:286
-#: src/firstrun/FirstRun.tsx:102
+#: src/firstrun/FindStep.tsx:288
+#: src/firstrun/FirstRun.tsx:104
 #: src/firstrun/LoaderStep.tsx:187
 #: src/firstrun/LoaderStep.tsx:387
 #: src/firstrun/NexusStep.tsx:34
@@ -13445,7 +13450,7 @@ msgstr "Start the game without the Before you play dialog"
 msgid "Display"
 msgstr "Display"
 
-#: src/firstrun/FirstRun.tsx:78
+#: src/firstrun/FirstRun.tsx:80
 msgid "Welcome to Mortar"
 msgstr "Welcome to Mortar"
 
@@ -13807,8 +13812,8 @@ msgid "{name}, descending"
 msgstr "{name}, descending"
 
 #. placeholder {0}: source.name
-#: src/settings/sections/Downloads.tsx:181
-#: src/settings/sections/Downloads.tsx:194
+#: src/settings/sections/Downloads.tsx:177
+#: src/settings/sections/Downloads.tsx:190
 msgid "Handle {0} links"
 msgstr "Handle {0} links"
 
@@ -14062,7 +14067,7 @@ msgid "{n, plural, one {{0}: # line} other {{1}: # lines}}"
 msgstr "{n, plural, one {{0}: # line} other {{1}: # lines}}"
 
 #. placeholder {0}: source.name
-#: src/settings/sections/Downloads.tsx:190
+#: src/settings/sections/Downloads.tsx:186
 msgid "Could not change how {0} links open"
 msgstr "Could not change how {0} links open"
 
@@ -14490,7 +14495,8 @@ msgstr "Switch profile"
 msgid " · "
 msgstr " · "
 
-#: src/settings/sections/NexusMods.tsx:258
+#: src/settings/sections/NexusMods.tsx:252
+#: src/settings/sections/NexusMods.tsx:263
 msgid "Personal API key"
 msgstr "Personal API key"
 
@@ -14568,8 +14574,8 @@ msgstr "Checks the data folder, games, Nexus download links and the browser exte
 msgid "Sort: most stars"
 msgstr "Sort: most stars"
 
-#: src/settings/sections/Downloads.tsx:255
-#: src/settings/sections/Downloads.tsx:264
+#: src/settings/sections/Downloads.tsx:251
+#: src/settings/sections/Downloads.tsx:260
 msgid "Preferred download server"
 msgstr "Preferred download server"
 
@@ -14585,7 +14591,7 @@ msgstr "Reading mod settings…"
 msgid "Update profiles"
 msgstr "Update profiles"
 
-#. placeholder {0}: launchers.length
-#: src/firstrun/FirstRun.tsx:98
+#. placeholder {0}: here.length
+#: src/firstrun/FirstRun.tsx:100
 msgid "{found} of {0, plural, one {# launcher} other {# launchers}} found."
 msgstr "{found} of {0, plural, one {# launcher} other {# launchers}} found."

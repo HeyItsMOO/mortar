@@ -86,3 +86,17 @@ func TestLauncherSetPerOS(t *testing.T) {
 		t.Errorf("Linux misses launchers: %v", got)
 	}
 }
+
+func TestLaunchersOfAnotherOSAreListedAndMarked(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("every Windows launcher runs here")
+	}
+	list, err := Launchers(home(t), settings.Defaults())
+	if err != nil {
+		t.Fatal(err)
+	}
+	i := slices.IndexFunc(list, func(l StoreApp) bool { return l.ID == LauncherEA })
+	if i < 0 || list[i].Platform != "windows" || list[i].Found {
+		t.Fatalf("EA App = %+v", list)
+	}
+}

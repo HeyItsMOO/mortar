@@ -46,7 +46,9 @@ export function FirstRun() {
   if (!launchers) {
     return <LoadingRow>{t`Loading…`}</LoadingRow>
   }
-  const found = launchers.filter((l) => l.found).length
+  // Launchers of another OS are listed for reference; nothing searched for them.
+  const here = launchers.filter((l) => !l.platform)
+  const found = here.filter((l) => l.found).length
   const finish = () => {
     setBusy(true)
     ConfirmLaunchers()
@@ -95,7 +97,7 @@ export function FirstRun() {
       >
         <Typography sx={{ fontSize: 14, color: 'text.secondary', flex: 1 }}>
           {found > 0
-            ? t`${found} of ${plural(launchers.length, { one: '# launcher', other: '# launchers' })} found.`
+            ? t`${found} of ${plural(here.length, { one: '# launcher', other: '# launchers' })} found.`
             : t`No launchers found. Continue and choose each game's folder when you open it.`}
         </Typography>
         <Button variant="contained" disabled={busy} onClick={finish} size="large" sx={{ px: 4 }}>

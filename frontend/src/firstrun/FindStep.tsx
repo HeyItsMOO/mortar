@@ -74,30 +74,32 @@ function Looked({ game, launchers }: { game: GameInfo; launchers: StoreApp[] }) 
   const muted = text.secondary
   return (
     <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none', display: 'grid', gap: '6px' }}>
-      {launchers.map((l) => {
-        const has = (l.games ?? []).some((g) => g.id === game.id)
-        let line = t`Not found`.toLowerCase()
-        if (l.found && !has) {
-          line = t`found, without ${game.name}`
-        } else if (has) {
-          line = t`has ${game.name}`
-        }
-        return (
-          <Box
-            component="li"
-            key={l.id}
-            sx={{ display: 'flex', alignItems: 'center', gap: space.gap, fontSize: 14 }}
-          >
-            {l.found ? <Check size={15} color={ok} /> : <X size={15} color={muted} />}
-            <Box component="span" sx={{ fontWeight: 600 }}>
-              {l.name}
+      {launchers
+        .filter((l) => !l.platform)
+        .map((l) => {
+          const has = (l.games ?? []).some((g) => g.id === game.id)
+          let line = t`Not found`.toLowerCase()
+          if (l.found && !has) {
+            line = t`found, without ${game.name}`
+          } else if (has) {
+            line = t`has ${game.name}`
+          }
+          return (
+            <Box
+              component="li"
+              key={l.id}
+              sx={{ display: 'flex', alignItems: 'center', gap: space.gap, fontSize: 14 }}
+            >
+              {l.found ? <Check size={15} color={ok} /> : <X size={15} color={muted} />}
+              <Box component="span" sx={{ fontWeight: 600 }}>
+                {l.name}
+              </Box>
+              <Box component="span" sx={{ color: 'text.secondary' }}>
+                {line}
+              </Box>
             </Box>
-            <Box component="span" sx={{ color: 'text.secondary' }}>
-              {line}
-            </Box>
-          </Box>
-        )
-      })}
+          )
+        })}
     </Box>
   )
 }

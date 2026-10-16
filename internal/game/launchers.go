@@ -24,7 +24,14 @@ type StoreApp struct {
 	// Looked lists every folder searched, in order.
 	Looked []string       `json:"looked"`
 	Games  []StoreAppGame `json:"games"`
+	// Platform is the OS the launcher runs on when it is not this one: it is listed so the player sees where its
+	// games come from here, and nothing searched for it.
+	Platform string `json:"platform,omitempty"`
 }
+
+// LauncherInstallers is the row for games found where their own installer or Flatpak put them, which no launcher
+// reports.
+const LauncherInstallers = "installers"
 
 // StoreAppGame is a supported game a launcher holds.
 type StoreAppGame struct {
@@ -67,6 +74,22 @@ func Launchers(home string, s settings.Settings) ([]StoreApp, error) {
 		}
 		l.Found = len(l.Roots) > 0
 		out = append(out, l)
+	}
+	if own := slices.Concat(byLauncher[gamestore.StoreStandalone], byLauncher[gamestore.StoreFlatpak]); len(own) > 0 {
+		out = append(out, StoreApp{
+			ID: LauncherInstallers, Name: "Game installers and Flatpak", Found: true, Games: own,
+			Roots: []string{}, Custom: []string{}, Looked: []string{},
+		})
+	}
+	if runtime.GOOS != "windows" {
+		for _, spec := range gamestore.Launchers("windows") {
+			if !slices.ContainsFunc(out, func(l StoreApp) bool { return l.ID == spec.ID }) {
+				out = append(out, StoreApp{
+					ID: spec.ID, Name: spec.Name, Platform: "windows",
+					Roots: []string{}, Custom: []string{}, Looked: []string{}, Games: []StoreAppGame{},
+				})
+			}
+		}
 	}
 	return out, nil
 }

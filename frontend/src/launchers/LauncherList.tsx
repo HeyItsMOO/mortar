@@ -69,6 +69,45 @@ function FolderRow({
   )
 }
 
+// A row with nothing to search or add: a launcher of another OS, or the games found outside any launcher.
+function FixedRow({ launcher }: { launcher: StoreApp }) {
+  const { t } = useLingui()
+  const { success } = useTheme().palette
+  const other = Boolean(launcher.platform)
+  const summary = other
+    ? t`Windows only. On this computer its games come in through Heroic, Lutris or Bottles.`
+    : (launcher.games ?? []).map((g) => g.name).join(', ')
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: space.pad,
+        px: 2,
+        py: 1.25,
+        bgcolor: 'var(--mortar-paper-78)',
+        borderRadius: 1,
+        opacity: other ? MISSING_OPACITY : 1,
+      }}
+    >
+      <Box sx={{ display: 'flex', flexShrink: 0 }}>
+        <LauncherLogo id={launcher.id} size={STATUS_ICON} />
+      </Box>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography sx={{ fontSize: 17, fontWeight: 700 }}>{launcher.name}</Typography>
+        <Typography title={summary} sx={{ fontSize: 13, color: 'text.secondary' }} noWrap={true}>
+          {summary}
+        </Typography>
+      </Box>
+      {other ? null : (
+        <Box sx={{ display: 'flex', mr: 5 }}>
+          <CircleCheck size={STATUS_ICON} color={success.main} aria-label={t`Found`} />
+        </Box>
+      )}
+    </Box>
+  )
+}
+
 function LauncherRow({
   launcher,
   refresh,
@@ -86,6 +125,7 @@ function LauncherRow({
   const roots = launcher.roots ?? []
   const custom = launcher.custom ?? []
   const looked = launcher.looked ?? []
+  const fixed = Boolean(launcher.platform) || launcher.id === 'installers'
   const run = (p: Promise<void>) =>
     p.then(
       () => {
@@ -103,6 +143,9 @@ function LauncherRow({
     } catch (e) {
       setError(inlineError(e))
     }
+  }
+  if (fixed) {
+    return <FixedRow launcher={launcher} />
   }
   let summary = t`Not found`
   if (launcher.found) {

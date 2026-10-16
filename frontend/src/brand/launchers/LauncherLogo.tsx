@@ -1,4 +1,5 @@
 import { Box } from '@mui/material'
+import { Package } from 'lucide-react'
 import {
   siEa,
   siEpicgames,
@@ -63,7 +64,17 @@ function Tile({ size, bg, children }: { size: number; bg: string; children: Reac
   )
 }
 
+// Games found where their own installer or Flatpak put them have no launcher, so their row takes a plain package mark.
+const INSTALLERS_BG = '#4B5563'
+
 export function LauncherLogo({ id, size }: { id: string; size: number }) {
+  if (id === 'installers') {
+    return (
+      <Tile size={size} bg={INSTALLERS_BG}>
+        <Package size={Math.round(size * MARK_SCALE)} color="#FFFFFF" aria-hidden={true} />
+      </Tile>
+    )
+  }
   const art = ART[id]
   if (art) {
     return (
