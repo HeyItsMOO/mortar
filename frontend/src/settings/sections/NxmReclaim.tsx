@@ -17,7 +17,10 @@ export function NxmReclaim() {
   const { t } = useLingui()
   const nexus = useSettings((s) => s.nxmHandled)
   const thunderstore = useSettings(
-    (s) => s.thunderstoreHandleLinks === true || s.curseforgeHandleLinks === true,
+    (s) =>
+      s.thunderstoreHandleLinks === true ||
+      s.curseforgeHandleLinks === true ||
+      s.vsmoddbHandleLinks === true,
   )
   const [taken, setTaken] = useState<Takeover[]>([])
   useEffect(() => {
@@ -38,8 +41,11 @@ export function NxmReclaim() {
     if (source === 'nexus') {
       return t`${name} now opens Nexus "Mod Manager Download" links.`
     }
-    return source === 'curseforge'
-      ? t`${name} now opens CurseForge "Install" links.`
+    if (source === 'curseforge') {
+      return t`${name} now opens CurseForge "Install" links.`
+    }
+    return source === 'vsmoddb'
+      ? t`${name} now opens Mod DB "1-click install" links.`
       : t`${name} now opens Thunderstore "Install with Mod Manager" links.`
   })
   const names = listNames([...new Set(taken.map((x) => x.name))])

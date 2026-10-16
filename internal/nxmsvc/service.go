@@ -22,6 +22,7 @@ import (
 	_ "github.com/Rethunk-Tech/mortar/internal/source/all"
 	"github.com/Rethunk-Tech/mortar/internal/source/curseforge"
 	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
+	"github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
 	"github.com/Rethunk-Tech/mortar/internal/winhost"
 )
 
@@ -38,8 +39,8 @@ type Arrival struct {
 	// Package and Version name the Thunderstore package of a ror2mm link, whose Link is empty.
 	Package string `json:"package,omitempty"`
 	Version string `json:"version,omitempty"`
-	// Source is the site of a Package other than Thunderstore ("curseforge"), where Package is the project id and
-	// File the file the link names.
+	// Source is the site of a Package other than Thunderstore ("curseforge", "vsmoddb"), where Package is the project
+	// id and File the file the link names, or Version the release (vsmoddb).
 	Source string `json:"source,omitempty"`
 	File   int    `json:"file,omitempty"`
 	// Name is the project's name on its site, when a Source link's project could be read.
@@ -89,6 +90,8 @@ type Service struct {
 	App winhost.Host
 	// CurseForgeProject reads a project's name and the site's game id; nil asks CurseForge.
 	CurseForgeProject func(ctx context.Context, id int) (curseforge.Project, error)
+	// VSModDBRelease reads the Mod DB mod and release an install link names; nil asks the Mod DB.
+	VSModDBRelease func(ctx context.Context, id, version string) (vsmoddb.Resolved, error)
 	// Assigned carries links the user matched to a profile.
 	Assigned chan Assignment
 	// Route is offered every accepted link first and reports whether the download queue was waiting for it; nil
@@ -161,6 +164,10 @@ func (s *Service) Receive(args []string) bool {
 		}
 		if ref, err := curseforge.ParseLink(arg); err == nil {
 			go s.receiveCurseForge(arg, ref)
+			continue
+		}
+		if ref, err := vsmoddb.ParseLink(arg); err == nil {
+			go s.receiveVSModDB(ref)
 			continue
 		}
 		if domain, gerr := nxm.LinkGame(arg); gerr == nil && !isMortarGame(domain) {
@@ -268,6 +275,31 @@ func (s *Service) receiveCurseForge(raw string, ref curseforge.Ref) {
 	s.mu.Lock()
 	s.arrivals = append(s.arrivals, a)
 	s.mu.Unlock()
+	s.emit(ArrivedEvent, a)
+}
+
+// receiveVSModDB reads the Mod DB's ids for the mod a link names, so the install lands under the same key as one from
+// Browse; when the site cannot be asked, the link's own mod id stands in, which the Mod DB also answers to.
+func (s *Service) receiveVSModDB(ref vsmoddb.Ref) {
+	release := s.VSModDBRelease
+	if release == nil {
+		release = vsmoddb.Driver{}.Resolve
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), curseforgeLookup)
+	found, err := release(ctx, ref.ModID, ref.Version)
+	cancel()
+	a := Arrival{Source: "vsmoddb", Package: ref.ModID, Version: ref.Version, Name: ref.ModID, Games: gamesWith("vsmoddb")}
+	if err != nil {
+		log.Printf("nxm: mod db mod %s not read: %v", ref.ModID, err)
+	} else {
+		a.Package, a.Name = found.ID, found.Name
+	}
+	s.mu.Lock()
+	s.nextID++
+	a.ID = s.nextID
+	s.arrivals = append(s.arrivals, a)
+	s.mu.Unlock()
+	log.Printf("nxm: link %d arrived: mod db mod %s %s", a.ID, a.Package, a.Version)
 	s.emit(ArrivedEvent, a)
 }
 
@@ -524,14 +556,17 @@ func ClaimLinks(store *settings.Store, handler nxm.Handler, id string) error {
 }
 
 // optInSources are the sources whose link choice is stored.
-var optInSources = []string{"thunderstore", "curseforge"}
+var optInSources = []string{"thunderstore", "curseforge", "vsmoddb"}
 
 func hasOptInSetting(id string) bool { return slices.Contains(optInSources, id) }
 
 // handleLinksOf is the stored link choice of an opt-in source.
 func handleLinksOf(v *settings.Settings, id string) **bool {
-	if id == "curseforge" {
+	switch id {
+	case "curseforge":
 		return &v.CurseForgeHandleLinks
+	case "vsmoddb":
+		return &v.VSModDBHandleLinks
 	}
 	return &v.ThunderstoreHandleLinks
 }

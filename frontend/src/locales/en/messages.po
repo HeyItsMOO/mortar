@@ -1364,7 +1364,7 @@ msgstr "Scheduled"
 msgid "Mod Manager Download on Nexus Mods only works in Mortar when you are signed in."
 msgstr "Mod Manager Download on Nexus Mods only works in Mortar when you are signed in."
 
-#: src/settings/sections/NxmReclaim.tsx:50
+#: src/settings/sections/NxmReclaim.tsx:56
 msgid "Take them back for Mortar?"
 msgstr "Take them back for Mortar?"
 
@@ -2110,7 +2110,7 @@ msgstr "Launch presets"
 msgid "{pickedName} is used after Save."
 msgstr "{pickedName} is used after Save."
 
-#: src/settings/sections/NxmReclaim.tsx:39
+#: src/settings/sections/NxmReclaim.tsx:42
 msgid "{name} now opens Nexus \"Mod Manager Download\" links."
 msgstr "{name} now opens Nexus \"Mod Manager Download\" links."
 
@@ -3024,7 +3024,7 @@ msgstr "No enabled mods"
 msgid "Cleanup"
 msgstr "Cleanup"
 
-#: src/settings/sections/NxmReclaim.tsx:43
+#: src/settings/sections/NxmReclaim.tsx:49
 msgid "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 msgstr "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 
@@ -4215,7 +4215,7 @@ msgstr "The game started without errors"
 msgid "Hidden"
 msgstr "Hidden"
 
-#: src/nxm/store.ts:172
+#: src/nxm/store.ts:178
 msgid "Mortar · Install {name}?"
 msgstr "Mortar · Install {name}?"
 
@@ -5604,7 +5604,7 @@ msgstr "Downloads"
 msgid "The fields above are the Standard preset. Play uses the default preset; the Play menu can launch with another one once. Templates are game-wide and copied in."
 msgstr "The fields above are the Standard preset. Play uses the default preset; the Play menu can launch with another one once. Templates are game-wide and copied in."
 
-#: src/settings/sections/NxmReclaim.tsx:42
+#: src/settings/sections/NxmReclaim.tsx:45
 msgid "{name} now opens CurseForge \"Install\" links."
 msgstr "{name} now opens CurseForge \"Install\" links."
 
@@ -6004,7 +6004,7 @@ msgstr "Start minimised to tray"
 msgid "{0, plural, one {# change} other {# changes}}"
 msgstr "{0, plural, one {# change} other {# changes}}"
 
-#: src/nxm/store.ts:174
+#: src/nxm/store.ts:180
 msgid "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 msgstr "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 
@@ -6059,7 +6059,7 @@ msgstr "Could not start measuring"
 msgid "Rose"
 msgstr "Rose"
 
-#: src/settings/sections/NxmReclaim.tsx:49
+#: src/settings/sections/NxmReclaim.tsx:55
 msgid "{names} took over mod links"
 msgstr "{names} took over mod links"
 
@@ -8453,7 +8453,7 @@ msgstr "Could not skip the update for {0}"
 msgid "Plugins load"
 msgstr "Plugins load"
 
-#: src/nxm/store.ts:103
+#: src/nxm/store.ts:109
 #: src/queue/totals.ts:121
 #: src/settings/sections/DataStoreReport.tsx:124
 #: src/share/arrivals.ts:55
@@ -9025,7 +9025,7 @@ msgstr "Could not show the skipped update for {0}"
 msgid "Share switched-off mods"
 msgstr "Share switched-off mods"
 
-#: src/settings/sections/NxmReclaim.tsx:52
+#: src/settings/sections/NxmReclaim.tsx:58
 msgid "Take back"
 msgstr "Take back"
 
@@ -10486,7 +10486,7 @@ msgstr "Retry all failed"
 msgid "Add it"
 msgstr "Add it"
 
-#: src/settings/sections/NxmReclaim.tsx:36
+#: src/settings/sections/NxmReclaim.tsx:39
 msgid "Could not change how mod links open"
 msgstr "Could not change how mod links open"
 
@@ -11336,6 +11336,10 @@ msgstr "Quit"
 msgid "Different version ({0})"
 msgstr "Different version ({0})"
 
+#: src/settings/sections/NxmReclaim.tsx:48
+msgid "{name} now opens Mod DB \"1-click install\" links."
+msgstr "{name} now opens Mod DB \"1-click install\" links."
+
 #: src/settings/sections/Shortcuts.tsx:62
 msgid "Use it anyway; {conflictName} becomes unbound"
 msgstr "Use it anyway; {conflictName} becomes unbound"
@@ -11434,7 +11438,7 @@ msgstr "If they stay there, the game goes on loading them even when a profile sw
 msgid "{0} is in use by the running game. Close the game to change its mods."
 msgstr "{0} is in use by the running game. Close the game to change its mods."
 
-#: src/nxm/store.ts:150
+#: src/nxm/store.ts:156
 msgid "Mod link not used"
 msgstr "Mod link not used"
 
@@ -12175,7 +12179,7 @@ msgstr "Automatic port"
 msgid "Health"
 msgstr "Health"
 
-#: src/nxm/store.ts:97
+#: src/nxm/store.ts:101
 msgid "CurseForge mod {id}"
 msgstr "CurseForge mod {id}"
 
@@ -13182,7 +13186,7 @@ msgstr "{0} was installed from another site. Updating installs {1} from {2} inst
 msgid "Nexus Mods"
 msgstr "Nexus Mods"
 
-#: src/settings/sections/NxmReclaim.tsx:51
+#: src/settings/sections/NxmReclaim.tsx:57
 msgid "Leave them"
 msgstr "Leave them"
 

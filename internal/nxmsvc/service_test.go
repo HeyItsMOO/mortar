@@ -15,6 +15,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/source"
 	"github.com/Rethunk-Tech/mortar/internal/source/curseforge"
+	"github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
 )
 
 type fakeHandler struct {
@@ -436,5 +437,27 @@ func TestACurseForgeLinkWaitsForItsOwnGameAndAnotherGamesGoesBack(t *testing.T) 
 	s.receiveCurseForge("curseforge://install?addonId=9&fileId=10", curseforge.Ref{Project: 9, File: 10})
 	if in := s.Inbox(); len(in.Arrivals) != 0 || len(in.Rejections) != 1 || in.Rejections[0].Reason != nxm.ReasonRestricted || in.Rejections[0].Name != "Shut" {
 		t.Fatalf("a mod Mortar may not download was not refused by name: %+v", in)
+	}
+}
+
+func TestAModDBLinkArrivesUnderTheIDBrowseUses(t *testing.T) {
+	s := newService(t, &fakeHandler{})
+	ref, err := vsmoddb.ParseLink("vintagestorymodinstall://carryon@1.14.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.VSModDBRelease = func(_ context.Context, id, version string) (vsmoddb.Resolved, error) {
+		return vsmoddb.Resolved{ID: vsmoddb.ID(890, 4405), Name: "Carry On", Version: version}, nil
+	}
+	s.receiveVSModDB(ref)
+	in := s.Inbox()
+	if len(in.Arrivals) != 1 || in.Arrivals[0].Name != "Carry On" || !slices.Contains(in.Arrivals[0].Games, "vintage-story") {
+		t.Fatalf("inbox %+v", in)
+	}
+	if err := s.Assign(in.Arrivals[0].ID, "vintage-story", "p1"); err != nil {
+		t.Fatal(err)
+	}
+	if got := <-s.Assigned; got.Source != "vsmoddb" || got.Package != "890-4405" || got.Version != "1.14.3" {
+		t.Fatalf("assigned %+v", got)
 	}
 }

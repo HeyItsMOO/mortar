@@ -26,6 +26,7 @@ const (
 var sourceFields = map[string][]string{
 	"thunderstore": {"thunderstoreHandleLinks=handleLinks"},
 	"curseforge":   {"curseforgeHandleLinks=handleLinks"},
+	"vsmoddb":      {"vsmoddbHandleLinks=handleLinks"},
 	"itch":         {"itchName=name"},
 	"nexus": {
 		"nexusUserId=userId", "nexusName=name", "nexusPremium=premium",

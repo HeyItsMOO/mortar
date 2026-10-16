@@ -88,6 +88,9 @@ type Settings struct {
 	ThunderstoreHandleLinks *bool `json:"thunderstoreHandleLinks"`
 	// CurseForgeHandleLinks is whether Mortar claims curseforge:// links from the system. Nil means the source's default (off).
 	CurseForgeHandleLinks *bool `json:"curseforgeHandleLinks"`
+	// VSModDBHandleLinks is whether Mortar claims vintagestorymodinstall:// links from the system. Nil means the source's
+	// default (off).
+	VSModDBHandleLinks *bool `json:"vsmoddbHandleLinks"`
 	// NexusPreferredDownloadServer is a seen download_link.json short_name, or empty for Automatic.
 	NexusPreferredDownloadServer string `json:"nexusPreferredDownloadServer"`
 	// NexusSeenDownloadServers lists short_name values Mortar has seen from Nexus.

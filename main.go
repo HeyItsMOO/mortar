@@ -1415,5 +1415,8 @@ func applyLinkChoices(s settings.Settings) {
 	if s.CurseForgeHandleLinks != nil {
 		choice["curseforge"] = *s.CurseForgeHandleLinks
 	}
+	if s.VSModDBHandleLinks != nil {
+		choice["vsmoddb"] = *s.VSModDBHandleLinks
+	}
 	source.SetHandleLinks(choice)
 }

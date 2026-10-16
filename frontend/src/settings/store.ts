@@ -28,6 +28,7 @@ const defaults: Settings = {
   dismissed: {},
   thunderstoreHandleLinks: null,
   curseforgeHandleLinks: null,
+  vsmoddbHandleLinks: null,
   nexusUserId: 0,
   nexusName: '',
   itchName: '',

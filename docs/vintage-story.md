@@ -20,6 +20,7 @@ Catalog id `vintage-story`. Sold outside any store app by Anego Studios; native 
 ## Sources
 
 - **Vintage Story Mod DB** (`vsmoddb`, `internal/source/vsmoddb`): the public API at `https://mods.vintagestory.at/api`, no key. `/mods` lists mods (`text`, `orderby` `downloads`, `follows`, `lastreleased`, `asset.created`, `tagids[]`) with a `limit` and no offset; `/mod/<modid>` (or the mod id a `modinfo.json` names) lists releases newest first, test builds (`-rc`, `-pre`, `-dev`) included. A mod's page is `/show/mod/<assetid>` or `/<urlalias>`, and the API does not answer to the assetid, so Mortar's id is `<modid>-<assetid>`. Downloads take the newest stable release unless one is named; the release id is the entry's file id. Update checks read each installed mod once (`ItemLister`). Release files carry no hash and no dependency list.
+- **Install links:** the site's 1-click install button opens `vintagestorymodinstall://<modid>@<version>` (the `modinfo.json` mod id), which the game's own installer registers for `Vintagestory -i`. Mortar claims the scheme only when the player turns it on, reads the Mod DB's ids for the mod so the entry matches one added from Browse, and installs that release.
 - **Nexus** domain `vintagestory` (game id 3576) and **GitHub** topic `vintagestory-mod`.
 
 ## Settings

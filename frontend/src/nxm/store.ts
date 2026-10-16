@@ -87,6 +87,9 @@ const arrivalSite = (a: Arrival): string => {
   if (a.source === 'curseforge') {
     return 'CurseForge'
   }
+  if (a.source === 'vsmoddb') {
+    return 'the Mod DB'
+  }
   return a.package ? 'Thunderstore' : 'Nexus'
 }
 
@@ -94,7 +97,10 @@ const arrivalSite = (a: Arrival): string => {
 // number, so its name is the one Mortar read from the site, when it could.
 const packageName = (a: Arrival): string => {
   const id = a.package ?? ''
-  return a.source === 'curseforge' ? a.name || i18n._(msg`CurseForge mod ${id}`) : id
+  if (a.source === 'curseforge') {
+    return a.name || i18n._(msg`CurseForge mod ${id}`)
+  }
+  return a.source === 'vsmoddb' ? a.name || id : id
 }
 
 const arrivalName = (a: Arrival): Promise<string> =>
