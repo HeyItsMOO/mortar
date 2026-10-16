@@ -33,6 +33,8 @@ type Mod struct {
 	Name     string         `json:"name"`
 	EntryKey string         `json:"entryKey"`
 	Source   profile.Source `json:"source"`
+	// Implicit is the install reason the mod's entry had, which applying the bundle gives a new entry.
+	Implicit bool `json:"implicit,omitempty"`
 	// OverlayOf is set on an optional file without a manifest: the entry key of the mod it is laid over, with
 	// OverlayFrom and OverlayTo as recorded on the profile entry. Its id is empty.
 	OverlayOf   string `json:"overlayOf,omitempty"`
@@ -165,7 +167,7 @@ func snapshot(p profile.Profile, uniqueIDs []mod.ID) ([]Mod, error) {
 			}
 			name := m.Name
 			name = cmp.Or(name, m.ID.Local())
-			byID[id] = Mod{ID: m.ID, Name: name, EntryKey: e.StoreKey(), Source: e.Source}
+			byID[id] = Mod{ID: m.ID, Name: name, EntryKey: e.StoreKey(), Source: e.Source, Implicit: e.Implicit}
 		}
 	}
 	out := make([]Mod, 0, len(uniqueIDs))
@@ -202,7 +204,7 @@ func withOverlays(p profile.Profile, mods []Mod) []Mod {
 			continue
 		}
 		mods = append(mods, Mod{
-			Name: e.Source.Name, EntryKey: e.Key, Source: e.Source,
+			Name: e.Source.Name, EntryKey: e.Key, Source: e.Source, Implicit: e.Implicit,
 			OverlayOf: e.OverlayOf, OverlayFrom: e.OverlayFrom, OverlayTo: e.OverlayTo,
 		})
 	}
@@ -448,7 +450,7 @@ func (s *Service) applyLocked(gameID, bundleID string, mods []Mod, profileID str
 		at, ok := groupAt[im.EntryKey]
 		if !ok {
 			groupAt[im.EntryKey] = len(groups)
-			src := im.Source
+			src := im.Source.WithImplicit(im.Implicit)
 			if im.OverlayOf != "" {
 				src = src.WithOverlay(im.OverlayFrom, im.OverlayTo)
 			}

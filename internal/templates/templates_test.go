@@ -35,6 +35,9 @@ func TestTemplateRoundTripFromProfileToNewProfile(t *testing.T) {
 	if _, err := profiles.AddEntry("stardew", from.ID, "local-a", profile.Source{Kind: profile.KindLocal, Name: "a.zip"}); err != nil {
 		t.Fatal(err)
 	}
+	if _, err := profiles.SetImplicitMany("stardew", from.ID, []string{"local-a"}, true); err != nil {
+		t.Fatal(err)
+	}
 	if _, err := profiles.SetLaunchOptions("stardew", from.ID, "--no-gui"); err != nil {
 		t.Fatal(err)
 	}
@@ -64,7 +67,7 @@ func TestTemplateRoundTripFromProfileToNewProfile(t *testing.T) {
 	}
 
 	res, err := svc.NewProfileFromTemplate("stardew", "Starter", "Fresh")
-	if err != nil || res.Added != 1 || len(res.Missing) != 0 || res.Profile.Name != "Fresh" {
+	if err != nil || res.Added != 1 || len(res.Missing) != 0 || res.Profile.Name != "Fresh" || !res.Profile.Entries[0].Implicit {
 		t.Fatalf("result = %+v, %v", res, err)
 	}
 	if opts, _ := profiles.LaunchOptions("stardew", res.Profile.ID); opts != "--no-gui" {
