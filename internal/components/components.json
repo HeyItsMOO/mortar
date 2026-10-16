@@ -1999,6 +1999,7 @@
         "{stem}-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_*{ext}"
       ],
       "saveCopyFolders": ["Backups", "BackupSaves"],
+      "caches": [{ "role": "userData", "path": "Cache/unpack" }],
       "deploy": "profile",
       "targets": [
         {
