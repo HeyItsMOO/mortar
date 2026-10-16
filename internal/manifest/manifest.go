@@ -123,6 +123,24 @@ func parse(b []byte) (Manifest, error) {
 	return m, nil
 }
 
+// ModInfo is what a folder game's mod-root file says of its mod (Vintage Story's modinfo.json).
+type ModInfo struct {
+	Name, ModID, Version string
+	Authors              []string
+}
+
+// ParseModInfo reads a mod-root file as leniently as a SMAPI manifest, its keys in any case.
+func ParseModInfo(b []byte) (ModInfo, error) {
+	raw, err := readObject(b)
+	if err != nil {
+		return ModInfo{}, err
+	}
+	return ModInfo{
+		Name: text(raw, "name"), ModID: text(raw, "modid"), Version: version(field(raw, "version")),
+		Authors: texts(field(raw, "authors")),
+	}, nil
+}
+
 // curlyQuotes turns typographic quotes into straight ones, the second try SMAPI makes on a manifest that fails to parse.
 var curlyQuotes = strings.NewReplacer("\u201c", `"`, "\u201d", `"`)
 

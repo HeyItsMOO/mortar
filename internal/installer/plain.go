@@ -24,8 +24,8 @@ func (plain) Layout(a Archive, g Game, _ Choices) (Layout, error) {
 	// A folder game's mods are loose files the game reads below the target, so no folder is made for the archive,
 	// unless the archive holds a mod folder of its own.
 	folder := slices.Contains(g.Loaders, "folder")
-	if dir, ok := modRootDir(all, g); folder && ok {
-		return wholeFolder(a, g, all, dir)
+	if file, ok := modRootFile(all, g); folder && ok {
+		return wholeFolder(a, g, all, path.Dir(file))
 	}
 	var l Layout
 	for _, f := range all {
@@ -44,8 +44,16 @@ func (plain) Layout(a Archive, g Game, _ Choices) (Layout, error) {
 	return l, validate(l, g)
 }
 
-// modRootDir is the shallowest archive folder ("." for the root) holding the mods target's ModRoot file.
-func modRootDir(all []string, g Game) (string, bool) {
+// ModRootFile is the slash path in the archive of the shallowest file named as the mods target's ModRoot.
+func ModRootFile(a Archive, g Game) (string, bool) {
+	all, err := files(a, ".")
+	if err != nil {
+		return "", false
+	}
+	return modRootFile(all, g)
+}
+
+func modRootFile(all []string, g Game) (string, bool) {
 	ti := slices.IndexFunc(g.Targets, func(t Target) bool { return t.ID == TargetMods })
 	if ti < 0 || g.Targets[ti].ModRoot == "" {
 		return "", false
@@ -61,8 +69,8 @@ func modRootDir(all []string, g Game) (string, bool) {
 		if skip(f) || !strings.EqualFold(path.Base(f), g.Targets[ti].ModRoot) {
 			continue
 		}
-		if d := path.Dir(f); !found || depth(d) < depth(best) {
-			best, found = d, true
+		if !found || depth(path.Dir(f)) < depth(path.Dir(best)) {
+			best, found = f, true
 		}
 	}
 	return best, found

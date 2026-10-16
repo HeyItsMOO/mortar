@@ -17,6 +17,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/installer"
 	"github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
+	"github.com/Rethunk-Tech/mortar/internal/manifest"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
@@ -170,7 +171,15 @@ func cutSuffixFold(s, suffix string) (string, bool) {
 func (s *Store) packageMods(game, key string) (mods []Component, ok bool, err error) {
 	arch, g, inst, err := s.pick(game, key)
 	if err == nil && inst.ID() == "plain" && slices.Contains(g.Loaders, folderLoader) {
-		return []Component{{ID: mod.NewID(mod.FormatFolder, key), Name: key, Folder: "."}}, true, nil
+		c := Component{ID: mod.NewID(mod.FormatFolder, key), Name: key, Folder: "."}
+		if file, ok := installer.ModRootFile(arch, g); ok {
+			if b, rerr := fsx.ReadFile(filepath.Join(arch.Dir, filepath.FromSlash(file))); rerr == nil {
+				if info, perr := manifest.ParseModInfo(b); perr == nil {
+					c.Name, c.Version, c.Author = cmp.Or(info.Name, info.ModID, key), info.Version, strings.Join(info.Authors, ", ")
+				}
+			}
+		}
+		return []Component{c}, true, nil
 	}
 	if err != nil || inst.ID() != driverThunderstore {
 		return nil, false, err
