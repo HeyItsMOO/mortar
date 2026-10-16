@@ -37,7 +37,7 @@ func dataDirOrRecover() (string, error) {
 		missing, ok := errors.AsType[*datadir.MissingLocationError](err)
 		if !ok {
 			showStartupError(err.Error())
-			return "", err
+			return "", shownError{err}
 		}
 		switch askMissingLocation(missing.Path) {
 		case choiceDefault:

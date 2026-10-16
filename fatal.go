@@ -10,6 +10,17 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
+// shownError is a startup failure the user has already seen in a dialog, so main does not show it again.
+type shownError struct{ error }
+
+func (e shownError) Unwrap() error { return e.error }
+
+// startupFailureText is what the dialog says when Mortar cannot start: a windowsgui build has no console, so without
+// it a failed start looks like nothing happened.
+func startupFailureText(err error) string {
+	return fmt.Sprintf("Mortar could not start:\n\n%v\n\nThe details are in mortar.log in Mortar's data folder.", err)
+}
+
 // logAppError sends Wails runtime errors to Mortar's log; without a handler they only reach a logger that discards
 // its output in release builds.
 func logAppError(err error) {
@@ -22,6 +33,7 @@ func panicHandler(dataDir string) func(*application.PanicDetails) {
 	return func(d *application.PanicDetails) {
 		slog.Error("panic", "err", d.Error)
 		_ = appendCrash(dataDir, d)
+		showStartupError(fmt.Sprintf("Mortar stopped because of an error:\n\n%v\n\nThe details are in crash.log in %s.", d.Error, dataDir))
 		os.Exit(2)
 	}
 }

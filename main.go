@@ -151,9 +151,28 @@ func registerEvents() {
 
 func main() {
 	applyMemoryLimit(os.Getenv)
-	if err := run(); err != nil {
-		log.Fatal(err)
+	if err := runShowingFailures(); err != nil {
+		os.Exit(1)
 	}
+}
+
+// runShowingFailures is run with a failed start or a panic shown in a dialog, since a windowsgui build has no
+// console and would otherwise end without a word.
+func runShowingFailures() error {
+	defer func() {
+		if r := recover(); r != nil {
+			showStartupError(fmt.Sprintf("Mortar stopped while starting:\n\n%v\n\nThe details are in crash.log in Mortar's data folder.", r))
+			panic(r)
+		}
+	}()
+	err := run()
+	if err != nil {
+		log.Print(err)
+		if _, shown := errors.AsType[shownError](err); !shown {
+			showStartupError(startupFailureText(err))
+		}
+	}
+	return err
 }
 
 // registerDoctorLoaders lets each game's loader contribute its checks to the Proton install checks.
@@ -249,6 +268,9 @@ func run() error {
 	}()
 	dataDir, err := dataDirOrRecover()
 	if err != nil {
+		return err
+	}
+	if err := requireWebView2(); err != nil {
 		return err
 	}
 	// The single-instance handoff exits this process at once, so a Steam session for a running Mortar forwards its
