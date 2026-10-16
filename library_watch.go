@@ -7,6 +7,7 @@ import (
 	"slices"
 	"sync"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/dlwatch"
 	"github.com/Rethunk-Tech/mortar/internal/folderwatch"
 	"github.com/Rethunk-Tech/mortar/internal/game"
@@ -71,8 +72,13 @@ func watchLibraryFolders(ctx context.Context, home, dataDir string, store *setti
 						out = append(out, folderwatch.Target{Event: syncsvc.FolderEvent, Game: g, Dir: filepath.Join(cur.SyncFolder, g)})
 					}
 				}
-				if dir, err := game.InstallDir(home, cur, id); err == nil && dir != "" {
-					out = append(out, folderwatch.Target{Event: folderwatch.ModsFolderEvent, Game: id, Dir: filepath.Join(dir, "Mods")})
+				// A game that names its own mods folder (a folder game) has it filled by Mortar for each launch, and the
+				// Mods folder in its install, if any, holds the game's own modules.
+				info, _ := components.Game(id)
+				if _, own := info.Paths["mods"]; !own {
+					if dir, err := game.InstallDir(home, cur, id); err == nil && dir != "" {
+						out = append(out, folderwatch.Target{Event: folderwatch.ModsFolderEvent, Game: id, Dir: filepath.Join(dir, "Mods")})
+					}
 				}
 				return out
 			},
