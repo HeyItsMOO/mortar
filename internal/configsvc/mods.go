@@ -47,7 +47,7 @@ func (s *Service) Mods(game, profileID string) (ModList, error) {
 	if err != nil {
 		return out, err
 	}
-	docs, err := s.cfgDocs(game, profileID)
+	docs, err := s.allDocs(game, profileID)
 	if err != nil {
 		return out, err
 	}
@@ -78,7 +78,7 @@ func (s *Service) Mods(game, profileID string) (ModList, error) {
 		for _, d := range docs {
 			if d.ownedBy(names) {
 				owned[d.name] = true
-				row.Files = append(row.Files, ModFile{Name: d.name, Format: FormatBepInEx, Changed: schemaChanged(d.doc.schema(d.file()))})
+				row.Files = append(row.Files, ModFile{Name: d.name, Format: d.file().Format, Changed: d.changed()})
 			}
 		}
 		if len(row.Files) == 0 {
@@ -89,7 +89,7 @@ func (s *Service) Mods(game, profileID string) (ModList, error) {
 	}
 	for _, d := range docs {
 		if !owned[d.name] {
-			out.Other = append(out.Other, ModFile{Name: d.name, Format: FormatBepInEx, Changed: schemaChanged(d.doc.schema(d.file()))})
+			out.Other = append(out.Other, ModFile{Name: d.name, Format: d.file().Format, Changed: d.changed()})
 		}
 	}
 	return out, nil

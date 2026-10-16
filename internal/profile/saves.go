@@ -16,6 +16,13 @@ func (s *Store) SeparateSaves(gameID, id string) bool {
 	return err == nil && p.SeparateSaves
 }
 
+// ModConfigRole is the catalog path role of the folder a game's mods write their settings to (Vintage Story's
+// ModConfig), of which each profile keeps its own copy in ModConfigFolder, swapped in for each launch.
+const (
+	ModConfigRole   = "modConfig"
+	ModConfigFolder = "ModConfig"
+)
+
 // SavesFolder is the profile's own saves folder, which a launch swaps in for the game's shared one when the profile
 // keeps its saves separate.
 func (s *Store) SavesFolder(gameID, id string) (string, error) {

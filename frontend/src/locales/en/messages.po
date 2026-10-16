@@ -1971,7 +1971,7 @@ msgstr "{a} and {b} each depend on the other, so BepInEx stops before loading an
 msgid "Could not add the download"
 msgstr "Could not add the download"
 
-#: src/saves/saveName.ts:18
+#: src/saves/saveName.ts:22
 msgid "Save file {slot}"
 msgstr "Save file {slot}"
 
@@ -4489,7 +4489,7 @@ msgstr "List copied"
 msgid "Added by you"
 msgstr "Added by you"
 
-#: src/saves/saveName.ts:35
+#: src/saves/saveName.ts:39
 msgid "Save slot"
 msgstr "Save slot"
 
@@ -5357,7 +5357,7 @@ msgstr "Log copied"
 msgid "Play without mods"
 msgstr "Play without mods"
 
-#: src/saves/saveName.ts:52
+#: src/saves/saveName.ts:56
 msgid "Homo Sapiens"
 msgstr "Homo Sapiens"
 
@@ -5494,7 +5494,7 @@ msgstr "Disable all"
 msgid "{plugin} failed to load."
 msgstr "{plugin} failed to load."
 
-#: src/saves/saveName.ts:39
+#: src/saves/saveName.ts:43
 msgid "Character"
 msgstr "Character"
 
@@ -7726,7 +7726,7 @@ msgstr "Badge checks for other profiles"
 msgid "Hide mods of {0}"
 msgstr "Hide mods of {0}"
 
-#: src/saves/saveName.ts:30
+#: src/saves/saveName.ts:34
 msgid "Weekly challenge"
 msgstr "Weekly challenge"
 
@@ -9805,7 +9805,7 @@ msgstr "Tips will show again"
 msgid "Open the page of {name}"
 msgstr "Open the page of {name}"
 
-#: src/saves/saveName.ts:50
+#: src/saves/saveName.ts:54
 msgid "Exploration"
 msgstr "Exploration"
 
@@ -9826,7 +9826,7 @@ msgstr "Press Play when the downloads finish."
 msgid "Install Mortar updates automatically"
 msgstr "Install Mortar updates automatically"
 
-#: src/saves/saveName.ts:21
+#: src/saves/saveName.ts:25
 msgid "Challenge moon"
 msgstr "Challenge moon"
 
@@ -11341,7 +11341,7 @@ msgstr "Already in this profile."
 msgid "When a mod is on several sites, its card installs from the first one here."
 msgstr "When a mod is on several sites, its card installs from the first one here."
 
-#: src/saves/saveName.ts:53
+#: src/saves/saveName.ts:57
 msgid "Creative Building"
 msgstr "Creative Building"
 
@@ -11601,7 +11601,7 @@ msgstr "Mod"
 msgid "Pending updates ({0})"
 msgstr "Pending updates ({0})"
 
-#: src/saves/saveName.ts:51
+#: src/saves/saveName.ts:55
 msgid "Wilderness Survival"
 msgstr "Wilderness Survival"
 
@@ -11716,7 +11716,7 @@ msgstr "Keep Mortar in the tray"
 #: src/profiles/LaunchPresetsBlock.tsx:143
 #: src/profiles/LaunchPresetsBlock.tsx:147
 #: src/profiles/LoaderLaunchSettings.tsx:21
-#: src/saves/saveName.ts:49
+#: src/saves/saveName.ts:53
 msgid "Standard"
 msgstr "Standard"
 
@@ -12095,7 +12095,7 @@ msgstr "Saved to {0}"
 msgid "{shared} of {total} mods"
 msgstr "{shared} of {total} mods"
 
-#: src/saves/saveName.ts:36
+#: src/saves/saveName.ts:40
 msgid "Extra slot added by a mod"
 msgstr "Extra slot added by a mod"
 
@@ -12393,7 +12393,7 @@ msgstr "Templates are shared by every profile of this game. Adding one copies it
 msgid "Saves"
 msgstr "Saves"
 
-#: src/saves/saveName.ts:42
+#: src/saves/saveName.ts:46
 #: src/settings/sections/StreamOverlay.tsx:153
 msgid "World"
 msgstr "World"

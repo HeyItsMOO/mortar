@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
@@ -130,10 +131,16 @@ type deployment struct {
 	saves *savesiso.Manifest
 	// options is the swap that gives the profile its own copy of the game's options file.
 	options *savesiso.FileManifest
+	// modConfig is the swap that gives the profile its own copy of the game's mod config folder.
+	modConfig *savesiso.Manifest
 }
 
 // savesJournal is the swap's journal folder, a sibling of the deploy journal so neither takes the other's record.
 func savesJournal(installID string) (string, error) { return journalDir(installID + "-saves") }
+
+// modConfigJournal is the mod config swap's journal folder, beside the saves journal so neither takes the other's
+// record.
+func modConfigJournal(installID string) (string, error) { return journalDir(installID + "-modconfig") }
 
 // pathOptions is the catalog path role of a game's options file, a single file the game rewrites in place.
 const pathOptions = "options"
@@ -245,6 +252,51 @@ func (s *Service) swapSaves(ctx context.Context, gameID string, inst game.Instal
 		return err
 	}
 	dep.saves = &m
+	if dep.finish == nil {
+		detached := context.WithoutCancel(ctx)
+		dep.finish = func() { dep.unwind(detached) }
+	}
+	return nil
+}
+
+// swapModConfig points the game's mod config folder (the catalog's modConfig path) at the profile's own for this
+// launch, so each profile keeps its mods' settings; a profile's first launch starts from the game's current folder. The
+// swap is undone with dep.
+func (s *Service) swapModConfig(ctx context.Context, gameID string, inst game.Install, profileID, installID string, dep *deployment) error {
+	if !game.HasPath(gameID, profile.ModConfigRole) {
+		return nil
+	}
+	dir, err := s.profiles.ProfileDir(gameID, profileID)
+	if err != nil {
+		return err
+	}
+	shared, err := game.PathFor(s.home, s.settings.Get(), gameID, s.pinOf(gameID, profileID, installID), profile.ModConfigRole)
+	if err != nil {
+		return err
+	}
+	journal, err := modConfigJournal(inst.ID)
+	if err != nil {
+		return err
+	}
+	if err := savesiso.Recover(journal, nil); err != nil {
+		return err
+	}
+	own := filepath.Join(dir, profile.ModConfigFolder)
+	if _, err := os.Stat(own); errors.Is(err, fs.ErrNotExist) {
+		if _, err := os.Stat(shared); err == nil {
+			if err := os.MkdirAll(own, 0o700); err != nil {
+				return err
+			}
+			if err := datadir.CopyTree(shared, own); err != nil {
+				return err
+			}
+		}
+	}
+	m, err := savesiso.Apply(journal, shared, own, false)
+	if err != nil {
+		return err
+	}
+	dep.modConfig = &m
 	if dep.finish == nil {
 		detached := context.WithoutCancel(ctx)
 		dep.finish = func() { dep.unwind(detached) }
@@ -365,6 +417,11 @@ func (dep *deployment) unwind(ctx context.Context) {
 				log.Printf("launch: restore options file: %v", err)
 			}
 		}
+		if dep.modConfig != nil {
+			if err := savesiso.Purge(*dep.modConfig); err != nil {
+				log.Printf("launch: restore mod config folder: %v", err)
+			}
+		}
 	})
 }
 
@@ -411,6 +468,9 @@ func (s *Service) RecoverGameDeploys(ctx context.Context, id string) (found bool
 		if oj, err := optionsJournal(sl.inst); err == nil && savesiso.HasFileJournal(oj) {
 			found = true
 		}
+		if mj, err := modConfigJournal(sl.inst); err == nil && savesiso.HasJournal(mj) {
+			found = true
+		}
 		if err := d.Recover(ctx, dir, alive); err != nil {
 			errs = append(errs, fmt.Errorf("%s: %w", id, err))
 		}
@@ -423,6 +483,11 @@ func (s *Service) RecoverGameDeploys(ctx context.Context, id string) (found bool
 			errs = append(errs, err)
 		} else if err := savesiso.RecoverFile(oj, alive); err != nil {
 			errs = append(errs, fmt.Errorf("%s options file: %w", id, err))
+		}
+		if mj, err := modConfigJournal(sl.inst); err != nil {
+			errs = append(errs, err)
+		} else if err := savesiso.Recover(mj, alive); err != nil {
+			errs = append(errs, fmt.Errorf("%s mod config folder: %w", id, err))
 		}
 	}
 	return found, errors.Join(errs...)

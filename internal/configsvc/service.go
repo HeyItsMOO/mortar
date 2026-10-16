@@ -10,7 +10,9 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"unicode"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/gmcm"
@@ -22,6 +24,7 @@ import (
 const (
 	jsonName = "config.json"
 	cfgExt   = ".cfg"
+	jsonExt  = ".json"
 )
 
 // Profiles is the part of the profile store configsvc reads through.
@@ -62,6 +65,54 @@ func (s *Service) cfgDir(game, id string) (string, error) {
 	return filepath.Join(dir, "BepInEx", "config"), nil
 }
 
+// modConfigDir is the profile's own copy of the game's mod config folder (the catalog's modConfig path), "" for a game
+// whose mods keep their settings elsewhere.
+func (s *Service) modConfigDir(game, id string) (string, error) {
+	info, ok := components.Game(game)
+	if _, has := info.Paths[profile.ModConfigRole]; !ok || !has {
+		return "", nil
+	}
+	dir, err := s.Profiles.ProfileDir(game, id)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, profile.ModConfigFolder), nil
+}
+
+// jsonDocs lists the JSON files of the profile's mod config folder; none for a game without one.
+func (s *Service) jsonDocs(game, profileID string) ([]cfgOnDisk, error) {
+	dir, err := s.modConfigDir(game, profileID)
+	if err != nil || dir == "" {
+		return nil, err
+	}
+	ents, err := os.ReadDir(dir)
+	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+		return nil, err
+	}
+	var out []cfgOnDisk
+	for _, e := range ents {
+		if !e.IsDir() && strings.EqualFold(filepath.Ext(e.Name()), jsonExt) {
+			out = append(out, cfgOnDisk{name: e.Name(), stem: strings.TrimSuffix(e.Name(), filepath.Ext(e.Name())), json: true})
+		}
+	}
+	return out, nil
+}
+
+// jsonPath is a file of the profile's mod config folder; name must be a bare .json file name.
+func (s *Service) jsonPath(game, id, name string) (string, error) {
+	if name != filepath.Base(name) || !strings.EqualFold(filepath.Ext(name), jsonExt) {
+		return "", fmt.Errorf("%q is not a config file name", name)
+	}
+	dir, err := s.modConfigDir(game, id)
+	if err != nil {
+		return "", err
+	}
+	if dir == "" {
+		return "", errors.New("this game keeps no mod config folder")
+	}
+	return filepath.Join(dir, name), nil
+}
+
 // cfgPath is a .cfg inside the profile's BepInEx config folder; name must be a bare file name.
 func (s *Service) cfgPath(game, id, name string) (string, error) {
 	if name != filepath.Base(name) || !strings.EqualFold(filepath.Ext(name), cfgExt) {
@@ -91,7 +142,7 @@ func (s *Service) Files(game, profileID, modID string) ([]ConfigFile, error) {
 			}
 		}
 	}
-	docs, err := s.cfgDocs(game, profileID)
+	docs, err := s.allDocs(game, profileID)
 	if err != nil {
 		return nil, err
 	}
@@ -104,21 +155,62 @@ func (s *Service) Files(game, profileID, modID string) ([]ConfigFile, error) {
 	return out, nil
 }
 
-// cfgOnDisk is one .cfg of the profile's BepInEx config folder, read once.
+// cfgOnDisk is one .cfg of the profile's BepInEx config folder, read once, or one JSON file of its mod config folder.
 type cfgOnDisk struct {
 	name string
 	stem string
 	doc  cfgDoc
+	json bool
 }
 
+// minConfigName is the shortest mod id a JSON file name is matched against by containment; a shorter one would
+// claim unrelated files.
+const minConfigName = 3
+
 func (d cfgOnDisk) ownedBy(names []string) bool {
+	if d.json {
+		// Mods name their file after their mod id in their own spelling ("CarryOnConfig.json" for carryon).
+		stem := squash(d.stem)
+		return slices.ContainsFunc(names, func(n string) bool {
+			n = squash(n)
+			return len(n) >= minConfigName && strings.Contains(stem, n)
+		})
+	}
 	return slices.ContainsFunc(names, func(n string) bool { return strings.EqualFold(d.stem, n) || strings.EqualFold(d.doc.guid, n) })
 }
 
+// squash lower-cases s and drops everything but letters and digits.
+func squash(s string) string {
+	return strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			return unicode.ToLower(r)
+		}
+		return -1
+	}, s)
+}
+
 func (d cfgOnDisk) file() ConfigFile {
+	if d.json {
+		return ConfigFile{Name: d.name, Format: FormatJSON, Label: d.name}
+	}
 	label := d.doc.plugin
 	label = cmp.Or(label, d.name)
 	return ConfigFile{Name: d.name, Format: FormatBepInEx, Label: label}
+}
+
+// changed reports whether a .cfg differs from its defaults; a mod's JSON file names none.
+func (d cfgOnDisk) changed() bool {
+	return !d.json && schemaChanged(d.doc.schema(d.file()))
+}
+
+// allDocs is the profile's .cfg files and the JSON files of its mod config folder.
+func (s *Service) allDocs(game, profileID string) ([]cfgOnDisk, error) {
+	docs, err := s.cfgDocs(game, profileID)
+	if err != nil {
+		return nil, err
+	}
+	more, err := s.jsonDocs(game, profileID)
+	return append(docs, more...), err
 }
 
 // cfgDocs reads every .cfg of the profile's BepInEx config folder, after seeding the shipped ones.
@@ -169,6 +261,17 @@ func (s *Service) Schema(game, profileID, modID, file string) (Schema, error) {
 	}
 	if f.Format == FormatGMCM {
 		return s.gmcmSchema(game, profileID, mod.ID(modID), f)
+	}
+	if f.Format == FormatJSON {
+		path, err := s.jsonPath(game, profileID, f.Name)
+		if err != nil {
+			return Schema{}, err
+		}
+		raw, err := fsx.ReadFile(path)
+		if err != nil {
+			return Schema{}, err
+		}
+		return jsonSchema(f, string(raw), "", nil, nil)
 	}
 	if f.Format == FormatBepInEx {
 		path, err := s.cfgPath(game, profileID, f.Name)
@@ -280,6 +383,9 @@ func (s *Service) write(game, profileID, modID string, f ConfigFile, edits []edi
 		}
 		return nil
 	}
+	if f.Format == FormatJSON {
+		return s.writeJSON(game, profileID, f.Name, edits)
+	}
 	p, err := s.cfgPath(game, profileID, f.Name)
 	if err != nil {
 		return err
@@ -295,4 +401,22 @@ func (s *Service) write(game, profileID, modID string, f ConfigFile, edits []edi
 		}
 	}
 	return datadir.WriteFile(p, []byte(text), 0o600)
+}
+
+// writeJSON applies edits to one JSON file of the profile's mod config folder, keeping its key order.
+func (s *Service) writeJSON(game, profileID, name string, edits []edit) error {
+	p, err := s.jsonPath(game, profileID, name)
+	if err != nil {
+		return err
+	}
+	raw, err := fsx.ReadFile(p)
+	if err != nil {
+		return err
+	}
+	for _, e := range edits {
+		if raw, err = profile.SetJSONValue(raw, path(e.section, e.key), e.value); err != nil {
+			return err
+		}
+	}
+	return datadir.WriteFile(p, raw, 0o600)
 }

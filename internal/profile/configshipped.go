@@ -49,7 +49,11 @@ func (s *Store) PluginGUIDs(game, id string, uniqueID mod.ID) []string {
 }
 
 func (s *Store) pluginGUIDsOf(game string, p Profile, uniqueID mod.ID) []string {
-	e, _, ok := p.FindMod("", uniqueID)
+	e, c, ok := p.FindMod("", uniqueID)
+	if ok && c.ModID != "" {
+		// A folder game's mod (Vintage Story) names its config files after the mod id its modinfo.json gives.
+		return []string{c.ModID}
+	}
 	if !ok || !e.Package || s.items == nil {
 		return nil
 	}

@@ -8,6 +8,9 @@ const (
 	FormatSMAPI   = "smapi"
 	// FormatGMCM is a mod's in-game settings menu as the bridge captured it; edits wait for the next start.
 	FormatGMCM = "gmcm"
+	// FormatJSON is a JSON file a mod writes to the game's mod config folder (Vintage Story's ModConfig), of which
+	// each profile keeps its own copy.
+	FormatJSON = "json"
 )
 
 // Entry types.

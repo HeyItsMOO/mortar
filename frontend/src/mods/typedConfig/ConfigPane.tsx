@@ -144,7 +144,9 @@ function Toolbar({
         {fileCaption}
       </Typography>
       <SearchField label={t`Search entries`} value={query} onChange={onQuery} sx={{ width: 260 }} />
-      {file?.format === 'gmcm' || !mod ? null : <PresetsButton mod={mod} />}
+      {file?.format === 'gmcm' || file?.format === 'json' || !mod ? null : (
+        <PresetsButton mod={mod} />
+      )}
       <Button
         variant="outlined"
         size="small"

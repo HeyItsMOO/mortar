@@ -147,6 +147,12 @@ func decodeConfigBytes(raw []byte) (jsonNode, error) {
 	return decodeJSON(dec)
 }
 
+// SetJSONValue writes one value at a dotted field path of a JSON config file the mod writes itself, keeping its key
+// order.
+func SetJSONValue(raw []byte, field, value string) ([]byte, error) {
+	return applyConfigSet(raw, field, value, modconfig.Schema{}, "")
+}
+
 // applyConfigSet writes one value. shipped is the mod's own config.json, whose value kinds type a setting that is
 // null in the file.
 func applyConfigSet(raw []byte, field, value string, schema modconfig.Schema, shipped string) ([]byte, error) {

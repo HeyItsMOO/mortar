@@ -930,6 +930,9 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 		if err == nil {
 			err = s.swapOptions(ctx, g.ID(), inst, profileID, t.install, dep)
 		}
+		if err == nil {
+			err = s.swapModConfig(ctx, g.ID(), inst, profileID, t.install, dep)
+		}
 		if err != nil {
 			dep.unwind(ctx)
 			if restoreErr := s.restoreGameSettings(restore); restoreErr != nil {

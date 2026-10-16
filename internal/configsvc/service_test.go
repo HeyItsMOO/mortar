@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -51,8 +52,11 @@ func (f fakeProfiles) ConfigView(string, string) (profile.ConfigView, error) {
 func (fakeProfiles) SeedConfigs(string, string) error { return nil }
 
 func (fakeProfiles) PluginGUIDs(_, _ string, id mod.ID) []string {
-	if id == "thunderstore:Ex-BetterStuff" {
+	switch id {
+	case "thunderstore:Ex-BetterStuff":
 		return []string{"com.example.BetterStuff"}
+	case "folder:carryon":
+		return []string{"carryon"}
 	}
 	return nil
 }
@@ -223,5 +227,40 @@ func TestContentPatcherFieldsTypeFromConfigSchema(t *testing.T) {
 		if got[k] != w {
 			t.Errorf("%s = %+v, want %+v", k, got[k], w)
 		}
+	}
+}
+
+// A Vintage Story mod's settings are the profile's copy of ModConfig, matched to the mod by the mod id its
+// modinfo.json gives, in the file name's own spelling.
+func TestModConfigJSONIsMatchedByModIDAndEditedInPlace(t *testing.T) {
+	s, _ := newService(t)
+	p, ok := s.Profiles.(fakeProfiles)
+	if !ok {
+		t.Fatal("not the fake profile store")
+	}
+	mc := filepath.Join(p.dir, "ModConfig")
+	if err := os.MkdirAll(mc, 0o750); err != nil {
+		t.Fatal(err)
+	}
+	for name, body := range map[string]string{"CarryOnConfig.json": `{"InteractDistance": 2.5, "Allowed": true}`, "OtherMod.json": `{"A": 1}`} {
+		if err := os.WriteFile(filepath.Join(mc, name), []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	p.mods = []profile.Mod{{ID: "folder:carryon", Name: "Carry On", Enabled: true}}
+	s.Profiles = p
+	files, err := s.Files("vintage-story", "p", "folder:carryon")
+	if err != nil || len(files) != 1 || files[0].Name != "CarryOnConfig.json" || files[0].Format != FormatJSON {
+		t.Fatalf("files = %+v, %v", files, err)
+	}
+	if err := s.Set("vintage-story", "p", "folder:carryon", "CarryOnConfig.json", "", "InteractDistance", "3"); err != nil {
+		t.Fatal(err)
+	}
+	if got, _ := os.ReadFile(filepath.Clean(filepath.Join(mc, "CarryOnConfig.json"))); !strings.Contains(string(got), `"InteractDistance": 3`) || strings.Index(string(got), "InteractDistance") > strings.Index(string(got), "Allowed") {
+		t.Fatalf("file = %s", got)
+	}
+	list, err := s.Mods("vintage-story", "p")
+	if err != nil || len(list.Mods) != 1 || len(list.Other) != 2 || !slices.ContainsFunc(list.Other, func(f ModFile) bool { return f.Name == "OtherMod.json" }) {
+		t.Fatalf("list = %+v, %v", list, err)
 	}
 }
