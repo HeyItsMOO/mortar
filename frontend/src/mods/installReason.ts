@@ -20,9 +20,10 @@ function primaryFramework(mods: readonly PartMod[]): string {
 
 /**
  * The mods that came in a download beside its main mod, which read implicit whatever the download's reason; the main
- * mod takes the download's. The main mod is one no other mod of the download requires: a pack for the primary
- * framework where there is one (an expansion's Content Patcher pack beside its Farm Type Manager and code parts), else
- * a mod that is no content pack, else the first.
+ * mod takes the download's. The main mod is the base the other parts build on: one that requires no other mod of the
+ * download, the one most of them require (Love of Cooking under its [CP] and [EN] packs). Where nothing in the download
+ * requires another, a pack for the primary framework wins (a town's Content Patcher pack beside its Farm Type Manager
+ * and Custom Companions packs), else a mod that is no content pack, else the first.
  */
 export function supportParts(
   mods: readonly PartMod[],
@@ -39,11 +40,16 @@ export function supportParts(
     if (parts.length < 2) {
       continue
     }
-    const tops = parts.filter((b) => !parts.some((a) => a !== b && needs(a, b) && !needs(b, a)))
-    const main =
-      tops.find((m) => primary !== '' && framework(m) === primary) ??
-      tops.find((m) => framework(m) === '') ??
-      tops[0]
+    const bases = parts.filter((b) => !parts.some((a) => a !== b && needs(b, a) && !needs(a, b)))
+    const dependents = (b: PartMod) => parts.filter((a) => a !== b && needs(a, b)).length
+    // Being required by more parts outweighs both tie-breaks, which cannot both hold.
+    const score = (m: PartMod) =>
+      dependents(m) * 4 +
+      (primary !== '' && framework(m) === primary ? 2 : 0) +
+      (framework(m) === '' ? 1 : 0)
+    const main = (bases.length > 0 ? bases : parts).reduce((best, m) =>
+      score(m) > score(best) ? m : best,
+    )
     for (const m of parts) {
       if (m !== main) {
         out.add(partKey(m))
