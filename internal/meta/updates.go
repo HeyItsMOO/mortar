@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -216,6 +217,7 @@ func (c *Client) askBatches(ctx context.Context, req UpdateRequest, batches [][]
 			got, err := c.askUpdates(ctx, req, asked)
 			answers[b] = updatesAnswer{got, err}
 			if err != nil {
+				log.Printf("updates: smapi.io did not answer for %d mods, pausing update checks for %s: %v", len(asked), updatesBackoff, err)
 				mu.Lock()
 				c.updatesPause = now.Add(updatesBackoff)
 				mu.Unlock()
