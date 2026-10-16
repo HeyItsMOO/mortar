@@ -30,6 +30,7 @@ func TestRestoreCopyPutsTheGamesOwnCopyBack(t *testing.T) {
 	}
 	write("worlds_local/W.fwl", "now")
 	write("worlds_local/W.db", "now db")
+	write("worlds_local/W.db-wal", "now wal")
 	write("worlds_local/W_backup_auto-1.fwl", "then")
 	write("worlds_local/W_backup_auto-1.db", "then db")
 	write("Slot_00000002.save", "slot now")
@@ -37,7 +38,7 @@ func TestRestoreCopyPutsTheGamesOwnCopyBack(t *testing.T) {
 	l := saves.Layout{
 		Dir:        dir,
 		Files:      []string{"worlds_local/*.fwl", "Slot_*.save", "!*_backup_*"},
-		Companions: []string{".db"},
+		Companions: []string{".db", ".db-wal"},
 		Copies:     []string{"{stem}_backup_auto-*{ext}", "{name}.ver?"},
 	}
 	if got := l.CopiesOf("worlds_local/W.fwl"); len(got) != 1 || got[0].Name != "worlds_local/W_backup_auto-1.fwl" {
@@ -47,8 +48,9 @@ func TestRestoreCopyPutsTheGamesOwnCopyBack(t *testing.T) {
 	if err := RestoreCopy(l, backups, "worlds_local/W.fwl", "worlds_local/W_backup_auto-1.fwl", 5, now); err != nil {
 		t.Fatal(err)
 	}
-	if read("worlds_local/W.fwl") != "then" || read("worlds_local/W.db") != "then db" || read("worlds_local/W_backup_auto-1.fwl") != "then" {
-		t.Fatal("world not restored from its copy, or the copy was moved")
+	if read("worlds_local/W.fwl") != "then" || read("worlds_local/W.db") != "then db" || read("worlds_local/W_backup_auto-1.fwl") != "then" ||
+		fsx.IsFile(filepath.Join(dir, "worlds_local", "W.db-wal")) {
+		t.Fatal("world not restored from its copy, the copy was moved, or the current write-ahead log was left")
 	}
 	if err := RestoreCopy(l, backups, "Slot_00000002.save", "Slot_00000002.save.ver0", 5, now.Add(time.Second)); err != nil || read("Slot_00000002.save") != "slot then" {
 		t.Fatalf("slot restore: %v", err)

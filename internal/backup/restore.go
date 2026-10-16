@@ -39,7 +39,11 @@ func Restore(zipPath string, l saves.Layout, backupsDir string, folders []string
 		return err
 	}
 	for _, folder := range want {
-		for _, part := range got.Paths(folder) {
+		parts := got.Paths(folder)
+		if err := dropCompanions(l, folder, parts); err != nil {
+			return err
+		}
+		for _, part := range parts {
 			if err := replace(filepath.Join(got.Dir, filepath.FromSlash(part)), filepath.Join(l.Dir, filepath.FromSlash(part))); err != nil {
 				return err
 			}
@@ -57,10 +61,31 @@ func RestoreCopy(l saves.Layout, backupsDir, save, kept string, keep int, now ti
 	if _, err := Saves(l, backupsDir, keep, now, Cause{Kind: KindRestore}); err != nil {
 		return err
 	}
-	for _, pair := range l.CopyPaths(save, kept) {
+	pairs := l.CopyPaths(save, kept)
+	restored := make([]string, 0, len(pairs))
+	for _, pair := range pairs {
+		restored = append(restored, pair[1])
+	}
+	if err := dropCompanions(l, save, restored); err != nil {
+		return err
+	}
+	for _, pair := range pairs {
 		src, dst := filepath.Join(l.Dir, filepath.FromSlash(pair[0])), filepath.Join(l.Dir, filepath.FromSlash(pair[1]))
 		if err := datadir.CopyFile(src, dst); err != nil {
 			return err
+		}
+	}
+	return nil
+}
+
+// dropCompanions deletes the companions of save in l's folder that the restored files do not replace: SQLite replays a
+// leftover -wal over the restored database, undoing the restore.
+func dropCompanions(l saves.Layout, save string, restored []string) error {
+	for _, p := range l.Paths(save)[1:] {
+		if !slices.Contains(restored, p) {
+			if err := fsx.RemoveAll(filepath.Join(l.Dir, filepath.FromSlash(p))); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

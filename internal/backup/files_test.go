@@ -103,7 +103,7 @@ func TestFileSetSavesInFoldersBackUpAndRestore(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	l := saves.Layout{Dir: dir, Files: []string{"characters_local/*.fch", "worlds_local/*.fwl", "!*_backup_*"}, Companions: []string{".db"}}
+	l := saves.Layout{Dir: dir, Files: []string{"characters_local/*.fch", "worlds_local/*.fwl", "!*_backup_*"}, Companions: []string{".db", ".db-wal"}}
 	if names, err := l.Names(); err != nil || !slices.Equal(names, []string{"characters_local/Ragnar.fch", "worlds_local/Midgard.fwl"}) {
 		t.Fatalf("Names = %v, %v", names, err)
 	}
@@ -125,8 +125,15 @@ func TestFileSetSavesInFoldersBackUpAndRestore(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
+	// A crashed session's write-ahead log, which the backup does not have.
+	if err := fsx.WriteFile(filepath.Join(dir, "worlds_local", "Midgard.db-wal"), []byte("v2"), 0o600); err != nil {
+		t.Fatal(err)
+	}
 	if err := Restore(whole, l, out, []string{"worlds_local/Midgard.fwl"}, DefaultKeep, start.Add(time.Hour)); err != nil {
 		t.Fatal(err)
+	}
+	if fsx.IsFile(filepath.Join(dir, "worlds_local", "Midgard.db-wal")) {
+		t.Error("the current save's write-ahead log was left beside the restored save")
 	}
 	for _, name := range []string{"worlds_local/Midgard.fwl", "worlds_local/Midgard.db", "worlds_local/Midgard.db.old"} {
 		if b, err := fsx.ReadFile(filepath.Join(dir, name)); err != nil || string(b) != "v1 "+name {
