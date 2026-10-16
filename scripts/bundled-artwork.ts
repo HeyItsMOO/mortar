@@ -16,6 +16,13 @@ export const bundledArtwork = [
       'Bundled launcher icon (frontend/src/brand/vendor/minigalaxy.png) from Minigalaxy, licensed under the GNU General Public License v3.0: https://www.gnu.org/licenses/gpl-3.0.html',
   },
   {
+    name: 'Bottles icon',
+    licence: 'GPL-3.0',
+    url: 'https://github.com/bottlesdevs/Bottles',
+    notice:
+      'Bundled launcher icon (frontend/src/brand/vendor/bottles.svg) from Bottles, licensed under the GNU General Public License v3.0: https://www.gnu.org/licenses/gpl-3.0.html',
+  },
+  {
     name: 'Nexus Mods logo (from Vortex)',
     licence: 'GPL-3.0',
     url: 'https://github.com/Nexus-Mods/Vortex',

@@ -9,11 +9,17 @@ import {
   siSteam,
 } from 'simple-icons'
 import { BrandMark } from '../BrandMark.tsx'
+import bottles from '../vendor/bottles.svg'
 import minigalaxy from '../vendor/minigalaxy.png'
 
-// simple-icons has no Bottles or Xbox mark, so those tiles carry a plain bottle and a plain X.
-const BOTTLE_PATH = 'M10 2h4v3l1.5 2.5V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V7.5L10 5z'
+// Microsoft's trademark terms forbid its logos without permission, so the Xbox tile carries a plain X.
 const X_PATH = 'M4 3h4.5L12 8.6 15.5 3H20l-5.7 9L20 21h-4.5L12 15.4 8.5 21H4l5.7-9z'
+
+// Launchers simple-icons has no mark for show their own GPL-3.0 icons (credited in THIRD_PARTY_NOTICES).
+const ART: Record<string, { src: string; bg: string }> = {
+  minigalaxy: { src: minigalaxy, bg: '#3B4A8C' },
+  bottles: { src: bottles, bg: '#1C71D8' },
+}
 
 // Each launcher sits on a tile of its brand colour so every logo is the same size and reads in colour on dark and
 // light surfaces. Steam's brand mark is black, so it takes the Steam client's blue instead.
@@ -22,7 +28,6 @@ const TILES: Record<string, { path: string; bg: string }> = {
   'flatpak-steam': { path: siSteam.path, bg: '#1A9FFF' },
   heroic: { path: siHeroicgameslauncher.path, bg: `#${siHeroicgameslauncher.hex}` },
   lutris: { path: siLutris.path, bg: `#${siLutris.hex}` },
-  bottles: { path: BOTTLE_PATH, bg: '#C0392B' },
   ea: { path: siEa.path, bg: `#${siEa.hex}` },
   epic: { path: siEpicgames.path, bg: `#${siEpicgames.hex}` },
   xbox: { path: X_PATH, bg: '#107C10' },
@@ -36,7 +41,7 @@ const BADGE_SCALE = 0.5
 const BADGE_OVERHANG = 0.25
 const BADGE_RING = 4
 const MARK_SCALE = 0.62
-// Minigalaxy's artwork carries a transparent margin, so it draws larger to match the other marks.
+// The artwork carries a transparent margin, so it draws larger to match the other marks.
 const ART_SCALE = 0.86
 const TILE_RADIUS = 0.22
 
@@ -59,12 +64,13 @@ function Tile({ size, bg, children }: { size: number; bg: string; children: Reac
 }
 
 export function LauncherLogo({ id, size }: { id: string; size: number }) {
-  if (id === 'minigalaxy') {
+  const art = ART[id]
+  if (art) {
     return (
-      <Tile size={size} bg="#3B4A8C">
+      <Tile size={size} bg={art.bg}>
         <Box
           component="img"
-          src={minigalaxy}
+          src={art.src}
           alt=""
           width={size * ART_SCALE}
           height={size * ART_SCALE}
