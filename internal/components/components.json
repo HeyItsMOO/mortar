@@ -1,5 +1,5 @@
 {
-  "serial": 1792169638,
+  "serial": 1792187124,
   "components": [
     {
       "game": "stardew",
@@ -2234,6 +2234,1112 @@
         {
           "id": "thunderstore",
           "key": "cat-mail-co"
+        }
+      ]
+    },
+    {
+      "id": "9-kings",
+      "name": "9 Kings",
+      "enabled": true,
+      "marker": "9Kings.exe",
+      "r2modmanFolder": "9Kings",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2784470"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "9-kings"
+        }
+      ]
+    },
+    {
+      "id": "a-little-to-the-left",
+      "name": "A Little to the Left",
+      "enabled": true,
+      "marker": "A Little To The Left.exe",
+      "r2modmanFolder": "ALittleToTheLeft",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1629520"
+        },
+        "xbox": {
+          "package": "SecretMode.14503D6FAF8AD"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "a-little-to-the-left"
+        }
+      ]
+    },
+    {
+      "id": "ai-limit",
+      "name": "AI LIMIT",
+      "enabled": true,
+      "marker": "AI-LIMIT.exe",
+      "r2modmanFolder": "AiLimit",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2407270"
+        },
+        "epic": {
+          "appNames": ["be55cbfd8bfb4605830e6a1308e03e73"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ai-limit"
+        }
+      ]
+    },
+    {
+      "id": "among-us-3d",
+      "name": "Among Us 3D",
+      "enabled": true,
+      "marker": "AmongUs3D.exe",
+      "r2modmanFolder": "AmongUs3D",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3168600"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "among-us-3d"
+        }
+      ]
+    },
+    {
+      "id": "aneurism-iv",
+      "name": "ANEURISM IV",
+      "enabled": true,
+      "marker": "ANEURISM IV.exe",
+      "r2modmanFolder": "ANEURISMIV",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2773280"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "aneurism-iv"
+        }
+      ]
+    },
+    {
+      "id": "aska",
+      "name": "ASKA",
+      "enabled": true,
+      "marker": "Aska.exe",
+      "r2modmanFolder": "ASKA",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1898300"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "aska"
+        }
+      ]
+    },
+    {
+      "id": "big-walk",
+      "name": "Big Walk",
+      "enabled": true,
+      "marker": "Big Walk.exe",
+      "r2modmanFolder": "BigWalk",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1478500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "big-walk"
+        }
+      ]
+    },
+    {
+      "id": "blue-prince",
+      "name": "Blue Prince",
+      "enabled": true,
+      "marker": "BLUE PRINCE.exe",
+      "r2modmanFolder": "BluePrince",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1569580"
+        },
+        "xbox": {
+          "package": "RawFury.BluePrince"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "blue-prince"
+        }
+      ]
+    },
+    {
+      "id": "cave-crawlers",
+      "name": "Cave Crawlers",
+      "enabled": true,
+      "marker": "Cave Crawlers.exe",
+      "r2modmanFolder": "CaveCrawlers",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2143030"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cave-crawlers"
+        }
+      ]
+    },
+    {
+      "id": "deep-rock-galactic-survivor",
+      "name": "Deep Rock Galactic: Survivor",
+      "enabled": true,
+      "marker": "DRG Survivor.exe",
+      "r2modmanFolder": "DeepRockGalacticSurvivor",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2321470"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "deep-rock-galactic-survivor"
+        }
+      ]
+    },
+    {
+      "id": "everything-is-crab",
+      "name": "Everything is Crab",
+      "enabled": true,
+      "marker": "Everything is Crab.exe",
+      "r2modmanFolder": "EverythingIsCrab",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3526710"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "everything-is-crab"
+        }
+      ]
+    },
+    {
+      "id": "gatekeeper",
+      "name": "Gatekeeper",
+      "enabled": true,
+      "marker": "Gatekeeper.exe",
+      "r2modmanFolder": "Gatekeeper",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2106670"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gatekeeper"
+        }
+      ]
+    },
+    {
+      "id": "granny-chapter-two",
+      "name": "Granny: Chapter Two",
+      "enabled": true,
+      "marker": "Granny Chapter Two.exe",
+      "r2modmanFolder": "GrannyChapterTwo",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1205040"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "granny-chapter-two"
+        }
+      ]
+    },
+    {
+      "id": "gunman-contracts-stand-alone",
+      "name": "Gunman Contracts - Stand Alone",
+      "enabled": true,
+      "marker": "GunmanContracts.exe",
+      "r2modmanFolder": "GunmanContractsStandAlone",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2421750"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gunman-contracts-stand-alone"
+        }
+      ]
+    },
+    {
+      "id": "in-falsus",
+      "name": "In Falsus",
+      "enabled": true,
+      "marker": "infalsus.exe",
+      "r2modmanFolder": "InFalsus",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3971950"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "in-falsus"
+        }
+      ]
+    },
+    {
+      "id": "inferno-protocol",
+      "name": "Inferno Protocol",
+      "enabled": true,
+      "marker": "Inferno Protocol.exe",
+      "r2modmanFolder": "InfernoProtocol",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3908940"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "inferno-protocol"
+        }
+      ]
+    },
+    {
+      "id": "island-market-simulator",
+      "name": "Island Market Simulator",
+      "enabled": true,
+      "marker": "Island Market Simulator.exe",
+      "r2modmanFolder": "IslandMarketSimulator",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3391510"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "island-market-simulator"
+        }
+      ]
+    },
+    {
+      "id": "magicraft",
+      "name": "Magicraft",
+      "enabled": true,
+      "marker": "Magicraft.exe",
+      "r2modmanFolder": "Magicraft",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2103140"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "magicraft"
+        }
+      ]
+    },
+    {
+      "id": "megabonk",
+      "name": "Megabonk",
+      "enabled": true,
+      "marker": "Megabonk.exe",
+      "r2modmanFolder": "Megabonk",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3405340"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "megabonk"
+        }
+      ]
+    },
+    {
+      "id": "miside",
+      "name": "MiSide",
+      "enabled": true,
+      "marker": "MiSideFull.exe",
+      "r2modmanFolder": "MiSide",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2527500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "miside"
+        }
+      ]
+    },
+    {
+      "id": "nivalis-nights",
+      "name": "Nivalis Nights",
+      "enabled": true,
+      "marker": "Nivalis Nights.exe",
+      "r2modmanFolder": "NivalisNights",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1488490"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "nivalis-nights"
+        }
+      ]
+    },
+    {
+      "id": "pac-man-world-re-pac",
+      "name": "PAC-MAN WORLD Re-PAC",
+      "enabled": true,
+      "marker": "PAC-MAN WORLD Re-PAC.exe",
+      "r2modmanFolder": "PacManWorldRePac",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1859470"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "pac-man-world-re-pac"
+        }
+      ]
+    },
+    {
+      "id": "project-gorgon",
+      "name": "Project Gorgon",
+      "enabled": true,
+      "marker": "WindowsPlayer.exe",
+      "r2modmanFolder": "ProjectGorgon",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "342940"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "project-gorgon"
+        }
+      ]
+    },
+    {
+      "id": "roadside-research",
+      "name": "Roadside Research",
+      "enabled": true,
+      "marker": "Roadside Research.exe",
+      "r2modmanFolder": "RoadsideResearch",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3643170"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "roadside-research"
+        }
+      ]
+    },
+    {
+      "id": "shadows-of-doubt",
+      "name": "Shadows of Doubt",
+      "enabled": true,
+      "marker": "Shadows of Doubt.exe",
+      "r2modmanFolder": "ShadowsofDoubt",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "986130"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "shadows-of-doubt"
+        }
+      ]
+    },
+    {
+      "id": "shift-at-midnight",
+      "name": "Shift At Midnight",
+      "enabled": true,
+      "marker": "ShiftAtMidnight.exe",
+      "r2modmanFolder": "ShiftAtMidnight",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3722330"
+        },
+        "xbox": {
+          "package": "Kwalee.ShiftAtMidnight"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "shift-at-midnight"
+        }
+      ]
+    },
+    {
+      "id": "sons-of-the-forest",
+      "name": "Sons Of The Forest",
+      "enabled": true,
+      "marker": "SonsOfTheForest.exe",
+      "r2modmanFolder": "SonsOfTheForest",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1326470"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "sons-of-the-forest"
+        }
+      ]
+    },
+    {
+      "id": "space-cat-digger",
+      "name": "Space Cat Digger",
+      "enabled": true,
+      "marker": "Space Cat Digger Demo.exe",
+      "r2modmanFolder": "SpaceCatDigger",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "5291170"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "space-cat-digger"
+        }
+      ]
+    },
+    {
+      "id": "the-spell-brigade",
+      "name": "The Spell Brigade",
+      "enabled": true,
+      "marker": "TheSpellBrigade.exe",
+      "r2modmanFolder": "TheSpellBrigade",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2904000"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "the-spell-brigade"
+        }
+      ]
+    },
+    {
+      "id": "vampire-crawlers",
+      "name": "Vampire Crawlers",
+      "enabled": true,
+      "marker": "Vampire Crawlers.exe",
+      "r2modmanFolder": "VampireCrawlers",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3265700"
+        },
+        "epic": {
+          "appNames": ["6d4f12300a0844369205eb8ae9619ca0"]
+        },
+        "xbox": {
+          "package": "poncle.VampireCrawlers"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "vampire-crawlers"
+        }
+      ]
+    },
+    {
+      "id": "voodoo-fishin",
+      "name": "Voodoo Fishin'",
+      "enabled": true,
+      "marker": "Voodoo Fishin'.exe",
+      "r2modmanFolder": "VoodooFishin",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3071240"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "voodoo-fishin"
+        }
+      ]
+    },
+    {
+      "id": "waterpark-simulator",
+      "name": "Waterpark Simulator",
+      "enabled": true,
+      "marker": "WaterparkSimulator.exe",
+      "r2modmanFolder": "WaterparkSimulator",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3293260"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "waterpark-simulator"
         }
       ]
     },
