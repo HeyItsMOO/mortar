@@ -2,6 +2,7 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { formatBytes } from '../i18n/bytes.ts'
 import { formatWhen } from '../i18n/formatWhen.ts'
+import type { ListRow } from '../mods/listColumns.ts'
 import { GITHUB, NEXUS, THUNDERSTORE } from './browseConstants.ts'
 import type { BrowseItem } from './browseTypes.ts'
 
@@ -69,5 +70,24 @@ function useCardStats(item: BrowseItem, stats: readonly CardStat[]): string[] {
   return stats.map((s) => parts[s]).filter((p) => p !== '')
 }
 
+/** An installed mod's card line for the same chosen stats: its Nexus page's figures and its size on disk. The card
+ * already shows the installed version. */
+function useModCardStats(row: ListRow, stats: readonly CardStat[]): string[] {
+  const { t } = useLingui()
+  const page = row.details?.page
+  const endorsements = page?.endorsements ?? row.mod.endorsements
+  const parts: Record<CardStat, string> = {
+    popularity:
+      endorsements > 0
+        ? plural(endorsements, { one: '# endorsement', other: '# endorsements' })
+        : '',
+    downloads: page ? plural(page.downloads, { one: '# download', other: '# downloads' }) : '',
+    size: row.size !== undefined && row.size > 0 ? formatBytes(row.size) : '',
+    version: '',
+    updated: page?.updated ? t`Updated ${formatWhen(page.updated)}` : '',
+  }
+  return stats.map((s) => parts[s]).filter((p) => p !== '')
+}
+
 export type { CardStat }
-export { CARD_STATS, formatCardStats, parseCardStats, useCardStats, useStats }
+export { CARD_STATS, formatCardStats, parseCardStats, useCardStats, useModCardStats, useStats }

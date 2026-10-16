@@ -5,6 +5,7 @@ import type {
   Mod,
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { parseCardStats, useModCardStats } from '../browse/stats.ts'
 import { compact, compactQuery } from '../game/compact.ts'
 import { boundShortcut } from '../settings/shortcuts.ts'
 import { useSettings } from '../settings/store.ts'
@@ -60,6 +61,8 @@ const CARD_HEIGHT_SMALL = 50
 const CARD_HEIGHT_MEDIUM = 64
 const CARD_HEIGHT_LARGE = 80
 const LARGE_LANE_EXTRA = 16
+// The Card details line under the author and version, when any detail is ticked.
+const STATS_LINE_PX = 16
 const TILE_COMPACT_PX = 38
 const TILE_COMPACT_FONT_PX = 19
 const CARD_GAP_PX = '10px'
@@ -85,6 +88,7 @@ const ARROWS: Record<string, string | undefined> = { ArrowLeft: 'left', ArrowRig
 
 interface ModCardProps {
   mod: Mod
+  row: ListRow
   orderedIds: readonly string[]
   profile: Profile
   // The column count at the time of a key press, read from a ref so a change of width re-lays the grid out without
@@ -93,13 +97,63 @@ interface ModCardProps {
   onMove: (id: string, delta: number) => void
 }
 
+// A card's second line (author and version) and, when Card details are ticked, the line of chosen details under it.
+function CardMeta({
+  mod: m,
+  row,
+  profile,
+  statsLine,
+}: {
+  mod: Mod
+  row: ListRow
+  profile: Profile
+  statsLine: boolean
+}) {
+  const showAuthor = useSettings((s) => s.showAuthorOnCards) !== false
+  const stats = useModCardStats(row, parseCardStats(useSettings((s) => s.browseCardStats))).join(
+    ' · ',
+  )
+  return (
+    <>
+      <Typography
+        noWrap={true}
+        title={showAuthor ? `${formatAuthors(m.author)} · ${m.version}` : m.version}
+        sx={{ fontSize: META_FONT_PX, color: 'text.secondary' }}
+      >
+        {showAuthor ? (
+          <>
+            <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>
+              <AuthorLink authorField={m.author} mod={m} profile={profile} />
+            </Box>
+            {` · ${m.version}`}
+          </>
+        ) : (
+          m.version
+        )}
+      </Typography>
+      {statsLine ? (
+        <Typography
+          className="card-stats"
+          noWrap={true}
+          title={stats}
+          sx={{ fontSize: META_FONT_PX, color: 'text.secondary' }}
+        >
+          {stats || '\u00a0'}
+        </Typography>
+      ) : null}
+    </>
+  )
+}
+
 const sameCard = (a: ModCardProps, b: ModCardProps) =>
   a.mod === b.mod &&
+  a.row.size === b.row.size &&
+  a.row.details === b.row.details &&
   a.orderedIds === b.orderedIds &&
   a.onMove === b.onMove &&
   (a.profile === b.profile || ownSlice(a.profile, a.mod.key) === ownSlice(b.profile, b.mod.key))
 
-function ModCardView({ mod: m, orderedIds, profile, columnsRef, onMove }: ModCardProps) {
+function ModCardView({ mod: m, row, orderedIds, profile, columnsRef, onMove }: ModCardProps) {
   const { t } = useLingui()
   const openDetail = useDetail((s) => s.show)
   const askRemove = useMods((s) => s.askRemove)
@@ -109,12 +163,13 @@ function ModCardView({ mod: m, orderedIds, profile, columnsRef, onMove }: ModCar
   const fresh = useNexusFresh(nexusIdOf(profile, m))
   const tag = firstTag(entryOf(profile, m.key)?.tags)
   const cardSize = useSettings((s) => s.gridCardSize) || 'medium'
-  const showAuthor = useSettings((s) => s.showAuthorOnCards) !== false
+  const statsLine =
+    parseCardStats(useSettings((s) => s.browseCardStats)).length > 0 && cardSize !== 'small'
   return (
     <Card
       {...contextMenuProps(m)}
       sx={{
-        height: cardHeightPx(cardSize),
+        height: cardHeightPx(cardSize) + (statsLine ? STATS_LINE_PX : 0),
         pl: space.gap,
         pr: 0.75,
         display: 'flex',
@@ -134,6 +189,7 @@ function ModCardView({ mod: m, orderedIds, profile, columnsRef, onMove }: ModCar
         },
         [compact]: {
           height: CARD_HEIGHT_SMALL,
+          '& .card-stats': { display: 'none' },
           '& .tile': {
             width: TILE_COMPACT_PX,
             height: TILE_COMPACT_PX,
@@ -215,22 +271,7 @@ function ModCardView({ mod: m, orderedIds, profile, columnsRef, onMove }: ModCar
               {m.name}
             </Typography>
           </ButtonBase>
-          <Typography
-            noWrap={true}
-            title={showAuthor ? `${formatAuthors(m.author)} · ${m.version}` : m.version}
-            sx={{ fontSize: META_FONT_PX, color: 'text.secondary' }}
-          >
-            {showAuthor ? (
-              <>
-                <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>
-                  <AuthorLink authorField={m.author} mod={m} profile={profile} />
-                </Box>
-                {` · ${m.version}`}
-              </>
-            ) : (
-              m.version
-            )}
-          </Typography>
+          <CardMeta mod={m} row={row} profile={profile} statsLine={statsLine} />
         </Box>
       </Box>
       <ExtraFilesChip mod={m} profile={profile} />
@@ -327,6 +368,7 @@ function GridWindow({
           <ModCard
             key={modId(r.mod)}
             mod={r.mod}
+            row={r}
             orderedIds={orderedIds}
             profile={profile}
             columnsRef={columnsRef}
@@ -362,7 +404,11 @@ function CardsPane({
   const compactCards = useMediaQuery(compactQuery)
   const cardSize = useSettings((s) => s.gridCardSize) || 'medium'
   const laneCompact = compactCards || cardSize === 'small'
-  const lanePx = gridLanePx(laneCompact) + (cardSize === 'large' ? LARGE_LANE_EXTRA : 0)
+  const statsLine = parseCardStats(useSettings((s) => s.browseCardStats)).length > 0 && !laneCompact
+  const lanePx =
+    gridLanePx(laneCompact) +
+    (cardSize === 'large' ? LARGE_LANE_EXTRA : 0) +
+    (statsLine ? STATS_LINE_PX : 0)
   const [width, setWidth] = useState(0)
   const columns = gridColumnCount(width)
   const columnsRef = useRef(columns)
