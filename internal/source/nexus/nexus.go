@@ -64,6 +64,7 @@ type searchResp struct {
 				PictureURL   string `json:"pictureUrl"`
 				UpdatedAt    string `json:"updatedAt"`
 				AdultContent bool   `json:"adultContent"`
+				FileSizeKB   int64  `json:"fileSize"`
 			} `json:"nodes"`
 		} `json:"mods"`
 	} `json:"data"`
@@ -129,7 +130,7 @@ func (d Driver) Search(ctx context.Context, q source.Query) (source.Page, error)
 		filter = "op:OR, filter:[" + strings.Join(branches, ", ") + "]"
 	}
 	query := fmt.Sprintf(
-		`{ mods(filter:{%s}, sort:[{%s}], count: %d, offset: %d) { totalCount nodes { modId name summary author version endorsements downloads pictureUrl updatedAt adultContent } } }`,
+		`{ mods(filter:{%s}, sort:[{%s}], count: %d, offset: %d) { totalCount nodes { modId name summary author version endorsements downloads pictureUrl updatedAt adultContent fileSize } } }`,
 		filter, sortClause(q.Sort), source.PageSize, offset,
 	)
 	var parsed searchResp
@@ -157,6 +158,7 @@ func (d Driver) Search(ctx context.Context, q source.Query) (source.Page, error)
 			Picture:      n.PictureURL,
 			Endorsements: n.Endorsements,
 			Downloads:    n.Downloads,
+			Size:         n.FileSizeKB * 1024,
 			Updated:      n.UpdatedAt,
 			Adult:        n.AdultContent,
 			URL:          nexus.ModURL(q.Key, n.ModID),

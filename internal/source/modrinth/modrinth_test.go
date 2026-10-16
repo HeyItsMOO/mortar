@@ -26,9 +26,14 @@ func fake(t *testing.T) Driver {
 				q.Get("index") != "downloads" || q.Get("offset") != "20" || q.Get("query") != "sod" {
 				t.Errorf("search params %v", q)
 			}
-			_, _ = w.Write([]byte(`{"total_hits":41,"hits":[{"project_id":"AANobbMI","slug":"sodium","title":"Sodium","description":"fast","author":"jelly","downloads":9,"follows":3,"date_modified":"2026-09-20T00:00:00Z"}]}`))
+			_, _ = w.Write([]byte(`{"total_hits":41,"hits":[{"project_id":"AANobbMI","slug":"sodium","title":"Sodium","description":"fast","author":"jelly","downloads":9,"follows":3,"date_modified":"2026-09-20T00:00:00Z","latest_version":"v2"}]}`))
 		case "/project/AANobbMI/version":
 			_, _ = w.Write([]byte(`[{"id":"v2","project_id":"AANobbMI","version_number":"2.0","dependencies":[{"project_id":"P1","version_id":"V1","dependency_type":"required"},{"project_id":"P2","dependency_type":"optional"},{"version_id":"V3","dependency_type":"required"}],"files":[{"hashes":{"sha512":"ab"},"url":"https://cdn/x.jar","filename":"x.jar","primary":false,"size":1},{"hashes":{"sha512":"cd"},"url":"https://cdn/y.jar","filename":"y.jar","primary":true,"size":7}]},{"id":"v1","project_id":"AANobbMI","version_number":"1.0","files":[{"hashes":{},"url":"https://cdn/o.jar","filename":"o.jar","size":2}]}]`))
+		case "/versions":
+			if r.URL.Query().Get("ids") != `["v2"]` {
+				t.Errorf("versions ids %q", r.URL.Query().Get("ids"))
+			}
+			_, _ = w.Write([]byte(`[{"id":"v2","files":[{"primary":false,"size":1},{"primary":true,"size":7}]}]`))
 		case "/tag/category":
 			_, _ = w.Write([]byte(`[{"name":"fabric"},{"name":"Fabric"},{"name":"adventure"}]`))
 		default:
@@ -49,7 +54,7 @@ func TestSearchBuildsFacetsAndMapsHits(t *testing.T) {
 		t.Fatalf("%+v %v", page, err)
 	}
 	it := page.Items[0]
-	if it.ID != "AANobbMI" || it.URL != "https://modrinth.com/project/sodium" || it.Endorsements != 3 || it.Downloads != 9 {
+	if it.ID != "AANobbMI" || it.URL != "https://modrinth.com/project/sodium" || it.Endorsements != 3 || it.Downloads != 9 || it.Size != 7 {
 		t.Fatalf("%+v", it)
 	}
 }

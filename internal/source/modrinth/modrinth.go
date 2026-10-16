@@ -8,6 +8,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"maps"
 	"net/http"
 	"net/url"
@@ -116,6 +117,7 @@ type searchResp struct {
 		Follows     int      `json:"follows"`
 		Modified    string   `json:"date_modified"`
 		Versions    []string `json:"versions"`
+		Latest      string   `json:"latest_version"`
 	} `json:"hits"`
 }
 
@@ -150,12 +152,19 @@ func (d Driver) Search(ctx context.Context, q source.Query) (source.Page, error)
 	if err := d.get(ctx, "/search", params, q.Version, &parsed); err != nil {
 		return source.Page{}, err
 	}
+	latest := make([]string, 0, len(parsed.Hits))
+	for _, h := range parsed.Hits {
+		if h.Latest != "" {
+			latest = append(latest, h.Latest)
+		}
+	}
+	sizes := d.primarySizes(ctx, latest, q.Version)
 	items := make([]source.Item, 0, len(parsed.Hits))
 	for _, h := range parsed.Hits {
 		items = append(items, source.Item{
 			Source: d.ID(), ID: h.ProjectID, Name: h.Title, Summary: h.Description, Author: h.Author,
 			Picture: h.IconURL, Endorsements: h.Follows, Downloads: h.Downloads, Updated: h.Modified,
-			URL: d.ModPageURL(q.Key, h.Slug),
+			Size: sizes[h.Latest], URL: d.ModPageURL(q.Key, h.Slug),
 		})
 	}
 	return source.Page{Total: parsed.TotalHits, Items: items}, nil
@@ -201,13 +210,52 @@ type versionResp struct {
 		VersionID      string `json:"version_id"`
 		DependencyType string `json:"dependency_type"`
 	} `json:"dependencies"`
-	Files []struct {
-		Hashes   map[string]string `json:"hashes"`
-		URL      string            `json:"url"`
-		Filename string            `json:"filename"`
-		Primary  bool              `json:"primary"`
-		Size     int64             `json:"size"`
-	} `json:"files"`
+	Files []versionFile `json:"files"`
+}
+
+type versionFile struct {
+	Hashes   map[string]string `json:"hashes"`
+	URL      string            `json:"url"`
+	Filename string            `json:"filename"`
+	Primary  bool              `json:"primary"`
+	Size     int64             `json:"size"`
+}
+
+// primaryFile is the version's primary file, else its first; ok is false when it has none.
+func (v versionResp) primaryFile() (versionFile, bool) {
+	if len(v.Files) == 0 {
+		return versionFile{}, false
+	}
+	for _, f := range v.Files {
+		if f.Primary {
+			return f, true
+		}
+	}
+	return v.Files[0], true
+}
+
+// primarySizes is each version's primary file size by version id, read in one request; a failed read sizes none, so
+// the cards leave the size out.
+func (d Driver) primarySizes(ctx context.Context, ids []string, mortarVersion string) map[string]int64 {
+	out := map[string]int64{}
+	if len(ids) == 0 {
+		return out
+	}
+	encoded, err := json.Marshal(ids)
+	if err != nil {
+		return out
+	}
+	var versions []versionResp
+	if err := d.get(ctx, "/versions", url.Values{"ids": {string(encoded)}}, mortarVersion, &versions); err != nil {
+		log.Printf("modrinth: file sizes: %v", err)
+		return out
+	}
+	for _, v := range versions {
+		if f, ok := v.primaryFile(); ok {
+			out[v.ID] = f.Size
+		}
+	}
+	return out
 }
 
 // versions lists the project's versions, only those for loaders when it names any.
@@ -237,15 +285,9 @@ func (d Driver) Resolve(ctx context.Context, project, version, mortarVersion str
 		if version != "" && v.VersionNumber != version && v.ID != version {
 			continue
 		}
-		if len(v.Files) == 0 {
+		f, ok := v.primaryFile()
+		if !ok {
 			return Resolved{}, fmt.Errorf("%s %s has no files", project, v.VersionNumber)
-		}
-		f := v.Files[0]
-		for _, c := range v.Files {
-			if c.Primary {
-				f = c
-				break
-			}
 		}
 		digest := ""
 		if h := f.Hashes["sha512"]; h != "" {
