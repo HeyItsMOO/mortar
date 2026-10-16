@@ -14,6 +14,7 @@ import { modTotal } from '../console/startupView.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { idKey } from './dependents.ts'
 import { type customCategoryById, resolvedCategoryLabel } from './group.ts'
+import { partKey, supportParts } from './installReason.ts'
 import type { ListRow } from './listColumns.ts'
 import { kindLabel } from './lookup.ts'
 import { siteCategory } from './modSearch.ts'
@@ -97,11 +98,16 @@ function toListRows(
     }
   }
   const place = new Map((profile.entries ?? []).map((e, i) => [e.key, i + 1]))
+  const parts = supportParts(mods)
   return mods.map((m) =>
     toListRow(
       m,
       entries.get(m.key),
-      { groupName: groupOf.get(m.key) ?? '', order: place.get(m.key) ?? 0 },
+      {
+        groupName: groupOf.get(m.key) ?? '',
+        order: place.get(m.key) ?? 0,
+        implicit: Boolean(entries.get(m.key)?.implicit) || parts.has(partKey(m)),
+      },
       data,
     ),
   )
@@ -110,7 +116,7 @@ function toListRows(
 function toListRow(
   m: Mod,
   entry: Entry | undefined,
-  { groupName, order }: { groupName: string; order: number },
+  { groupName, order, implicit }: { groupName: string; order: number; implicit: boolean },
   { byId, customById, sizes, costs, wins }: Parameters<typeof toListRows>[2],
 ): ListRow {
   const pageless = entry?.source.kind === 'nexus' && (entry.source.modId ?? 0) <= 0
@@ -134,8 +140,8 @@ function toListRow(
     mod: m,
     added: entry?.added ?? '',
     pinned: Boolean(entry?.pinned),
-    implicit: Boolean(entry?.implicit),
-    reason: entry?.implicit ? i18n._(msg`Implicit`) : i18n._(msg`Explicit`),
+    implicit,
+    reason: implicit ? i18n._(msg`Implicit`) : i18n._(msg`Explicit`),
     source,
     unsourced: pageless || fileless || entry?.source.kind === 'local',
     status: m.enabled ? i18n._(msg`Enabled`) : i18n._(msg`Disabled`),

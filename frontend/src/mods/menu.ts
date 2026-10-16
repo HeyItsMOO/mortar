@@ -12,6 +12,7 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { reportUnexpected } from '../toasts/report.ts'
+import { partKey, supportParts } from './installReason.ts'
 import { entryOf, modId, updateFor } from './lookup.ts'
 import { hostOf, type MenuState } from './modActions.ts'
 import { useMods } from './store.ts'
@@ -27,6 +28,11 @@ export function useMenuState(mod: Mod): MenuState {
   const profile = useProfiles(openProfileOf)
   const entry = entryOf(profile, mod.key)
   const update = useUpdates((s) => updateFor(s.updates, mod, profile))
+  const all = useMods((s) => s.mods)
+  const part = supportParts(
+    all.filter((m) => m.key === mod.key),
+    all,
+  ).has(partKey(mod))
   return {
     enabled: mod.enabled,
     host,
@@ -34,7 +40,8 @@ export function useMenuState(mod: Mod): MenuState {
     skipVersion: entry?.skipVersion ?? '',
     hasUpdate: Boolean(update),
     bundled: entry?.source.kind === 'smapi' || entry?.source.kind === 'mortar',
-    implicit: Boolean(entry?.implicit),
+    part,
+    implicit: Boolean(entry?.implicit) || part,
   }
 }
 

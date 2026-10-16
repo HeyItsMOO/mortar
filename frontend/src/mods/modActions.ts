@@ -28,8 +28,10 @@ export interface MenuState {
   pinned: boolean
   skipVersion: string
   hasUpdate: boolean
-  // Mortar's own loader and bridge entries are always implicit, so they offer no Mark items.
+  // Mortar's own loader and bridge entries are always implicit, and a part another mod of its download requires is
+  // implicit through that mod, so neither offers Mark items.
   bundled: boolean
+  part: boolean
   implicit: boolean
 }
 
@@ -92,7 +94,7 @@ export function modActions(s: MenuState): ModAction[] {
   if (s.hasUpdate || s.skipVersion !== '') {
     out.push('skip')
   }
-  if (!s.bundled) {
+  if (!(s.bundled || s.part)) {
     out.push('reason')
   }
   out.push('remove')

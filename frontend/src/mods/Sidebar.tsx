@@ -32,6 +32,7 @@ import { useDescribe } from './describe.ts'
 import { showModId, useDetail } from './detail.ts'
 import { customCategoryById, resolvedCategoryLabel } from './group.ts'
 import { HiddenInside } from './HiddenInside.tsx'
+import { readsImplicit } from './installReason.ts'
 import { lastRunSummary, showLastRunInConsole, useLastRun } from './lastRun.ts'
 import {
   concerns,
@@ -555,6 +556,7 @@ function Inspector({ mod, profile }: { mod: Mod; profile: Profile }) {
   const { t } = useLingui()
   const all = useMods((s) => s.mods)
   const others = siblingsOf(all, mod)
+  const dependency = readsImplicit(entryOf(profile, mod.key)?.implicit, mod, all)
   const kind = sourceKind(profile, mod)
   const fresh = useNexusFresh(nexusIdOf(profile, mod))
   const sourceName = kindLabel(kind, {
@@ -580,7 +582,7 @@ function Inspector({ mod, profile }: { mod: Mod; profile: Profile }) {
           <>
             <AuthorLink authorField={mod.author} mod={mod} profile={profile} />
             {` · ${sourceName}`}
-            {entryOf(profile, mod.key)?.implicit ? ` · ${t`Installed as a dependency`}` : null}
+            {dependency ? ` · ${t`Installed as a dependency`}` : null}
           </>
         }
         controls={<ModSwitch mod={mod} />}

@@ -10,6 +10,7 @@ test('a mod with a page gets every action', () => {
       skipVersion: '',
       hasUpdate: false,
       bundled: false,
+      part: false,
       implicit: false,
     }),
   ).toEqual(['toggle', 'details', 'page', 'files', 'pin', 'reason', 'remove'])
@@ -24,6 +25,7 @@ test('no page drops the page action', () => {
       skipVersion: '',
       hasUpdate: false,
       bundled: false,
+      part: false,
       implicit: false,
     }),
   ).toEqual(['toggle', 'details', 'files', 'pin', 'reason', 'remove'])
@@ -38,6 +40,7 @@ test('an update can be skipped and a pin is always offered', () => {
       skipVersion: '',
       hasUpdate: true,
       bundled: true,
+      part: false,
       implicit: true,
     }),
   ).toEqual(['toggle', 'details', 'files', 'pin', 'skip', 'remove'])
@@ -49,6 +52,7 @@ test('an update can be skipped and a pin is always offered', () => {
       skipVersion: '2.0.0',
       hasUpdate: false,
       bundled: false,
+      part: false,
       implicit: false,
     }),
   ).toEqual(['toggle', 'details', 'files', 'pin', 'skip', 'reason', 'remove'])

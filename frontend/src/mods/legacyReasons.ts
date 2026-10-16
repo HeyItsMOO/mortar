@@ -16,10 +16,12 @@ type LegacyMod = Pick<
 const isPack = (m: LegacyMod) =>
   Boolean(m.contentPackFor) && idKey(m.contentPackFor ?? '') !== idKey(m.id)
 
+const ID_SEPARATOR = /[.-]/
+
 // A mod id's own name, without its format and author: smapi:Bouhm.NPCMapLocations is npcmaplocations.
 const idName = (id: string) => {
   const local = idKey(id).slice(idKey(id).indexOf(':') + 1)
-  const cut = local.search(/[.-]/)
+  const cut = local.search(ID_SEPARATOR)
   return cut < 0 ? local : local.slice(cut + 1)
 }
 
