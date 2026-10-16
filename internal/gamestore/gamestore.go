@@ -20,6 +20,8 @@ const (
 	StoreBottles      = "bottles"
 	StoreEA           = "ea"
 	StoreEpic         = "epic"
+	// StoreEpicHeroic is an Epic Games copy Heroic installed through legendary.
+	StoreEpicHeroic = "epic-heroic"
 )
 
 // Launcher ids, each the source of one or more stores' installs and the key of the user's added folders.
@@ -104,7 +106,7 @@ func Discover(home string, roots map[string][]string, g components.GameInfo) []I
 	return all
 }
 
-var storeOrder = []string{StoreSteam, StoreFlatpakSteam, StoreGOG, StoreGOGHeroic, StoreMinigalaxy, StoreEA, StoreEpic, StoreLutris, StoreBottles}
+var storeOrder = []string{StoreSteam, StoreFlatpakSteam, StoreGOG, StoreGOGHeroic, StoreMinigalaxy, StoreEA, StoreEpic, StoreEpicHeroic, StoreLutris, StoreBottles}
 
 // Rank orders stores for choosing a default install, lowest first; an unknown store ties with Steam.
 func Rank(store string) int { return max(slices.Index(storeOrder, store), 0) }
@@ -127,7 +129,7 @@ func Launchers(goos string) []LauncherSpec {
 // LauncherOf is the launcher that reported installs of store.
 func LauncherOf(store string) string {
 	switch store {
-	case StoreGOGHeroic:
+	case StoreGOGHeroic, StoreEpicHeroic:
 		return LauncherHeroic
 	case StoreMinigalaxy:
 		return LauncherMinigalaxy

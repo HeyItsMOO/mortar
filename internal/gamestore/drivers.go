@@ -68,7 +68,9 @@ func (gogStore) Key() string { return gogKey }
 
 func (gogStore) Launchers(goos string) []LauncherSpec {
 	specs := []LauncherSpec{{
-		ID: LauncherHeroic, Name: "Heroic", Usable: func(dir string) bool { return fsx.IsDir(filepath.Join(dir, "gog_store")) },
+		ID: LauncherHeroic, Name: "Heroic", Usable: func(dir string) bool {
+			return fsx.IsDir(filepath.Join(dir, "gog_store")) || fsx.IsFile(heroicEpicList(dir))
+		},
 		Looked: func(home string, added map[string][]string) []string {
 			return gog.HeroicDirs(home, added[LauncherHeroic]...)
 		},
@@ -226,17 +228,48 @@ func epicInstalls(dir string) []epicInstall {
 	return list.Installs
 }
 
-func (epicStore) Discover(_ string, roots map[string][]string, g components.GameInfo) []Install {
+// heroicEpicList is the list of the Epic games Heroic installed through legendary, below a Heroic config folder.
+func heroicEpicList(heroicDir string) string {
+	return filepath.Join(heroicDir, "legendaryConfig", "legendary", "installed.json")
+}
+
+// heroicEpicInstalls reads the list in heroicDir; an unreadable list holds nothing.
+func heroicEpicInstalls(heroicDir string) []epicInstall {
+	b, err := fsx.ReadFile(heroicEpicList(heroicDir))
+	if err != nil {
+		return nil
+	}
+	var list map[string]struct {
+		AppName string `json:"app_name"`
+		Path    string `json:"install_path"`
+	}
+	if json.Unmarshal(b, &list) != nil {
+		return nil
+	}
+	out := make([]epicInstall, 0, len(list))
+	for _, in := range list {
+		out = append(out, epicInstall{Location: in.Path, AppName: in.AppName})
+	}
+	return out
+}
+
+func (epicStore) Discover(home string, roots map[string][]string, g components.GameInfo) []Install {
 	var out []Install
-	for _, dir := range epicDirs(runtime.GOOS, os.Getenv, roots[LauncherEpic]...) {
-		for _, in := range epicInstalls(dir) {
+	add := func(store string, installs []epicInstall) {
+		for _, in := range installs {
 			if !slices.Contains(g.Stores.Epic.AppNames, in.AppName) {
 				continue
 			}
 			if found := gog.GameDir(in.Location, g.MarkerPath()); found != "" {
-				out = append(out, Install{Store: StoreEpic, Dir: found})
+				out = append(out, Install{Store: store, Dir: found})
 			}
 		}
+	}
+	for _, dir := range epicDirs(runtime.GOOS, os.Getenv, roots[LauncherEpic]...) {
+		add(StoreEpic, epicInstalls(dir))
+	}
+	for _, dir := range gog.HeroicDirs(home, roots[LauncherHeroic]...) {
+		add(StoreEpicHeroic, heroicEpicInstalls(dir))
 	}
 	return out
 }

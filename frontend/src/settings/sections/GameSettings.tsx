@@ -41,9 +41,9 @@ const STEAM_BUILD = /^\d+$/
 
 const noShrink = { flexShrink: 0 }
 
-// A GOG install found through Heroic or Minigalaxy carries that launcher's logo.
-const GOG_VIA = /^gog-/
-const launcherOf = (store: string) => store.replace(GOG_VIA, '')
+// A GOG or Epic install found through Heroic or Minigalaxy carries that launcher's logo.
+const STORE_VIA = /^(gog|epic)-/
+const launcherOf = (store: string) => store.replace(STORE_VIA, '')
 
 function StoreLabel({ store }: { store: string }) {
   const { t } = useLingui()

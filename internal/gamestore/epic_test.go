@@ -29,3 +29,22 @@ func TestEpicFindsTheInstallItsLauncherListsUnderTheGamesAppName(t *testing.T) {
 		t.Fatal("the Epic Games Launcher is listed on Windows only")
 	}
 }
+
+func TestEpicFindsACopyHeroicInstalledThroughLegendary(t *testing.T) {
+	game := filepath.Join(t.TempDir(), "Garlic")
+	touchFile(t, filepath.Join(game, "X.exe"))
+	heroic := t.TempDir()
+	list := fmt.Sprintf(`{"Garlic":{"app_name":"Garlic","install_path":%q,"platform":"Windows"}}`, game)
+	touchFile(t, heroicEpicList(heroic))
+	if err := os.WriteFile(heroicEpicList(heroic), []byte(list), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	g := components.GameInfo{ID: "x", Name: "X", Marker: "X.exe", Stores: components.GameStores{Epic: &components.EpicStore{AppNames: []string{"Garlic"}}}}
+	got := Discover(t.TempDir(), map[string][]string{LauncherHeroic: {heroic}}, g)
+	if want := []Install{{Store: StoreEpicHeroic, Dir: game}}; !slices.Equal(got, want) {
+		t.Fatalf("got %+v, want %+v", got, want)
+	}
+	if LauncherOf(StoreEpicHeroic) != LauncherHeroic {
+		t.Fatal("an Epic copy from Heroic belongs to the Heroic launcher")
+	}
+}

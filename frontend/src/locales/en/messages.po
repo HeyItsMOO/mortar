@@ -13181,6 +13181,10 @@ msgstr "Applied when the game next starts"
 msgid "Search Nexus Mods. Download installs the mod into this profile."
 msgstr "Search Nexus Mods. Download installs the mod into this profile."
 
+#: src/games/storeName.ts:14
+msgid "Epic via Heroic"
+msgstr "Epic via Heroic"
+
 #: src/lan/OutgoingProgress.tsx:18
 msgid "Sending to {peer} stopped: {why}"
 msgstr "Sending to {peer} stopped: {why}"
