@@ -1722,7 +1722,7 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:515
+#: src/games/GameSelect.tsx:523
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -3940,6 +3940,10 @@ msgstr "95th ms"
 msgid "Data folder moved"
 msgstr "Data folder moved"
 
+#: src/games/GameSelect.tsx:507
+msgid "On this computer"
+msgstr "On this computer"
+
 #: src/settings/prefCopy.ts:290
 msgid "Keep downloaded archives"
 msgstr "Keep downloaded archives"
@@ -4303,7 +4307,7 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:518
+#: src/games/GameSelect.tsx:526
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
@@ -8402,7 +8406,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:107
-#: src/games/GameSelect.tsx:499
+#: src/games/GameSelect.tsx:503
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -9893,6 +9897,10 @@ msgstr "Mortar stays on screen beside the game."
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
+#: src/games/GameSelect.tsx:512
+msgid "Other games"
+msgstr "Other games"
+
 #: src/mods/storeEntries.ts:183
 msgid "Could not rename the group"
 msgstr "Could not rename the group"
@@ -10085,7 +10093,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
 #: src/game/ProfileWorkspace.tsx:39
-#: src/games/GameSelect.tsx:455
+#: src/games/GameSelect.tsx:459
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -11779,7 +11787,6 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:504
 msgid "All games"
 msgstr "All games"
 

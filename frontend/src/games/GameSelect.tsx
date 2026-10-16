@@ -446,8 +446,12 @@ function GameSelect() {
   const played = useSettings((s) => s.lastPlayed)
   const scroller = useRef<HTMLElement | null>(null)
   const [current, setCurrent] = useState('')
-  const { recent, rest } = gameOrder(status?.games ?? [], lastGame, played)
-  useTypeToScroll(scroller, [...recent, ...rest])
+  const ordered = gameOrder(status?.games ?? [], lastGame, played)
+  const { recent } = ordered
+  // Games found on this computer come before the rest of the catalog, most of which is not set up here.
+  const found = ordered.rest.filter((g) => g.available && g.installed)
+  const rest = ordered.rest.filter((g) => !(g.available && g.installed))
+  useTypeToScroll(scroller, [...recent, ...found, ...rest])
   if (loadError) {
     return <LoadErrorRow error={loadError} onRetry={refresh} />
   }
@@ -500,8 +504,12 @@ function GameSelect() {
           {recent.map((g) => (
             <Row key={g.id} {...tileProps(g)} />
           ))}
-          {recent.length > 0 && rest.length > 0 ? (
-            <GroupHeading>{t`All games`}</GroupHeading>
+          {found.length > 0 ? <GroupHeading>{t`On this computer`}</GroupHeading> : null}
+          {found.map((g) => (
+            <Row key={g.id} {...tileProps(g)} />
+          ))}
+          {recent.length + found.length > 0 && rest.length > 0 ? (
+            <GroupHeading>{t`Other games`}</GroupHeading>
           ) : null}
           {rest.map((g) => (
             <Row key={g.id} {...tileProps(g)} />
