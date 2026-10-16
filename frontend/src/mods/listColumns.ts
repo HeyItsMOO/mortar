@@ -78,7 +78,7 @@ const LIST_COLUMN_WIDTH: Record<ListColumnId, string> = {
   downloads: '88px',
   updated: '140px',
   installed: '140px',
-  reason: '100px',
+  reason: '124px',
   needs: '140px',
   status: '100px',
   notes: '160px',
