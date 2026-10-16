@@ -120,7 +120,7 @@ Modrinth and itch.io are mod sites Mortar can search and install from for a game
 
 ## Edit a mod's settings
 
-Mortar edits a mod's config file as a form, so you never open a text file. The **Config** tab (Ctrl+6) lists every mod that has settings, with a **Changed** chip on the ones that differ from the mod's own defaults, and edits the one you pick beside the list. Mods that have not run yet have no config; they write it the first time the game runs.
+Mortar edits a mod's config file as a form. Other files a BepInEx mod keeps beside its settings (YAML, TOML, XML, INI, JSON or plain text) open as text you can change and **Save**, while the game is not running. The **Config** tab (Ctrl+6) lists every mod that has settings, with a **Changed** chip on the ones that differ from the mod's own defaults, and edits the one you pick beside the list. Mods that have not run yet have no config; they write it the first time the game runs.
 
 1. In the **Mods** tab, select a mod. The details panel opens beside the list; drag its left edge to resize it. (Right-click a mod, or open its **⋯** menu, and choose **Edit config** to jump straight there.)
 2. Under **Config**, choose **Edit config**. (The **More details** dialog has the same button under **Settings**.)

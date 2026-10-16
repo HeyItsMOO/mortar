@@ -11,6 +11,9 @@ const (
 	// FormatJSON is a JSON file a mod writes to the game's mod config folder (Vintage Story's ModConfig), of which
 	// each profile keeps its own copy.
 	FormatJSON = "json"
+	// FormatText is any other text file a mod keeps in BepInEx's config folder (YAML, TOML, XML, INI, JSON, plain
+	// text), edited whole as text since no schema says what its values mean.
+	FormatText = "text"
 )
 
 // Entry types.

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/modconfig"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
@@ -262,5 +263,73 @@ func TestModConfigJSONIsMatchedByModIDAndEditedInPlace(t *testing.T) {
 	list, err := s.Mods("vintage-story", "p")
 	if err != nil || len(list.Mods) != 1 || len(list.Other) != 2 || !slices.ContainsFunc(list.Other, func(f ModFile) bool { return f.Name == "OtherMod.json" }) {
 		t.Fatalf("list = %+v, %v", list, err)
+	}
+}
+
+// A mod's other text files in BepInEx's config folder (its package's subfolder, or a file named for it) are listed for
+// that mod and edited whole; anything else is listed as nobody's.
+func TestTextFilesAreMatchedByPackageAndEditedWhole(t *testing.T) {
+	s, cfgPath := newService(t)
+	cfg := filepath.Dir(cfgPath)
+	for name, body := range map[string]string{
+		"Ex-BetterStuff/rules.yaml": "speed: 2\n",
+		"BetterStuff.toml":          "speed = 2\n",
+		"Unrelated.xml":             "\ufeff<x/>",
+		"Ex-BetterStuff/icon.png":   "png",
+	} {
+		p := filepath.Join(cfg, filepath.FromSlash(name))
+		if err := os.MkdirAll(filepath.Dir(p), 0o750); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	const id = "thunderstore:Ex-BetterStuff"
+	files, err := s.Files("g", "p", id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var text []string
+	for _, f := range files {
+		if f.Format == FormatText {
+			text = append(text, f.Name)
+		}
+	}
+	slices.Sort(text)
+	if !slices.Equal(text, []string{"BetterStuff.toml", "Ex-BetterStuff/rules.yaml"}) {
+		t.Fatalf("text files = %v", text)
+	}
+	list, err := s.Mods("g", "p")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.ContainsFunc(list.Other, func(f ModFile) bool { return f.Name == "Unrelated.xml" && f.Format == FormatText }) {
+		t.Fatalf("other files = %+v, want Unrelated.xml", list.Other)
+	}
+	if got, err := s.Text("g", "p", id, "Ex-BetterStuff/rules.yaml"); err != nil || got != "speed: 2\n" {
+		t.Fatalf("text %q %v", got, err)
+	}
+	if err := s.SetText("g", "p", id, "Ex-BetterStuff/rules.yaml", "speed: 3\n"); err != nil {
+		t.Fatal(err)
+	}
+	if b, _ := fsx.ReadFile(filepath.Join(cfg, "Ex-BetterStuff", "rules.yaml")); string(b) != "speed: 3\n" {
+		t.Fatalf("written %q", b)
+	}
+	if got, _ := s.Text("g", "p", "", "Unrelated.xml"); got != "<x/>" {
+		t.Fatalf("a BOM reached the editor: %q", got)
+	}
+	if err := s.SetText("g", "p", "", "Unrelated.xml", "<y/>"); err != nil {
+		t.Fatal(err)
+	}
+	if b, _ := fsx.ReadFile(filepath.Join(cfg, "Unrelated.xml")); string(b) != "\ufeff<y/>" {
+		t.Fatalf("the BOM was not kept: %q", b)
+	}
+	if err := s.SetText("g", "p", id, "../escape.yaml", "x"); err == nil {
+		t.Fatal("a name outside the config folder was written")
+	}
+	s.Running = func(string, string) bool { return true }
+	if err := s.SetText("g", "p", id, "BetterStuff.toml", "x"); err == nil {
+		t.Fatal("a running game's file was written")
 	}
 }

@@ -66,7 +66,7 @@ msgstr "Start muted"
 msgid "{0, plural, one {# mod is downloading.} other {# mods are downloading.}}"
 msgstr "{0, plural, one {# mod is downloading.} other {# mods are downloading.}}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:77
+#: src/mods/typedConfig/ConfigPane.tsx:79
 msgid "Keep the game's current value"
 msgstr "Keep the game's current value"
 
@@ -271,11 +271,11 @@ msgstr "Stop the game to change mods."
 msgid "Could not delete the template"
 msgstr "Could not delete the template"
 
-#: src/mods/typedConfig/ConfigPane.tsx:304
+#: src/mods/typedConfig/ConfigPane.tsx:407
 msgid "Every entry in {current} goes back to its default."
 msgstr "Every entry in {current} goes back to its default."
 
-#: src/mods/typedConfig/ConfigPane.tsx:100
+#: src/mods/typedConfig/ConfigPane.tsx:102
 msgid "The game could not apply the last change: {reason}"
 msgstr "The game could not apply the last change: {reason}"
 
@@ -1622,8 +1622,8 @@ msgstr "The mod files can be copied directly from this Mortar."
 msgid "Newest lines kept in the Console"
 msgstr "Newest lines kept in the Console"
 
-#: src/mods/typedConfig/ConfigPane.tsx:156
-#: src/mods/typedConfig/ConfigPane.tsx:306
+#: src/mods/typedConfig/ConfigPane.tsx:165
+#: src/mods/typedConfig/ConfigPane.tsx:409
 #: src/settings/sections/Shortcuts.tsx:107
 #: src/settings/sections/Shortcuts.tsx:113
 msgid "Reset all"
@@ -1871,7 +1871,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:394
 #: src/mods/ModsTab.tsx:108
-#: src/mods/typedConfig/ConfigPane.tsx:287
+#: src/mods/typedConfig/ConfigPane.tsx:386
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
 #: src/profiles/HealthDialog.tsx:245
@@ -1929,7 +1929,7 @@ msgid "{0} left"
 msgstr "{0} left"
 
 #. placeholder {0}: entry.key
-#: src/mods/typedConfig/ConfigPane.tsx:83
+#: src/mods/typedConfig/ConfigPane.tsx:85
 msgid "Reset {0} to its default"
 msgstr "Reset {0} to its default"
 
@@ -2519,8 +2519,8 @@ msgstr "Show the first-run tips again"
 msgid "Show"
 msgstr "Show"
 
-#: src/mods/typedConfig/ConfigPane.tsx:133
-#: src/mods/typedConfig/ConfigPane.tsx:185
+#: src/mods/typedConfig/ConfigPane.tsx:135
+#: src/mods/typedConfig/ConfigPane.tsx:201
 #: src/mods/typedConfig/ConfigTab.tsx:53
 #: src/mods/typedConfig/ConfigTab.tsx:99
 msgid "In-game menu"
@@ -4851,6 +4851,10 @@ msgstr "Every mod in this profile is already off, so there is nothing to turn of
 msgid "This save has no recorded mod list yet."
 msgstr "This save has no recorded mod list yet."
 
+#: src/mods/typedConfig/ConfigPane.tsx:294
+msgid "Could not open: {error}"
+msgstr "Could not open: {error}"
+
 #: src/settings/sections/Downloads.tsx:122
 msgid "Get the extension"
 msgstr "Get the extension"
@@ -6539,7 +6543,7 @@ msgstr "Skip for now"
 msgid "Saved on version {0}"
 msgstr "Saved on version {0}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:174
+#: src/mods/typedConfig/ConfigPane.tsx:185
 #: src/share/ImportPreview.tsx:369
 #: src/share/Included.tsx:94
 msgid "Config files"
@@ -7040,7 +7044,7 @@ msgstr "Move…"
 msgid "Deleted a custom category"
 msgstr "Deleted a custom category"
 
-#: src/mods/typedConfig/ConfigPane.tsx:82
+#: src/mods/typedConfig/ConfigPane.tsx:84
 msgid "Discard the change to {name}"
 msgstr "Discard the change to {name}"
 
@@ -7395,6 +7399,7 @@ msgstr "Unity exception"
 
 #: src/mods/problemFixButtons.tsx:251
 #: src/mods/problemFixButtons.tsx:256
+#: src/mods/typedConfig/ConfigPane.tsx:320
 #: src/profiles/HealthDialog.tsx:287
 msgid "Revert"
 msgstr "Revert"
@@ -7470,7 +7475,7 @@ msgstr "Asset map"
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:303
+#: src/mods/typedConfig/ConfigPane.tsx:406
 msgid "Every change waiting for the next start is discarded."
 msgstr "Every change waiting for the next start is discarded."
 
@@ -7694,7 +7699,7 @@ msgstr "Installed and up to date"
 msgid "Regenerate token"
 msgstr "Regenerate token"
 
-#: src/mods/typedConfig/ConfigPane.tsx:269
+#: src/mods/typedConfig/ConfigPane.tsx:368
 msgid "Config of {name}"
 msgstr "Config of {name}"
 
@@ -7813,7 +7818,8 @@ msgstr "Paste the address of the mod's page on Nexus Mods. To name the exact fil
 msgid "Finding the mod that crashes the game"
 msgstr "Finding the mod that crashes the game"
 
-#: src/mods/typedConfig/ConfigPane.tsx:105
+#: src/mods/typedConfig/ConfigPane.tsx:107
+#: src/mods/typedConfig/ConfigPane.tsx:294
 msgid "Could not save: {error}"
 msgstr "Could not save: {error}"
 
@@ -8094,7 +8100,7 @@ msgstr "Request counts appear after Mortar talks to GitHub."
 msgid "Run again"
 msgstr "Run again"
 
-#: src/mods/typedConfig/ConfigPane.tsx:77
+#: src/mods/typedConfig/ConfigPane.tsx:79
 msgid "Reset to default"
 msgstr "Reset to default"
 
@@ -8391,6 +8397,10 @@ msgstr "A download fails"
 msgid "{0} does not allow downloads outside its own page: get it there."
 msgstr "{0} does not allow downloads outside its own page: get it there."
 
+#: src/mods/typedConfig/ConfigPane.tsx:304
+msgid "Contents of {name}"
+msgstr "Contents of {name}"
+
 #: src/launchers/LauncherList.tsx:239
 #: src/settings/sections/WatchFolders.tsx:46
 msgid "Add folder…"
@@ -8606,7 +8616,7 @@ msgstr "Save mod list"
 msgid "Update all ({wantedCount})"
 msgstr "Update all ({wantedCount})"
 
-#: src/mods/typedConfig/ConfigPane.tsx:225
+#: src/mods/typedConfig/ConfigPane.tsx:241
 msgid "No entries match."
 msgstr "No entries match."
 
@@ -10197,7 +10207,7 @@ msgid "Create a profile to manage a set of mods."
 msgstr "Create a profile to manage a set of mods."
 
 #. placeholder {0}: entry.key
-#: src/mods/typedConfig/ConfigPane.tsx:57
+#: src/mods/typedConfig/ConfigPane.tsx:59
 msgid "About {0}"
 msgstr "About {0}"
 
@@ -11405,7 +11415,7 @@ msgstr "{name} now opens Mod DB \"1-click install\" links."
 msgid "Use it anyway; {conflictName} becomes unbound"
 msgstr "Use it anyway; {conflictName} becomes unbound"
 
-#: src/mods/typedConfig/ConfigPane.tsx:68
+#: src/mods/typedConfig/ConfigPane.tsx:70
 msgid "Change it in the game"
 msgstr "Change it in the game"
 
@@ -11691,6 +11701,7 @@ msgstr "Beach farm"
 #: src/mods/CategoryEditor.tsx:163
 #: src/mods/ConfigPresets.tsx:135
 #: src/mods/SelectionBar.tsx:38
+#: src/mods/typedConfig/ConfigPane.tsx:323
 #: src/profiles/EditProfileDialog.tsx:490
 #: src/profiles/LaunchPresetDialog.tsx:96
 #: src/saves/SaveListRow.tsx:66
@@ -13258,7 +13269,7 @@ msgstr "Nexus Mods"
 msgid "Leave them"
 msgstr "Leave them"
 
-#: src/mods/typedConfig/ConfigPane.tsx:95
+#: src/mods/typedConfig/ConfigPane.tsx:97
 msgid "Applied when the game next starts"
 msgstr "Applied when the game next starts"
 
@@ -13306,7 +13317,7 @@ msgstr "Replace {name}?"
 msgid "Mods you put there show up here to add."
 msgstr "Mods you put there show up here to add."
 
-#: src/mods/typedConfig/ConfigPane.tsx:300
+#: src/mods/typedConfig/ConfigPane.tsx:403
 msgid "Reset all entries?"
 msgstr "Reset all entries?"
 
@@ -13773,7 +13784,7 @@ msgstr "Mortar downloads and installs a mod when you click Mod Manager Download 
 msgid "Settings sections"
 msgstr "Settings sections"
 
-#: src/mods/typedConfig/ConfigPane.tsx:146
+#: src/mods/typedConfig/ConfigPane.tsx:151
 msgid "Search entries"
 msgstr "Search entries"
 

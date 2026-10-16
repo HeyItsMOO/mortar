@@ -1,6 +1,7 @@
 package configsvc
 
 import (
+	"bytes"
 	"cmp"
 	"errors"
 	"fmt"
@@ -155,12 +156,16 @@ func (s *Service) Files(game, profileID, modID string) ([]ConfigFile, error) {
 	return out, nil
 }
 
-// cfgOnDisk is one .cfg of the profile's BepInEx config folder, read once, or one JSON file of its mod config folder.
+// cfgOnDisk is one .cfg of the profile's BepInEx config folder, read once, one JSON file of its mod config folder, or
+// one other text file of the BepInEx config folder (text), whose name is its slash path there.
 type cfgOnDisk struct {
 	name string
 	stem string
 	doc  cfgDoc
 	json bool
+	text bool
+	// folder is the subfolder a text file sits in, "" at the top: mods put their files in one named for the package.
+	folder string
 }
 
 // minConfigName is the shortest mod id a JSON file name is matched against by containment; a shorter one would
@@ -168,6 +173,19 @@ type cfgOnDisk struct {
 const minConfigName = 3
 
 func (d cfgOnDisk) ownedBy(names []string) bool {
+	if d.text {
+		return slices.ContainsFunc(names, func(n string) bool {
+			// A Thunderstore id is source:Namespace-Name; the package's folder is Namespace-Name, its file the Name.
+			_, pkg, _ := strings.Cut(n, ":")
+			_, name, _ := strings.Cut(pkg, "-")
+			for _, k := range []string{squash(n), squash(pkg), squash(name)} {
+				if len(k) >= minConfigName && (squash(d.folder) == k || strings.Contains(squash(d.stem), k)) {
+					return true
+				}
+			}
+			return false
+		})
+	}
 	if d.json {
 		// Mods name their file after their mod id in their own spelling ("CarryOnConfig.json" for carryon).
 		stem := squash(d.stem)
@@ -190,6 +208,9 @@ func squash(s string) string {
 }
 
 func (d cfgOnDisk) file() ConfigFile {
+	if d.text {
+		return ConfigFile{Name: d.name, Format: FormatText, Label: filepath.Base(filepath.FromSlash(d.name))}
+	}
 	if d.json {
 		return ConfigFile{Name: d.name, Format: FormatJSON, Label: d.name}
 	}
@@ -200,7 +221,7 @@ func (d cfgOnDisk) file() ConfigFile {
 
 // changed reports whether a .cfg differs from its defaults; a mod's JSON file names none.
 func (d cfgOnDisk) changed() bool {
-	return !d.json && schemaChanged(d.doc.schema(d.file()))
+	return !d.json && !d.text && schemaChanged(d.doc.schema(d.file()))
 }
 
 // allDocs is the profile's .cfg files and the JSON files of its mod config folder.
@@ -210,7 +231,120 @@ func (s *Service) allDocs(game, profileID string) ([]cfgOnDisk, error) {
 		return nil, err
 	}
 	more, err := s.jsonDocs(game, profileID)
-	return append(docs, more...), err
+	if err != nil {
+		return nil, err
+	}
+	text, err := s.textDocs(game, profileID)
+	return append(append(docs, more...), text...), err
+}
+
+// textExts are the file types listed as text files: what mods write beside their .cfg in BepInEx's config folder.
+var textExts = []string{".json", ".yaml", ".yml", ".toml", ".xml", ".ini", ".txt"}
+
+// maxTextFile bounds a text file opened for editing; a bigger one is data the mod generates, not settings.
+const maxTextFile = 1 << 20
+
+// textDocs lists the text files of the profile's BepInEx config folder and of the folders one level below it.
+func (s *Service) textDocs(game, profileID string) ([]cfgOnDisk, error) {
+	dir, err := s.cfgDir(game, profileID)
+	if err != nil {
+		return nil, err
+	}
+	var out []cfgOnDisk
+	add := func(folder string) error {
+		ents, err := os.ReadDir(filepath.Join(dir, folder))
+		if errors.Is(err, fs.ErrNotExist) {
+			return nil
+		} else if err != nil {
+			return err
+		}
+		for _, e := range ents {
+			ext := strings.ToLower(filepath.Ext(e.Name()))
+			if e.IsDir() || !slices.Contains(textExts, ext) {
+				continue
+			}
+			name := e.Name()
+			if folder != "" {
+				name = folder + "/" + name
+			}
+			out = append(out, cfgOnDisk{name: name, stem: strings.TrimSuffix(e.Name(), filepath.Ext(e.Name())), text: true, folder: folder})
+		}
+		return nil
+	}
+	if err := add(""); err != nil {
+		return nil, err
+	}
+	ents, err := os.ReadDir(dir)
+	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+		return nil, err
+	}
+	for _, e := range ents {
+		if e.IsDir() {
+			if err := add(e.Name()); err != nil {
+				return nil, err
+			}
+		}
+	}
+	return out, nil
+}
+
+// textPath is a text file of the profile's BepInEx config folder, at most one folder down; name is its slash path.
+func (s *Service) textPath(game, id, name string) (string, error) {
+	rel := filepath.FromSlash(name)
+	if !filepath.IsLocal(rel) || strings.Count(name, "/") > 1 || !slices.Contains(textExts, strings.ToLower(filepath.Ext(name))) {
+		return "", fmt.Errorf("%q is not a config file name", name)
+	}
+	dir, err := s.cfgDir(game, id)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, rel), nil
+}
+
+// Text reads one of a mod's text config files whole.
+func (s *Service) Text(game, profileID, modID, file string) (string, error) {
+	p, err := s.textFile(game, profileID, modID, file)
+	if err != nil {
+		return "", err
+	}
+	if st, err := os.Stat(p); err != nil {
+		return "", err
+	} else if st.Size() > maxTextFile {
+		return "", fmt.Errorf("%s is %d KB, too big to edit here; open its folder instead", file, st.Size()>>10)
+	}
+	raw, err := fsx.ReadFile(p)
+	return string(bytes.TrimPrefix(raw, utf8BOM)), err
+}
+
+// utf8BOM starts many mods' XML and JSON files; Text leaves it out, so an edit at the top cannot push it inside the
+// text, and SetText puts it back.
+var utf8BOM = []byte("\xef\xbb\xbf")
+
+// SetText replaces one of a mod's text config files, atomically.
+func (s *Service) SetText(game, profileID, modID, file, text string) error {
+	if err := s.refuseRunning(game, profileID); err != nil {
+		return err
+	}
+	p, err := s.textFile(game, profileID, modID, file)
+	if err != nil {
+		return err
+	}
+	out := []byte(text)
+	if old, err := fsx.ReadFile(p); err == nil && bytes.HasPrefix(old, utf8BOM) {
+		out = append(slices.Clone(utf8BOM), out...)
+	}
+	return datadir.WriteFile(p, out, 0o600)
+}
+
+func (s *Service) textFile(game, profileID, modID, file string) (string, error) {
+	f, err := s.fileOf(game, profileID, modID, file)
+	if err != nil {
+		return "", err
+	}
+	if f.Format != FormatText {
+		return "", fmt.Errorf("%s is not edited as text", file)
+	}
+	return s.textPath(game, profileID, f.Name)
 }
 
 // cfgDocs reads every .cfg of the profile's BepInEx config folder, after seeding the shipped ones.
@@ -261,6 +395,9 @@ func (s *Service) Schema(game, profileID, modID, file string) (Schema, error) {
 	}
 	if f.Format == FormatGMCM {
 		return s.gmcmSchema(game, profileID, mod.ID(modID), f)
+	}
+	if f.Format == FormatText {
+		return Schema{File: f, Sections: []Section{}}, nil
 	}
 	if f.Format == FormatJSON {
 		path, err := s.jsonPath(game, profileID, f.Name)

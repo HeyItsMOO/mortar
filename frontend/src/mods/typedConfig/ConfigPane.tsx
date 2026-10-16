@@ -7,6 +7,7 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material'
@@ -19,6 +20,7 @@ import { SearchField } from '../../shell/SearchField.tsx'
 import { space } from '../../theme/density.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 import { PresetsButton } from '../ConfigPresets.tsx'
+import { configApi } from './api.ts'
 import { showsOneFile } from './configList.ts'
 import { filterFile, humanizeKey, isModified, modifiedCount } from './entries.ts'
 import { type Target, useTypedConfig } from './store.ts'
@@ -143,18 +145,27 @@ function Toolbar({
       >
         {fileCaption}
       </Typography>
-      <SearchField label={t`Search entries`} value={query} onChange={onQuery} sx={{ width: 260 }} />
-      {file?.format === 'gmcm' || file?.format === 'json' || !mod ? null : (
-        <PresetsButton mod={mod} />
+      {file?.format === 'text' ? null : (
+        <>
+          <SearchField
+            label={t`Search entries`}
+            value={query}
+            onChange={onQuery}
+            sx={{ width: 260 }}
+          />
+          {file?.format === 'gmcm' || file?.format === 'json' || !mod ? null : (
+            <PresetsButton mod={mod} />
+          )}
+          <Button
+            variant="outlined"
+            size="small"
+            disabled={!file || modifiedCount(file) === 0}
+            onClick={onReset}
+          >
+            {t`Reset all`}
+          </Button>
+        </>
       )}
-      <Button
-        variant="outlined"
-        size="small"
-        disabled={!file || modifiedCount(file) === 0}
-        onClick={onReset}
-      >
-        {t`Reset all`}
-      </Button>
     </Box>
   )
 }
@@ -180,7 +191,12 @@ function FileList({
       }}
     >
       {files.map((f) => (
-        <ListItemButton key={f.name} selected={f.name === current} onClick={() => onSelect(f.name)}>
+        <ListItemButton
+          key={f.name}
+          title={f.name}
+          selected={f.name === current}
+          onClick={() => onSelect(f.name)}
+        >
           <ListItemText
             primary={f.format === 'gmcm' ? t`In-game menu` : f.label || f.name}
             slotProps={{ primary: { noWrap: true } }}
@@ -224,6 +240,89 @@ function Sections({ shown }: { shown: ReturnType<typeof filterFile> | null }) {
       {shown && shown.sections.length === 0 ? (
         <Typography sx={{ color: 'text.secondary' }}>{t`No entries match.`}</Typography>
       ) : null}
+    </Box>
+  )
+}
+
+// A text file (YAML, TOML, XML, INI, JSON or plain text a mod keeps beside its .cfg) has no schema, so it is edited
+// whole, and saved only when asked.
+function TextFile({ target, name }: { target: Target; name: string }) {
+  const { t } = useLingui()
+  const [saved, setSaved] = useState<string | null>(null)
+  const [text, setText] = useState('')
+  const [error, setError] = useState('')
+  const { game, profile, key, id } = target
+  useEffect(() => {
+    const at = { game, profile, key, id }
+    let live = true
+    setSaved(null)
+    setError('')
+    configApi
+      .text(at, name)
+      .then((v) => {
+        if (live) {
+          setSaved(v)
+          setText(v)
+        }
+      })
+      .catch((e: unknown) => live && setError(String(e)))
+    return () => {
+      live = false
+    }
+  }, [game, profile, key, id, name])
+  const save = () => {
+    setError('')
+    configApi
+      .setText(target, name, text)
+      .then(() => setSaved(text))
+      .catch((e: unknown) => setError(String(e)))
+  }
+  const dirty = saved !== null && text !== saved
+  return (
+    <Box
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: space.gap,
+        p: space.pad,
+      }}
+    >
+      {error ? (
+        <Typography role="alert" sx={{ fontSize: 12, color: 'error.main' }}>
+          {saved === null ? t`Could not open: ${error}` : t`Could not save: ${error}`}
+        </Typography>
+      ) : null}
+      <TextField
+        multiline={true}
+        fullWidth={true}
+        disabled={saved === null}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        slotProps={{
+          htmlInput: { 'aria-label': t`Contents of ${name}`, spellCheck: false },
+        }}
+        sx={{
+          flex: 1,
+          minHeight: 0,
+          '& .MuiInputBase-root': { height: '100%', alignItems: 'flex-start', overflowY: 'auto' },
+          '& textarea': { fontFamily: 'monospace', fontSize: 13 },
+        }}
+      />
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: space.gap }}>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={!dirty}
+          onClick={() => setText(saved ?? '')}
+        >
+          {t`Revert`}
+        </Button>
+        <Button variant="contained" size="small" disabled={!dirty} onClick={save}>
+          {t`Save`}
+        </Button>
+      </Box>
     </Box>
   )
 }
@@ -293,7 +392,11 @@ export function ConfigPane({
       ) : null}
       <Box sx={{ flex: 1, minHeight: 0, display: 'flex' }}>
         {single ? null : <FileList files={files} current={current} onSelect={(n) => select(n)} />}
-        <Sections shown={file ? filterFile(file, query) : null} />
+        {file?.format === 'text' ? (
+          <TextFile key={file.name} target={target} name={file.name} />
+        ) : (
+          <Sections shown={file ? filterFile(file, query) : null} />
+        )}
       </Box>
       <ConfirmDialog
         open={confirming}
