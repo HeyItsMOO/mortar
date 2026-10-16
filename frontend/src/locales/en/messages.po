@@ -271,7 +271,7 @@ msgstr "Stop the game to change mods."
 msgid "Could not delete the template"
 msgstr "Could not delete the template"
 
-#: src/mods/typedConfig/ConfigPane.tsx:302
+#: src/mods/typedConfig/ConfigPane.tsx:304
 msgid "Every entry in {current} goes back to its default."
 msgstr "Every entry in {current} goes back to its default."
 
@@ -1614,8 +1614,8 @@ msgstr "The mod files can be copied directly from this Mortar."
 msgid "Newest lines kept in the Console"
 msgstr "Newest lines kept in the Console"
 
-#: src/mods/typedConfig/ConfigPane.tsx:154
-#: src/mods/typedConfig/ConfigPane.tsx:304
+#: src/mods/typedConfig/ConfigPane.tsx:156
+#: src/mods/typedConfig/ConfigPane.tsx:306
 #: src/settings/sections/Shortcuts.tsx:107
 #: src/settings/sections/Shortcuts.tsx:113
 msgid "Reset all"
@@ -1862,7 +1862,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:394
 #: src/mods/ModsTab.tsx:108
-#: src/mods/typedConfig/ConfigPane.tsx:285
+#: src/mods/typedConfig/ConfigPane.tsx:287
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
 #: src/profiles/HealthDialog.tsx:245
@@ -2510,7 +2510,7 @@ msgid "Show"
 msgstr "Show"
 
 #: src/mods/typedConfig/ConfigPane.tsx:133
-#: src/mods/typedConfig/ConfigPane.tsx:183
+#: src/mods/typedConfig/ConfigPane.tsx:185
 #: src/mods/typedConfig/ConfigTab.tsx:53
 #: src/mods/typedConfig/ConfigTab.tsx:99
 msgid "In-game menu"
@@ -6517,7 +6517,7 @@ msgstr "Skip for now"
 msgid "Saved on version {0}"
 msgstr "Saved on version {0}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:172
+#: src/mods/typedConfig/ConfigPane.tsx:174
 #: src/share/ImportPreview.tsx:369
 #: src/share/Included.tsx:94
 msgid "Config files"
@@ -7444,7 +7444,7 @@ msgstr "Asset map"
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:301
+#: src/mods/typedConfig/ConfigPane.tsx:303
 msgid "Every change waiting for the next start is discarded."
 msgstr "Every change waiting for the next start is discarded."
 
@@ -7668,7 +7668,7 @@ msgstr "Installed and up to date"
 msgid "Regenerate token"
 msgstr "Regenerate token"
 
-#: src/mods/typedConfig/ConfigPane.tsx:267
+#: src/mods/typedConfig/ConfigPane.tsx:269
 msgid "Config of {name}"
 msgstr "Config of {name}"
 
@@ -8572,7 +8572,7 @@ msgstr "Save mod list"
 msgid "Update all ({wantedCount})"
 msgstr "Update all ({wantedCount})"
 
-#: src/mods/typedConfig/ConfigPane.tsx:223
+#: src/mods/typedConfig/ConfigPane.tsx:225
 msgid "No entries match."
 msgstr "No entries match."
 
@@ -13265,7 +13265,7 @@ msgstr "Replace {name}?"
 msgid "Mods you put there show up here to add."
 msgstr "Mods you put there show up here to add."
 
-#: src/mods/typedConfig/ConfigPane.tsx:298
+#: src/mods/typedConfig/ConfigPane.tsx:300
 msgid "Reset all entries?"
 msgstr "Reset all entries?"
 
