@@ -434,6 +434,28 @@ func TestDirectCommandRunsBottleInstallThroughBottlesCLI(t *testing.T) {
 	}
 }
 
+func TestOnlySteamCopiesStartThroughSteamAndLinuxRefusesAWindowsBuildWithNothingToRunIt(t *testing.T) {
+	cases := []struct {
+		inst        Install
+		steam, runs bool
+	}{
+		{Install{Store: StoreSteam, Dir: "/g", Platform: "windows", Runtime: "proton"}, true, true},
+		{Install{Store: StoreFlatpakSteam, Dir: "/g", Platform: "linux", Runtime: "native"}, true, true},
+		{Install{Store: "", Dir: "/g", Platform: "linux", Runtime: "native"}, false, true},
+		{Install{Store: StoreBottles, Dir: "/g", Prefix: "/b", Platform: "windows", Runtime: "wine-prefix"}, false, true},
+		{Install{Store: "", Dir: "/g", Platform: "windows", Runtime: "native"}, false, runtime.GOOS == "windows"},
+		{Install{Store: StoreLutris, Dir: "/g", Platform: "windows", Runtime: "native"}, false, runtime.GOOS == "windows"},
+	}
+	for _, c := range cases {
+		if got := c.inst.SteamStarts(); got != c.steam {
+			t.Errorf("%+v SteamStarts = %v", c.inst, got)
+		}
+		if err := c.inst.RunError("Game"); (err == nil) != c.runs {
+			t.Errorf("%+v RunError = %v", c.inst, err)
+		}
+	}
+}
+
 func TestGuardedPutsTheWrapperFirst(t *testing.T) {
 	name, args := guarded("", "game", []string{"-a"})
 	if name != "game" || !slices.Equal(args, []string{"-a"}) {

@@ -839,13 +839,6 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 	if vanilla {
 		mode = launchplan.ModeVanilla
 	}
-	env := game.StartEnv{Direct: direct, HideWindow: !showConsole, Ready: s.seen(g)}
-	var measure, sample bool
-	var startupBefore map[string]bool
-	if waitOnChild(direct, vanilla) {
-		env.OnExit = func(x launch.Exit) { s.finishWait(g, x) }
-		s.armReap(g)
-	}
 	pin := ""
 	if !vanilla {
 		pin = s.pinOf(g.ID(), profileID, t.install)
@@ -853,6 +846,17 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 	inst, err := game.ResolveInstall(s.home, s.settings.Get(), g.ID(), pin)
 	if err != nil {
 		return err
+	}
+	if err := inst.RunError(g.Name()); err != nil {
+		return err
+	}
+	direct = direct || !inst.SteamStarts()
+	env := game.StartEnv{Direct: direct, HideWindow: !showConsole, Ready: s.seen(g)}
+	var measure, sample bool
+	var startupBefore map[string]bool
+	if waitOnChild(direct, vanilla) {
+		env.OnExit = func(x launch.Exit) { s.finishWait(g, x) }
+		s.armReap(g)
 	}
 	var plan *launchplan.Plan
 	if !vanilla && profileID != "" {

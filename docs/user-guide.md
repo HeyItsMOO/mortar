@@ -59,7 +59,7 @@ sudo pacman -Sy mortar
 
 Mortar opens with a welcome screen and lists the launchers it found (Steam, GOG, Heroic, Lutris, Bottles). Continue, then open Stardew Valley. Setup has three steps.
 
-1. **Game folder.** Mortar shows where it found the game. If it did not find it, choose **Choose folder…** and pick the folder that holds the game. **Change folder…** and **Rescan** are there if the wrong copy was picked.
+1. **Game folder.** Mortar shows where it found the game. If it did not find it, choose **Choose folder…** and pick the folder that holds the game; a copy installed without any launcher works the same way, and Mortar starts it directly. On Linux, a Windows build runs only from Steam or a Bottles bottle, so add a Windows-only game to one of those first. **Change folder…** and **Rescan** are there if the wrong copy was picked.
 2. **Install SMAPI.** Mortar downloads SMAPI and puts it in the game folder. **Skip for now** leaves it for later. On Windows with Steam, Steam starts the game without SMAPI unless SMAPI is in the game's Steam launch options. Mortar shows the line to paste (right-click Stardew Valley in Steam, **Properties**, **Launch Options**), or choose **Set it in Steam for me** with Steam closed.
 3. **First profile.** Choose **Start empty** (a profile with only SMAPI), **Import from the game's Mods folder** (copies the mods you already have; nothing in the game folder is moved or changed), or **From a shared link**.
 

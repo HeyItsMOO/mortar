@@ -78,7 +78,7 @@ export function FirstRun() {
           {t`Welcome to Mortar`}
         </Typography>
         <Typography sx={{ fontSize: 17, textAlign: 'center' }}>
-          {t`Mortar finds games through their launchers. Set each one up when you first open it.`}
+          {t`Mortar finds games through their launchers. A game installed anywhere else works too: choose its folder when you set it up.`}
         </Typography>
       </Box>
       <Box sx={{ width: 'min(1200px, 100%)' }}>

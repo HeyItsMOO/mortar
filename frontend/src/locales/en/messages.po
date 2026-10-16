@@ -679,10 +679,6 @@ msgstr "{0} sent you {1} ({gameName})"
 msgid "This log is {size}. Sharing uploads it to smapi.io as a public link."
 msgstr "This log is {size}. Sharing uploads it to smapi.io as a public link."
 
-#: src/firstrun/FirstRun.tsx:81
-msgid "Mortar finds games through their launchers. Set each one up when you first open it."
-msgstr "Mortar finds games through their launchers. Set each one up when you first open it."
-
 #: src/games/GameMenu.tsx:72
 msgid "Switch game: {gameLabel}"
 msgstr "Switch game: {gameLabel}"
@@ -1776,7 +1772,7 @@ msgstr "No mods to share"
 msgid "Compares every stored mod's files with what was saved when it was added. Mortar also runs it slowly in the background, about weekly."
 msgstr "Compares every stored mod's files with what was saved when it was added. Mortar also runs it slowly in the background, about weekly."
 
-#: src/launch/store.ts:130
+#: src/launch/store.ts:131
 #: src/mods/ModSections.tsx:72
 #: src/mods/ModSections.tsx:163
 msgid "Roll back"
@@ -2898,7 +2894,7 @@ msgid "{downloads, plural, one {# download} other {# downloads}}"
 msgstr "{downloads, plural, one {# download} other {# downloads}}"
 
 #. placeholder {0}: status.error
-#: src/launch/store.ts:74
+#: src/launch/store.ts:75
 msgid "The program to start {name} was not found. Check that the game is still installed and the launch prefix names a real command. {0}"
 msgstr "The program to start {name} was not found. Check that the game is still installed and the launch prefix names a real command. {0}"
 
@@ -5812,7 +5808,7 @@ msgid "Show hidden mods"
 msgstr "Show hidden mods"
 
 #. placeholder {0}: profileName(rollback)
-#: src/launch/store.ts:127
+#: src/launch/store.ts:128
 msgid "New errors after updating {0}"
 msgstr "New errors after updating {0}"
 
@@ -6582,6 +6578,10 @@ msgstr "Tag…"
 msgid "{0, plural, one {Added # mod to {1}} other {Added # mods to {2}}}"
 msgstr "{0, plural, one {Added # mod to {1}} other {Added # mods to {2}}}"
 
+#: src/firstrun/FirstRun.tsx:81
+msgid "Mortar finds games through their launchers. A game installed anywhere else works too: choose its folder when you set it up."
+msgstr "Mortar finds games through their launchers. A game installed anywhere else works too: choose its folder when you set it up."
+
 #: src/mods/OldFilesCallouts.tsx:80
 #: src/mods/OldFilesCallouts.tsx:220
 msgid "Could not move the old files to trash"
@@ -7137,7 +7137,7 @@ msgstr "Search {gameName} settings"
 msgid "Open author page on Nexus"
 msgstr "Open author page on Nexus"
 
-#: src/launch/store.ts:283
+#: src/launch/store.ts:284
 msgid "Could not check whether the game is running"
 msgstr "Could not check whether the game is running"
 
@@ -7790,7 +7790,7 @@ msgstr "Each mod's Entry method, run one after another"
 msgid "All games…"
 msgstr "All games…"
 
-#: src/launch/store.ts:94
+#: src/launch/store.ts:95
 msgid "Could not roll back updates"
 msgstr "Could not roll back updates"
 
@@ -7987,7 +7987,7 @@ msgstr "Run again"
 msgid "Reset to default"
 msgstr "Reset to default"
 
-#: src/launch/store.ts:359
+#: src/launch/store.ts:360
 msgid "Could not stop the game"
 msgstr "Could not stop the game"
 
@@ -8697,7 +8697,7 @@ msgid "No launchers found. Continue and choose each game's folder when you open 
 msgstr "No launchers found. Continue and choose each game's folder when you open it."
 
 #. placeholder {0}: status.error
-#: src/launch/store.ts:70
+#: src/launch/store.ts:71
 msgid "Wine stopped on an error before {name} started: {0}"
 msgstr "Wine stopped on an error before {name} started: {0}"
 
@@ -11422,7 +11422,7 @@ msgstr "Preview Mods folder import…"
 msgid "Could not save the graphics choice"
 msgstr "Could not save the graphics choice"
 
-#: src/launch/store.ts:79
+#: src/launch/store.ts:80
 msgid "Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › {name}) or the game will not see this profile."
 msgstr "Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › {name}) or the game will not see this profile."
 
@@ -12292,7 +12292,7 @@ msgstr "Resume"
 msgid "Preset name"
 msgstr "Preset name"
 
-#: src/launch/store.ts:62
+#: src/launch/store.ts:63
 msgid "Steam may not be running or signed in. Start Steam, sign in and try again."
 msgstr "Steam may not be running or signed in. Start Steam, sign in and try again."
 
@@ -13858,7 +13858,7 @@ msgstr "From a link or file…"
 msgid "Archives land here instead of Mortar's downloads folder. Empty uses the default."
 msgstr "Archives land here instead of Mortar's downloads folder. Empty uses the default."
 
-#: src/launch/store.ts:66
+#: src/launch/store.ts:67
 msgid "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 msgstr "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 

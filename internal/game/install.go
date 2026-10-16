@@ -208,6 +208,19 @@ func ResolveInstall(home string, s settings.Settings, id, pin string) (Install, 
 	return newInstall(info, store, dir, prefix, OriginFolder), nil
 }
 
+// SteamStarts reports whether Steam can start this install: `steam -applaunch` runs the copy Steam installed, so a
+// folder the user chose or another launcher's copy has to be started directly.
+func (in Install) SteamStarts() bool { return in.Store == StoreSteam || in.Store == StoreFlatpakSteam }
+
+// RunError says why the install cannot be started on this computer, or is nil. On Linux a Windows build runs only
+// through Proton (a Steam copy) or a Bottles bottle; any other copy would be executed as a Linux program.
+func (in Install) RunError(name string) error {
+	if goruntime.GOOS == "windows" || in.Dir == "" || in.Platform != "windows" || in.Runtime != runtime.Native {
+		return nil
+	}
+	return usererr.Wrap(usererr.Invalid, fmt.Errorf("%s in %s is the Windows build, and on Linux Mortar runs Windows games only through Steam or a Bottles bottle: add the game to one of them, then choose that copy in the game's settings", name, in.Dir))
+}
+
 // RunsInBottle reports whether the install runs through a Bottles bottle.
 func (in Install) RunsInBottle() bool { return in.Runtime == runtime.WinePrefix }
 

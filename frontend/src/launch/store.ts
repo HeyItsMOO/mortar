@@ -19,6 +19,7 @@ import { i18n } from '../i18n/index.ts'
 import { listNames } from '../i18n/list.ts'
 import { isGameId, useNav } from '../nav/store.ts'
 import { useProfiles } from '../profiles/store.ts'
+import { errorDetails } from '../toasts/errorKind.ts'
 import { reportError, reportUnexpected, toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { type AutoUpdateRestorePoint, rollbackAutoUpdate } from './autoUpdate.ts'
@@ -79,7 +80,7 @@ function failureBody(status: Status): string {
       msg`Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › ${name}) or the game will not see this profile.`,
     )
   }
-  return status.error
+  return errorDetails(status.error)
 }
 interface Failure {
   profile: string
