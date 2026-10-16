@@ -256,6 +256,9 @@ type Request struct {
 	// Implicit creates the entry as one brought in for another mod, for a request that copies an entry's flag
 	// (undo, a template, a share); a dependency request is implicit by its kind.
 	Implicit bool `json:"implicit,omitempty"`
+	// InferReason marks a request from an imported list that records no install reasons: a listed package another
+	// listed package depends on is created implicit.
+	InferReason bool `json:"-"`
 
 	key     string
 	expires int64

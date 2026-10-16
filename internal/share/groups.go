@@ -13,6 +13,38 @@ type FileGroup struct {
 	Refs []Ref  `json:"refs,omitempty"`
 }
 
+// withRefGroups names on each ref the profile groups holding its entries, which is how a link carries groups.
+func withRefGroups(p profile.Profile, refs []Ref) {
+	for _, g := range p.Groups {
+		for _, key := range g.Keys {
+			i := slices.IndexFunc(p.Entries, func(e profile.Entry) bool { return e.Key == key })
+			if i < 0 {
+				continue
+			}
+			j := slices.IndexFunc(refs, func(r Ref) bool { return r.key == p.Entries[i].StoreKey() })
+			if j >= 0 && !slices.Contains(refs[j].Groups, g.Name) {
+				refs[j].Groups = append(refs[j].Groups, g.Name)
+			}
+		}
+	}
+}
+
+// RefGroups gathers the groups the refs of a link name, in the order they first appear.
+func RefGroups(refs []Ref) []FileGroup {
+	var out []FileGroup
+	for _, r := range refs {
+		for _, name := range r.Groups {
+			i := slices.IndexFunc(out, func(g FileGroup) bool { return g.Name == name })
+			if i < 0 {
+				out = append(out, FileGroup{Name: name})
+				i = len(out) - 1
+			}
+			out[i].Refs = append(out[i].Refs, r)
+		}
+	}
+	return out
+}
+
 func collectFileGroups(p profile.Profile) []FileGroup {
 	out := make([]FileGroup, 0, len(p.Groups))
 	for _, g := range p.Groups {

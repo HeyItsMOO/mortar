@@ -75,6 +75,13 @@ type Ref struct {
 	Fomod    map[string]map[string][]string `json:"fomod,omitempty"`
 	Note     string                         `json:"note,omitempty"`
 	Tags     []string                       `json:"tags,omitempty"`
+	// Implicit is the sender's install reason for the entry. A share with no implicit entry may come from before Mortar
+	// kept reasons, so the receiver infers them from the list (RecordsReasons).
+	Implicit  bool   `json:"implicit,omitempty"`
+	Pinned    bool   `json:"pinned,omitempty"`
+	PinReason string `json:"pinReason,omitempty"`
+	// Groups are the sender's profile groups holding the entry; a link carries them here, a .mortar file in its own list.
+	Groups []string `json:"groups,omitempty"`
 	// Files holds the note and tags of each file of a split archive, by the file's path in the archive's layout;
 	// Note and Tags are those of the entry that holds the archive whole.
 	Files   map[string]FileNote `json:"files,omitempty"`
@@ -244,6 +251,10 @@ type wireRef struct {
 	Tags     []string                       `json:"tags,omitempty"`
 	Files    map[string]FileNote            `json:"files,omitempty"`
 	Overlay  *Overlay                       `json:"overlay,omitempty"`
+	Imp      bool                           `json:"imp,omitempty"`
+	Pin      bool                           `json:"pin,omitempty"`
+	PinR     string                         `json:"pinr,omitempty"`
+	Grp      []string                       `json:"grp,omitempty"`
 	Key      string                         `json:"key,omitempty"`
 	KB       int64                          `json:"kb,omitempty"`
 	Min      string                         `json:"min,omitempty"`
@@ -251,7 +262,7 @@ type wireRef struct {
 
 // MarshalJSON writes the ref as its wire object.
 func (r Ref) MarshalJSON() ([]byte, error) {
-	w := wireRef{Disabled: r.Disabled, Fomod: r.Fomod, Note: r.Note, Tags: r.Tags, Files: r.Files, Overlay: r.Overlay, KB: r.SizeKB, Min: r.MinGame}
+	w := wireRef{Disabled: r.Disabled, Fomod: r.Fomod, Note: r.Note, Tags: r.Tags, Files: r.Files, Overlay: r.Overlay, KB: r.SizeKB, Min: r.MinGame, Imp: r.Implicit, Pin: r.Pinned, PinR: r.PinReason, Grp: r.Groups}
 	switch {
 	case r.Local != "":
 		w.Source, w.Key, w.Name = "local", r.Local, r.LocalName
@@ -287,7 +298,7 @@ func parseRef(raw json.RawMessage) (Ref, error) {
 	if err := json.Unmarshal(raw, &w); err != nil {
 		return Ref{}, fmt.Errorf("%w: bad entry", ErrMalformed)
 	}
-	r := Ref{Disabled: w.Disabled, Fomod: w.Fomod, Note: w.Note, Tags: w.Tags, Files: w.Files, Overlay: w.Overlay, SizeKB: w.KB, MinGame: w.Min}
+	r := Ref{Disabled: w.Disabled, Fomod: w.Fomod, Note: w.Note, Tags: w.Tags, Files: w.Files, Overlay: w.Overlay, SizeKB: w.KB, MinGame: w.Min, Implicit: w.Imp, Pinned: w.Pin, PinReason: w.PinR, Groups: w.Grp}
 	switch {
 	case w.Source == "local" && w.Key != "" && w.Mod == 0 && w.File == 0 && w.Repo == "" && w.NS == "":
 		r.Local, r.LocalName = w.Key, w.Name
@@ -353,6 +364,14 @@ func checkShared(s Shared) error {
 	return nil
 }
 
+// maxRefGroups bounds the groups one shared entry names.
+const maxRefGroups = 16
+
+// RecordsReasons reports whether the refs carry install reasons, which a share with an implicit entry does.
+func RecordsReasons(refs []Ref) bool {
+	return slices.ContainsFunc(refs, func(r Ref) bool { return r.Implicit })
+}
+
 func validDetails(r Ref) bool {
 	if len(r.Disabled) > MaxEntries || len(r.Fomod) > MaxEntries {
 		return false
@@ -360,7 +379,10 @@ func validDetails(r Ref) bool {
 	if !validEntryNote(r.Note) || !validEntryTags(r.Tags) || r.SizeKB < 0 || r.SizeKB > maxID || !gameVersion.MatchString(r.MinGame) {
 		return false
 	}
-	if len(r.Files) > MaxEntries {
+	if len(r.Files) > MaxEntries || utf8.RuneCountInString(r.PinReason) > profile.MaxPinReason || strings.ContainsFunc(r.PinReason, unicode.IsControl) || len(r.Groups) > maxRefGroups {
+		return false
+	}
+	if slices.ContainsFunc(r.Groups, func(g string) bool { return !validName(g) }) {
 		return false
 	}
 	for file, n := range r.Files {
@@ -655,7 +677,7 @@ func roundKB(kb int64) int64 {
 func withoutDetails(s Shared) Shared {
 	out := Shared{Game: s.Game, SourceKeys: s.SourceKeys, Name: s.Name, Entries: make([]Ref, len(s.Entries)), GameVersion: s.GameVersion}
 	for i, r := range s.Entries {
-		out.Entries[i] = Ref{ModID: r.ModID, FileID: r.FileID, GitHub: r.GitHub, Patreon: r.Patreon, Itch: r.Itch, CurseForge: r.CurseForge, VSModDB: r.VSModDB, Package: r.Package, Version: r.Version, Local: r.Local, LocalName: r.LocalName}
+		out.Entries[i] = Ref{ModID: r.ModID, FileID: r.FileID, GitHub: r.GitHub, Patreon: r.Patreon, Itch: r.Itch, CurseForge: r.CurseForge, VSModDB: r.VSModDB, Package: r.Package, Version: r.Version, Local: r.Local, LocalName: r.LocalName, Implicit: r.Implicit}
 	}
 	return out
 }
@@ -780,6 +802,10 @@ func Collect(p profile.Profile, include ...Include) (s Shared, left []LeftOut, o
 			}
 			r.Files[o.File] = FileNote{Note: o.Note, Tags: slices.Clone(o.Tags)}
 		}
+		r.Implicit = !slices.ContainsFunc(group, func(o profile.Entry) bool { return !o.Implicit })
+		if i := slices.IndexFunc(group, func(o profile.Entry) bool { return o.Pinned }); i >= 0 {
+			r.Pinned, r.PinReason = true, group[i].PinReason
+		}
 		r.key = key
 		s.Entries = append(s.Entries, r)
 	}
@@ -810,6 +836,7 @@ var linkPrefix = regexp.MustCompile(`^(?:https://mortar\.rethunk\.tech/([a-z0-9-
 func Encode(gameID string, p profile.Profile, facts profile.ShareFacts, include ...Include) (Result, error) {
 	s, left, _ := Collect(p, include...)
 	s.Game, s.SourceKeys = gameID, SourceKeys(gameID)
+	withRefGroups(p, s.Entries)
 	plain := s
 	s.GameVersion = facts.GameVersion
 	s.Entries = slices.Clone(s.Entries)

@@ -622,6 +622,7 @@ func (s *Service) preview(ctx context.Context, game string, shared share.Shared,
 	if s.gen == gen {
 		s.current = &session{
 			id: pv.Session, game: game, preview: pv, notes: notes, configs: configs, origin: origin, target: profileID, refs: shared.Entries,
+			groups: share.RefGroups(shared.Entries),
 			stored: maps.Clone(r.storedKeys),
 		}
 	}
@@ -756,7 +757,7 @@ func requestFor(game, profileID string, m Mod) queue.Request {
 	if m.State == StateDependency {
 		kind = queue.KindDependency
 	}
-	r := queue.Request{Kind: kind, Game: game, Profile: profileID, Name: m.Name, Version: m.Version}
+	r := queue.Request{Kind: kind, Game: game, Profile: profileID, Name: m.Name, Version: m.Version, Implicit: m.Implicit}
 	r.Disabled, r.Fomod = m.Disabled, m.Fomod
 	if m.Site == SiteThunderstore {
 		r.Package = m.Package
@@ -802,6 +803,7 @@ func joinNotes(parts ...string) string {
 	return strings.Join(kept, "\n\n")
 }
 
+// applySharedEntryNotes gives the profile's entries the notes, tags and pins the share recorded for them.
 func (s *Service) applySharedEntryNotes(game, profileID string, refs []share.Ref) error {
 	p, err := s.find(game, profileID)
 	if err != nil {
@@ -809,6 +811,11 @@ func (s *Service) applySharedEntryNotes(game, profileID string, refs []share.Ref
 	}
 	notes := share.EntryNotes(p.Entries, refs)
 	for _, e := range p.Entries {
+		if i := slices.IndexFunc(refs, func(r share.Ref) bool { return r.Pinned && r.MatchesEntry(e) }); i >= 0 && !e.Pinned {
+			if _, err := s.d.Profiles.SetPinned(game, profileID, e.Key, true, refs[i].PinReason); err != nil {
+				return err
+			}
+		}
 		n, ok := notes[e.Key]
 		if !ok {
 			continue
@@ -891,10 +898,13 @@ func (s *Service) importWithBatch(ctx context.Context, game, session, profileID 
 			continue
 		}
 		if e, ok := m.storedEntry(); ok && stored[m.Key] {
+			e.source = e.source.WithImplicit(m.Implicit || m.State == StateDependency)
 			fromStore = append(fromStore, e)
 			continue
 		}
-		reqs = append(reqs, requestFor(game, "", m))
+		req := requestFor(game, "", m)
+		req.InferReason = !share.RecordsReasons(cur.refs)
+		reqs = append(reqs, req)
 		wanted = append(wanted, wantedOf(m))
 	}
 	if slices.ContainsFunc(reqs, func(r queue.Request) bool { return r.Repo == "" && r.Package == "" }) && !s.d.SignedIn() {

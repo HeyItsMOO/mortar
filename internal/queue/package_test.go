@@ -54,3 +54,16 @@ func TestPackageInstallsWithItsDependencies(t *testing.T) {
 		t.Error("a malformed package was queued")
 	}
 }
+
+// A listed package another listed package depends on, directly or through a dependency in between, is implicit.
+func TestInferPackageReasons(t *testing.T) {
+	list := []thunderstore.Resolved{
+		{Namespace: "Lib", Name: "Core", Version: "1.0.0"},
+		{Namespace: "Lib", Name: "Mid", Version: "1.0.0", Dependencies: []string{"Lib-Core-1.0.0"}},
+		{Namespace: "Me", Name: "Mod", Version: "1.0.0", Dependencies: []string{"Lib-Mid-1.0.0"}},
+	}
+	roots := map[string]Request{"lib-core": {}, "me-mod": {}}
+	if got := inferPackageReasons(list, roots); !got["lib-core"] || got["me-mod"] {
+		t.Fatalf("inferred = %v", got)
+	}
+}

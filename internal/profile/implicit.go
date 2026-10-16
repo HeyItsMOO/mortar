@@ -97,3 +97,34 @@ func (s *Store) SetImplicitMany(game, id string, keys []string, implicit bool) (
 		return nil
 	})
 }
+
+// InferImplicit is the install reason an imported list implies when it records none: requires maps each listed item
+// to the listed items it requires, and an item is implicit when another item requires it that it does not itself
+// lead back to, so the members of a cycle nothing outside requires stay explicit.
+func InferImplicit(requires map[string][]string) map[string]bool {
+	reaches := func(from, to string) bool {
+		seen := map[string]bool{}
+		stack := slices.Clone(requires[from])
+		for len(stack) > 0 {
+			n := stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+			if n == to {
+				return true
+			}
+			if !seen[n] {
+				seen[n] = true
+				stack = append(stack, requires[n]...)
+			}
+		}
+		return false
+	}
+	out := map[string]bool{}
+	for by, needs := range requires {
+		for _, item := range needs {
+			if item != by && !reaches(item, by) {
+				out[item] = true
+			}
+		}
+	}
+	return out
+}

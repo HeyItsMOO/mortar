@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"maps"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/mod"
@@ -62,5 +63,21 @@ func TestSetImplicitMany(t *testing.T) {
 	}
 	if _, err := s.SetImplicitMany("stardew", p.ID, []string{"smapi"}, false); err == nil {
 		t.Fatal("marked Mortar's own entry explicit")
+	}
+}
+
+func TestInferImplicit(t *testing.T) {
+	t.Parallel()
+	got := InferImplicit(map[string][]string{
+		"pack":  {"cp"},
+		"cycA":  {"cycB"},
+		"cycB":  {"cycA"},
+		"outer": {"loopA"},
+		"loopA": {"loopB"},
+		"loopB": {"loopA"},
+	})
+	want := map[string]bool{"cp": true, "loopA": true}
+	if !maps.Equal(got, want) {
+		t.Fatalf("InferImplicit = %v, want %v", got, want)
 	}
 }

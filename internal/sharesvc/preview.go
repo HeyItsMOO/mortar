@@ -95,6 +95,8 @@ type Mod struct {
 	Fomod      map[string]map[string][]string `json:"fomod,omitempty"`
 	// Overlay is set on an optional file: where it goes in its main file, and whether it starts off.
 	Overlay *share.Overlay `json:"overlay,omitempty"`
+	// Implicit is the install reason the share recorded, or the one inferred from the list when it recorded none.
+	Implicit bool `json:"implicit,omitempty"`
 }
 
 // Problem is something found before any download. Key is the mod it is about, when one is; Detail is a version
@@ -551,6 +553,10 @@ func (r *resolver) resolve(ctx context.Context, refs []share.Ref) ([]Mod, []Prob
 			m.Disabled, m.Fomod, m.Overlay = append([]mod.ID{}, ref.Disabled...), ref.Fomod, ref.Overlay
 			add("nexus", m)
 		}
+		mods[len(mods)-1].Implicit = ref.Implicit
+	}
+	if !share.RecordsReasons(refs) {
+		r.inferReasons(mods)
 	}
 	deps, probs := r.dependencies(ctx, mods)
 	mods = append(mods, deps...)
@@ -568,6 +574,44 @@ func asInstalled(m Mod, df *meta.File) []framework.Mod {
 		out = append(out, framework.Mod{Key: m.Key, SourceKind: profile.KindNexus, Enabled: true, Manifest: mf})
 	}
 	return out
+}
+
+// inferReasons gives a share that recorded no install reasons the ones its Nexus files imply: a file another shared file
+// requires is implicit. Thunderstore packages are inferred by the queue, which resolves their dependencies.
+func (r *resolver) inferReasons(mods []Mod) {
+	provides := map[string]string{}
+	var listed []string
+	needs := map[string][]string{}
+	for _, m := range mods {
+		if m.Site != SiteNexus {
+			continue
+		}
+		df := datasetFile(r.infos[m.ModID].page, m.FileID)
+		if df == nil {
+			continue
+		}
+		listed = append(listed, m.Key)
+		for _, i := range asInstalled(m, df) {
+			provides[i.ModID().Fold()] = m.Key
+			for _, d := range i.Dependencies {
+				if d.Required {
+					needs[m.Key] = append(needs[m.Key], d.ModID().Fold())
+				}
+			}
+		}
+	}
+	requires := map[string][]string{}
+	for _, key := range listed {
+		for _, id := range needs[key] {
+			if by, ok := provides[id]; ok {
+				requires[key] = append(requires[key], by)
+			}
+		}
+	}
+	implicit := profile.InferImplicit(requires)
+	for i := range mods {
+		mods[i].Implicit = mods[i].Implicit || implicit[mods[i].Key]
+	}
 }
 
 func (r *resolver) dependencies(ctx context.Context, mods []Mod) ([]Mod, []Problem) {

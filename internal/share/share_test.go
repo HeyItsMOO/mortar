@@ -398,6 +398,8 @@ func TestEntryNotesRoundTrip(t *testing.T) {
 	}}
 	p.Entries[0].Note = "farm tweak\n\tsecond line"
 	p.Entries[0].Tags = []string{"QoL", "UI"}
+	p.Entries[0].Implicit, p.Entries[0].Pinned, p.Entries[0].PinReason = true, true, "breaks on 2.0"
+	p.Groups = []profile.Group{{Name: "Core", Keys: []string{"one"}}}
 	res, err := Encode("stardew", p, profile.ShareFacts{})
 	if err != nil {
 		t.Fatal(err)
@@ -410,6 +412,13 @@ func TestEntryNotesRoundTrip(t *testing.T) {
 		got.Entries[1].Note != "gh note" || !slices.Equal(got.Entries[1].Tags, []string{"git"}) {
 		t.Fatalf("link notes = %+v", got.Entries)
 	}
+	one, gh := got.Entries[0], got.Entries[1]
+	if !RecordsReasons(got.Entries) || !one.Implicit || !one.Pinned || one.PinReason != "breaks on 2.0" || gh.Implicit {
+		t.Fatalf("link reasons and pins = %+v", got.Entries)
+	}
+	if gs := RefGroups(got.Entries); len(gs) != 1 || gs[0].Name != "Core" || len(gs[0].Refs) != 1 || gs[0].Refs[0].ModID != 541 {
+		t.Fatalf("link groups = %+v", gs)
+	}
 	var buf bytes.Buffer
 	if _, err := Write(&buf, "stardew", p, t.TempDir()); err != nil {
 		t.Fatal(err)
@@ -418,7 +427,7 @@ func TestEntryNotesRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if pv.Entries[0].Note != p.Entries[0].Note || !slices.Equal(pv.Entries[0].Tags, []string{"QoL", "UI"}) {
+	if pv.Entries[0].Note != p.Entries[0].Note || !slices.Equal(pv.Entries[0].Tags, []string{"QoL", "UI"}) || !pv.Entries[0].Implicit || !pv.Entries[0].Pinned {
 		t.Fatalf("file notes = %+v", pv.Entries[0])
 	}
 }

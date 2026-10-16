@@ -64,6 +64,7 @@ func (s *Service) expandPackages(ctx context.Context, reqs []Request) ([]Request
 		if err != nil {
 			return nil, err
 		}
+		inferred := inferPackageReasons(list, byID)
 		for _, p := range list {
 			id := p.Namespace + "-" + p.Name
 			low := strings.ToLower(id)
@@ -72,6 +73,9 @@ func (s *Service) expandPackages(ctx context.Context, reqs []Request) ([]Request
 				continue
 			}
 			dep, isRoot := byID[low]
+			if isRoot && dep.InferReason {
+				dep.Implicit = dep.Implicit || inferred[low]
+			}
 			if !isRoot {
 				if s.holds(r, id, p.Version) {
 					continue
@@ -86,6 +90,42 @@ func (s *Service) expandPackages(ctx context.Context, reqs []Request) ([]Request
 		}
 	}
 	return out, nil
+}
+
+// inferPackageReasons is which listed roots another listed root depends on, through the closure, by lowercase id.
+func inferPackageReasons(list []thunderstore.Resolved, roots map[string]Request) map[string]bool {
+	requires := map[string][]string{}
+	for _, p := range list {
+		id := strings.ToLower(p.Namespace + "-" + p.Name)
+		for _, d := range p.Dependencies {
+			if i := strings.LastIndex(d, "-"); i > 0 {
+				requires[id] = append(requires[id], strings.ToLower(d[:i]))
+			}
+		}
+	}
+	return profile.InferImplicit(reachable(requires, roots))
+}
+
+// reachable maps each root to the other roots its closure reaches, so a root a dependency in between requires counts.
+func reachable(requires map[string][]string, roots map[string]Request) map[string][]string {
+	out := map[string][]string{}
+	for root := range roots {
+		seen := map[string]bool{}
+		stack := slices.Clone(requires[root])
+		for len(stack) > 0 {
+			n := stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+			if seen[n] {
+				continue
+			}
+			seen[n] = true
+			if _, ok := roots[n]; ok && n != root {
+				out[root] = append(out[root], n)
+			}
+			stack = append(stack, requires[n]...)
+		}
+	}
+	return out
 }
 
 // holds reports whether the request's profile already has the package at version or newer.

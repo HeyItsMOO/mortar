@@ -192,7 +192,7 @@ func (s *Service) Import(ctx context.Context, src Source, gameID, profileID stri
 			res.Unsupported = append(res.Unsupported, r.Native)
 			continue
 		}
-		req := queue.Request{Kind: queue.KindInstall, Game: gameID, Package: r.Native, Version: r.Version}
+		req := queue.Request{Kind: queue.KindInstall, Game: gameID, Package: r.Native, Version: r.Version, InferReason: true}
 		if r.Disabled {
 			res.Disabled = append(res.Disabled, r.Native)
 			req.Disabled = []mod.ID{mod.NewID(mod.FormatThunderstore, r.Native)}

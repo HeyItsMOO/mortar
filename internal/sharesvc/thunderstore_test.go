@@ -16,8 +16,9 @@ func TestThunderstoreRefsQueueAsPackages(t *testing.T) {
 	if m.State != StateDownload || m.Name != "MoreCompany" || m.Author != "Alice" || m.PageURL == "" {
 		t.Fatalf("mod %+v", m)
 	}
+	m.Implicit = true
 	req := requestFor("lethal-company", "p1", m)
-	if req.Package != "Alice-MoreCompany" || req.Version != "1.2.3" || req.Kind != queue.KindInstall || req.ModID != 0 {
+	if req.Package != "Alice-MoreCompany" || req.Version != "1.2.3" || req.Kind != queue.KindInstall || req.ModID != 0 || !req.Implicit {
 		t.Errorf("request %+v", req)
 	}
 	if had := r.thunderstore(share.Ref{Package: "alice-had", Version: "1.0.0"}); had.State != StateInstalled {
