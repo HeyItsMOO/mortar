@@ -10,6 +10,7 @@ const REPO = /^[\w.-]+\/[\w.-]+$/
 const GAME_VERSION = /^\d{1,9}(\.\d{1,9}){0,3}$/
 const PACKAGE_VERSION = /^\d+\.\d+\.\d+$/
 const ITCH_PAGE = /^[a-z0-9][\w-]{0,38}\/[A-Za-z0-9][\w-]{0,99}$/
+const MODDB_ID = /^\d{1,9}-\d{1,9}$/
 const POST_ID = /^\d{1,12}$/
 const HASH = /^#/
 const B64URL = /^[\w-]+$/
@@ -45,48 +46,51 @@ function facts(e) {
 }
 
 // An entry is an object naming its source: {s: 'nexus', mod, file}, {s: 'github', repo, tag, asset} or
-// {s: 'thunderstore', ns, name, version}, {s: 'curseforge', mod: project, file}, {s: 'itch', name: 'user/game'} or
+// {s: 'thunderstore', ns, name, version}, {s: 'curseforge', mod: project, file}, {s: 'vsmoddb', name: 'modid-assetid',
+// file, version}, {s: 'itch', name: 'user/game'} or
 // {s: 'patreon', name: post id}, with optional page facts.
 function entry(e) {
   return { ...source(e), ...facts(e) }
 }
 
+const positive = (n) => Number.isInteger(n) && n > 0
+const matches = (v, re) => typeof v === 'string' && re.test(v)
+
+// Each source's reader returns its entry, or null when the object does not hold a well-formed one.
+const READERS = {
+  nexus: (e) => (positive(e.mod) ? { kind: 'nexus', mod: e.mod } : null),
+  github: (e) =>
+    [e.repo, e.tag, e.asset].every((v) => typeof v === 'string' && v) && REPO.test(e.repo)
+      ? { kind: 'github', repo: e.repo, tag: e.tag, asset: e.asset }
+      : null,
+  curseforge: (e) =>
+    positive(e.mod) && positive(e.file) ? { kind: 'curseforge', project: e.mod } : null,
+  vsmoddb: (e) =>
+    matches(e.name, MODDB_ID) && positive(e.file) ? { kind: 'vsmoddb', id: e.name } : null,
+  itch: (e) => (matches(e.name, ITCH_PAGE) ? { kind: 'itch', page: e.name } : null),
+  patreon: (e) => (matches(e.name, POST_ID) ? { kind: 'patreon', post: e.name } : null),
+  thunderstore: (e) => {
+    if (!(PART.test(e.ns) && PART.test(e.name))) {
+      return null
+    }
+    const out = { kind: 'thunderstore', ns: e.ns, name: e.name }
+    if (matches(e.version, PACKAGE_VERSION)) {
+      out.version = e.version
+    }
+    return out
+  },
+}
+
 function source(e) {
-  if (e && typeof e === 'object' && !Array.isArray(e)) {
-    if (e.s === 'nexus' && Number.isInteger(e.mod) && e.mod > 0) {
-      return { kind: 'nexus', mod: e.mod }
-    }
-    if (
-      e.s === 'github' &&
-      [e.repo, e.tag, e.asset].every((v) => typeof v === 'string' && v) &&
-      REPO.test(e.repo)
-    ) {
-      return { kind: 'github', repo: e.repo, tag: e.tag, asset: e.asset }
-    }
-    if (
-      e.s === 'curseforge' &&
-      Number.isInteger(e.mod) &&
-      e.mod > 0 &&
-      Number.isInteger(e.file) &&
-      e.file > 0
-    ) {
-      return { kind: 'curseforge', project: e.mod }
-    }
-    if (e.s === 'itch' && typeof e.name === 'string' && ITCH_PAGE.test(e.name)) {
-      return { kind: 'itch', page: e.name }
-    }
-    if (e.s === 'patreon' && typeof e.name === 'string' && POST_ID.test(e.name)) {
-      return { kind: 'patreon', post: e.name }
-    }
-    if (e.s === 'thunderstore' && PART.test(e.ns) && PART.test(e.name)) {
-      const out = { kind: 'thunderstore', ns: e.ns, name: e.name }
-      if (typeof e.version === 'string' && PACKAGE_VERSION.test(e.version)) {
-        out.version = e.version
-      }
-      return out
-    }
+  const read =
+    e && typeof e === 'object' && !Array.isArray(e) && Object.hasOwn(READERS, e.s)
+      ? READERS[e.s]
+      : null
+  const out = read?.(e)
+  if (!out) {
+    throw new ShareError('bad')
   }
-  throw new ShareError('bad')
+  return out
 }
 
 // Payload is the text after "#": base64url(brotli(JSON [3, name, game, sourceKeys, entries, gameVersion?])); only
@@ -130,7 +134,7 @@ export async function decodeShare(hash, wasm) {
     throw new ShareError('bad')
   }
   const out = entries.map(entry)
-  for (const kind of ['nexus', 'thunderstore', 'curseforge']) {
+  for (const kind of ['nexus', 'thunderstore', 'curseforge', 'vsmoddb']) {
     if (out.some((e) => e.kind === kind) && typeof sourceKeys[kind] !== 'string') {
       throw new ShareError('bad')
     }

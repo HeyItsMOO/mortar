@@ -108,6 +108,8 @@ func transferItems(shared share.Shared) []transferItem {
 		case ref.CurseForge != 0:
 			project := strconv.Itoa(ref.CurseForge)
 			item = transferItem{Key: store.PackageKey(profile.KindCurseForge+":"+project, strconv.Itoa(ref.FileID)), Source: profile.KindCurseForge, Package: project}
+		case ref.VSModDB != "":
+			item = transferItem{Key: store.PackageKey(profile.KindVSModDB+":"+ref.VSModDB, ref.Version), Source: profile.KindVSModDB, Package: ref.VSModDB, Version: ref.Version}
 		case ref.GitHub != "":
 			repo, tag, asset := ref.GitHubParts()
 			owner, name, _ := strings.Cut(repo, "/")

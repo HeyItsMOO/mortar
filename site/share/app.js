@@ -39,6 +39,13 @@ const SOURCES = {
       text: `CurseForge project ${e.project}`,
     }),
   },
+  vsmoddb: {
+    label: 'Vintage Story Mod DB',
+    link: (e) => ({
+      href: `https://mods.vintagestory.at/show/mod/${e.id.split('-')[1]}`,
+      text: `Mod DB mod ${e.id}`,
+    }),
+  },
   itch: {
     label: 'itch.io',
     link: (e) => {

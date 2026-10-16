@@ -126,7 +126,7 @@ test('decodes a link the app made', async () => {
 })
 
 test('decodes CurseForge, itch.io and Patreon entries', async () => {
-  const withCurseForge = { ...keys, curseforge: '4643' }
+  const withCurseForge = { ...keys, curseforge: '4643', vsmoddb: 'vintagestory' }
   const p = encode([
     3,
     'Sims',
@@ -136,12 +136,14 @@ test('decodes CurseForge, itch.io and Patreon entries', async () => {
       { s: 'curseforge', mod: 309_243, file: 555, kb: 40 },
       { s: 'itch', name: 'someone/cool-mod' },
       { s: 'patreon', name: '12345678' },
+      { s: 'vsmoddb', name: '890-4405', file: 61_448, version: '1.14.3' },
     ],
   ])
   expect((await decodeShare(`#${p}`, wasm)).entries).toEqual([
     { kind: 'curseforge', project: 309_243, kb: 40 },
     { kind: 'itch', page: 'someone/cool-mod' },
     { kind: 'patreon', post: '12345678' },
+    { kind: 'vsmoddb', id: '890-4405' },
   ])
 })
 
@@ -154,4 +156,8 @@ test('rejects malformed CurseForge, itch.io and Patreon entries', async () => {
   expect(await kind({ s: 'itch', name: 'nogame' })).toBe('bad')
   expect(await kind({ s: 'itch', name: 'a/b"onload="x' })).toBe('bad')
   expect(await kind({ s: 'patreon', name: 'abc' })).toBe('bad')
+  expect(await kind({ s: 'vsmoddb', name: '890:4405', file: 1 }, { ...keys, vsmoddb: 'v' })).toBe(
+    'bad',
+  )
+  expect(await kind({ s: 'vsmoddb', name: '890-4405', file: 1 }, keys)).toBe('bad')
 })

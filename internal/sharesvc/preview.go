@@ -26,6 +26,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/source/itch"
 	"github.com/Rethunk-Tech/mortar/internal/source/patreon"
 	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
+	"github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
 	"github.com/Rethunk-Tech/mortar/internal/store"
 )
 
@@ -167,6 +168,8 @@ const (
 	SiteItch = "itch"
 	// SiteCurseForge is a CurseForge file.
 	SiteCurseForge = "curseforge"
+	// SiteVSModDB is a Vintage Story Mod DB release.
+	SiteVSModDB = "vsmoddb"
 )
 
 const (
@@ -196,6 +199,8 @@ type resolver struct {
 	curseforgeUnavailable func() string
 	// curseforgeName is a CurseForge project's name, or "" when it cannot be read; nil asks nothing.
 	curseforgeName func(ctx context.Context, project string) string
+	// vsmoddbRelease reads a Mod DB release's mod name; nil asks nothing.
+	vsmoddbRelease func(ctx context.Context, id, version string) (vsmoddb.Resolved, error)
 
 	infos map[int]*modInfo
 }
@@ -424,6 +429,27 @@ func (r *resolver) curseforge(ctx context.Context, ref share.Ref) Mod {
 	return m
 }
 
+// vsmoddb resolves a shared Mod DB release: installed when the profile or the store holds it, else downloaded.
+func (r *resolver) vsmoddb(ctx context.Context, ref share.Ref) Mod {
+	m := Mod{
+		Key: "vsmoddb:" + ref.VSModDB + ":" + strconv.Itoa(ref.FileID), Site: SiteVSModDB, Name: "Mod DB mod " + ref.VSModDB,
+		Package: ref.VSModDB, FileID: ref.FileID, Version: ref.Version, PageURL: vsmoddb.Driver{}.ModPageURL("", ref.VSModDB),
+		State: StateDownload, IDs: []mod.ID{}, Disabled: append([]mod.ID{}, ref.Disabled...),
+	}
+	switch {
+	case slices.ContainsFunc(r.target, ref.MatchesEntry):
+		m.State = StateInstalled
+	case r.storedKey(store.PackageKey(profile.KindVSModDB+":"+ref.VSModDB, ref.Version)):
+		m.State, r.storedKeys[m.Key] = StateInstalled, true
+	}
+	if r.vsmoddbRelease != nil {
+		if found, err := r.vsmoddbRelease(ctx, ref.VSModDB, strconv.Itoa(ref.FileID)); err == nil && found.Name != "" {
+			m.Name = found.Name
+		}
+	}
+	return m
+}
+
 func (r *resolver) hasPackage(pkg, version string) bool {
 	return slices.ContainsFunc(r.target, func(e profile.Entry) bool {
 		return e.Source.Kind == profile.KindThunderstore && strings.EqualFold(e.Source.Name, pkg) && (version == "" || e.Source.Version == version)
@@ -486,7 +512,7 @@ func (r *resolver) storedKey(key string) bool {
 func nexusIDs(refs []share.Ref) []int {
 	var ids []int
 	for _, ref := range refs {
-		if ref.GitHub == "" && ref.Package == "" && ref.Local == "" && ref.Patreon == "" && ref.Itch == "" && ref.CurseForge == 0 && !slices.Contains(ids, ref.ModID) {
+		if ref.GitHub == "" && ref.Package == "" && ref.Local == "" && ref.Patreon == "" && ref.Itch == "" && ref.CurseForge == 0 && ref.VSModDB == "" && !slices.Contains(ids, ref.ModID) {
 			ids = append(ids, ref.ModID)
 		}
 	}
@@ -514,6 +540,8 @@ func (r *resolver) resolve(ctx context.Context, refs []share.Ref) ([]Mod, []Prob
 			add("itch", r.itch(ref))
 		case ref.CurseForge != 0:
 			add("curseforge", r.curseforge(ctx, ref))
+		case ref.VSModDB != "":
+			add("vsmoddb", r.vsmoddb(ctx, ref))
 		case ref.Package != "":
 			add("thunderstore", r.thunderstore(ref))
 		case ref.GitHub != "":

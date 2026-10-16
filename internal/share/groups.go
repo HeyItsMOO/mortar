@@ -63,6 +63,11 @@ func identityOf(e profile.Entry) (Ref, bool) {
 			return Ref{}, false
 		}
 		return Ref{CurseForge: project, FileID: e.Source.FileID}, true
+	case profile.KindVSModDB:
+		if e.Source.Name == "" || e.Source.FileID <= 0 {
+			return Ref{}, false
+		}
+		return Ref{VSModDB: e.Source.Name, FileID: e.Source.FileID, Version: e.Source.Version}, true
 	case profile.KindThunderstore:
 		if e.Source.Name == "" {
 			return Ref{}, false

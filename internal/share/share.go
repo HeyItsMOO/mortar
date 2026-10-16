@@ -65,6 +65,9 @@ type Ref struct {
 	Itch string `json:"itch,omitempty"`
 	// CurseForge is the project id of a CurseForge file, which FileID names; the receiver downloads it with their key.
 	CurseForge int `json:"curseforge,omitempty"`
+	// VSModDB is the "<modid>-<assetid>" of a Vintage Story Mod DB release, which FileID (the release id) and Version
+	// name.
+	VSModDB string `json:"vsmoddb,omitempty"`
 	// Package is a Thunderstore "Namespace-Name" at Version (the newest when Version is empty).
 	Package  string                         `json:"package,omitempty"`
 	Version  string                         `json:"version,omitempty"`
@@ -186,9 +189,15 @@ var (
 	localRef   = regexp.MustCompile(`^local-[0-9a-f]{64}$`)
 	packageRef = regexp.MustCompile(`^[A-Za-z0-9_]+-[A-Za-z0-9_]+$`)
 	versionRef = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
+	modDBRef   = regexp.MustCompile(`^\d{1,9}-\d{1,9}$`)
+	modDBVer   = regexp.MustCompile(`^[0-9A-Za-z.+-]{1,40}$`)
 )
 
 func (r Ref) valid() bool {
+	if r.VSModDB != "" {
+		return r.ModID == 0 && r.GitHub == "" && r.Package == "" && r.Patreon == "" && r.Itch == "" && r.CurseForge == 0 && r.Local == "" &&
+			modDBRef.MatchString(r.VSModDB) && r.FileID > 0 && r.FileID <= maxID && modDBVer.MatchString(r.Version)
+	}
 	if r.Local != "" {
 		return r.ModID == 0 && r.FileID == 0 && r.GitHub == "" && r.Package == "" && r.Patreon == "" && r.Itch == "" && r.CurseForge == 0 && localRef.MatchString(r.Local) &&
 			validName(r.LocalName) && !strings.ContainsAny(r.LocalName, `/\`)
@@ -255,6 +264,8 @@ func (r Ref) MarshalJSON() ([]byte, error) {
 		w.Source, w.Name = "itch", r.Itch
 	case r.CurseForge != 0:
 		w.Source, w.Mod, w.File = "curseforge", r.CurseForge, r.FileID
+	case r.VSModDB != "":
+		w.Source, w.Name, w.File, w.Version = "vsmoddb", r.VSModDB, r.FileID, r.Version
 	case r.GitHub != "":
 		w.Source = "github"
 		w.Repo, w.Tag, w.Asset = r.GitHubParts()
@@ -288,6 +299,8 @@ func parseRef(raw json.RawMessage) (Ref, error) {
 		r.Itch = w.Name
 	case w.Source == "curseforge" && w.Key == "" && w.Repo == "" && w.Tag == "" && w.Asset == "" && w.NS == "" && w.Name == "" && w.Version == "":
 		r.CurseForge, r.FileID = w.Mod, w.File
+	case w.Source == "vsmoddb" && w.Mod == 0 && w.Key == "" && w.Repo == "" && w.Tag == "" && w.Asset == "" && w.NS == "" && w.Name != "":
+		r.VSModDB, r.FileID, r.Version = w.Name, w.File, w.Version
 	case w.Source == "nexus" && w.Repo == "" && w.Tag == "" && w.Asset == "":
 		r.ModID, r.FileID = w.Mod, w.File
 	case w.Source == "github" && w.Mod == 0 && w.File == 0 && w.Repo != "" && w.Tag != "" && w.Asset != "":
@@ -331,7 +344,8 @@ func checkShared(s Shared) error {
 	// What a game has is the receiver's catalog's word; the link must also name the source, but its sourceKeys never grant one.
 	have := SourceKeys(s.Game)
 	for _, r := range s.Entries {
-		if !r.valid() || !validDetails(r) || (r.GitHub == "" && r.Package == "" && r.Patreon == "" && r.Itch == "" && r.CurseForge == 0 && have["nexus"] == "" || s.SourceKeys["nexus"] == "") ||
+		if !r.valid() || !validDetails(r) || (r.GitHub == "" && r.Package == "" && r.Patreon == "" && r.Itch == "" && r.CurseForge == 0 && r.VSModDB == "" && have["nexus"] == "" || s.SourceKeys["nexus"] == "") ||
+			(r.VSModDB != "" && (have["vsmoddb"] == "" || s.SourceKeys["vsmoddb"] == "")) ||
 			(r.Package != "" && (have["thunderstore"] == "" || s.SourceKeys["thunderstore"] == "")) || (r.CurseForge != 0 && (have["curseforge"] == "" || s.SourceKeys["curseforge"] == "")) {
 			return fmt.Errorf("%w: bad entry", ErrMalformed)
 		}
@@ -354,7 +368,7 @@ func validDetails(r Ref) bool {
 			return false
 		}
 	}
-	if r.Overlay != nil && (r.GitHub != "" || r.Package != "" || r.Patreon != "" || r.Itch != "" || r.CurseForge != 0 || !validOverlayPath(r.Overlay.From) || !validOverlayPath(r.Overlay.To)) {
+	if r.Overlay != nil && (r.GitHub != "" || r.Package != "" || r.Patreon != "" || r.Itch != "" || r.CurseForge != 0 || r.VSModDB != "" || !validOverlayPath(r.Overlay.From) || !validOverlayPath(r.Overlay.To)) {
 		return false
 	}
 	for _, disabled := range r.Disabled {
@@ -508,6 +522,9 @@ func (r Ref) MatchesEntry(e profile.Entry) bool {
 	if r.CurseForge != 0 {
 		return e.Source.Kind == profile.KindCurseForge && e.Source.Name == strconv.Itoa(r.CurseForge) && e.Source.FileID == r.FileID
 	}
+	if r.VSModDB != "" {
+		return e.Source.Kind == profile.KindVSModDB && e.Source.Name == r.VSModDB && e.Source.FileID == r.FileID
+	}
 	if r.Package != "" {
 		return e.Source.Kind == profile.KindThunderstore && strings.EqualFold(e.Source.Name, r.Package) &&
 			(r.Version == "" || e.Source.Version == r.Version)
@@ -638,7 +655,7 @@ func roundKB(kb int64) int64 {
 func withoutDetails(s Shared) Shared {
 	out := Shared{Game: s.Game, SourceKeys: s.SourceKeys, Name: s.Name, Entries: make([]Ref, len(s.Entries)), GameVersion: s.GameVersion}
 	for i, r := range s.Entries {
-		out.Entries[i] = Ref{ModID: r.ModID, FileID: r.FileID, GitHub: r.GitHub, Patreon: r.Patreon, Itch: r.Itch, CurseForge: r.CurseForge, Package: r.Package, Version: r.Version, Local: r.Local, LocalName: r.LocalName}
+		out.Entries[i] = Ref{ModID: r.ModID, FileID: r.FileID, GitHub: r.GitHub, Patreon: r.Patreon, Itch: r.Itch, CurseForge: r.CurseForge, VSModDB: r.VSModDB, Package: r.Package, Version: r.Version, Local: r.Local, LocalName: r.LocalName}
 	}
 	return out
 }
@@ -664,6 +681,9 @@ func refOf(e profile.Entry, inc Include) (Ref, string) {
 		project, _ := strconv.Atoi(e.Source.Name)
 		r = Ref{CurseForge: project, FileID: e.Source.FileID}
 		missing = "no CurseForge file recorded"
+	case profile.KindVSModDB:
+		r = Ref{VSModDB: e.Source.Name, FileID: e.Source.FileID, Version: e.Source.Version}
+		missing = "no Mod DB release recorded"
 	case profile.KindThunderstore:
 		r = Ref{Package: e.Source.Name, Version: e.Source.Version}
 		missing = "no Thunderstore package recorded"
