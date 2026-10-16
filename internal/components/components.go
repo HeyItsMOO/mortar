@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"os"
 	"path"
@@ -720,17 +721,43 @@ func (m Manifest) Validate() error {
 	return nil
 }
 
-// Decode parses and validates a manifest after its signature has been checked.
+// Decode parses and validates a manifest after its signature has been checked. An entry this build cannot read (a
+// field value a later Mortar added) is left out with a warning rather than failing the whole manifest, so a catalog
+// published for newer versions still reaches this one. The generator validates strictly before signing.
 func Decode(data []byte) (Manifest, error) {
 	var m Manifest
 	if err := json.Unmarshal(data, &m); err != nil {
 		return Manifest{}, fmt.Errorf("decode component manifest: %w", err)
+	}
+	m, dropped := withoutUnreadable(m)
+	if dropped > 0 && len(m.Games) == 0 {
+		return Manifest{}, errors.New("component manifest lists no game this Mortar can read")
 	}
 	if err := m.Validate(); err != nil {
 		return Manifest{}, err
 	}
 	enableForSandbox(m.Games)
 	return m, nil
+}
+
+// withoutUnreadable is m less the components and games that fail validation, and how many games it left out.
+func withoutUnreadable(m Manifest) (Manifest, int) {
+	m.Components = slices.DeleteFunc(m.Components, func(c Component) bool {
+		err := c.Validate()
+		if err != nil {
+			slog.Warn("component manifest: skipping an entry this Mortar cannot read", "game", c.Game, "component", c.Name, "err", err)
+		}
+		return err != nil
+	})
+	listed := len(m.Games)
+	m.Games = slices.DeleteFunc(m.Games, func(g GameInfo) bool {
+		err := g.Validate()
+		if err != nil {
+			slog.Warn("component manifest: skipping a game this Mortar cannot read", "game", g.ID, "err", err)
+		}
+		return err != nil
+	})
+	return m, listed - len(m.Games)
 }
 
 // enableGamesEnv lists catalog games, comma separated, to switch on whatever the manifest says. A self-test sandbox

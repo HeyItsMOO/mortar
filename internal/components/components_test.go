@@ -625,3 +625,24 @@ func TestValidateChecksCachePaths(t *testing.T) {
 		}
 	}
 }
+
+// A catalog published with a game this build cannot read (a value a later Mortar added) still delivers the rest.
+func TestDecodeSkipsAGameThisBuildCannotRead(t *testing.T) {
+	var m Manifest
+	if err := json.Unmarshal(bundledJSON, &m); err != nil {
+		t.Fatal(err)
+	}
+	if err := m.Validate(); err != nil {
+		t.Fatalf("bundled manifest fails strict validation: %v", err)
+	}
+	want := len(m.Games) - 1
+	m.Games[0].Marker = ""
+	b, err := json.Marshal(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := Decode(b)
+	if err != nil || len(got.Games) != want {
+		t.Fatalf("decode = %d games, %v; want %d", len(got.Games), err, want)
+	}
+}
