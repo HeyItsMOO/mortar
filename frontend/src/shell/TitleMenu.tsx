@@ -138,7 +138,15 @@ export function TitleMenuItem({
           {icon}
         </Box>
       ) : null}
-      <Box component="span" sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      <Box
+        component="span"
+        // Only a label cut off at the menu's width cap needs its full text on hover.
+        onMouseEnter={(e: MouseEvent<HTMLElement>) => {
+          const el = e.currentTarget
+          el.title = el.scrollWidth > el.clientWidth ? (el.textContent ?? '') : ''
+        }}
+        sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+      >
         {label}
       </Box>
       {hint ? (
