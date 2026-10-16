@@ -7,6 +7,7 @@ import type {
   GameInfo,
   StoreApp,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
+import { SuggestFolders } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/service.ts'
 import { PickFolder } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/picker/service.ts'
 import { SetGameFolder } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { gameArt } from '../games/art.ts'
@@ -97,6 +98,46 @@ function Looked({ game, launchers }: { game: GameInfo; launchers: StoreApp[] }) 
           </Box>
         )
       })}
+    </Box>
+  )
+}
+
+// Copies outside a launcher (a Desktop or Games folder, another launcher's library), offered before the picker.
+function Suggested({ gameId, onUse }: { gameId: string; onUse: (dir: string) => Promise<void> }) {
+  const { t } = useLingui()
+  const { success } = useTheme().palette
+  const [suggested, setSuggested] = useState<string[]>([])
+  useEffect(() => {
+    SuggestFolders(gameId)
+      .then((dirs) => setSuggested(dirs ?? []))
+      .catch(() => setSuggested([]))
+  }, [gameId])
+  if (suggested.length === 0) {
+    return null
+  }
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px' }}>
+      <Typography sx={{ fontSize: 14 }}>{t`Found a copy outside your launchers:`}</Typography>
+      {suggested.map((folder) => (
+        <Button
+          key={folder}
+          variant="outlined"
+          color="inherit"
+          startIcon={<Check size={16} color={success.main} />}
+          onClick={() => {
+            onUse(folder).catch(() => undefined)
+          }}
+          title={folder}
+          sx={{ maxWidth: '100%', justifyContent: 'flex-start', textTransform: 'none' }}
+        >
+          <Box
+            component="span"
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
+            {t`Use ${folder}`}
+          </Box>
+        </Button>
+      ))}
     </Box>
   )
 }
@@ -213,6 +254,7 @@ export function FindStep({
             </Typography>
           </Box>
           <Looked game={game} launchers={launchers} />
+          <Suggested gameId={game.id} onUse={use} />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
             <Button
               variant="contained"

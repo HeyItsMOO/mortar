@@ -1883,7 +1883,7 @@ msgid "Copper"
 msgstr "Copper"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:80
+#: src/firstrun/FindStep.tsx:81
 msgid "found, without {0}"
 msgstr "found, without {0}"
 
@@ -2308,7 +2308,7 @@ msgid "Replaced {mods} in {profileName}"
 msgstr "Replaced {mods} in {profileName}"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:82
+#: src/firstrun/FindStep.tsx:83
 msgid "has {0}"
 msgstr "has {0}"
 
@@ -2596,7 +2596,7 @@ msgstr "Not signed in"
 msgid "{game} profile"
 msgstr "{game} profile"
 
-#: src/firstrun/FindStep.tsx:181
+#: src/firstrun/FindStep.tsx:222
 #: src/firstrun/GameSetup.tsx:77
 #: src/settings/sections/GameSettings.tsx:194
 #: src/settings/sections/GameSettings.tsx:196
@@ -3369,7 +3369,7 @@ msgstr "Connected from {0}, last seen "
 msgid "Search all runs…"
 msgstr "Search all runs…"
 
-#: src/firstrun/FindStep.tsx:223
+#: src/firstrun/FindStep.tsx:265
 #: src/install/NeedsRootCallout.tsx:24
 #: src/profiles/VortexFolderPrompt.tsx:60
 #: src/settings/sections/GameSettings.tsx:370
@@ -3795,7 +3795,7 @@ msgstr "Check store files"
 msgid "Imported {0}: {1}"
 msgstr "Imported {0}: {1}"
 
-#: src/firstrun/FindStep.tsx:125
+#: src/firstrun/FindStep.tsx:166
 #: src/settings/sections/GameSettings.tsx:190
 msgid "Found in {path}"
 msgstr "Found in {path}"
@@ -4584,7 +4584,7 @@ msgid "In progress ({0})"
 msgstr "In progress ({0})"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:145
+#: src/firstrun/FindStep.tsx:186
 msgid "Choose your {0} folder"
 msgstr "Choose your {0} folder"
 
@@ -4904,7 +4904,7 @@ msgstr "Apply a template…"
 msgid "Wheat"
 msgstr "Wheat"
 
-#: src/firstrun/FindStep.tsx:125
+#: src/firstrun/FindStep.tsx:166
 msgid "Folder chosen by you"
 msgstr "Folder chosen by you"
 
@@ -5195,7 +5195,7 @@ msgid "Include beta releases"
 msgstr "Include beta releases"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:236
+#: src/firstrun/FindStep.tsx:278
 msgid "{0} folder"
 msgstr "{0} folder"
 
@@ -6900,7 +6900,7 @@ msgstr "Mortar started with default settings. The damaged file was kept at {path
 msgid "Mod config"
 msgstr "Mod config"
 
-#: src/firstrun/FindStep.tsx:231
+#: src/firstrun/FindStep.tsx:273
 #: src/launchers/LauncherList.tsx:187
 msgid "Rescan"
 msgstr "Rescan"
@@ -7923,7 +7923,7 @@ msgstr "No account"
 msgid "{0} · {1} unique"
 msgstr "{0} · {1} unique"
 
-#: src/firstrun/FindStep.tsx:78
+#: src/firstrun/FindStep.tsx:79
 #: src/launchers/LauncherList.tsx:107
 #: src/launchers/LauncherList.tsx:144
 #: src/launchers/LauncherList.tsx:164
@@ -8121,6 +8121,10 @@ msgstr "{store} in the store ({shared} shared with other profiles)"
 #: src/mods/ModMenu.tsx:275
 msgid "Remove {0} from other profiles"
 msgstr "Remove {0} from other profiles"
+
+#: src/firstrun/FindStep.tsx:120
+msgid "Found a copy outside your launchers:"
+msgstr "Found a copy outside your launchers:"
 
 #: src/browse/BrowsePage.tsx:93
 msgid "All sources"
@@ -10211,7 +10215,7 @@ msgid "Search run logs"
 msgstr "Search run logs"
 
 #. placeholder {0}: game.loader
-#: src/firstrun/FindStep.tsx:157
+#: src/firstrun/FindStep.tsx:198
 msgid "{0} not installed yet"
 msgstr "{0} not installed yet"
 
@@ -10386,7 +10390,7 @@ msgid "When {0}"
 msgstr "When {0}"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:212
+#: src/firstrun/FindStep.tsx:253
 msgid "{0} was not found in your launchers"
 msgstr "{0} was not found in your launchers"
 
@@ -12517,7 +12521,7 @@ msgstr "Quota"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/firstrun/FindStep.tsx:202
+#: src/firstrun/FindStep.tsx:243
 #: src/settings/sections/Downloads.tsx:300
 #: src/settings/sections/GameSettings.tsx:206
 #: src/settings/sections/GameSettings.tsx:398
@@ -12721,6 +12725,10 @@ msgstr "Check mods and Mortar for updates (F5)"
 msgid "Games"
 msgstr "Games"
 
+#: src/firstrun/FindStep.tsx:137
+msgid "Use {folder}"
+msgstr "Use {folder}"
+
 #: src/settings/sections/General.tsx:95
 #: src/settings/sections/General.tsx:97
 #: src/settings/sections/General.tsx:106
@@ -12812,7 +12820,7 @@ msgstr "Could not repair the profile"
 msgid "Empty profile"
 msgstr "Empty profile"
 
-#: src/firstrun/FindStep.tsx:156
+#: src/firstrun/FindStep.tsx:197
 #: src/firstrun/LoaderStep.tsx:372
 msgid "{loader} {version} installed"
 msgstr "{loader} {version} installed"
@@ -13324,7 +13332,7 @@ msgstr "Compare with…"
 msgid "Could not update tags for the selected mods"
 msgstr "Could not update tags for the selected mods"
 
-#: src/firstrun/FindStep.tsx:244
+#: src/firstrun/FindStep.tsx:286
 #: src/firstrun/FirstRun.tsx:102
 #: src/firstrun/LoaderStep.tsx:187
 #: src/firstrun/LoaderStep.tsx:387
