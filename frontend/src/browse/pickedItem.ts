@@ -18,6 +18,9 @@ function pickedItem(item: BrowseItem, source: string): BrowseItem {
     endorsements: alt.endorsements,
     stars: alt.stars,
     downloads: alt.downloads,
+    version: alt.version,
+    updated: alt.updated,
+    size: alt.size,
     bundled: false,
   }
 }

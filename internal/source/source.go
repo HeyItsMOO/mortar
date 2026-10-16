@@ -116,8 +116,10 @@ type Item struct {
 	Stars        int    `json:"stars"`
 	Downloads    int    `json:"downloads"`
 	Updated      string `json:"updated"`
-	URL          string `json:"url"`
-	Installed    bool   `json:"installed"`
+	// Size is the latest main file's size in bytes, 0 when the site does not say in its search results.
+	Size      int64  `json:"size"`
+	URL       string `json:"url"`
+	Installed bool   `json:"installed"`
 	// Repo is the mod's GitHub repository as "owner/repo" when its site links one; it ties the same mod on
 	// several sources together.
 	Repo string `json:"repo,omitempty"`
@@ -145,10 +147,13 @@ type Alt struct {
 	Obsolete  bool   `json:"obsolete"`
 	Broken    bool   `json:"broken"`
 	Loader    bool   `json:"loader"`
-	// Endorsements, Stars and Downloads are that site's own counts for the mod.
-	Endorsements int `json:"endorsements"`
-	Stars        int `json:"stars"`
-	Downloads    int `json:"downloads"`
+	// Endorsements, Stars, Downloads, Version, Updated and Size are that site's own values for the mod.
+	Endorsements int    `json:"endorsements"`
+	Stars        int    `json:"stars"`
+	Downloads    int    `json:"downloads"`
+	Version      string `json:"version"`
+	Updated      string `json:"updated"`
+	Size         int64  `json:"size"`
 }
 
 // Page is one slice of search hits. A merged search across sources also sets Pages, the page count of its largest

@@ -100,6 +100,12 @@ function windowAndMods(i18n: I18n): Record<string, PrefCopy> {
       label: i18n._(msg`Author on cards`),
       description: i18n._(msg`Show the author line on grid cards`),
     },
+    browseCardStats: {
+      label: i18n._(msg`Card details in Browse`),
+      description: i18n._(
+        msg`The stats each Browse card shows under its summary; choose them from Browse's Show menu`,
+      ),
+    },
     enableRequirements: {
       label: i18n._(msg`Auto-enable requirements`),
       description: i18n._(

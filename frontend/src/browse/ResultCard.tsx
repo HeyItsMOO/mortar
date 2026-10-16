@@ -3,6 +3,7 @@ import { Box, ButtonBase, Card, Typography } from '@mui/material'
 import { ExternalLink } from 'lucide-react'
 import { type MouseEvent, useState } from 'react'
 import { formatAuthors } from '../mods/authorNormalize.ts'
+import { useSettings } from '../settings/store.ts'
 import { IconAction } from '../shell/IconAction.tsx'
 import { GRAY_OPACITY, openPageLabel, PICTURE_PX, ROW_PICTURE_PX } from './browseConstants.ts'
 
@@ -11,7 +12,7 @@ import type { BrowseItem, ResultCardProps } from './browseTypes.ts'
 import { pictureSrc } from './pictureSrc.ts'
 import { SourceBadges } from './SourceBadges.tsx'
 import { hitKey, useBrowseSelection } from './selection.ts'
-import { useStats } from './stats.ts'
+import { parseCardStats, useCardStats } from './stats.ts'
 import { useCardAction } from './useCardAction.tsx'
 
 function CardPicture({ picture, size, dim }: { picture: string; size: number; dim: number }) {
@@ -54,7 +55,8 @@ function ResultCard(props: ResultCardProps) {
   const [picked, setPicked] = useState(item.source)
   const source = sources.includes(picked) ? picked : item.source
   const { shownItem, url, installed, action } = useCardAction(props, item, source)
-  const stats = useStats(shownItem)
+  const shownStats = parseCardStats(useSettings((s) => s.browseCardStats))
+  const stats = useCardStats(shownItem, shownStats)
   const selected = useBrowseSelection(
     (s) => s.selected !== null && hitKey(s.selected.item) === hitKey(item),
   )
@@ -108,9 +110,11 @@ function ResultCard(props: ResultCardProps) {
             {name}
           </Typography>
         </ButtonBase>
-        <Typography noWrap={true} sx={{ fontSize: 12, color: 'text.secondary' }}>
-          {author === '' ? stats : `${formatAuthors(author)} · ${stats}`}
-        </Typography>
+        {author === '' ? null : (
+          <Typography noWrap={true} sx={{ fontSize: 12, color: 'text.secondary' }}>
+            {formatAuthors(author)}
+          </Typography>
+        )}
         <Typography
           title={summary}
           sx={{
@@ -124,6 +128,24 @@ function ResultCard(props: ResultCardProps) {
         >
           {summary}
         </Typography>
+        {stats.length === 0 ? null : (
+          // Each stat stays whole and the line wraps between them, since the action button narrows the column.
+          <Typography
+            sx={{
+              fontSize: 12,
+              color: 'text.secondary',
+              display: 'flex',
+              flexWrap: 'wrap',
+              columnGap: 0.75,
+            }}
+          >
+            {stats.map((s, i) => (
+              <Box component="span" key={s} sx={{ whiteSpace: 'nowrap' }}>
+                {i === 0 ? s : `· ${s}`}
+              </Box>
+            ))}
+          </Typography>
+        )}
         <SourceBadges sources={sources} picked={source} names={sourceNames} onPick={setPicked} />
       </Box>
       <Box

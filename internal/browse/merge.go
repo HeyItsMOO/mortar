@@ -145,6 +145,7 @@ func mergeSame(items []Item, order []string, ident identityOf) []Item {
 					Source: m.Source, ID: m.ID, URL: m.URL, Installed: m.Installed,
 					Obsolete: m.Obsolete, Broken: m.Broken, Loader: m.Loader,
 					Endorsements: m.Endorsements, Stars: m.Stars, Downloads: m.Downloads,
+					Version: m.Version, Updated: m.Updated, Size: m.Size,
 				})
 			}
 		}

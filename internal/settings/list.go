@@ -3,6 +3,7 @@ package settings
 import (
 	"fmt"
 	"slices"
+	"strings"
 )
 
 const (
@@ -93,4 +94,45 @@ func normalizeList(s *Settings) {
 	s.ListColumns = sanitizeListColumns(s.ListColumns)
 	s.ListSortColumn, s.ListSortDir = sanitizeListSort(s.ListSortColumn, s.ListSortDir)
 	s.ListGroupBy = sanitizeListGroupBy(s.ListGroupBy)
+}
+
+// Browse card stats, in the order a card shows them.
+var browseCardStatValues = []string{"popularity", "downloads", "size", "version", "updated"}
+
+const defaultBrowseCardStats = "popularity,downloads"
+
+// sanitizeBrowseCardStats keeps the known ids of raw once each, in display order; "none" or no known id left over a
+// non-empty raw is "none", and an empty raw is the default.
+func sanitizeBrowseCardStats(raw string) string {
+	if raw == "" {
+		return defaultBrowseCardStats
+	}
+	ids := strings.Split(raw, ",")
+	var out []string
+	for _, id := range browseCardStatValues {
+		if slices.Contains(ids, id) {
+			out = append(out, id)
+		}
+	}
+	if len(out) == 0 {
+		return "none"
+	}
+	return strings.Join(out, ",")
+}
+
+// browseCardStatsPref is the Browse card stats as a comma-separated list of ids, or "none".
+func browseCardStatsPref() pref {
+	return pref{
+		spec: PrefSpec{Key: "browseCardStats", Scope: ScopeApp, Type: TypeString},
+		get:  func(s Settings, _ string) string { return s.BrowseCardStats },
+		set: func(s *Settings, _, raw string) error {
+			for id := range strings.SplitSeq(raw, ",") {
+				if id != "none" && !slices.Contains(browseCardStatValues, id) {
+					return fmt.Errorf("unknown card stat %q", id)
+				}
+			}
+			s.BrowseCardStats = sanitizeBrowseCardStats(raw)
+			return nil
+		},
+	}
 }

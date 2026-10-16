@@ -94,6 +94,7 @@ const defaults: Settings = {
   theme: 'dark',
   gridCardSize: 'medium',
   showAuthorOnCards: true,
+  browseCardStats: 'popularity,downloads',
   reduceMotion: 'system',
   profileHero: 'full',
   reuseFomodChoices: true,

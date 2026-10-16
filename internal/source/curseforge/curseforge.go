@@ -322,6 +322,7 @@ func (d Driver) Search(ctx context.Context, q source.Query) (source.Page, error)
 		for _, f := range m.LatestFiles {
 			if f.ID == m.MainFileID {
 				it.Version = f.version()
+				it.Size = f.FileLength
 			}
 		}
 		items = append(items, it)

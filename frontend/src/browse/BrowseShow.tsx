@@ -1,12 +1,17 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, Menu, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControlLabel, Menu, Tooltip, Typography } from '@mui/material'
 import { Filter } from 'lucide-react'
 import { useState } from 'react'
+import { SetByKey } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { PrefSegmented } from '../settings/PrefControls.tsx'
+import { persist } from '../settings/persist.ts'
+import { useSettings } from '../settings/store.ts'
 import { space } from '../theme/density.ts'
 import { type BrowseModes, DEFAULT_MODES, type Mode, ROWS } from './browseModes.ts'
+import { CARD_STATS, type CardStat, formatCardStats, parseCardStats } from './stats.ts'
 
-// The Mods tab's "Show" button, for what Browse does with mods in the profile, obsolete ones and broken ones.
+// The Mods tab's "Show" button, for what Browse does with mods in the profile, obsolete ones and broken ones, and
+// which stats its cards show.
 function BrowseShow({
   modes,
   onModes,
@@ -25,6 +30,21 @@ function BrowseShow({
     broken: t`Broken`,
   }
   const noCompat = t`This game has no compatibility list, so no mod is known to be broken.`
+  const cardStats = parseCardStats(useSettings((s) => s.browseCardStats))
+  const statLabels: Record<CardStat, string> = {
+    popularity: t`Endorsements, likes or stars`,
+    downloads: t`Downloads`,
+    size: t`Size`,
+    version: t`Version`,
+    updated: t`Last updated`,
+  }
+  const toggleStat = (stat: CardStat, on: boolean) => {
+    const next = on ? [...cardStats, stat] : cardStats.filter((s) => s !== stat)
+    persist(
+      () => SetByKey('browseCardStats', formatCardStats(next), ''),
+      t`Could not save that setting`,
+    )
+  }
   const choices: { value: Mode; label: string }[] = [
     { value: 'off', label: t`Off` },
     { value: 'gray', label: t`Gray out` },
@@ -69,6 +89,22 @@ function BrowseShow({
               />
             </Box>
           ))}
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography sx={{ fontSize: 13, fontWeight: 600 }}>{t`Card details`}</Typography>
+            {CARD_STATS.map((stat) => (
+              <FormControlLabel
+                key={stat}
+                label={statLabels[stat]}
+                control={
+                  <Checkbox
+                    size="small"
+                    checked={cardStats.includes(stat)}
+                    onChange={(e) => toggleStat(stat, e.target.checked)}
+                  />
+                }
+              />
+            ))}
+          </Box>
         </Box>
       </Menu>
     </>

@@ -108,7 +108,7 @@ func TestPrefsExportImportRoundTrip(t *testing.T) {
 		"notifyDownloadFinished": "false", "notifyDownloadFailed": "false", "notifyRunCrashed": "false",
 		"desktopDownloadFinished": "true", "desktopDownloadFailed": "false", "desktopRunCrashed": "false",
 		"desktopModUpdates": "true",
-		"density":           "compact", "theme": "light", "gridCardSize": "large", "showAuthorOnCards": "false",
+		"density":           "compact", "theme": "light", "gridCardSize": "large", "showAuthorOnCards": "false", "browseCardStats": "size,updated",
 		"reduceMotion": "always", "profileHero": "hidden", "enableRequirements": "never",
 		"missingRequirements": "autodownload", "reuseFomodChoices": "false", "driftChecks": "false",
 		"smapiBuilds": "include", "smapiPin": "4.0.0", "bepinex5Pin": "5.4.2100", "autoInstallMortarUpdates": "false", "autoTrackNexus": "true",
