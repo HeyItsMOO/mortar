@@ -1982,6 +1982,11 @@
       },
       "saveFiles": ["*.vcdbs"],
       "saveCompanions": [".vcdbs-shm", ".vcdbs-wal"],
+      "saveCopies": [
+        "{stem}-bkp-*{ext}",
+        "{stem}-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_*{ext}"
+      ],
+      "saveCopyFolders": ["Backups", "BackupSaves"],
       "deploy": "profile",
       "targets": [
         {

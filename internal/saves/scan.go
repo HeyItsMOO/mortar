@@ -78,17 +78,18 @@ type cached struct {
 
 // Scanner scans the saves in Dir, laid out as Files and Companions say (see Layout), and caches results in CacheDir.
 type Scanner struct {
-	Dir        string
-	Files      []string
-	Companions []string
-	Copies     []string
-	CacheDir   string
-	mu         sync.Mutex
+	Dir         string
+	Files       []string
+	Companions  []string
+	Copies      []string
+	CopyFolders []string
+	CacheDir    string
+	mu          sync.Mutex
 }
 
 // Layout is the scanned folder and its save shape.
 func (s *Scanner) Layout() Layout {
-	return Layout{Dir: s.Dir, Files: s.Files, Companions: s.Companions, Copies: s.Copies}
+	return Layout{Dir: s.Dir, Files: s.Files, Companions: s.Companions, Copies: s.Copies, CopyFolders: s.CopyFolders}
 }
 
 // Scan returns every save in Dir, newest first. A save that cannot be read is left out and reported in the
@@ -189,6 +190,9 @@ type Layout struct {
 	Companions []string
 	// Copies are the patterns for the copies of a save the game keeps beside it (components.GameInfo.SaveCopies).
 	Copies []string
+	// CopyFolders are folders beside Dir that also hold copies (components.GameInfo.SaveCopyFolders); a copy there is
+	// named "../<folder>/<file>".
+	CopyFolders []string
 }
 
 // Copy is one copy of a save that the game itself keeps beside it, named by its slash path under Dir.
@@ -206,20 +210,32 @@ func (l Layout) CopiesOf(name string) []Copy {
 	dir, base := path.Split(name)
 	ext := path.Ext(base)
 	fill := strings.NewReplacer("{name}", globQuote(base), "{stem}", globQuote(strings.TrimSuffix(base, ext)), "{ext}", globQuote(ext))
+	dirs := []string{dir}
+	for _, f := range l.CopyFolders {
+		dirs = append(dirs, path.Join("..", f))
+	}
 	var out []Copy
-	for _, p := range l.Copies {
-		matches, _ := filepath.Glob(filepath.Join(l.Dir, filepath.FromSlash(dir), fill.Replace(p)))
-		for _, m := range matches {
-			fi, err := os.Stat(m)
-			c := Copy{Name: path.Join(dir, filepath.Base(m))}
-			if err != nil || !fi.Mode().IsRegular() || c.Name == name || slices.ContainsFunc(out, func(o Copy) bool { return o.Name == c.Name }) {
-				continue
-			}
-			c.At, c.Size = fi.ModTime().UnixMilli(), fi.Size()
-			out = append(out, c)
+	for _, d := range dirs {
+		for _, p := range l.Copies {
+			out = l.appendCopies(out, name, d, fill.Replace(p))
 		}
 	}
 	slices.SortFunc(out, func(a, b Copy) int { return cmp.Compare(b.At, a.At) })
+	return out
+}
+
+// appendCopies adds the files in dir, a slash path relative to Dir, that match pattern and are not save name itself.
+func (l Layout) appendCopies(out []Copy, name, dir, pattern string) []Copy {
+	matches, _ := filepath.Glob(filepath.Join(l.Dir, filepath.FromSlash(dir), pattern))
+	for _, m := range matches {
+		fi, err := os.Stat(m)
+		c := Copy{Name: path.Join(dir, filepath.Base(m))}
+		if err != nil || !fi.Mode().IsRegular() || c.Name == name || slices.ContainsFunc(out, func(o Copy) bool { return o.Name == c.Name }) {
+			continue
+		}
+		c.At, c.Size = fi.ModTime().UnixMilli(), fi.Size()
+		out = append(out, c)
+	}
 	return out
 }
 

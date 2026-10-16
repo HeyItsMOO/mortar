@@ -154,6 +154,9 @@ type GameInfo struct {
 	// {name} is the save's file name, {stem} the name without its extension and {ext} the extension (a Valheim world's
 	// "{stem}_backup_auto-*{ext}", a Sims 4 slot's "{name}.ver?"). An older Mortar ignores the field.
 	SaveCopies []string `json:"saveCopies,omitempty"`
+	// SaveCopyFolders are folders beside the saves folder where the game also keeps copies named by SaveCopies
+	// (Vintage Story's Backups and BackupSaves). An older Mortar ignores the field.
+	SaveCopyFolders []string `json:"saveCopyFolders,omitempty"`
 	// FolderNames lists, by a folder name Paths uses, the names the game gives that folder on some installs (The Sims
 	// 4 names its user folder after the game's language). An older Mortar ignores the field and uses the name in Paths.
 	FolderNames map[string][]string `json:"folderNames,omitempty"`
@@ -604,6 +607,11 @@ func (g GameInfo) Validate() error {
 	for _, p := range g.SaveCopies {
 		if !strings.Contains(p, "{") || strings.ContainsAny(p, "/\\") {
 			return fmt.Errorf("game %q has an unusable save copy pattern %q", g.ID, p)
+		}
+	}
+	for _, f := range g.SaveCopyFolders {
+		if f == "" || f == "." || f == ".." || strings.ContainsAny(f, "/\\*?[") {
+			return fmt.Errorf("game %q has an unusable save copy folder %q", g.ID, f)
 		}
 	}
 	if g.Stores.Epic != nil {
