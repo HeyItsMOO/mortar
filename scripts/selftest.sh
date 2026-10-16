@@ -637,7 +637,7 @@ regress() {
   verdict=FAIL
   local timeout=${MORTAR_REGRESS_TIMEOUT:-180}
   local log="$SANDBOX_HOME/.config/StardewValley/ErrorLogs/SMAPI-latest.txt" t0=$SECONDS
-  local failures=() mods_n="" packs_n="" skips=0 enabled="" profile="" diff_lines=0
+  local failures=() mods_n="" packs_n="" skips=0 enabled="" profile="" diff_lines=0 bridge=""
 
   finish() { release_sandbox; }
   regress_traps
@@ -672,6 +672,10 @@ regress() {
     if [ $((mods_n + packs_n + skips)) -ne "$enabled" ]; then
       failures+=("loaded $mods_n mods + $packs_n content packs + $skips skipped != $enabled enabled")
     fi
+    # The profile gets the catalog's published bridge, so a broken bridge release fails here; SMAPI lists each loaded
+    # mod as "Name version by author", and a bridge it skipped is not in that list.
+    bridge=$(sed -n 's/.*SMAPI\] *Mortar SMAPI Bridge \([0-9][^ ]*\) by .*/\1/p' "$log" | head -1)
+    [ -n "$bridge" ] || failures+=("the Mortar SMAPI Bridge did not load")
   fi
   [ -n "$gpids" ] && echo "$gpids" >"$ROOT/game.pid"
 
@@ -700,6 +704,7 @@ regress() {
   echo "profile        $profile"
   echo "enabled        $enabled"
   echo "SMAPI loaded   ${mods_n:-?} mods + ${packs_n:-?} content packs (+ $skips skipped)"
+  echo "bridge         ${bridge:-not loaded}"
   echo "game entries   $(wc -l <"$ROOT/game-before.txt") hashed, $diff_lines differing after purge"
   local f
   for f in "${failures[@]}"; do echo "FAIL: $f"; done
