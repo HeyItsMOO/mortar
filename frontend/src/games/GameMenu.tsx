@@ -52,6 +52,8 @@ export function GameMenu() {
     lastGame,
     played,
   )
+  // The rest of the catalog, mostly games not set up here, is one click away under All games.
+  const found = rest.filter((g) => g.installed)
   const item = (g: GameInfo) => (
     <TitleMenuItem
       key={g.id}
@@ -106,8 +108,8 @@ export function GameMenu() {
       <TitleMenu anchorEl={anchor} onClose={close} label={t`Games`} width={300}>
         {recent.length > 0 ? <MenuHeading>{t`Recently played`}</MenuHeading> : null}
         {recent.map(item)}
-        {rest.length > 0 ? <MenuHeading>{t`Games`}</MenuHeading> : null}
-        {rest.map(item)}
+        {found.length > 0 ? <MenuHeading>{t`On this computer`}</MenuHeading> : null}
+        {found.map(item)}
         <MenuRule />
         <TitleMenuItem
           label={t`All games…`}

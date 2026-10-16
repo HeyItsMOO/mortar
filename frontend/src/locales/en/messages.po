@@ -688,7 +688,7 @@ msgstr "{0} sent you {1} ({gameName})"
 msgid "This log is {size}. Sharing uploads it to smapi.io as a public link."
 msgstr "This log is {size}. Sharing uploads it to smapi.io as a public link."
 
-#: src/games/GameMenu.tsx:72
+#: src/games/GameMenu.tsx:74
 msgid "Switch game: {gameLabel}"
 msgstr "Switch game: {gameLabel}"
 
@@ -2710,11 +2710,6 @@ msgstr "Skipped"
 msgid "Edit profile"
 msgstr "Edit profile"
 
-#. placeholder {0}: formatBytes(backdropBytes)
-#: src/settings/sections/Appearance.tsx:206
-msgid "This image is {0}, which costs memory and GPU while Mortar is open. An animated WebP of the same clip is often a tenth of the size."
-msgstr "This image is {0}, which costs memory and GPU while Mortar is open. An animated WebP of the same clip is often a tenth of the size."
-
 #: src/game/FarmMenuItem.tsx:121
 msgid "The host's list"
 msgstr "The host's list"
@@ -3049,6 +3044,11 @@ msgstr "Install into {0}"
 #: src/fomod/Dialog.tsx:191
 msgid "Step {0} of {1}: {2}"
 msgstr "Step {0} of {1}: {2}"
+
+#. placeholder {0}: formatBytes(backdropBytes)
+#: src/settings/sections/Appearance.tsx:209
+msgid "This image is {0}, which costs memory and GPU while Mortar is open. The same picture or animation saved as WebP is often a tenth of the size."
+msgstr "This image is {0}, which costs memory and GPU while Mortar is open. The same picture or animation saved as WebP is often a tenth of the size."
 
 #: src/mods/DuplicateDialog.tsx:139
 msgid "Keep the Nexus copy"
@@ -3940,6 +3940,7 @@ msgstr "95th ms"
 msgid "Data folder moved"
 msgstr "Data folder moved"
 
+#: src/games/GameMenu.tsx:111
 #: src/games/GameSelect.tsx:507
 msgid "On this computer"
 msgstr "On this computer"
@@ -4447,7 +4448,7 @@ msgstr "The stats each Browse card shows under its summary; choose them from Bro
 
 #: src/profiles/EditProfileDialog.tsx:113
 #: src/profiles/EditProfileDialog.tsx:121
-#: src/settings/sections/Appearance.tsx:191
+#: src/settings/sections/Appearance.tsx:192
 msgid "Choose image…"
 msgstr "Choose image…"
 
@@ -5464,8 +5465,8 @@ msgstr "Settings backups"
 msgid "{0} stays as it is."
 msgstr "{0} stays as it is."
 
-#: src/games/GameMenu.tsx:72
-#: src/games/GameMenu.tsx:102
+#: src/games/GameMenu.tsx:74
+#: src/games/GameMenu.tsx:104
 msgid "Choose a game"
 msgstr "Choose a game"
 
@@ -5686,7 +5687,7 @@ msgstr "Could not read other profiles"
 msgid "Copy the command"
 msgstr "Copy the command"
 
-#: src/settings/sections/Appearance.tsx:180
+#: src/settings/sections/Appearance.tsx:181
 msgid "Background preview"
 msgstr "Background preview"
 
@@ -7842,7 +7843,7 @@ msgstr "Back up {0}?"
 msgid "Each mod's Entry method, run one after another"
 msgstr "Each mod's Entry method, run one after another"
 
-#: src/games/GameMenu.tsx:113
+#: src/games/GameMenu.tsx:115
 msgid "All games…"
 msgstr "All games…"
 
@@ -7933,7 +7934,7 @@ msgstr "Not found"
 #: src/profiles/EditProfileDialog.tsx:123
 #: src/profiles/GameSettings.tsx:182
 #: src/profiles/OverrideRows.tsx:113
-#: src/settings/sections/Appearance.tsx:201
+#: src/settings/sections/Appearance.tsx:202
 #: src/settings/sections/GameSettings.tsx:215
 msgid "Use default"
 msgstr "Use default"
@@ -8405,7 +8406,7 @@ msgstr "{0} goes back to {previous}, keeping its settings. Your saves are backed
 msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
-#: src/games/GameMenu.tsx:107
+#: src/games/GameMenu.tsx:109
 #: src/games/GameSelect.tsx:503
 msgid "Recently played"
 msgstr "Recently played"
@@ -12260,7 +12261,7 @@ msgstr "{0} is still taking your last share"
 msgid "Game install deleted"
 msgstr "Game install deleted"
 
-#: src/settings/sections/Appearance.tsx:219
+#: src/settings/sections/Appearance.tsx:223
 msgid "Sidebar"
 msgstr "Sidebar"
 
@@ -12602,7 +12603,7 @@ msgstr "Not enough disk space"
 msgid "Clean up storage"
 msgstr "Clean up storage"
 
-#: src/settings/sections/Appearance.tsx:215
+#: src/settings/sections/Appearance.tsx:219
 msgid "Mods view"
 msgstr "Mods view"
 
@@ -12714,8 +12715,7 @@ msgstr "Cancelled"
 msgid "Check mods and Mortar for updates (F5)"
 msgstr "Check mods and Mortar for updates (F5)"
 
-#: src/games/GameMenu.tsx:106
-#: src/games/GameMenu.tsx:109
+#: src/games/GameMenu.tsx:108
 #: src/settings/sections/AboutDiagnostics.tsx:85
 #: src/settings/sections/DataImport.tsx:27
 msgid "Games"
@@ -13394,7 +13394,7 @@ msgstr "Could not undo: some mods are missing, and the change's record could not
 msgid "Start the game without the Before you play dialog"
 msgstr "Start the game without the Before you play dialog"
 
-#: src/settings/sections/Appearance.tsx:212
+#: src/settings/sections/Appearance.tsx:216
 msgid "Display"
 msgstr "Display"
 
