@@ -50,6 +50,20 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
+    <release version="0.3.2" date="2026-10-15">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Browse cards can show downloads, endorsements, likes or stars, file size, version and last updated under the summary: tick the ones you want under Show › Card details</li>
+        </ul>
+        <p>Fixed</p>
+        <ul>
+          <li>Creating a Lethal Company or Valheim profile no longer fails with "does not say who published it"</li>
+          <li>Lethal Company's Saves lists each slot once: the backup and temporary files the game writes beside a slot belong to it, and each save says whether it is a save slot, an extra slot added by a mod, or the weekly challenge</li>
+          <li>Menus are wide enough for their longest item, so Check mods and Mortar for updates is no longer cut off</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.1" date="2026-10-15">
       <description>
         <p>New</p>
