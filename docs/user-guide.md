@@ -10,6 +10,8 @@ Download from [Releases](https://github.com/Rethunk-Tech/mortar/releases/latest)
 
 Use `mortar-amd64-installer.exe` on most PCs, or `mortar-arm64-installer.exe` on an ARM PC. The installer puts Mortar in `%LOCALAPPDATA%\Programs\Mortar` and adds Start Menu and Desktop shortcuts. It installs for your account only, so it never asks for administrator rights. `mortar-windows-amd64.exe` and `mortar-windows-arm64.exe` are the bare program: run them from any folder, with nothing installed.
 
+Mortar's window needs Microsoft's WebView2 Runtime, which Windows 10 and 11 usually have. The installer checks for it and installs it when it is missing, and says so if that fails; the bare program asks before it starts without it and offers Microsoft's download page.
+
 The Windows builds are not code-signed, so SmartScreen shows "Windows protected your PC" the first time. Choose **More info**, then **Run anyway**.
 
 With [Scoop](https://scoop.sh): `scoop bucket add mortar https://github.com/Rethunk-Tech/scoop-bucket`, then `scoop install mortar/mortar`. Scoop then handles updates and Mortar's own updater stays off.
@@ -59,7 +61,7 @@ sudo pacman -Sy mortar
 
 Mortar opens with a welcome screen and lists the launchers it found (Steam, GOG, Heroic, Lutris, Bottles). Continue, then open Stardew Valley. Setup has three steps.
 
-1. **Game folder.** Mortar shows where it found the game. If it did not find it, choose **Choose folder…** and pick the folder that holds the game; a copy installed without any launcher works the same way, and Mortar starts it directly. On Linux, a Windows build runs only from Steam or a Bottles bottle, so add a Windows-only game to one of those first. **Change folder…** and **Rescan** are there if the wrong copy was picked.
+1. **Game folder.** Mortar shows where it found the game. If it did not find it but a copy sits in your Desktop, Downloads or Games folder (on Windows, also a drive's root or Games folder), it offers that copy under **Found a copy outside your launchers**; otherwise choose **Choose folder…** and pick the folder that holds the game; a copy installed without any launcher works the same way, and Mortar starts it directly. On Linux, a Windows build runs only from Steam or a Bottles bottle, so add a Windows-only game to one of those first. **Change folder…** and **Rescan** are there if the wrong copy was picked.
 2. **Install SMAPI.** Mortar downloads SMAPI and puts it in the game folder. **Skip for now** leaves it for later. On Windows with Steam, Steam starts the game without SMAPI unless SMAPI is in the game's Steam launch options. Mortar shows the line to paste (right-click Stardew Valley in Steam, **Properties**, **Launch Options**), or choose **Set it in Steam for me** with Steam closed.
 3. **First profile.** Choose **Start empty** (a profile with only SMAPI), **Import from the game's Mods folder** (copies the mods you already have; nothing in the game folder is moved or changed), or **From a shared link**.
 
@@ -92,6 +94,7 @@ The **Browse** tab searches every site the game's mods come from at once: for St
 - **Nexus Mods:** Premium accounts download straight into the profile. Free accounts open the mod's files page and use **Mod Manager Download**, which the browser extension or the nxm link hands to Mortar.
 - **GitHub:** **Add** puts the latest release in the profile. Mortar uses your GitHub CLI login (`gh auth login`) when it is present, which raises GitHub's rate limits; without it, it works anonymously.
 - **Grid or list:** the toggle at the left of the search row switches between cards and rows.
+- **Card details:** **Show › Card details** picks what each card lists under its summary: popularity (endorsements, likes, followers or stars, as the site counts them), downloads, file size, version and when it was last updated. The Mods tab's cards use the same choice. A site that does not report one leaves it out (GitHub gives no file size).
 
 ### Narrow and sort the results
 
@@ -157,7 +160,7 @@ To send, use **Share…**, choose **Nearby** and pick the computer. The receiver
 
 ## Switch games
 
-Click the game's name in the title bar. A menu lists each playable game, the one you opened last first, with a tick on the current one. Choose a game and Mortar opens it on the profile you used last. **All games…** opens Game select, which shows every game, including the ones Mortar did not find.
+Click the game's name in the title bar. A menu lists the games you played recently and the ones found on this computer, with a tick on the current one. Choose a game and Mortar opens it on the profile you used last. **All games…** opens Game select: recently played games first, then the ones on this computer, then every other game Mortar supports, with a letter rail to jump through them.
 
 ## Game installs
 
@@ -303,12 +306,19 @@ A sync folder shares each profile's mod list, sources, settings and mod config f
 - **Mortar:** the Mortar menu's **Check mods and Mortar for updates**, or **Settings › Updates**, which can also include beta releases. An update downloads and applies when you close Mortar, or choose **Restart now**.
 - **Mods:** updates show on each profile's mod list, and **Settings › Updates** has **Review mod updates**.
 - **SMAPI:** Mortar tells you when a new SMAPI is out. The game's settings have its version and update.
+- **What's new:** after an update, Mortar shows what changed, grouped by area with a New or Fixed label on each line. An update that skipped versions shows every release you missed. The Mortar menu's **What's new** shows it again.
+
+## Appearance
+
+**Settings › Appearance** sets the theme, the accent colour and the background: an image (yours or the default), the desktop wallpaper, or a solid colour. An animated GIF, WebP or PNG plays behind Mortar; it holds still while a game runs and when **Reduce motion** is on. Mortar says when an image is large enough to cost memory and GPU, and an animation saved as WebP is often a tenth of the size of a GIF.
 
 ## Save backups and restore
 
 Mortar zips your saves before it changes them. **Back up saves before Play** (Settings, then the game's **Save backups**) backs up every time the game starts, and **Scheduled save backups** does it on a timer. Backups also happen before a profile update.
 
 To restore, open the **Saves** tab, choose **Save backups…**, pick a backup and choose **Restore**. Mortar names the saves it will overwrite and backs up the current Saves folder first. Stop the game before restoring. **Open backups folder** shows the zips; **Backup location** in the game's settings moves where new ones go.
+
+Each save's backups button lists the backups that hold it. For Valheim and The Sims 4 it also lists the copies the game keeps itself (Valheim's automatic world backups, The Sims 4's rollback copies of a slot), marked **Kept by the game**; restoring one puts it back over the save, and Mortar backs up the current saves first.
 
 ## Where your data lives
 
@@ -340,6 +350,7 @@ In **Settings › General › Antivirus**, choose **Automatic**, **clamd socket*
 
 ## Troubleshooting
 
+- **Mortar does not start:** it shows why in a message, with a button that opens the folder holding `mortar.log` (on Windows, **Yes** opens it, and Ctrl+C copies the message). On Linux without zenity or kdialog the message arrives as a desktop notification. If Mortar is already open but has stopped answering, starting it again offers to end the stuck copy and open a fresh one.
 - **Run checks:** **Settings › About › Diagnostics › Run checks…** inspects the data folder, games, Nexus links and the extension, and **Repair** fixes what it can.
 - **Logs:** Mortar's own log is `mortar.log` in the data folder; `crash.log` is there too after a crash. Each profile's SMAPI log is shown on its log view, and every run is kept.
 - **Report a bug:** the Mortar menu's **Report a bug** opens a prefilled GitHub issue. Leave **Attach diagnostics** ticked to save a zip (checks, logs, settings and recent runs, with secrets and your home folder removed) and add Mortar's checks to the issue; drag the zip into the issue before posting. **Save diagnostics…** in the Mortar menu and in Settings › About › Diagnostics writes the same zip.
