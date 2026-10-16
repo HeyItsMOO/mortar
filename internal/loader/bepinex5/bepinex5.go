@@ -148,12 +148,50 @@ func doorstopMajor(profileRoot string) int {
 // executable: winhttp.dll and doorstop_config.ini. Absent ones are left out. Everything else of the pack stays in the profile.
 func DoorstopFiles(profileRoot string) []string {
 	var files []string
-	for _, name := range []string{"doorstop_config.ini", "winhttp.dll"} {
+	for _, name := range []string{doorstopConfig, "winhttp.dll"} {
 		if _, err := os.Stat(filepath.Join(profileRoot, name)); err == nil {
 			files = append(files, name)
 		}
 	}
 	return files
+}
+
+const (
+	doorstopConfig = "doorstop_config.ini"
+	// relayConfig is the profile's Doorstop config with its target made absolute, the copy the game folder gets.
+	relayConfig = ".mortar-doorstop_config.ini"
+)
+
+// absoluteDoorstopConfig writes the profile's Doorstop config with its target assembly set to target (added, in the
+// spelling of Doorstop doorstopMajor, when the config names none), and returns the copy's path: the game folder's
+// config then loads the profile's BepInEx even when a start cannot pass Doorstop's flags, as the Epic Games
+// Launcher's link cannot.
+func absoluteDoorstopConfig(profileRoot string, doorstopMajor int, target string) (string, error) {
+	b, err := fsx.ReadFile(filepath.Join(profileRoot, doorstopConfig))
+	if err != nil {
+		return "", err
+	}
+	lines := strings.Split(string(b), "\n")
+	found := false
+	for i, line := range lines {
+		key, _, ok := strings.Cut(line, "=")
+		if k := strings.TrimSpace(key); ok && (k == "targetAssembly" || k == "target_assembly") {
+			found = true
+			lines[i] = k + "=" + target
+			if strings.HasSuffix(line, "\r") {
+				lines[i] += "\r"
+			}
+		}
+	}
+	if !found {
+		key := "targetAssembly"
+		if doorstopMajor >= 4 {
+			key = "target_assembly"
+		}
+		lines = append(lines, key+"="+target)
+	}
+	out := filepath.Join(profileRoot, relayConfig)
+	return out, fsx.WriteFile(out, []byte(strings.Join(lines, "\n")), 0o600)
 }
 
 func targetPath(profileRoot string, proton bool) string {

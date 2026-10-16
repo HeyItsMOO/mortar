@@ -850,7 +850,7 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 	if err := inst.RunError(g.Name()); err != nil {
 		return err
 	}
-	direct = direct || !inst.SteamStarts()
+	direct = direct || !inst.StoreStarts()
 	env := game.StartEnv{Direct: direct, HideWindow: !showConsole, Ready: s.seen(g)}
 	var measure, sample bool
 	var startupBefore map[string]bool

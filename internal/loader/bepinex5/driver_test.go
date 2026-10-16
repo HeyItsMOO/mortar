@@ -2,6 +2,7 @@ package bepinex5
 
 import (
 	"errors"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -45,6 +46,10 @@ func TestLoaderContract(t *testing.T) {
 	}
 	if len(plan.Files) != 2 || plan.Files[0].Dst != "doorstop_config.ini" || len(plan.RuntimeReqs) != 1 {
 		t.Fatalf("plan %+v", plan)
+	}
+	// The game folder's config names the profile's preloader itself, for a start that passes no Doorstop flags.
+	if cfg, err := os.ReadFile(plan.Files[0].Src); err != nil || !strings.Contains(string(cfg), "target_assembly=Z:\\") {
+		t.Fatalf("config %q %v", cfg, err)
 	}
 	native := launchplan.New(launchplan.ModeProfile)
 	view.Runtime = "native"

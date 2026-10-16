@@ -435,7 +435,7 @@ func TestDirectCommandRunsBottleInstallThroughBottlesCLI(t *testing.T) {
 	}
 }
 
-func TestOnlySteamCopiesStartThroughSteamAndLinuxRefusesAWindowsBuildWithNothingToRunIt(t *testing.T) {
+func TestOnlySteamAndEpicCopiesStartThroughTheirStoreAndLinuxRefusesAWindowsBuildWithNothingToRunIt(t *testing.T) {
 	cases := []struct {
 		inst        Install
 		steam, runs bool
@@ -446,10 +446,11 @@ func TestOnlySteamCopiesStartThroughSteamAndLinuxRefusesAWindowsBuildWithNothing
 		{Install{Store: StoreBottles, Dir: "/g", Prefix: "/b", Platform: "windows", Runtime: "wine-prefix"}, false, true},
 		{Install{Store: "", Dir: "/g", Platform: "windows", Runtime: "native"}, false, runtime.GOOS == "windows"},
 		{Install{Store: StoreLutris, Dir: "/g", Platform: "windows", Runtime: "native"}, false, runtime.GOOS == "windows"},
+		{Install{Store: StoreEpic, Dir: "/g", Platform: "windows", Runtime: "native"}, true, runtime.GOOS == "windows"},
 	}
 	for _, c := range cases {
-		if got := c.inst.SteamStarts(); got != c.steam {
-			t.Errorf("%+v SteamStarts = %v", c.inst, got)
+		if got := c.inst.StoreStarts(); got != c.steam {
+			t.Errorf("%+v StoreStarts = %v", c.inst, got)
 		}
 		if err := c.inst.RunError("Game"); (err == nil) != c.runs {
 			t.Errorf("%+v RunError = %v", c.inst, err)

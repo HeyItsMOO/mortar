@@ -106,7 +106,14 @@ func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.Prof
 	proton := p.Runtime == "proton"
 	plan.AddArgs(LaunchArgs(p.Dir, m.Doorstop, proton)...)
 	for _, f := range DoorstopFiles(p.Dir) {
-		plan.AddFile(launchplan.PlanFile{Src: filepath.Join(p.Dir, filepath.FromSlash(f)), Dst: filepath.FromSlash(f)})
+		src := filepath.Join(p.Dir, filepath.FromSlash(f))
+		if f == doorstopConfig {
+			var err error
+			if src, err = absoluteDoorstopConfig(p.Dir, m.Doorstop, targetPath(p.Dir, proton)); err != nil {
+				return err
+			}
+		}
+		plan.AddFile(launchplan.PlanFile{Src: src, Dst: filepath.FromSlash(f)})
 	}
 	if proton {
 		plan.RequireRuntime(launchplan.RuntimeReq{Kind: "dll-override", Key: "winhttp", Value: "native,builtin"})

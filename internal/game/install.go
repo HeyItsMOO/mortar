@@ -209,9 +209,11 @@ func ResolveInstall(home string, s settings.Settings, id, pin string) (Install, 
 	return newInstall(info, store, dir, prefix, OriginFolder), nil
 }
 
-// SteamStarts reports whether Steam can start this install: `steam -applaunch` runs the copy Steam installed, so a
-// folder the user chose or another launcher's copy has to be started directly.
-func (in Install) SteamStarts() bool { return in.Store == StoreSteam || in.Store == StoreFlatpakSteam }
+// StoreStarts reports whether the store that installed this copy can start it: `steam -applaunch` and the Epic Games
+// Launcher's link run the copy their store installed, so a copy from anywhere else starts directly.
+func (in Install) StoreStarts() bool {
+	return in.Store == StoreSteam || in.Store == StoreFlatpakSteam || in.Store == StoreEpic
+}
 
 // RunError says why the install cannot be started on this computer, or is nil. On Linux a Windows build runs only
 // through Proton (a Steam copy) or a Bottles bottle; any other copy would be executed as a Linux program.
