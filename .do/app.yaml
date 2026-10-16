@@ -11,22 +11,23 @@ domains:
     type: PRIMARY
     zone: rethunk.tech
 static_sites:
+  # Both components deploy from the orphan `packages` branch, which package-repo.yml replaces with the tagged site
+  # and the signed apt, dnf and pacman repository on each release, so an ordinary push to main never changes the site.
   - name: site
     github:
       repo: Rethunk-Tech/mortar
-      branch: main
-      deploy_on_push: false
+      branch: packages
+      deploy_on_push: true
     environment_slug: html
     source_dir: site
     routes:
       - path: /
-  # The signed apt, dnf and pacman repository: package-repo.yml force-replaces the orphan `packages` branch each release.
   - name: packages
     github:
       repo: Rethunk-Tech/mortar
       branch: packages
       deploy_on_push: true
     environment_slug: html
-    source_dir: /
+    source_dir: packages
     routes:
       - path: /packages

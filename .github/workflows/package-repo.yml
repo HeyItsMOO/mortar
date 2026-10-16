@@ -1,8 +1,9 @@
 name: Package repository
 
-# Builds the signed apt, dnf and pacman repository from a published release's packages and publishes it as the single
-# commit of the orphan `packages` branch, which mortar.rethunk.tech serves at /packages (.do/app.yaml). release.yml
-# calls it after each release; a manual run rebuilds it for an existing tag.
+# Builds the signed apt, dnf and pacman repository from a published release's packages and publishes it, with the
+# tag's site, as the single commit of the orphan `packages` branch that mortar.rethunk.tech deploys on push
+# (.do/app.yaml), so the site changes only with a release. release.yml calls it after each release; a manual run
+# rebuilds both for an existing tag.
 on:
   workflow_dispatch:
     inputs:
@@ -35,6 +36,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.tag }}
           persist-credentials: false
 
       - name: Download packages
@@ -67,7 +69,11 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           set -euo pipefail
-          cd "$RUNNER_TEMP/packages"
+          tree="$RUNNER_TEMP/branch"
+          mkdir "$tree"
+          cp -r site "$tree/site"
+          cp -r "$RUNNER_TEMP/packages" "$tree/packages"
+          cd "$tree"
           git init -q -b packages
           git add -A
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \

@@ -413,7 +413,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: bun scripts/site-downloads.ts
 
-  # Publishes the signed package repository to the `packages` branch, served at https://mortar.rethunk.tech/packages.
+  # Publishes the signed package repository and the tagged site to the `packages` branch, which mortar.rethunk.tech deploys.
   package-repo:
     needs: finalize
     if: github.ref_type == 'tag'
