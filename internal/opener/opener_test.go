@@ -6,6 +6,7 @@ import (
 )
 
 func TestWebOpensOnlyHTTPAndHTTPSWithAHost(t *testing.T) {
+	tooLong := "https://example.com/" + strings.Repeat("a", maxURL)
 	for raw, ok := range map[string]bool{
 		"https://www.nexusmods.com/stardewvalley/mods/1915?tab=files": true,
 		"http://example.com/page#frag":                                true,
@@ -23,7 +24,7 @@ func TestWebOpensOnlyHTTPAndHTTPSWithAHost(t *testing.T) {
 		"https://example.com/a b":                                     false,
 		"https://example.com/\n":                                      false,
 		"example.com/page":                                            false,
-		"https://example.com/" + strings.Repeat("a", maxURL):          false,
+		tooLong:                                                       false,
 	} {
 		got, err := Web(raw)
 		if (err == nil) != ok || (ok && got != raw) {
