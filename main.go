@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"runtime/debug"
 	"strings"
 	"sync"
@@ -355,6 +356,8 @@ func run() error {
 		log.SetOutput(out)
 		slog.SetDefault(slog.New(slog.NewTextHandler(out, nil)))
 	}
+	// A user's log is often the only report there is, so it starts by naming the build.
+	log.Printf("mortar %s (build %s) on %s/%s", version, cmp.Or(appversion.Commit(), "unknown"), runtime.GOOS, runtime.GOARCH)
 	tidied := &tidy.Collector{}
 	if checkCrashLog(dataDir) {
 		tidied.Add("Emptied the crash log after it was reported", "data folder", 1, "crash.log")
