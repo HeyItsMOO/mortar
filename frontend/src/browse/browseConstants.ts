@@ -1,5 +1,4 @@
 import { msg } from '@lingui/core/macro'
-import { sourceLabel } from '../brand/sources/sourceLabel.ts'
 import { i18n } from '../i18n/index.ts'
 
 const ALL = 'all'
@@ -34,11 +33,6 @@ function searchHint(source: string, premium: boolean): string {
   )
 }
 
-function openPageLabel(source: string): string {
-  const label = sourceLabel(source)
-  return i18n._(msg`Open on ${label}`)
-}
-
 const list = { display: 'flex', flexDirection: 'column', gap: `${GAP_PX}px` } as const
 
 const grid = {
@@ -58,7 +52,6 @@ export {
   ICON_SIZE,
   list,
   NEXUS,
-  openPageLabel,
   PICTURE_PX,
   ROW_PICTURE_PX,
   STALE_OPACITY,

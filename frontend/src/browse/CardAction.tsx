@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Button, Chip } from '@mui/material'
+import { Button, Chip, Tooltip } from '@mui/material'
 import { Download, ExternalLink, Plus } from 'lucide-react'
 import { openPage } from '../mods/menu.ts'
 import { useNav } from '../nav/store.ts'
@@ -26,14 +26,18 @@ function NexusAction({
   const { t } = useLingui()
   const signedIn = useNexus((state) => state.signedIn)
   if (!signedIn) {
+    const why = t`Sign in to download`
     return (
-      <Button
-        size="small"
-        variant="outlined"
-        onClick={() => useNav.getState().openSettings('accounts')}
-      >
-        {t`Sign in to download`}
-      </Button>
+      <Tooltip title={why}>
+        <Button
+          size="small"
+          variant="outlined"
+          aria-label={why}
+          onClick={() => useNav.getState().openSettings('accounts')}
+        >
+          {t`Sign in`}
+        </Button>
+      </Tooltip>
     )
   }
   if (premium) {
@@ -49,15 +53,20 @@ function NexusAction({
       </Button>
     )
   }
+  // The short label fits under a card's picture; the files page is where Mod Manager Download starts it.
+  const why = t`Open files page`
   return (
-    <Button
-      size="small"
-      variant="contained"
-      startIcon={<ExternalLink size={14} />}
-      onClick={onOpenFiles}
-    >
-      {t`Open files page`}
-    </Button>
+    <Tooltip title={why}>
+      <Button
+        size="small"
+        variant="contained"
+        aria-label={why}
+        startIcon={<ExternalLink size={14} />}
+        onClick={onOpenFiles}
+      >
+        {t`Get`}
+      </Button>
+    </Tooltip>
   )
 }
 
@@ -112,13 +121,13 @@ function CardAction(props: CardActionProps) {
     return <Chip size="small" label={t`Loader`} title={t`Mortar installs the loader for you.`} />
   }
   if (item.bundled) {
-    return <Chip size="small" label={t`Installed by Mortar`} />
+    return <Chip size="small" label={t`Built in`} title={t`Installed by Mortar`} />
   }
   if (state.kind !== 'idle') {
     return <CardProgress state={state} />
   }
   if (installed) {
-    return <Chip size="small" label={t`In this profile`} />
+    return <Chip size="small" label={t`Added`} title={t`In this profile`} />
   }
   if (item.external === true) {
     return (
