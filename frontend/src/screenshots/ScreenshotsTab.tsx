@@ -193,6 +193,7 @@ export function ScreenshotsTab({ game }: { game: string }) {
           display: 'flex',
           flexDirection: 'column',
           px: space.gutter,
+          pt: space.gap,
           pb: space.gutter,
         }}
       >
