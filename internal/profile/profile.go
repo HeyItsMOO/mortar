@@ -125,6 +125,10 @@ type Component struct {
 	ContentPackFor mod.ID `json:"contentPackFor,omitempty"`
 	// LoadAfter is ids this pack should load after, recorded when the user makes it win an edit conflict.
 	LoadAfter []mod.ID `json:"loadAfter,omitempty"`
+	// ModID and Requires are the mod's own id and the ids it requires where its files name them (Vintage Story's
+	// modinfo.json), so a download can fetch what it needs.
+	ModID    string   `json:"modId,omitempty"`
+	Requires []string `json:"requires,omitempty"`
 }
 
 // Entry is one package in a profile: a download unit with its source, holding one or more components. Disabled

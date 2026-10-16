@@ -75,6 +75,7 @@ func (c Component) clone() Component {
 	c.Needs = slices.Clone(c.Needs)
 	c.Optional = slices.Clone(c.Optional)
 	c.LoadAfter = slices.Clone(c.LoadAfter)
+	c.Requires = slices.Clone(c.Requires)
 	return c
 }
 

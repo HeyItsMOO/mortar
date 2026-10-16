@@ -5,7 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"os"
+	"slices"
 	"strings"
 	"time"
 
@@ -144,5 +146,49 @@ func (s *Service) downloadPackage(ctx context.Context, it Item) error {
 	if err == nil || errors.As(err, &dup) {
 		s.dropDownloadUnlessKept(path)
 	}
+	if err == nil && it.Source == profile.KindVSModDB {
+		s.queueRequired(ctx, it, res.Profile)
+	}
 	return s.afterInstall(it.ID, res, err, false)
+}
+
+// gameModules are the mod ids a Vintage Story install provides itself.
+var gameModules = []string{"game", "survival", "creative"}
+
+// queueRequired queues, from the same site, each mod the profile's mods require by id that none of them is: a site
+// that publishes no dependencies leaves them to the files' own lists.
+func (s *Service) queueRequired(ctx context.Context, it Item, p profile.Profile) {
+	var reqs []Request
+	for _, id := range missingRequired(p) {
+		reqs = append(reqs, Request{Kind: KindDependency, Game: it.Game, Profile: it.Profile, Source: it.Source, Package: id})
+	}
+	if len(reqs) == 0 {
+		return
+	}
+	// Add takes the queue's lock, which the worker calling this may be inside of; the item's own context ends with it.
+	go func() {
+		if _, err := s.Add(context.WithoutCancel(ctx), reqs); err != nil {
+			log.Printf("queue: required mods of %s: %v", it.Package, err)
+		}
+	}()
+}
+
+// missingRequired is each mod id the profile's mods require that none of them is, once, in the order first required.
+func missingRequired(p profile.Profile) []string {
+	have := map[string]bool{}
+	var want []string
+	for _, e := range p.Entries {
+		for _, c := range e.Mods {
+			have[c.ModID] = true
+			want = append(want, c.Requires...)
+		}
+	}
+	var out []string
+	for _, id := range want {
+		if !have[id] && !slices.Contains(gameModules, id) {
+			have[id] = true
+			out = append(out, id)
+		}
+	}
+	return out
 }

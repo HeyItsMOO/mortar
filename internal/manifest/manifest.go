@@ -127,6 +127,8 @@ func parse(b []byte) (Manifest, error) {
 type ModInfo struct {
 	Name, ModID, Version string
 	Authors              []string
+	// Dependencies are the mod ids the file requires, lower-cased and sorted; the values (versions) are not read.
+	Dependencies []string
 }
 
 // ParseModInfo reads a mod-root file as leniently as a SMAPI manifest, its keys in any case.
@@ -135,10 +137,18 @@ func ParseModInfo(b []byte) (ModInfo, error) {
 	if err != nil {
 		return ModInfo{}, err
 	}
-	return ModInfo{
+	info := ModInfo{
 		Name: text(raw, "name"), ModID: text(raw, "modid"), Version: version(field(raw, "version")),
 		Authors: texts(field(raw, "authors")),
-	}, nil
+	}
+	var deps map[string]json.RawMessage
+	if json.Unmarshal(field(raw, "dependencies"), &deps) == nil {
+		for id := range deps {
+			info.Dependencies = append(info.Dependencies, strings.ToLower(id))
+		}
+		slices.Sort(info.Dependencies)
+	}
+	return info, nil
 }
 
 // curlyQuotes turns typographic quotes into straight ones, the second try SMAPI makes on a manifest that fails to parse.

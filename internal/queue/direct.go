@@ -69,7 +69,8 @@ func (s *Service) expandDirect(ctx context.Context, r Request) ([]Request, error
 		if !root {
 			q.Kind, q.Disabled, q.Picture = KindDependency, nil, ""
 		}
-		q.Package, q.Version, q.url, q.sizeKB, q.digest = ref.ID, f.Version, f.URL, f.SizeKB, f.Digest
+		// A dependency named by another id the site answers to (a Vintage Story mod id) is kept under the site's own.
+		q.Package, q.Version, q.url, q.sizeKB, q.digest = cmp.Or(f.ID, ref.ID), f.Version, f.URL, f.SizeKB, f.Digest
 		if !root || q.Name == "" {
 			q.Name = cmp.Or(f.Name, ref.ID)
 		}
