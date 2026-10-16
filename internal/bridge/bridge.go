@@ -21,15 +21,17 @@ import (
 
 // Companion is a loader's companion mod: its folder and id as the loader spells them, and the state file it writes.
 // StateFile is relative to the mod's folder for SMAPI and to the profile for BepInEx, which keeps one config folder.
+// Package is its Thunderstore-style Namespace-Name in a profile, fixed by Mortar because each mod site's manifest
+// rules differ and the catalog installs it from a GitHub release, where no index names it.
 type Companion struct {
-	ModFolder, ID, StateFile string
+	ModFolder, ID, StateFile, Package string
 }
 
 // SMAPI is the Mortar SMAPI Bridge.
 var SMAPI = Companion{ModFolder: "MortarSmapiBridge", ID: "Rethunk.MortarSmapiBridge", StateFile: "mortar-smapi-bridge.json"}
 
 // BepInEx is the Mortar BepInEx Bridge, whose state file sits in BepInEx's config folder.
-var BepInEx = Companion{ModFolder: "MortarBepInExBridge", ID: "Rethunk.MortarBepInExBridge", StateFile: "BepInEx/config/mortar-bepinex-bridge.json"}
+var BepInEx = Companion{ModFolder: "MortarBepInExBridge", ID: "Rethunk.MortarBepInExBridge", StateFile: "BepInEx/config/mortar-bepinex-bridge.json", Package: "Rethunk-MortarBepInExBridge"}
 
 // maxReply bounds the reply read: a status answer is one line of JSON.
 const maxReply = 1 << 20

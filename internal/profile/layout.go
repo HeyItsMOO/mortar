@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/Rethunk-Tech/mortar/internal/bridge"
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fomod"
@@ -49,10 +50,14 @@ func (s *Store) pick(game, key string) (installer.Archive, installer.Game, insta
 	if _, statErr := os.Stat(filepath.Join(root, "manifest.json")); inst.ID() == driverThunderstore && statErr == nil {
 		// The driver names files by package, Namespace-Name, which is not the store key. An archive from disk has only
 		// the manifest's name, which the driver reads itself. A BepInEx mod without a manifest keeps the store key.
-		_, arch.Key, _, _ = s.items.Meta(game, key)
+		var src string
+		src, arch.Key, _, _ = s.items.Meta(game, key)
 		// A GitHub item is described by owner/repo, which may hold a dash but is no package name.
 		if _, _, isTS := strings.Cut(arch.Key, "-"); !isTS || strings.Contains(arch.Key, "/") {
 			arch.Key = ""
+		}
+		if src == SourceMortar {
+			arch.Key = bridge.BepInEx.Package
 		}
 	}
 	return arch, g, inst, nil
