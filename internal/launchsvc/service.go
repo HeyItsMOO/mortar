@@ -902,7 +902,7 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 		return err
 	}
 	store := inst.Store
-	if store == game.StoreGOG || store == game.StoreGOGHeroic || store == game.StoreMinigalaxy || store == game.StoreLutris || store == game.StoreBottles || store == game.StoreEA {
+	if store == game.StoreGOG || store == game.StoreGOGHeroic || store == game.StoreMinigalaxy || store == game.StoreLutris || store == game.StoreBottles || store == game.StoreEA || store == game.StoreEpic {
 		env.Direct = true
 	}
 	if st, status := steam.Locate(s.home); status == steam.Found {

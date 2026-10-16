@@ -19,6 +19,7 @@ const (
 	StoreLutris       = lutris.StoreLutris
 	StoreBottles      = "bottles"
 	StoreEA           = "ea"
+	StoreEpic         = "epic"
 )
 
 // Launcher ids, each the source of one or more stores' installs and the key of the user's added folders.
@@ -31,6 +32,7 @@ const (
 	LauncherMinigalaxy   = "minigalaxy"
 	LauncherBottles      = "bottles"
 	LauncherEA           = "ea"
+	LauncherEpic         = "epic"
 )
 
 // Install is one discovered game folder and the store it came from.
@@ -61,7 +63,7 @@ type Store interface {
 
 // All returns the drivers in discovery order.
 func All() []Store {
-	return []Store{steamStore{}, gogStore{}, lutrisStore{}, bottlesStore{}, eaStore{}}
+	return []Store{steamStore{}, gogStore{}, lutrisStore{}, bottlesStore{}, eaStore{}, epicStore{}}
 }
 
 // Has reports whether g's catalog entry names the store key.
@@ -77,6 +79,8 @@ func Has(g components.GameInfo, key string) bool {
 		return g.Stores.Bottles != nil
 	case eaKey:
 		return g.Stores.EA != nil
+	case epicKey:
+		return g.Stores.Epic != nil
 	}
 	return false
 }
@@ -100,13 +104,13 @@ func Discover(home string, roots map[string][]string, g components.GameInfo) []I
 	return all
 }
 
-var storeOrder = []string{StoreSteam, StoreFlatpakSteam, StoreGOG, StoreGOGHeroic, StoreMinigalaxy, StoreEA, StoreLutris, StoreBottles}
+var storeOrder = []string{StoreSteam, StoreFlatpakSteam, StoreGOG, StoreGOGHeroic, StoreMinigalaxy, StoreEA, StoreEpic, StoreLutris, StoreBottles}
 
 // Rank orders stores for choosing a default install, lowest first; an unknown store ties with Steam.
 func Rank(store string) int { return max(slices.Index(storeOrder, store), 0) }
 
 // launcherOrder is the order the setup screen lists launchers in.
-var launcherOrder = []string{LauncherSteam, LauncherFlatpakSteam, LauncherHeroic, LauncherLutris, LauncherMinigalaxy, LauncherBottles, LauncherGOG, LauncherEA}
+var launcherOrder = []string{LauncherSteam, LauncherFlatpakSteam, LauncherHeroic, LauncherLutris, LauncherMinigalaxy, LauncherBottles, LauncherGOG, LauncherEA, LauncherEpic}
 
 // Launchers returns every driver's launchers on goos in the setup screen's order.
 func Launchers(goos string) []LauncherSpec {

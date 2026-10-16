@@ -1,6 +1,7 @@
 package gamestore
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -167,6 +168,66 @@ func (eaStore) Discover(_ string, roots map[string][]string, g components.GameIn
 	for _, dir := range eaDirs(runtime.GOOS, os.Getenv, roots[LauncherEA]...) {
 		if found := gog.GameDir(filepath.Join(dir, g.Stores.EA.Folder), g.MarkerPath()); found != "" {
 			out = append(out, Install{Store: StoreEA, Dir: found})
+		}
+	}
+	return out
+}
+
+const (
+	epicKey = "epic"
+	// epicInstalled is the Epic Games Launcher's list of the games it installed and where.
+	epicInstalled = "LauncherInstalled.dat"
+)
+
+// epicDirs are the folders holding the Epic Games Launcher's install list, the user's own first. Only Windows has the
+// launcher.
+func epicDirs(goos string, env func(string) string, custom ...string) []string {
+	out := slices.Clone(custom)
+	if pd := env("ProgramData"); goos == "windows" && pd != "" {
+		out = append(out, filepath.Join(pd, "Epic", "UnrealEngineLauncher"))
+	}
+	return out
+}
+
+type epicStore struct{}
+
+func (epicStore) Key() string { return epicKey }
+
+func (epicStore) Launchers(goos string) []LauncherSpec {
+	if goos != "windows" {
+		return nil
+	}
+	return []LauncherSpec{{
+		ID: LauncherEpic, Name: "Epic Games", Usable: func(dir string) bool { return fsx.IsFile(filepath.Join(dir, epicInstalled)) },
+		Looked: func(_ string, added map[string][]string) []string {
+			return epicDirs(goos, os.Getenv, added[LauncherEpic]...)
+		},
+	}}
+}
+
+func (epicStore) Discover(_ string, roots map[string][]string, g components.GameInfo) []Install {
+	var out []Install
+	for _, dir := range epicDirs(runtime.GOOS, os.Getenv, roots[LauncherEpic]...) {
+		b, err := fsx.ReadFile(filepath.Join(dir, epicInstalled))
+		if err != nil {
+			continue
+		}
+		var list struct {
+			Installs []struct {
+				Location string `json:"InstallLocation"`
+				AppName  string `json:"AppName"`
+			} `json:"InstallationList"`
+		}
+		if json.Unmarshal(b, &list) != nil {
+			continue
+		}
+		for _, in := range list.Installs {
+			if !slices.Contains(g.Stores.Epic.AppNames, in.AppName) {
+				continue
+			}
+			if found := gog.GameDir(in.Location, g.MarkerPath()); found != "" {
+				out = append(out, Install{Store: StoreEpic, Dir: found})
+			}
 		}
 	}
 	return out

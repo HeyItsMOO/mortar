@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import {
   siEa,
+  siEpicgames,
   siFlatpak,
   siGogdotcom,
   siHeroicgameslauncher,
@@ -22,6 +23,7 @@ const TILES: Record<string, { path: string; bg: string }> = {
   lutris: { path: siLutris.path, bg: `#${siLutris.hex}` },
   bottles: { path: BOTTLE_PATH, bg: '#C0392B' },
   ea: { path: siEa.path, bg: `#${siEa.hex}` },
+  epic: { path: siEpicgames.path, bg: `#${siEpicgames.hex}` },
   gog: { path: siGogdotcom.path, bg: `#${siGogdotcom.hex}` },
 }
 

@@ -330,6 +330,13 @@ type GameStores struct {
 	Lutris  *LutrisStore  `json:"lutris,omitempty"`
 	Bottles *BottlesStore `json:"bottles,omitempty"`
 	EA      *EAStore      `json:"ea,omitempty"`
+	Epic    *EpicStore    `json:"epic,omitempty"`
+}
+
+// EpicStore names a game to the Epic Games Launcher: the AppName (or names, for a game sold as several products) its
+// install list gives the game's installs.
+type EpicStore struct {
+	AppNames []string `json:"appNames"`
 }
 
 // EAStore names a game to the EA App: the folder under an EA library folder (`EA Games`) its installer gives it.

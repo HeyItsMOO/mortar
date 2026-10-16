@@ -344,6 +344,9 @@
         }
       ],
       "stores": {
+        "epic": {
+          "appNames": ["4b3dcc5723454a47a9112d8fe8fd5f5c"]
+        },
         "steam": {
           "appId": "632360"
         }
@@ -955,6 +958,9 @@
         }
       ],
       "stores": {
+        "epic": {
+          "appNames": ["Garlic"]
+        },
         "steam": {
           "appId": "311690"
         }
@@ -1360,6 +1366,9 @@
         }
       ],
       "stores": {
+        "epic": {
+          "appNames": ["Viola", "f07a51af8ac845ea96f792fb485e04a3"]
+        },
         "steam": {
           "appId": "794260"
         }
@@ -1788,6 +1797,9 @@
         }
       ],
       "stores": {
+        "epic": {
+          "appNames": ["Driftfish"]
+        },
         "steam": {
           "appId": "508440"
         }

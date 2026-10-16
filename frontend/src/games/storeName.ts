@@ -10,6 +10,7 @@ const NAMES: Record<string, MessageDescriptor> = {
   lutris: msg`Lutris`,
   bottles: msg`Bottles`,
   ea: msg`EA App`,
+  epic: msg`Epic Games`,
 }
 
 // The store an install came from, as the window names it; "" for a folder the user chose.

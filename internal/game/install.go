@@ -28,6 +28,7 @@ const (
 	StoreLutris       = gamestore.StoreLutris
 	StoreBottles      = gamestore.StoreBottles
 	StoreEA           = gamestore.StoreEA
+	StoreEpic         = gamestore.StoreEpic
 )
 
 // Install origins.

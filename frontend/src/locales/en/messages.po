@@ -9260,6 +9260,10 @@ msgstr "{plugin} failed to load ({name})."
 msgid "An install is already running."
 msgstr "An install is already running."
 
+#: src/games/storeName.ts:13
+msgid "Epic Games"
+msgstr "Epic Games"
+
 #: src/mods/CleanupSection.tsx:185
 msgid "This change can be undone from History."
 msgstr "This change can be undone from History."
