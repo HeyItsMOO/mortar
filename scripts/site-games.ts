@@ -123,6 +123,7 @@ for (const page of PAGES) {
   after = fill(after, 'foot', chrome(footer(page)))
   if (page.path === 'site/index.html') {
     after = fill(after, 'games', text)
+    after = fill(after, 'game-count', String(playable.length))
   }
   if (after !== before) {
     stale = true

@@ -148,6 +148,13 @@ code {
 }
 .ext-cta {
   justify-content: flex-start;
+  align-items: center;
+}
+/* Google's own badge, unaltered but for its size: as tall as the button beside it. */
+.store-badge img {
+  display: block;
+  height: 50px;
+  width: auto;
 }
 .ext-shot {
   max-width: 380px;
