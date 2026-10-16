@@ -175,37 +175,41 @@ export function Appearance() {
         </SettingRow>
         {background === 'image' ? (
           <SettingRow label={t`Image`}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <BackdropImage
-                alt={t`Background preview`}
-                src={backdropSrc}
-                sx={{ width: 160, height: 90, objectFit: 'cover', borderRadius: '6px' }}
-              />
-              <Button
-                variant="outlined"
-                startIcon={<ImagePlus size={16} />}
-                onClick={() => {
-                  ChooseBackgroundImage().catch(reportFailure)
-                }}
-              >
-                {t`Choose image…`}
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<RotateCcw size={16} />}
-                disabled={backgroundImage === ''}
-                onClick={() => {
-                  SetBackgroundImage('').catch(reportFailure)
-                }}
-              >
-                {t`Use default`}
-              </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <BackdropImage
+                  alt={t`Background preview`}
+                  src={backdropSrc}
+                  sx={{ width: 160, height: 90, objectFit: 'cover', borderRadius: '6px' }}
+                />
+                <Button
+                  variant="outlined"
+                  startIcon={<ImagePlus size={16} />}
+                  onClick={() => {
+                    ChooseBackgroundImage().catch(reportFailure)
+                  }}
+                >
+                  {t`Choose image…`}
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<RotateCcw size={16} />}
+                  disabled={backgroundImage === ''}
+                  onClick={() => {
+                    SetBackgroundImage('').catch(reportFailure)
+                  }}
+                >
+                  {t`Use default`}
+                </Button>
+              </Box>
+              {backgroundImage !== '' && backdropBytes > LARGE_BACKGROUND_BYTES ? (
+                <Typography
+                  sx={{ maxWidth: 420, fontSize: 12, textAlign: 'right', color: 'warning.main' }}
+                >
+                  {t`This image is ${formatBytes(backdropBytes)}, which costs memory and GPU while Mortar is open. The same picture or animation saved as WebP is often a tenth of the size.`}
+                </Typography>
+              ) : null}
             </Box>
-            {backgroundImage !== '' && backdropBytes > LARGE_BACKGROUND_BYTES ? (
-              <Typography sx={{ mt: 1, fontSize: 12, color: 'warning.main' }}>
-                {t`This image is ${formatBytes(backdropBytes)}, which costs memory and GPU while Mortar is open. An animated WebP of the same clip is often a tenth of the size.`}
-              </Typography>
-            ) : null}
           </SettingRow>
         ) : null}
       </SettingsSection>
