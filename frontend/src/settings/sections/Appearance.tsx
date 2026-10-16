@@ -1,6 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, FormControlLabel, Radio, RadioGroup } from '@mui/material'
+import { Box, Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import { ImagePlus, RotateCcw } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import {
   ChooseBackgroundImage,
   SetAccent,
@@ -8,6 +9,7 @@ import {
   SetBackgroundImage,
   SetListSort,
 } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
+import { formatBytes } from '../../i18n/bytes.ts'
 import { columnLabel } from '../../mods/columnLabel.ts'
 import { LIST_COLUMN_IDS, sanitizeListSort } from '../../mods/listColumns.ts'
 import { BackdropImage } from '../../shell/BackdropImage.tsx'
@@ -22,6 +24,25 @@ import { persist } from '../persist.ts'
 import { Searchable, SettingRow, SettingsSection } from '../SettingsSection.tsx'
 import { useSettings } from '../store.ts'
 import { isAccent } from '../theme.ts'
+
+// An image above this is decoded whole on every start, and an animated GIF is never shrunk, so it costs memory and GPU.
+const LARGE_BACKGROUND_BYTES = 16 * 1024 * 1024
+
+// The chosen background's size, read from the page's own request for it; 0 until known.
+function useBackgroundBytes(src: string): number {
+  const [bytes, setBytes] = useState({ src: '', n: 0 })
+  useEffect(() => {
+    const abort = new AbortController()
+    fetch(src, { signal: abort.signal })
+      .then((res) => {
+        setBytes({ src, n: Number(res.headers.get('content-length')) || 0 })
+        abort.abort()
+      })
+      .catch(() => undefined)
+    return () => abort.abort()
+  }, [src])
+  return bytes.src === src ? bytes.n : 0
+}
 
 function DefaultSort() {
   const { t } = useLingui()
@@ -60,6 +81,8 @@ export function Appearance() {
   const background = useSettings((s) => s.background)
   const backgroundImage = useSettings((s) => s.backgroundImage)
   const reportFailure = reportError(t`Could not save that setting`)
+  const backdropSrc = `/backdrop?mode=image&v=${encodeURIComponent(backgroundImage)}`
+  const backdropBytes = useBackgroundBytes(backdropSrc)
   const cards: { name: AccentName; label: string; note: string }[] = [
     { name: 'sand', label: t`Sand`, note: t`Default` },
     { name: 'moss', label: t`Moss`, note: t`Earthy green` },
@@ -155,7 +178,7 @@ export function Appearance() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <BackdropImage
                 alt={t`Background preview`}
-                src={`/backdrop?mode=image&v=${encodeURIComponent(backgroundImage)}`}
+                src={backdropSrc}
                 sx={{ width: 160, height: 90, objectFit: 'cover', borderRadius: '6px' }}
               />
               <Button
@@ -178,6 +201,11 @@ export function Appearance() {
                 {t`Use default`}
               </Button>
             </Box>
+            {backgroundImage !== '' && backdropBytes > LARGE_BACKGROUND_BYTES ? (
+              <Typography sx={{ mt: 1, fontSize: 12, color: 'warning.main' }}>
+                {t`This image is ${formatBytes(backdropBytes)}, which costs memory and GPU while Mortar is open. An animated WebP of the same clip is often a tenth of the size.`}
+              </Typography>
+            ) : null}
           </SettingRow>
         ) : null}
       </SettingsSection>

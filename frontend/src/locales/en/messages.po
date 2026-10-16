@@ -44,7 +44,7 @@ msgstr "Launch method"
 msgid "Hidden on Nexus · {0}"
 msgstr "Hidden on Nexus · {0}"
 
-#: src/settings/sections/Appearance.tsx:69
+#: src/settings/sections/Appearance.tsx:92
 msgid "Gentle violet"
 msgstr "Gentle violet"
 
@@ -159,7 +159,7 @@ msgstr "This profile matches that list."
 msgid "Streaming"
 msgstr "Streaming"
 
-#: src/saves/SaveRow.tsx:167
+#: src/saves/SaveRow.tsx:161
 msgid "Could not back up {label}"
 msgstr "Could not back up {label}"
 
@@ -255,7 +255,7 @@ msgstr "Imported {0}: {1} to install"
 #: src/profiles/MergeDialog.tsx:180
 #: src/saves/lackChipActions.tsx:44
 #: src/saves/lackChips.tsx:60
-#: src/saves/SaveRow.tsx:137
+#: src/saves/SaveRow.tsx:131
 #: src/share/usePasteLink.ts:29
 #: src/share/usePasteLink.ts:64
 #: src/toasts/HistoryButton.tsx:33
@@ -382,7 +382,7 @@ msgstr "More levels"
 msgid "Switch game"
 msgstr "Switch game"
 
-#: src/settings/sections/Appearance.tsx:64
+#: src/settings/sections/Appearance.tsx:87
 msgid "Sand"
 msgstr "Sand"
 
@@ -933,10 +933,6 @@ msgstr "{n, plural, one {Also update # optional file} other {Also update # optio
 #: src/settings/prefCopy.ts:236
 msgid "Start the game without a backup."
 msgstr "Start the game without a backup."
-
-#: src/saves/SaveRow.tsx:75
-msgid "Mods not recorded"
-msgstr "Mods not recorded"
 
 #: src/mods/NexusDetails.tsx:108
 msgid "Uploaded by"
@@ -1585,7 +1581,7 @@ msgstr "None of {0} are in Saves yet; they will be added. The current Saves fold
 msgid "the connection failed"
 msgstr "the connection failed"
 
-#: src/settings/sections/Appearance.tsx:149
+#: src/settings/sections/Appearance.tsx:172
 msgid "Solid"
 msgstr "Solid"
 
@@ -1745,8 +1741,8 @@ msgstr "Missing requirements"
 
 #: src/settings/prefCopy.ts:152
 #: src/settings/prefCopy.ts:153
-#: src/settings/sections/Appearance.tsx:40
-#: src/settings/sections/Appearance.tsx:48
+#: src/settings/sections/Appearance.tsx:61
+#: src/settings/sections/Appearance.tsx:69
 msgid "Default sort"
 msgstr "Default sort"
 
@@ -1875,7 +1871,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 msgid "Retry"
 msgstr "Retry"
 
-#: src/settings/sections/Appearance.tsx:66
+#: src/settings/sections/Appearance.tsx:89
 msgid "Copper"
 msgstr "Copper"
 
@@ -2112,7 +2108,7 @@ msgid "{name} now opens Nexus \"Mod Manager Download\" links."
 msgstr "{name} now opens Nexus \"Mod Manager Download\" links."
 
 #: src/commandPalette/CommandPalette.tsx:99
-#: src/saves/SaveListRow.tsx:68
+#: src/saves/SaveListRow.tsx:80
 msgid "Actions"
 msgstr "Actions"
 
@@ -2241,7 +2237,7 @@ msgstr "Enter a name for the profile."
 msgid "Already has it"
 msgstr "Already has it"
 
-#: src/saves/SavesTab.tsx:117
+#: src/saves/SavesTab.tsx:126
 msgid "Filter saves"
 msgstr "Filter saves"
 
@@ -2610,7 +2606,7 @@ msgstr "Remove from other profiles…"
 msgid "Boss names"
 msgstr "Boss names"
 
-#: src/saves/SaveRow.tsx:58
+#: src/saves/SaveRow.tsx:57
 msgid "Hill-top farm"
 msgstr "Hill-top farm"
 
@@ -2664,10 +2660,6 @@ msgstr "Free Nexus accounts click each download on Nexus; those updates do not b
 msgid "{count, plural, one {# mod in the game's Mods folder isn't in this profile} other {# mods in the game's Mods folder aren't in this profile}}"
 msgstr "{count, plural, one {# mod in the game's Mods folder isn't in this profile} other {# mods in the game's Mods folder aren't in this profile}}"
 
-#: src/saves/SaveRow.tsx:83
-msgid "This game's saves do not record which mods they used."
-msgstr "This game's saves do not record which mods they used."
-
 #: src/mods/AddToGroupDialog.tsx:67
 msgid "No groups yet"
 msgstr "No groups yet"
@@ -2710,6 +2702,11 @@ msgstr "Skipped"
 #: src/profiles/EditProfileDialog.tsx:456
 msgid "Edit profile"
 msgstr "Edit profile"
+
+#. placeholder {0}: formatBytes(backdropBytes)
+#: src/settings/sections/Appearance.tsx:206
+msgid "This image is {0}, which costs memory and GPU while Mortar is open. An animated WebP of the same clip is often a tenth of the size."
+msgstr "This image is {0}, which costs memory and GPU while Mortar is open. An animated WebP of the same clip is often a tenth of the size."
 
 #: src/game/FarmMenuItem.tsx:121
 msgid "The host's list"
@@ -3123,7 +3120,7 @@ msgstr "No mod settings yet"
 msgid "The console fills when the game runs."
 msgstr "The console fills when the game runs."
 
-#: src/saves/SaveRow.tsx:207
+#: src/saves/SaveRow.tsx:201
 msgid "Last played with {profile}"
 msgstr "Last played with {profile}"
 
@@ -3141,7 +3138,7 @@ msgstr "Waiting for {0}'s profile file to finish syncing. Changes made here are 
 msgid "Reading the Nexus page…"
 msgstr "Reading the Nexus page…"
 
-#: src/saves/SaveRow.tsx:79
+#: src/saves/SaveRow.tsx:74
 msgid "All mods present"
 msgstr "All mods present"
 
@@ -3292,7 +3289,7 @@ msgstr "Left in the shared folder"
 msgid "Open the next profile"
 msgstr "Open the next profile"
 
-#: src/settings/sections/Appearance.tsx:148
+#: src/settings/sections/Appearance.tsx:171
 #: src/settings/sections/Notifications.tsx:57
 msgid "Desktop"
 msgstr "Desktop"
@@ -3401,7 +3398,7 @@ msgid "Gray out"
 msgstr "Gray out"
 
 #: src/profiles/AppearancePickers.tsx:35
-#: src/settings/sections/Appearance.tsx:67
+#: src/settings/sections/Appearance.tsx:90
 msgid "Sky"
 msgstr "Sky"
 
@@ -3475,7 +3472,7 @@ msgstr "Check again"
 msgid "More from the Nexus page"
 msgstr "More from the Nexus page"
 
-#: src/saves/SaveRow.tsx:159
+#: src/saves/SaveRow.tsx:153
 msgid "{label} is no longer in the saves folder"
 msgstr "{label} is no longer in the saves folder"
 
@@ -4412,7 +4409,7 @@ msgstr "Could not unpin the selected mods"
 msgid "Nothing to download"
 msgstr "Nothing to download"
 
-#: src/saves/SaveRow.tsx:55
+#: src/saves/SaveRow.tsx:54
 msgid "Standard farm"
 msgstr "Standard farm"
 
@@ -4439,7 +4436,7 @@ msgstr "The stats each Browse card shows under its summary; choose them from Bro
 
 #: src/profiles/EditProfileDialog.tsx:113
 #: src/profiles/EditProfileDialog.tsx:121
-#: src/settings/sections/Appearance.tsx:168
+#: src/settings/sections/Appearance.tsx:191
 msgid "Choose image…"
 msgstr "Choose image…"
 
@@ -4820,7 +4817,7 @@ msgstr "Needs your click"
 msgid "Every mod in this profile is already off, so there is nothing to turn off and test."
 msgstr "Every mod in this profile is already off, so there is nothing to turn off and test."
 
-#: src/saves/SaveRow.tsx:137
+#: src/saves/SaveRow.tsx:131
 msgid "This save has no recorded mod list yet."
 msgstr "This save has no recorded mod list yet."
 
@@ -4861,7 +4858,7 @@ msgid "Message {n} of {total} copied"
 msgstr "Message {n} of {total} copied"
 
 #: src/saves/backups.ts:99
-#: src/saves/SaveListRow.tsx:100
+#: src/saves/SaveListRow.tsx:115
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -5055,8 +5052,8 @@ msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 #: src/settings/PrefControls.tsx:190
 #: src/settings/PrefControls.tsx:241
 #: src/settings/PrefRow.tsx:39
-#: src/settings/sections/Appearance.tsx:45
-#: src/settings/sections/Appearance.tsx:62
+#: src/settings/sections/Appearance.tsx:66
+#: src/settings/sections/Appearance.tsx:83
 #: src/settings/sections/Downloads.tsx:53
 #: src/settings/sections/Downloads.tsx:230
 #: src/settings/sections/Downloads.tsx:261
@@ -5190,7 +5187,7 @@ msgstr "Include beta releases"
 msgid "{0} folder"
 msgstr "{0} folder"
 
-#: src/saves/SaveRow.tsx:62
+#: src/saves/SaveRow.tsx:61
 msgid "Meadowlands farm"
 msgstr "Meadowlands farm"
 
@@ -5438,8 +5435,8 @@ msgid "Mortar's own SMAPI mod; it records these timings"
 msgstr "Mortar's own SMAPI mod; it records these timings"
 
 #: src/settings/prefCopy.ts:190
-#: src/settings/sections/Appearance.tsx:75
-#: src/settings/sections/Appearance.tsx:79
+#: src/settings/sections/Appearance.tsx:98
+#: src/settings/sections/Appearance.tsx:102
 msgid "Theme"
 msgstr "Theme"
 
@@ -5678,7 +5675,7 @@ msgstr "Could not read other profiles"
 msgid "Copy the command"
 msgstr "Copy the command"
 
-#: src/settings/sections/Appearance.tsx:157
+#: src/settings/sections/Appearance.tsx:180
 msgid "Background preview"
 msgstr "Background preview"
 
@@ -5807,7 +5804,7 @@ msgstr "Clear finished"
 msgid "Enable {0}"
 msgstr "Enable {0}"
 
-#: src/saves/SavesTab.tsx:108
+#: src/saves/SavesTab.tsx:117
 msgid "Save backups…"
 msgstr "Save backups…"
 
@@ -5819,7 +5816,7 @@ msgstr "{total} messages"
 msgid "Stop the game before moving the data folder."
 msgstr "Stop the game before moving the data folder."
 
-#: src/settings/sections/Appearance.tsx:65
+#: src/settings/sections/Appearance.tsx:88
 msgid "Earthy green"
 msgstr "Earthy green"
 
@@ -5939,7 +5936,7 @@ msgstr "Could not run the command"
 msgid "About Mortar"
 msgstr "About Mortar"
 
-#: src/settings/sections/Appearance.tsx:69
+#: src/settings/sections/Appearance.tsx:92
 msgid "Lavender"
 msgstr "Lavender"
 
@@ -5966,7 +5963,7 @@ msgstr "The files will download from each mod's source."
 msgid "Mortar found nothing to repair in this profile."
 msgstr "Mortar found nothing to repair in this profile."
 
-#: src/saves/SaveRow.tsx:71
+#: src/saves/SaveRow.tsx:70
 msgid "Has used {missing, plural, one {# mod it lacks} other {# mods it lacks}}"
 msgstr "Has used {missing, plural, one {# mod it lacks} other {# mods it lacks}}"
 
@@ -6036,7 +6033,7 @@ msgid "Could not start measuring"
 msgstr "Could not start measuring"
 
 #: src/profiles/AppearancePickers.tsx:25
-#: src/settings/sections/Appearance.tsx:68
+#: src/settings/sections/Appearance.tsx:91
 msgid "Rose"
 msgstr "Rose"
 
@@ -6161,9 +6158,9 @@ msgstr "Kept in your system keyring. Find it on Nexus under Settings, API Keys."
 msgid "Where to share"
 msgstr "Where to share"
 
-#: src/settings/sections/Appearance.tsx:138
-#: src/settings/sections/Appearance.tsx:139
-#: src/settings/sections/Appearance.tsx:142
+#: src/settings/sections/Appearance.tsx:161
+#: src/settings/sections/Appearance.tsx:162
+#: src/settings/sections/Appearance.tsx:165
 msgid "Background"
 msgstr "Background"
 
@@ -6401,8 +6398,8 @@ msgstr "Open the command palette"
 msgid "Could not read load order"
 msgstr "Could not read load order"
 
-#: src/settings/sections/Appearance.tsx:147
-#: src/settings/sections/Appearance.tsx:154
+#: src/settings/sections/Appearance.tsx:170
+#: src/settings/sections/Appearance.tsx:177
 msgid "Image"
 msgstr "Image"
 
@@ -6540,7 +6537,7 @@ msgstr "This profile has no mods to download"
 msgid "Relative"
 msgstr "Relative"
 
-#: src/saves/SaveRow.tsx:206
+#: src/saves/SaveRow.tsx:200
 msgid "a deleted profile"
 msgstr "a deleted profile"
 
@@ -6561,7 +6558,7 @@ msgstr "Rename the open profile"
 msgid "Place {file}"
 msgstr "Place {file}"
 
-#: src/saves/SaveListRow.tsx:131
+#: src/saves/SaveListRow.tsx:148
 msgid "This save has no SaveGameInfo date, so Mortar cannot tell when it is in the game."
 msgstr "This save has no SaveGameInfo date, so Mortar cannot tell when it is in the game."
 
@@ -7425,7 +7422,7 @@ msgstr "requirements"
 msgid "Source code"
 msgstr "Source code"
 
-#: src/settings/sections/Appearance.tsx:79
+#: src/settings/sections/Appearance.tsx:102
 msgid "color"
 msgstr "color"
 
@@ -7666,7 +7663,7 @@ msgstr "Clear game caches"
 msgid "Copy log and open {pasteHost}"
 msgstr "Copy log and open {pasteHost}"
 
-#: src/settings/sections/Appearance.tsx:66
+#: src/settings/sections/Appearance.tsx:89
 msgid "Warm and bold"
 msgstr "Warm and bold"
 
@@ -7866,7 +7863,7 @@ msgid "Reachable"
 msgstr "Reachable"
 
 #: src/profiles/AppearancePickers.tsx:76
-#: src/settings/sections/Appearance.tsx:79
+#: src/settings/sections/Appearance.tsx:102
 msgid "Colour"
 msgstr "Colour"
 
@@ -7923,7 +7920,7 @@ msgstr "Not found"
 #: src/profiles/EditProfileDialog.tsx:123
 #: src/profiles/GameSettings.tsx:182
 #: src/profiles/OverrideRows.tsx:113
-#: src/settings/sections/Appearance.tsx:178
+#: src/settings/sections/Appearance.tsx:201
 #: src/settings/sections/GameSettings.tsx:215
 msgid "Use default"
 msgstr "Use default"
@@ -7982,7 +7979,7 @@ msgstr "{queued, plural, one {# download queued} other {# downloads queued}}"
 msgid "Restored the profile from before Update all"
 msgstr "Restored the profile from before Update all"
 
-#: src/settings/sections/Appearance.tsx:35
+#: src/settings/sections/Appearance.tsx:56
 msgid "{name}, ascending"
 msgstr "{name}, ascending"
 
@@ -8046,7 +8043,7 @@ msgstr "Unofficial"
 msgid "Hide archive contents"
 msgstr "Hide archive contents"
 
-#: src/saves/SaveRow.tsx:60
+#: src/saves/SaveRow.tsx:59
 msgid "Four Corners farm"
 msgstr "Four Corners farm"
 
@@ -8228,7 +8225,7 @@ msgstr "{gameName}'s Steam launch options run {loader} in place of the game. Ste
 
 #: src/game/Home.tsx:96
 #: src/saves/SaveDetails.tsx:55
-#: src/saves/SaveListRow.tsx:93
+#: src/saves/SaveListRow.tsx:108
 msgid "Summer"
 msgstr "Summer"
 
@@ -8448,7 +8445,7 @@ msgstr "{count, plural, one {# mod} other {# mods}}"
 msgid "{cause}. Retry or skip it from the queue."
 msgstr "{cause}. Retry or skip it from the queue."
 
-#: src/saves/SaveRow.tsx:59
+#: src/saves/SaveRow.tsx:58
 msgid "Wilderness farm"
 msgstr "Wilderness farm"
 
@@ -8502,7 +8499,7 @@ msgid "Add"
 msgstr "Add"
 
 #. placeholder {0}: fits.length
-#: src/saves/SavesTab.tsx:118
+#: src/saves/SavesTab.tsx:127
 msgid "{0, plural, one {Filter # save} other {Filter # saves}}"
 msgstr "{0, plural, one {Filter # save} other {Filter # saves}}"
 
@@ -8798,7 +8795,7 @@ msgstr "Restart now"
 msgid "Remove one…"
 msgstr "Remove one…"
 
-#: src/saves/SaveRow.tsx:165
+#: src/saves/SaveRow.tsx:159
 msgid "Backed up {label}"
 msgstr "Backed up {label}"
 
@@ -9337,7 +9334,7 @@ msgstr "Last scheduled backup {when}"
 
 #: src/game/Home.tsx:96
 #: src/saves/SaveDetails.tsx:55
-#: src/saves/SaveListRow.tsx:93
+#: src/saves/SaveListRow.tsx:108
 msgid "Winter"
 msgstr "Winter"
 
@@ -9495,7 +9492,7 @@ msgstr "Stop the game first."
 
 #: src/game/Home.tsx:96
 #: src/saves/SaveDetails.tsx:55
-#: src/saves/SaveListRow.tsx:93
+#: src/saves/SaveListRow.tsx:108
 msgid "Spring"
 msgstr "Spring"
 
@@ -9655,7 +9652,7 @@ msgstr "Downloads: {downloading} {percent}%"
 
 #: src/launch/VanillaPlay.tsx:208
 #: src/profiles/LaunchPresetsBlock.tsx:45
-#: src/settings/sections/Appearance.tsx:64
+#: src/settings/sections/Appearance.tsx:87
 msgid "Default"
 msgstr "Default"
 
@@ -9693,7 +9690,7 @@ msgstr "Problems"
 msgid "Create your first profile"
 msgstr "Create your first profile"
 
-#: src/settings/sections/Appearance.tsx:65
+#: src/settings/sections/Appearance.tsx:88
 msgid "Moss"
 msgstr "Moss"
 
@@ -9986,7 +9983,7 @@ msgstr "Set as default"
 msgid "{0, plural, one {Untracked # mod} other {Untracked # mods}}"
 msgstr "{0, plural, one {Untracked # mod} other {Untracked # mods}}"
 
-#: src/saves/SaveListRow.tsx:64
+#: src/saves/SaveListRow.tsx:74
 msgid "Fits {name}"
 msgstr "Fits {name}"
 
@@ -10274,7 +10271,7 @@ msgstr "Updates ignored"
 msgid "Could not enable {0}"
 msgstr "Could not enable {0}"
 
-#: src/settings/sections/Appearance.tsx:71
+#: src/settings/sections/Appearance.tsx:94
 msgid "Slate"
 msgstr "Slate"
 
@@ -10910,7 +10907,7 @@ msgstr "A collection draft"
 msgid "Open focused mod details"
 msgstr "Open focused mod details"
 
-#: src/saves/SaveRow.tsx:174
+#: src/saves/SaveRow.tsx:168
 msgid "Open the folder of {label}"
 msgstr "Open the folder of {label}"
 
@@ -11568,7 +11565,7 @@ msgstr "{local, plural, one {# mod you added from an archive can't go in the fil
 msgid "Delete {0}?"
 msgstr "Delete {0}?"
 
-#: src/saves/SaveRow.tsx:61
+#: src/saves/SaveRow.tsx:60
 msgid "Beach farm"
 msgstr "Beach farm"
 
@@ -11578,7 +11575,7 @@ msgstr "Beach farm"
 #: src/mods/SelectionBar.tsx:38
 #: src/profiles/EditProfileDialog.tsx:490
 #: src/profiles/LaunchPresetDialog.tsx:96
-#: src/saves/SaveListRow.tsx:58
+#: src/saves/SaveListRow.tsx:66
 #: src/templates/TemplateDialogs.tsx:71
 #: src/tools/ToolEditorDialog.tsx:143
 msgid "Save"
@@ -11748,7 +11745,7 @@ msgstr "{0, plural, one {# result} other {# results}}"
 msgid "This launch was not measured. Use Measure next launch under Startup, play again, then start measuring here."
 msgstr "This launch was not measured. Use Measure next launch under Startup, play again, then start measuring here."
 
-#: src/saves/SaveRow.tsx:56
+#: src/saves/SaveRow.tsx:55
 msgid "Riverland farm"
 msgstr "Riverland farm"
 
@@ -12246,11 +12243,11 @@ msgstr "{0} is still taking your last share"
 msgid "Game install deleted"
 msgstr "Game install deleted"
 
-#: src/settings/sections/Appearance.tsx:191
+#: src/settings/sections/Appearance.tsx:219
 msgid "Sidebar"
 msgstr "Sidebar"
 
-#: src/settings/sections/Appearance.tsx:67
+#: src/settings/sections/Appearance.tsx:90
 msgid "Cool and calm"
 msgstr "Cool and calm"
 
@@ -12312,7 +12309,7 @@ msgstr "Templates are shared by every profile of this game. Adding one copies it
 
 #: src/game/Home.tsx:137
 #: src/game/Sidebar.tsx:196
-#: src/saves/SaveListRow.tsx:43
+#: src/saves/SaveListRow.tsx:51
 msgid "Saves"
 msgstr "Saves"
 
@@ -12321,7 +12318,7 @@ msgstr "Saves"
 msgid "World"
 msgstr "World"
 
-#: src/settings/sections/Appearance.tsx:70
+#: src/settings/sections/Appearance.tsx:93
 msgid "Fresh and clear"
 msgstr "Fresh and clear"
 
@@ -12588,7 +12585,7 @@ msgstr "Not enough disk space"
 msgid "Clean up storage"
 msgstr "Clean up storage"
 
-#: src/settings/sections/Appearance.tsx:187
+#: src/settings/sections/Appearance.tsx:215
 msgid "Mods view"
 msgstr "Mods view"
 
@@ -12617,9 +12614,9 @@ msgstr "Nothing new"
 msgid "Preparing a temporary copy of this profile…"
 msgstr "Preparing a temporary copy of this profile…"
 
-#: src/settings/sections/Appearance.tsx:78
-#: src/settings/sections/Appearance.tsx:79
-#: src/settings/sections/Appearance.tsx:82
+#: src/settings/sections/Appearance.tsx:101
+#: src/settings/sections/Appearance.tsx:102
+#: src/settings/sections/Appearance.tsx:105
 msgid "Accent colour"
 msgstr "Accent colour"
 
@@ -12774,7 +12771,7 @@ msgstr "Jump to first error"
 msgid "Now needs {0}"
 msgstr "Now needs {0}"
 
-#: src/saves/SaveRow.tsx:142
+#: src/saves/SaveRow.tsx:136
 msgid "New profile from this save"
 msgstr "New profile from this save"
 
@@ -12863,7 +12860,7 @@ msgid "Skip the waiting downloads of this profile"
 msgstr "Skip the waiting downloads of this profile"
 
 #: src/profiles/AppearancePickers.tsx:33
-#: src/settings/sections/Appearance.tsx:70
+#: src/settings/sections/Appearance.tsx:93
 msgid "Teal"
 msgstr "Teal"
 
@@ -13217,7 +13214,7 @@ msgstr "Nexus Mods · Signed in as {name}"
 msgid "Also update other profiles that hold the same files"
 msgstr "Also update other profiles that hold the same files"
 
-#: src/settings/sections/Appearance.tsx:71
+#: src/settings/sections/Appearance.tsx:94
 msgid "Quiet grey-blue"
 msgstr "Quiet grey-blue"
 
@@ -13277,7 +13274,7 @@ msgstr "Clear"
 msgid "Handle links"
 msgstr "Handle links"
 
-#: src/saves/SaveListRow.tsx:61
+#: src/saves/SaveListRow.tsx:71
 #: src/settings/sections/StreamOverlay.tsx:66
 msgid "Season"
 msgstr "Season"
@@ -13286,7 +13283,7 @@ msgstr "Season"
 msgid "Two enabled copies of the same mod are in this profile. The game loads only one of them, and you do not choose which."
 msgstr "Two enabled copies of the same mod are in this profile. The game loads only one of them, and you do not choose which."
 
-#: src/settings/sections/Appearance.tsx:68
+#: src/settings/sections/Appearance.tsx:91
 msgid "Soft and warm"
 msgstr "Soft and warm"
 
@@ -13380,7 +13377,7 @@ msgstr "Could not undo: some mods are missing, and the change's record could not
 msgid "Start the game without the Before you play dialog"
 msgstr "Start the game without the Before you play dialog"
 
-#: src/settings/sections/Appearance.tsx:184
+#: src/settings/sections/Appearance.tsx:212
 msgid "Display"
 msgstr "Display"
 
@@ -13500,7 +13497,7 @@ msgstr "Walk through profiles, Play, mods, and the command palette"
 
 #: src/game/Home.tsx:96
 #: src/saves/SaveDetails.tsx:55
-#: src/saves/SaveListRow.tsx:93
+#: src/saves/SaveListRow.tsx:108
 msgid "Fall"
 msgstr "Fall"
 
@@ -13741,7 +13738,7 @@ msgstr "Play this profile and save a game. Each save shows here with how well it
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
-#: src/settings/sections/Appearance.tsx:36
+#: src/settings/sections/Appearance.tsx:57
 msgid "{name}, descending"
 msgstr "{name}, descending"
 
@@ -13937,7 +13934,7 @@ msgstr "Untrack unused…"
 msgid "{gameName} was not found. Browse to its folder."
 msgstr "{gameName} was not found. Browse to its folder."
 
-#: src/saves/SaveRow.tsx:151
+#: src/saves/SaveRow.tsx:145
 msgid "Back up {label} now"
 msgstr "Back up {label} now"
 
@@ -13976,7 +13973,7 @@ msgstr "{0} ({1})"
 #. placeholder {0}: calendar.year
 #. placeholder {1}: seasons[calendar.season] ?? ''
 #: src/game/Home.tsx:123
-#: src/saves/SaveListRow.tsx:98
+#: src/saves/SaveListRow.tsx:113
 msgid "Year {0} {1}"
 msgstr "Year {0} {1}"
 
@@ -14339,7 +14336,7 @@ msgstr "Confirm removals"
 msgid "Recently deleted retention"
 msgstr "Recently deleted retention"
 
-#: src/saves/SaveRow.tsx:57
+#: src/saves/SaveRow.tsx:56
 msgid "Forest farm"
 msgstr "Forest farm"
 
