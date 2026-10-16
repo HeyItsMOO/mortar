@@ -9,7 +9,7 @@ const HINT_FONT_PX = 12
 const HINT_GAP_PX = 24
 const ICON_COLUMN_PX = 22
 
-// A dropdown under a title bar button: the menu surface, a fixed width, compact rows and small-caps headings.
+// A dropdown under a title bar button: the menu surface, a minimum width, compact rows and small-caps headings.
 export function TitleMenu({
   anchorEl,
   onClose,
@@ -37,7 +37,16 @@ export function TitleMenu({
         // paper do.
         root: { sx: { pointerEvents: 'none' } },
         backdrop: { invisible: true, sx: { top: 'var(--title-bar)', pointerEvents: 'auto' } },
-        paper: { sx: { width, maxWidth: 'calc(100vw - 16px)', mt: '4px', pointerEvents: 'auto' } },
+        // width is a floor: a menu grows to its longest label, up to a cap that still truncates a long profile name.
+        paper: {
+          sx: {
+            minWidth: width,
+            width: 'max-content',
+            maxWidth: 'min(440px, calc(100vw - 16px))',
+            mt: '4px',
+            pointerEvents: 'auto',
+          },
+        },
         list: { 'aria-label': label, sx: { py: space.menuY } },
       }}
     >
