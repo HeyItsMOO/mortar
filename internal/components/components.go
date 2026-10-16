@@ -144,6 +144,10 @@ type GameInfo struct {
 	// SaveCompanions are extensions of files beside a save file, sharing its stem, that belong to that save (a Valheim
 	// world's .db beside its .fwl).
 	SaveCompanions []string `json:"saveCompanions,omitempty"`
+	// SaveCopies are patterns for the copies of a save the game keeps itself beside it, which restore over the save:
+	// {name} is the save's file name, {stem} the name without its extension and {ext} the extension (a Valheim world's
+	// "{stem}_backup_auto-*{ext}", a Sims 4 slot's "{name}.ver?"). An older Mortar ignores the field.
+	SaveCopies []string `json:"saveCopies,omitempty"`
 	// RequiredSettings are settings in a game's own files that mods need switched on; Problems reports one that is
 	// switched off and never edits the file. An older Mortar ignores the field.
 	RequiredSettings []RequiredSetting `json:"requiredSettings,omitempty"`
@@ -516,6 +520,11 @@ func (g GameInfo) Validate() error {
 	for _, ext := range g.SaveCompanions {
 		if len(ext) < 2 || ext[0] != '.' || strings.ContainsAny(ext, "/\\*?[") {
 			return fmt.Errorf("game %q has an unusable save companion %q", g.ID, ext)
+		}
+	}
+	for _, p := range g.SaveCopies {
+		if !strings.Contains(p, "{") || strings.ContainsAny(p, "/\\") {
+			return fmt.Errorf("game %q has an unusable save copy pattern %q", g.ID, p)
 		}
 	}
 	for _, cp := range g.Caches {

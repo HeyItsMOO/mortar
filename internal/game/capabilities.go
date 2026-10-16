@@ -66,5 +66,5 @@ func StartupPreferencesPath(home string, s settings.Settings, id, pin string) (s
 // folder per save when it names none.
 func SaveLayout(id, dir string) saves.Layout {
 	g, _ := catalogGame(id)
-	return saves.Layout{Dir: dir, Files: g.SaveFiles, Companions: g.SaveCompanions}
+	return saves.Layout{Dir: dir, Files: g.SaveFiles, Companions: g.SaveCompanions, Copies: g.SaveCopies}
 }

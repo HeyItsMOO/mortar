@@ -113,6 +113,39 @@ func (s *Service) RestoreBackup(game, profile, name string, folders []string) er
 	return backup.Restore(src, sc.Layout(), target.Dir, folders, target.Keep, time.Now())
 }
 
+// SaveCopies lists the copies the game keeps itself of save in the saves folder profile reads, newest first.
+func (s *Service) SaveCopies(game, profile, save string) ([]saves.Copy, error) {
+	id, err := s.saveGame(game)
+	if err != nil {
+		return nil, err
+	}
+	sc, err := s.scannerFor(id, profile)
+	if err != nil {
+		return nil, err
+	}
+	return sc.Layout().CopiesOf(save), nil
+}
+
+// RestoreSaveCopy puts one of the game's own copies of save back over it, after backing up the current saves.
+func (s *Service) RestoreSaveCopy(game, profile, save, kept string) error {
+	id, err := s.saveGame(game)
+	if err != nil {
+		return err
+	}
+	if s.gameBusy(id) {
+		return ErrBusy
+	}
+	target, err := s.target(id, profile)
+	if err != nil {
+		return err
+	}
+	sc, err := s.scannerFor(id, profile)
+	if err != nil {
+		return err
+	}
+	return backup.RestoreCopy(sc.Layout(), target.Dir, save, kept, target.Keep, time.Now())
+}
+
 // OpenBackupsFolder shows the backups folder in the system file manager.
 func (s *Service) OpenBackupsFolder(game string) error {
 	id, err := s.saveGame(game)

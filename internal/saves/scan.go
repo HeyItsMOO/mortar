@@ -75,13 +75,14 @@ type Scanner struct {
 	Dir        string
 	Files      []string
 	Companions []string
+	Copies     []string
 	CacheDir   string
 	mu         sync.Mutex
 }
 
 // Layout is the scanned folder and its save shape.
 func (s *Scanner) Layout() Layout {
-	return Layout{Dir: s.Dir, Files: s.Files, Companions: s.Companions}
+	return Layout{Dir: s.Dir, Files: s.Files, Companions: s.Companions, Copies: s.Copies}
 }
 
 // Scan returns every save in Dir, newest first. A save that cannot be read is left out and reported in the
@@ -180,6 +181,58 @@ type Layout struct {
 	Dir        string
 	Files      []string
 	Companions []string
+	// Copies are the patterns for the copies of a save the game keeps beside it (components.GameInfo.SaveCopies).
+	Copies []string
+}
+
+// Copy is one copy of a save that the game itself keeps beside it, named by its slash path under Dir.
+type Copy struct {
+	Name string `json:"name"`
+	At   int64  `json:"at"`
+	Size int64  `json:"size"`
+}
+
+// CopiesOf lists the copies the game keeps of save name, newest first.
+func (l Layout) CopiesOf(name string) []Copy {
+	if !l.IsSave(name) {
+		return nil
+	}
+	dir, base := path.Split(name)
+	ext := path.Ext(base)
+	fill := strings.NewReplacer("{name}", globQuote(base), "{stem}", globQuote(strings.TrimSuffix(base, ext)), "{ext}", globQuote(ext))
+	var out []Copy
+	for _, p := range l.Copies {
+		matches, _ := filepath.Glob(filepath.Join(l.Dir, filepath.FromSlash(dir), fill.Replace(p)))
+		for _, m := range matches {
+			fi, err := os.Stat(m)
+			c := Copy{Name: path.Join(dir, filepath.Base(m))}
+			if err != nil || !fi.Mode().IsRegular() || c.Name == name || slices.ContainsFunc(out, func(o Copy) bool { return o.Name == c.Name }) {
+				continue
+			}
+			c.At, c.Size = fi.ModTime().UnixMilli(), fi.Size()
+			out = append(out, c)
+		}
+	}
+	slices.SortFunc(out, func(a, b Copy) int { return cmp.Compare(b.At, a.At) })
+	return out
+}
+
+// CopyPaths pairs each file of kept, a copy of save (its own and its companions') with the file of save it restores over.
+func (l Layout) CopyPaths(save, kept string) [][2]string {
+	out := [][2]string{{kept, save}}
+	copyStem := strings.TrimSuffix(kept, path.Ext(kept))
+	saveStem := strings.TrimSuffix(save, path.Ext(save))
+	for _, ext := range l.Companions {
+		if fsx.IsFile(filepath.Join(l.Dir, filepath.FromSlash(copyStem+ext))) {
+			out = append(out, [2]string{copyStem + ext, saveStem + ext})
+		}
+	}
+	return out
+}
+
+// globQuote escapes the characters filepath.Glob would read as a pattern in a save's own name.
+func globQuote(s string) string {
+	return strings.NewReplacer("*", "[*]", "?", "[?]", "[", "[[]").Replace(s)
 }
 
 // IsSave reports whether name, a save's path under Dir, is a save.

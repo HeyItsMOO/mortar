@@ -239,6 +239,7 @@
       },
       "saveFiles": ["characters_local/*.fch", "worlds_local/*.fwl", "!*_backup_*"],
       "saveCompanions": [".db"],
+      "saveCopies": ["{stem}_backup_auto-*{ext}"],
       "titleScene": "start",
       "deploy": "profile",
       "targets": [
@@ -2093,6 +2094,7 @@
         }
       },
       "saveFiles": ["Slot_*.save"],
+      "saveCopies": ["{name}.ver?"],
       "newProfileSeparateSaves": true,
       "caches": [
         {

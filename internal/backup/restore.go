@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/archive"
+	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/saves"
 )
@@ -42,6 +43,24 @@ func Restore(zipPath string, l saves.Layout, backupsDir string, folders []string
 			if err := replace(filepath.Join(got.Dir, filepath.FromSlash(part)), filepath.Join(l.Dir, filepath.FromSlash(part))); err != nil {
 				return err
 			}
+		}
+	}
+	return nil
+}
+
+// RestoreCopy puts kept, one of the copies the game keeps of save (saves.Layout.CopiesOf), back over save, companions
+// included, after zipping the current saves into backupsDir. The game's copy stays where it is.
+func RestoreCopy(l saves.Layout, backupsDir, save, kept string, keep int, now time.Time) error {
+	if !slices.ContainsFunc(l.CopiesOf(save), func(c saves.Copy) bool { return c.Name == kept }) {
+		return fmt.Errorf("%q is not a copy the game keeps of %q", kept, save)
+	}
+	if _, err := Saves(l, backupsDir, keep, now, Cause{Kind: KindRestore}); err != nil {
+		return err
+	}
+	for _, pair := range l.CopyPaths(save, kept) {
+		src, dst := filepath.Join(l.Dir, filepath.FromSlash(pair[0])), filepath.Join(l.Dir, filepath.FromSlash(pair[1]))
+		if err := datadir.CopyFile(src, dst); err != nil {
+			return err
 		}
 	}
 	return nil

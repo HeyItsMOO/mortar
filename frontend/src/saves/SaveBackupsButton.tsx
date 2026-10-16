@@ -1,11 +1,14 @@
 import { useLingui } from '@lingui/react/macro'
 import { Badge, Box, Popover, Typography } from '@mui/material'
 import { History, Pin, PinOff, RotateCcw, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Backup } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/backup/models.ts'
+import type { Copy } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/saves/models.ts'
 import {
   DeleteBackup,
   RestoreBackup,
+  RestoreSaveCopy,
+  SaveCopies,
   SetBackupPinned,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savessvc/service.ts'
 import { formatBytes } from '../i18n/bytes.ts'
@@ -23,9 +26,38 @@ import { usePending } from '../toasts/usePending.ts'
 import { causeLabel, useSaveBackups } from './backups.ts'
 import { useSaves } from './store.ts'
 
-interface Ask {
-  kind: 'restore' | 'delete'
-  backup: Backup
+type Ask = { kind: 'restore' | 'delete'; backup: Backup } | { kind: 'copy'; copy: Copy }
+
+// One copy the game keeps of the save itself (Valheim's automatic world backups, The Sims 4's rollback copies).
+function CopyRow({
+  copy,
+  busyGame,
+  pending,
+  onAsk,
+}: {
+  copy: Copy
+  busyGame: boolean
+  pending: boolean
+  onAsk: (a: Ask) => void
+}) {
+  const { t } = useLingui()
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+      <Typography noWrap={true} title={copy.name} sx={{ flex: 1, minWidth: 0, fontSize: 12 }}>
+        <When value={copy.at} withTime={true} />
+        <Box component="span" sx={{ color: 'text.secondary' }}>
+          {t` · Kept by the game · ${formatBytes(copy.size)}`}
+        </Box>
+      </Typography>
+      <TipIconButton
+        label={busyGame ? t`Stop the game to restore saves.` : t`Restore`}
+        disabled={busyGame || pending}
+        onClick={() => onAsk({ kind: 'copy', copy })}
+      >
+        <RotateCcw size={14} />
+      </TipIconButton>
+    </Box>
+  )
 }
 
 function Row({
@@ -99,13 +131,30 @@ export function SaveBackupsButton({
   const [pending, run] = usePending()
   const busyGame = useGameBusy()
   const game = useCurrentGame()
+  const [copies, setCopies] = useState<Copy[]>([])
+  useEffect(() => {
+    if (anchor) {
+      SaveCopies(game, profile, folder)
+        .then((c) => setCopies(c ?? []))
+        .catch(() => setCopies([]))
+    }
+  }, [anchor, game, profile, folder])
   const count = backups?.length ?? 0
   const tip = count > 0 ? t`Backups (${count})` : t`No backups yet`
   const refresh = async () => {
     await onChanged()
     await useSaveBackups.getState().reload()
   }
-  const when = ask ? formatWhen(ask.backup.at, { withTime: true }) : ''
+  let when = ''
+  if (ask) {
+    when = formatWhen(ask.kind === 'copy' ? ask.copy.at : ask.backup.at, { withTime: true })
+  }
+  let body = t`${label} is replaced by the copy in this backup. The current ${label} is backed up first.`
+  if (ask?.kind === 'delete') {
+    body = t`The backup from ${when} is deleted for good, with every save in it.`
+  } else if (ask?.kind === 'copy') {
+    body = t`${label} is replaced by the game's own copy from ${when}. The current ${label} is backed up first.`
+  }
   return (
     <>
       <TipIconButton
@@ -137,7 +186,7 @@ export function SaveBackupsButton({
           }}
         >
           {backups === null ? <LoadingRow>{t`Reading backups…`}</LoadingRow> : null}
-          {backups?.length === 0 ? (
+          {backups?.length === 0 && copies.length === 0 ? (
             <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
               {t`No backup contains this save yet.`}
             </Typography>
@@ -154,6 +203,9 @@ export function SaveBackupsButton({
               }}
             />
           ))}
+          {copies.map((c) => (
+            <CopyRow key={c.name} copy={c} busyGame={busyGame} pending={pending} onAsk={setAsk} />
+          ))}
         </Box>
       </Popover>
       <ConfirmDialog
@@ -161,25 +213,24 @@ export function SaveBackupsButton({
         title={ask?.kind === 'delete' ? t`Delete this backup?` : t`Restore ${label} to ${when}?`}
         confirmLabel={ask?.kind === 'delete' ? t`Delete` : t`Restore`}
         color={ask?.kind === 'delete' ? 'error' : 'primary'}
-        busy={pending || (ask?.kind === 'restore' && busyGame)}
-        body={
-          ask?.kind === 'delete'
-            ? t`The backup from ${when} is deleted for good, with every save in it.`
-            : t`${label} is replaced by the copy in this backup. The current ${label} is backed up first.`
-        }
+        busy={pending || (ask?.kind !== 'delete' && busyGame)}
+        body={body}
         onCancel={() => setAsk(null)}
         onConfirm={() => {
           if (!ask) {
             return
           }
-          const { kind, backup } = ask
           run(async () => {
-            await (kind === 'delete'
-              ? DeleteBackup(game, backup.name)
-              : RestoreBackup(game, profile, backup.name, [folder]))
+            if (ask.kind === 'copy') {
+              await RestoreSaveCopy(game, profile, folder, ask.copy.name)
+            } else if (ask.kind === 'delete') {
+              await DeleteBackup(game, ask.backup.name)
+            } else {
+              await RestoreBackup(game, profile, ask.backup.name, [folder])
+            }
             setAsk(null)
             await refresh()
-            if (kind === 'restore') {
+            if (ask.kind !== 'delete') {
               await useSaves.getState().reload()
             }
           })
