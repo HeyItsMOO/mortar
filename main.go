@@ -367,6 +367,9 @@ func run() error {
 		out := io.MultiWriter(&cappedWriter{w: logFile, left: maxLogBytes}, os.Stderr)
 		log.SetOutput(out)
 		slog.SetDefault(slog.New(slog.NewTextHandler(out, nil)))
+		// Wails discards its own info lines without a logger, and those are the only trace of a WebView2 process
+		// failure it chose not to recover from.
+		app.Logger = slog.Default()
 	}
 	// A user's log is often the only report there is, so it starts by naming the build.
 	log.Printf("mortar %s (build %s) on %s/%s", version, cmp.Or(appversion.Commit(), "unknown"), runtime.GOOS, runtime.GOARCH)
