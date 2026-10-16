@@ -50,6 +50,57 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
+    <release version="0.3.1" date="2026-10-15">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>46 more games modded through BepInEx and Thunderstore, among them R.E.P.O., Risk of Rain 2, PEAK, Content Warning, Inscryption, Cult of the Lamb, Sun Haven and Enter the Gungeon; 14 of them also browse Nexus Mods</li>
+          <li>The Sims 4: each profile has its own Mods, saves and game options, Tray files go to the game's library, and mods come from CurseForge, Nexus Mods, GitHub, Patreon posts and itch.io pages</li>
+          <li>Game select is one alphabetical list with your recently played games on top, a letter rail to jump with, and typing a name finds it</li>
+          <li>Paste a Patreon post or an itch.io page in Add mod: it opens in your browser, and the file you save from it is offered and recorded under that page</li>
+          <li>Games installed through the EA App are found and started</li>
+          <li>Merge one profile into another, as one step you can undo</li>
+          <li>Review the mods in the game's own Mods folder against a profile and bring them in</li>
+          <li>Scheduled save backups, the run log, the console, conflicts and requirements can be set per profile</li>
+          <li>A profile can keep its own copy of the game's options file</li>
+          <li>Play asks which graphics API to use for games that offer more than one, and asks again after a start that fails under another</li>
+          <li>Problems lists game settings your mods need switched on, and a Redundant finding can be dismissed and restored</li>
+          <li>The game's caches are cleared on the first start after a profile's mods change</li>
+          <li>The Windows installer offers to open Nexus and Thunderstore links with Mortar, and Mortar offers to take them back when another app claims them</li>
+          <li>Typing in the mod list jumps to a mod the way Game select does: punctuation is ignored and digits count</li>
+          <li>Settings › About shows the build, and Open log folder finds the log</li>
+          <li>Share › Mod list saves the list to a text file, and Multiplayer mod list loads a host's list from one</li>
+          <li>Join our Discord from the app menu, the Welcome screen and the site</li>
+          <li>The Sims 4: Import from the game's Mods folder reads the mods already in Documents › Electronic Arts › The Sims 4 › Mods, at first set-up and from the Import menu, switched-off files included, and can move them out of that folder</li>
+          <li>Find on Nexus: mods imported from another manager or a folder with no page get their Nexus page and file back, from the Source grouping of the Mods list; Set Nexus page… in a mod's menu names the page by hand</li>
+          <li>CurseForge's Install button can open Mortar: turn on Handle CurseForge links in Settings › Downloads; links for games Mortar does not manage go back to the CurseForge app</li>
+        </ul>
+        <p>Fixed</p>
+        <ul>
+          <li>Windows: SMAPI starts when Steam's launch options do not name it, a hidden SMAPI no longer hides the game window, Stop ends the whole game, and no console windows flash when Settings opens</li>
+          <li>Windows: LAN sharing never listens on a network set to Public, and its firewall rules cover every network type so Windows does not prompt</li>
+          <li>Importing from Vortex reads mods it deployed as links</li>
+          <li>Closing the window quits when Mortar is not kept in the tray, and the tray's Quit works with the window closed</li>
+          <li>A Thunderstore update is found by the package's id, so a namesake cannot hide it, and other mod managers are left out of search and installs</li>
+          <li>The stored Thunderstore listing takes about a quarter of the disk space, loads twice as fast, and leaves memory after ten idle minutes</li>
+          <li>A space typed inside a mod's name no longer switches the focused mod off</li>
+          <li>Multiplayer mod list: Check reads the text Share › Mod list makes, in all three formats</li>
+          <li>Share › Mod list names a mod once when several parts of one download share its name and version</li>
+          <li>A second Install waits for the running download instead of failing</li>
+          <li>Changing mods no longer puts off the update check</li>
+          <li>A config file no mod owns opens alone instead of beside a second list</li>
+          <li>An itch.io key is accepted</li>
+          <li>Tooltips, the reasons a control is off and an update's requirement changes are reachable by keyboard, and the sidebar is one tab stop walked with the arrow keys</li>
+          <li>A crafted archive or image can no longer make Mortar run out of memory</li>
+          <li>Edit profile no longer scrolls sideways, and a long game list no longer widens the page</li>
+          <li>A mod whose page is not known shows Unknown source instead of Nexus Mods</li>
+          <li>Review updates lists an update from another site that Mortar cannot download itself, instead of counting it and showing nothing</li>
+          <li>A CurseForge Install link for a mod whose author only allows downloads from its page is refused by name with what to do, instead of failing in the queue</li>
+          <li>Installing an archive over a mod from a site keeps its page, picture and update checks instead of turning it into a plain Archive</li>
+          <li>A game set up from a folder you chose, or found through another launcher, starts directly instead of being handed to Steam, and on Linux a Windows-only game outside Steam or Bottles says why it cannot start</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.0" date="2026-10-07">
       <description>
         <p>New</p>
