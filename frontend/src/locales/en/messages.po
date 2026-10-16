@@ -1784,7 +1784,7 @@ msgstr "No mods to share"
 msgid "Compares every stored mod's files with what was saved when it was added. Mortar also runs it slowly in the background, about weekly."
 msgstr "Compares every stored mod's files with what was saved when it was added. Mortar also runs it slowly in the background, about weekly."
 
-#: src/launch/store.ts:131
+#: src/launch/store.ts:136
 #: src/mods/ModSections.tsx:72
 #: src/mods/ModSections.tsx:163
 msgid "Roll back"
@@ -2898,7 +2898,7 @@ msgid "Appearance"
 msgstr "Appearance"
 
 #. placeholder {0}: status.error
-#: src/launch/store.ts:75
+#: src/launch/store.ts:80
 msgid "The program to start {name} was not found. Check that the game is still installed and the launch prefix names a real command. {0}"
 msgstr "The program to start {name} was not found. Check that the game is still installed and the launch prefix names a real command. {0}"
 
@@ -5850,7 +5850,7 @@ msgid "Show hidden mods"
 msgstr "Show hidden mods"
 
 #. placeholder {0}: profileName(rollback)
-#: src/launch/store.ts:128
+#: src/launch/store.ts:133
 msgid "New errors after updating {0}"
 msgstr "New errors after updating {0}"
 
@@ -7199,7 +7199,7 @@ msgstr "Search {gameName} settings"
 msgid "Open author page on Nexus"
 msgstr "Open author page on Nexus"
 
-#: src/launch/store.ts:284
+#: src/launch/store.ts:289
 msgid "Could not check whether the game is running"
 msgstr "Could not check whether the game is running"
 
@@ -7852,7 +7852,7 @@ msgstr "Each mod's Entry method, run one after another"
 msgid "All games…"
 msgstr "All games…"
 
-#: src/launch/store.ts:95
+#: src/launch/store.ts:100
 msgid "Could not roll back updates"
 msgstr "Could not roll back updates"
 
@@ -8049,7 +8049,7 @@ msgstr "Run again"
 msgid "Reset to default"
 msgstr "Reset to default"
 
-#: src/launch/store.ts:360
+#: src/launch/store.ts:365
 msgid "Could not stop the game"
 msgstr "Could not stop the game"
 
@@ -8767,7 +8767,7 @@ msgid "No launchers found. Continue and choose each game's folder when you open 
 msgstr "No launchers found. Continue and choose each game's folder when you open it."
 
 #. placeholder {0}: status.error
-#: src/launch/store.ts:71
+#: src/launch/store.ts:76
 msgid "Wine stopped on an error before {name} started: {0}"
 msgstr "Wine stopped on an error before {name} started: {0}"
 
@@ -11509,7 +11509,7 @@ msgstr "Preview Mods folder import…"
 msgid "Could not save the graphics choice"
 msgstr "Could not save the graphics choice"
 
-#: src/launch/store.ts:80
+#: src/launch/store.ts:85
 msgid "Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › {name}) or the game will not see this profile."
 msgstr "Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › {name}) or the game will not see this profile."
 
@@ -12964,6 +12964,10 @@ msgstr "Game install"
 msgid "Used by: {label}"
 msgstr "Used by: {label}"
 
+#: src/launch/store.ts:67
+msgid "The Epic Games Launcher may not be running or signed in. Start it, sign in and try again."
+msgstr "The Epic Games Launcher may not be running or signed in. Start it, sign in and try again."
+
 #: src/profiles/HistoryToolbar.tsx:36
 msgid "Mark current as known good"
 msgstr "Mark current as known good"
@@ -13958,7 +13962,7 @@ msgstr "From a link or file…"
 msgid "Archives land here instead of Mortar's downloads folder. Empty uses the default."
 msgstr "Archives land here instead of Mortar's downloads folder. Empty uses the default."
 
-#: src/launch/store.ts:67
+#: src/launch/store.ts:72
 msgid "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 msgstr "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 

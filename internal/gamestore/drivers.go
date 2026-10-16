@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"slices"
+	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
@@ -205,23 +206,30 @@ func (epicStore) Launchers(goos string) []LauncherSpec {
 	}}
 }
 
+type epicInstall struct {
+	Location string `json:"InstallLocation"`
+	AppName  string `json:"AppName"`
+}
+
+// epicInstalls reads the install list in dir; an unreadable list holds nothing.
+func epicInstalls(dir string) []epicInstall {
+	b, err := fsx.ReadFile(filepath.Join(dir, epicInstalled))
+	if err != nil {
+		return nil
+	}
+	var list struct {
+		Installs []epicInstall `json:"InstallationList"`
+	}
+	if json.Unmarshal(b, &list) != nil {
+		return nil
+	}
+	return list.Installs
+}
+
 func (epicStore) Discover(_ string, roots map[string][]string, g components.GameInfo) []Install {
 	var out []Install
 	for _, dir := range epicDirs(runtime.GOOS, os.Getenv, roots[LauncherEpic]...) {
-		b, err := fsx.ReadFile(filepath.Join(dir, epicInstalled))
-		if err != nil {
-			continue
-		}
-		var list struct {
-			Installs []struct {
-				Location string `json:"InstallLocation"`
-				AppName  string `json:"AppName"`
-			} `json:"InstallationList"`
-		}
-		if json.Unmarshal(b, &list) != nil {
-			continue
-		}
-		for _, in := range list.Installs {
+		for _, in := range epicInstalls(dir) {
 			if !slices.Contains(g.Stores.Epic.AppNames, in.AppName) {
 				continue
 			}
@@ -231,4 +239,21 @@ func (epicStore) Discover(_ string, roots map[string][]string, g components.Game
 		}
 	}
 	return out
+}
+
+// EpicAppName is the AppName the Epic Games Launcher lists for the install in dir (its folder, or the one above its
+// game folder), else the first of names: a game sold as several products is started as the one installed.
+func EpicAppName(dir string, names []string) string {
+	for _, list := range epicDirs(runtime.GOOS, os.Getenv) {
+		for _, in := range epicInstalls(list) {
+			loc := filepath.Clean(in.Location)
+			if slices.Contains(names, in.AppName) && (strings.EqualFold(loc, dir) || strings.EqualFold(loc, filepath.Dir(dir))) {
+				return in.AppName
+			}
+		}
+	}
+	if len(names) == 0 {
+		return ""
+	}
+	return names[0]
 }

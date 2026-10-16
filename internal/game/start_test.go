@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/sandbox"
@@ -464,5 +465,23 @@ func TestGuardedPutsTheWrapperFirst(t *testing.T) {
 	name, args = guarded("/guard", "game", []string{"-a"})
 	if name != "/guard" || !slices.Equal(args, []string{"game", "-a"}) {
 		t.Fatalf("wrapped: %s %v", name, args)
+	}
+}
+
+// An Epic Games copy starts through its launcher's link, as a relay Mortar follows by the loader's log.
+func TestEpicCopyStartsThroughTheEpicLauncher(t *testing.T) {
+	inst := Install{Game: "enter-the-gungeon", Store: StoreEpic, Dir: filepath.FromSlash("/games/EtG")}
+	c, err := Starter{}.command("windows", inst, &launchplan.Plan{Mode: launchplan.ModeProfile}, StartEnv{}, "", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"rundll32.exe", "url.dll,FileProtocolHandler", "com.epicgames.launcher://apps/Garlic?action=launch&silent=true"}
+	if got := append([]string{c.Name}, c.Args...); !slices.Equal(got, want) || !c.Relay || c.Failure != launch.HintEpic {
+		t.Fatalf("got %v relay %v hint %q, want %v", got, c.Relay, c.Failure, want)
+	}
+	for _, bad := range []string{"", "a&b", "x?y", "../x", "a b", "a/b"} {
+		if components.PlainAppName(bad) {
+			t.Fatalf("%q passed as a plain AppName", bad)
+		}
 	}
 }

@@ -62,6 +62,11 @@ function failureBody(status: Status): string {
   if (status.hint === Hint.HintSteam) {
     return i18n._(msg`Steam may not be running or signed in. Start Steam, sign in and try again.`)
   }
+  if (status.hint === Hint.HintEpic) {
+    return i18n._(
+      msg`The Epic Games Launcher may not be running or signed in. Start it, sign in and try again.`,
+    )
+  }
   if (status.hint === Hint.HintSteamClient) {
     return i18n._(
       msg`Steam must be installed and signed in for this game. Install Steam, sign in once and try again.`,

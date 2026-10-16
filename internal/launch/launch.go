@@ -32,6 +32,8 @@ const (
 	HintWine Hint = "wine"
 	// HintMissingExe: the process to start, or the game's executable, was not found.
 	HintMissingExe Hint = "missing-exe"
+	// HintEpic: the game never wrote its log, so the Epic Games Launcher may not be running or signed in.
+	HintEpic Hint = "epic"
 )
 
 // ErrNoSteam means there is no Steam to launch through; the user may choose to launch directly.

@@ -129,6 +129,9 @@ func steamSkipsLoader(goos string, inst Install, plan *launchplan.Plan, env Star
 
 // command builds the process to start. steamPath and flatpakPath are LookPath results, "" when missing.
 func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env StartEnv, steamPath, flatpakPath string) (launch.Command, error) {
+	if inst.Store == StoreEpic && !env.Direct && plan.Exe == "" {
+		return epicCommand(inst)
+	}
 	// A loader that replaces the executable cannot be reproduced by a store's relay.
 	if env.Direct || plan.Exe != "" || steamSkipsLoader(goos, inst, plan, env) {
 		exe := cmp.Or(plan.Exe, plan.Entry)

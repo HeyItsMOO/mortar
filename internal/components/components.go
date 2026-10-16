@@ -333,6 +333,11 @@ type GameStores struct {
 	Epic    *EpicStore    `json:"epic,omitempty"`
 }
 
+var plainAppName = regexp.MustCompile(`^[A-Za-z0-9_-]{1,64}$`)
+
+// PlainAppName reports whether name is an Epic AppName safe to put in a launcher link: letters, digits, "-" and "_".
+func PlainAppName(name string) bool { return plainAppName.MatchString(name) }
+
 // EpicStore names a game to the Epic Games Launcher: the AppName (or names, for a game sold as several products) its
 // install list gives the game's installs.
 type EpicStore struct {
@@ -536,6 +541,16 @@ func (g GameInfo) Validate() error {
 	for _, p := range g.SaveCopies {
 		if !strings.Contains(p, "{") || strings.ContainsAny(p, "/\\") {
 			return fmt.Errorf("game %q has an unusable save copy pattern %q", g.ID, p)
+		}
+	}
+	if g.Stores.Epic != nil {
+		if len(g.Stores.Epic.AppNames) == 0 {
+			return fmt.Errorf("game %q names Epic Games without an AppName", g.ID)
+		}
+		for _, app := range g.Stores.Epic.AppNames {
+			if !PlainAppName(app) {
+				return fmt.Errorf("game %q has an unusable Epic AppName %q", g.ID, app)
+			}
 		}
 	}
 	for name, alts := range g.FolderNames {
