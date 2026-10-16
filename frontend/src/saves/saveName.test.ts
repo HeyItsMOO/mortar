@@ -25,3 +25,9 @@ test('a Valheim save is a character or a world by its folder', () => {
   expect(saveKind('worlds_local/Midgard.fwl')).toBe('World')
   expect(saveKind('Farm_1')).toBe('')
 })
+
+test('a Lethal Company save says whether it is a slot, an extra slot from a mod or the weekly challenge', () => {
+  expect(saveKind('LCSaveFile3')).toBe('Save slot')
+  expect(saveKind('LCSaveFile4')).toBe('Extra slot added by a mod')
+  expect(saveKind('LCChallengeFile')).toBe('Weekly challenge')
+})

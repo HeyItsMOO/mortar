@@ -421,7 +421,7 @@ func TestSaveFilePatternsStayInTheSavesFolder(t *testing.T) {
 		t.Error("companion without a dot passed")
 	}
 	lc, ok := bundledGame("lethal-company")
-	if !ok || !slices.Equal(lc.SaveFiles, []string{"LCSaveFile*", "LCChallengeFile"}) {
+	if !ok || !slices.Equal(lc.SaveFiles, []string{"LCSaveFile*", "LCChallengeFile", "!*.bac", "!*.tmp", "!*.bak"}) {
 		t.Fatalf("bundled Lethal Company save files = %v", lc.SaveFiles)
 	}
 	if err := lc.Validate(); err != nil {

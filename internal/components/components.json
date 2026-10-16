@@ -1,5 +1,5 @@
 {
-  "serial": 1792128799,
+  "serial": 1792130309,
   "components": [
     {
       "game": "stardew",
@@ -185,7 +185,8 @@
           "linux": "{xdgConfig}/unity3d/ZeekerssRBLX/Lethal Company/Player.log"
         }
       },
-      "saveFiles": ["LCSaveFile*", "LCChallengeFile"],
+      "saveFiles": ["LCSaveFile*", "LCChallengeFile", "!*.bac", "!*.tmp", "!*.bak"],
+      "saveCompanions": [".bac", ".tmp", ".tmp.bak"],
       "titleScene": "MainMenu",
       "deploy": "profile",
       "targets": [

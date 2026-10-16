@@ -10,7 +10,7 @@ import { visuallyHidden } from '../shell/visuallyHidden.ts'
 import { space } from '../theme/density.ts'
 import { SaveGapLine } from './SaveGapLine.tsx'
 import { FitStatus, SaveButtons } from './SaveRow.tsx'
-import { saveName } from './saveName.ts'
+import { saveKind, saveName } from './saveName.ts'
 
 // The last column holds up to four icon buttons; a fixed width keeps it aligned when a save has fewer.
 const COLUMNS = 'minmax(0,1fr) 160px 220px 148px'
@@ -100,6 +100,7 @@ function SaveListRow({
     when = t`Unknown`
   }
   const label = saveName(fit)
+  const kind = saveKind(fit.folder)
   return (
     <TableRow
       role="row"
@@ -114,6 +115,14 @@ function SaveListRow({
       <SaveCell title={label}>
         <Typography noWrap={true} sx={{ fontWeight: 500, fontSize: 'inherit' }}>
           {label}
+          {kind === '' ? null : (
+            <Box
+              component="span"
+              sx={{ ml: 1, fontWeight: 400, fontSize: 13, color: 'text.secondary' }}
+            >
+              {kind}
+            </Box>
+          )}
         </Typography>
       </SaveCell>
       <SaveCell
