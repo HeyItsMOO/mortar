@@ -65,8 +65,8 @@ export async function openSettings(page: Page) {
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null
 
 // The arguments a Wails runtime call's request body passes to the bound method ({object, method, args: {methodID,
-// args}}), so a test matches a call by an exact argument rather than by text anywhere in the body.
-export function callArgs(body: string): unknown[] {
+// args}}).
+function callArgs(body: string): unknown[] {
   let parsed: unknown
   try {
     parsed = JSON.parse(body)
@@ -75,4 +75,10 @@ export function callArgs(body: string): unknown[] {
   }
   const call = isRecord(parsed) ? parsed.args : undefined
   return isRecord(call) && Array.isArray(call.args) ? call.args : []
+}
+
+// Whether a Wails runtime call's request body passes value as one of its arguments, compared exactly rather than found
+// anywhere in the body's text.
+export function calledWith(body: string, value: unknown): boolean {
+  return callArgs(body).some((arg) => arg === value)
 }
