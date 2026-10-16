@@ -61,3 +61,18 @@ export async function openSettings(page: Page) {
   await page.getByRole('button', { name: 'Mortar menu' }).click()
   await page.getByRole('menuitem', { name: /^Mortar settings/ }).click()
 }
+
+const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null
+
+// The arguments a Wails runtime call's request body passes to the bound method ({object, method, args: {methodID,
+// args}}), so a test matches a call by an exact argument rather than by text anywhere in the body.
+export function callArgs(body: string): unknown[] {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(body)
+  } catch {
+    return []
+  }
+  const call = isRecord(parsed) ? parsed.args : undefined
+  return isRecord(call) && Array.isArray(call.args) ? call.args : []
+}

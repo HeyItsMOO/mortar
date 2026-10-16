@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs'
 import process from 'node:process'
 import { expect, type Page, test } from '@playwright/test'
-import { openSeedFarm } from './app.ts'
+import { callArgs, openSeedFarm } from './app.ts'
 
 // A pasted Patreon post opens in the browser and is remembered; the file the player then saves is added from the
 // Downloads dialog under that post. The browser open is answered by the test, so the sandbox opens nothing.
@@ -50,7 +50,7 @@ test('a pasted Patreon post opens, then the saved file installs under that post'
   await page.route('**/wails/runtime', async (route) => {
     const body = route.request().postData() ?? ''
     calls.push(body)
-    if (body.includes(POST_URL)) {
+    if (callArgs(body).includes(POST_URL)) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
       return
     }
@@ -63,7 +63,7 @@ test('a pasted Patreon post opens, then the saved file installs under that post'
   await dialog.getByLabel('Share link').fill(POST)
   await dialog.getByRole('button', { name: 'Preview' }).click()
   await expect(dialog.getByRole('status')).toContainText('Opened the Patreon post')
-  expect(calls.some((c) => c.includes(POST_URL))).toBe(true)
+  expect(calls.some((c) => callArgs(c).includes(POST_URL))).toBe(true)
 
   writeArchive(`${dir}/home/.local/share/mortar/downloads`)
   await dialog.getByLabel('Close').click()
@@ -90,7 +90,7 @@ test('a file saved from a Patreon post is offered in a toast and installs under 
   await page.route('**/wails/runtime', async (route) => {
     const body = route.request().postData() ?? ''
     calls.push(body)
-    if (body.includes(postUrl)) {
+    if (callArgs(body).includes(postUrl)) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
       return
     }

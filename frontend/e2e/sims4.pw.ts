@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs'
 import process from 'node:process'
 import { expect, type Page, test } from '@playwright/test'
-import { openGameSelect, openGameSettings, openSeedFarm } from './app.ts'
+import { callArgs, openGameSelect, openGameSettings, openSeedFarm } from './app.ts'
 
 // The Sims 4 through the real UI against the sandbox's stand-in install (scripts/selftest.sh sims4-install): a Steam
 // install with a placeholder TS4_x64.exe and the player's Documents tree. The game is disabled in the shipped catalog;
@@ -167,7 +167,7 @@ test('a pasted itch.io link opens the page, and the file saved from it asks befo
 }) => {
   await page.route('**/wails/runtime', async (route) => {
     const body = route.request().postData() ?? ''
-    if (body.includes(PAGE) && body.includes(String(OPEN_WEB_ID))) {
+    if (callArgs(body).includes(PAGE) && body.includes(String(OPEN_WEB_ID))) {
       await route.fulfill({ status: 200, contentType: 'application/json', body: 'null' })
       return
     }
