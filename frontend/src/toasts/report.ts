@@ -98,14 +98,16 @@ export function toastError(
   e: unknown,
   extra: { action?: ToastAction; detail?: string; retry?: () => unknown } = {},
 ): void {
-  const details = [errorDetails(e), extra.detail ?? ''].filter((part) => part !== '').join('\n')
+  const details = [errorDetails(e), extra.detail ?? '']
+    .filter((part) => part !== '' && part !== title)
+    .join('\n')
   const action = extra.action ?? nextStep(e, extra.retry)
-  const body = errorMessage(e)
+  // An untagged error has no plain sentence of its own: the title names what failed and the detail its cause.
+  const body = kindOf(e) === 'unknown' ? '' : errorMessage(e)
   useToasts.getState().push({
     kind: 'error',
     title,
-    // An untagged error's sentence is the generic title itself which would only repeat it.
-    ...(body === title ? {} : { body }),
+    ...(body === '' ? {} : { body }),
     ...(details === '' ? {} : { detail: details }),
     action,
   })
@@ -122,5 +124,7 @@ export const reportUnexpected = (e: unknown) => {
   if (kindOf(e) === 'network' || kindOf(e) === 'locked') {
     return
   }
-  toastError(errorMessage(null), e)
+  // Nothing named what was being done, so the cause's first line is the title rather than a generic sentence.
+  const cause = errorDetails(e).split('\n', 1)[0]?.trim() ?? ''
+  toastError(cause === '' ? errorMessage(null) : cause.charAt(0).toUpperCase() + cause.slice(1), e)
 }

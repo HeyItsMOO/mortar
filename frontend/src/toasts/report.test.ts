@@ -1,17 +1,20 @@
-import { expect, test } from 'bun:test'
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { beforeEach, expect, test } from 'bun:test'
+import { reportUnexpected, toastError } from './report.ts'
+import { useToasts } from './store.ts'
 
-test('toastError puts the mapped sentence in body and raw text in detail', () => {
-  const src = readFileSync(join(import.meta.dir, 'report.ts'), 'utf8')
-  expect(src).toContain('export function toastError')
-  expect(src).toContain('export const reportError')
-  expect(src).toContain('const body = errorMessage(e)')
-  // The generic sentence is also the unexpected-error title, so it is not repeated as the body.
-  expect(src).toContain('...(body === title ? {} : { body })')
-  expect(src).toContain("...(details === '' ? {} : { detail: details })")
-  expect(src).toContain('const action = extra.action ?? nextStep(e, extra.retry)')
-  expect(src).toContain("run: () => openSettings('about')")
-  expect(src).toContain('toastError(errorMessage(null), e)')
-  expect(src).toContain("if (kindOf(e) === 'network' || kindOf(e) === 'locked') {")
+const last = () => useToasts.getState().toasts.at(-1)
+
+beforeEach(() => useToasts.setState({ toasts: [], history: [] }))
+
+test('an unexpected failure is titled by its cause, not a generic sentence', () => {
+  reportUnexpected(new Error("GitHub's release API answered 404 Not Found"))
+  expect(last()?.title).toBe("GitHub's release API answered 404 Not Found")
+  expect(last()?.body).toBeUndefined()
+  expect(last()?.detail).toBeUndefined()
+})
+
+test('an untagged failure under a named title carries its cause as the detail, with no generic body', () => {
+  toastError('Could not save that setting', new Error('open settings.json: read-only file system'))
+  expect(last()?.body).toBeUndefined()
+  expect(last()?.detail).toBe('open settings.json: read-only file system')
 })
