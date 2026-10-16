@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/appversion"
 	"github.com/Rethunk-Tech/mortar/internal/doctor"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/game"
@@ -132,7 +133,7 @@ type BugReport struct {
 // BugURL is a new GitHub issue on Mortar prefilled with the report, the version, OS and game, and, when the user
 // left it on, the diagnostics checks and recent log lines; never a full log.
 func (s *Service) BugURL(gameID string, r BugReport) string {
-	about := fmt.Sprintf("Mortar %s · %s/%s", s.version, runtime.GOOS, runtime.GOARCH)
+	about := fmt.Sprintf("Mortar %s (build %s) · %s/%s", s.version, cmp.Or(appversion.Commit(), "unknown"), runtime.GOOS, runtime.GOARCH)
 	if g := game.Find(gameID); g != nil {
 		env := s.env(gameID)
 		about += " · " + g.Name()
