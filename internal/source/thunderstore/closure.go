@@ -34,24 +34,28 @@ func newer(a, b string) bool {
 }
 
 // pick is the version of p that ref asks for: the newest when it names none or when it is a dependency's pin, which
-// r2modman treats as a minimum; the newest 5.4.x for a BepInEx loader pack, since mods name old pack versions that the
-// newest one still serves; else exactly the named one.
+// r2modman treats as a minimum; for a BepInEx loader pack the newest of the series Mortar runs it as (5.4.x, or the
+// whole major the catalog names, 6 for BepInExPack_IL2CPP), since mods name old pack versions that the newest one
+// still serves; else exactly the named one.
 func pick(p pkg, ref Ref, minimum bool) (string, error) {
 	id := packageID(p.Owner, p.Name)
 	if components.IsLoaderPackage(p.Owner + "-" + p.Name) {
-		if ref.Version != "" {
-			if v := versionParts(ref.Version); v[0] != 5 || v[1] != 4 {
-				return "", fmt.Errorf("%s asks for %s %s, but Mortar runs BepInEx 5.4.x", id, p.Name, ref.Version)
-			}
+		major := components.LoaderPackageMajor(p.Owner + "-" + p.Name)
+		series, inSeries := "5.4.x", func(v [3]int) bool { return v[0] == 5 && v[1] == 4 }
+		if major != 5 {
+			series, inSeries = strconv.Itoa(major)+".x", func(v [3]int) bool { return v[0] == major }
+		}
+		if ref.Version != "" && !inSeries(versionParts(ref.Version)) {
+			return "", fmt.Errorf("%s asks for %s %s, but Mortar runs BepInEx %s", id, p.Name, ref.Version, series)
 		}
 		best := ""
 		for _, v := range p.Versions {
-			if vp := versionParts(v.Number); vp[0] == 5 && vp[1] == 4 && (best == "" || newer(v.Number, best)) {
+			if inSeries(versionParts(v.Number)) && (best == "" || newer(v.Number, best)) {
 				best = v.Number
 			}
 		}
 		if best == "" {
-			return "", fmt.Errorf("no %s 5.4.x in the index", p.Name)
+			return "", fmt.Errorf("no %s %s in the index", p.Name, series)
 		}
 		return best, nil
 	}

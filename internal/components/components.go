@@ -491,6 +491,19 @@ func IsLoaderPackage(id string) bool {
 	return false
 }
 
+// LoaderPackageMajor is the BepInEx major of the Thunderstore pack id (Namespace-Name): the major the catalog names for
+// the games that install it, else 5.
+func LoaderPackageMajor(id string) int {
+	for _, g := range Games() {
+		for _, l := range g.Loaders {
+			if l.Major != 0 && strings.EqualFold(id, g.LoaderPackage()) {
+				return l.Major
+			}
+		}
+	}
+	return 5
+}
+
 // GameSource is a site the game's mods come from. Key is the site's name for the game (Nexus domain, Thunderstore
 // community) and GameID its numeric id where the site's API uses one.
 type GameSource struct {

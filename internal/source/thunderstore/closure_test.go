@@ -28,6 +28,8 @@ func TestClosure(t *testing.T) {
 		custom("Ns", "Lost", v("1.0.0", "Ghost-Pkg-1.0.0")),
 		custom("Ns", "X", v("1.0.0", "Ns-Y-1.0.0")),
 		custom("Ns", "Y", v("1.0.0", "Ns-X-1.0.0")),
+		custom("BepInEx", "BepInExPack_IL2CPP", v("6.0.788"), v("6.0.700")),
+		custom("Ns", "Cat", v("1.0.0", "BepInEx-BepInExPack_IL2CPP-6.0.700")),
 		custom("ebkr", "r2modman", v("3.0.0")),
 		custom("Ns", "Managed", v("1.0.0", "ebkr-r2modman-3.0.0", "Ns-D-1.0.0")),
 	)
@@ -48,6 +50,7 @@ func TestClosure(t *testing.T) {
 		{"a root named at an exact version keeps it", []Ref{{"Ns", "A", "1.0.0"}, {"Ns", "B", "1.0.0"}}, "B 1.0.0, BepInExPack 5.4.2305, A 1.0.0", ""},
 		{"a pin newer than the index is an error", []Ref{{"Ns", "Ahead", ""}}, "", "ns-d 9.0.0 is not in the index"},
 		{"another loader major is refused", []Ref{{"Ns", "Old", ""}}, "", "ns-old 1.0.0 -> bepinex-bepinexpack"},
+		{"an IL2CPP pack's dependents take its newest BepInEx 6", []Ref{{"Ns", "Cat", ""}}, "BepInExPack_IL2CPP 6.0.788, Cat 1.0.0", ""},
 		{"a missing package names the chain", []Ref{{"Ns", "Lost", ""}}, "", "ghost-pkg is not in the index (requested by ns-lost 1.0.0 -> ghost-pkg)"},
 		{"a cycle is an error", []Ref{{"Ns", "X", ""}}, "", "dependency cycle: ns-x 1.0.0 -> ns-y 1.0.0 -> ns-x"},
 		{"a mod manager listed as a dependency is left out", []Ref{{"Ns", "Managed", ""}}, "D 1.0.0, Managed 1.0.0", ""},
