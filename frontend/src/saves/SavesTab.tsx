@@ -83,18 +83,27 @@ export function SavesTab({ profile, game }: { profile: Profile; game: string }) 
       </EmptyState>
     )
   } else {
-    const Row = list ? SaveListRow : SaveRow
-    const rows = shown.map((fit) => (
-      <Row
-        key={fit.folder}
-        fit={fit}
-        profile={profile}
-        game={game}
-        backups={all === null ? null : backupsOf(all, fit.folder)}
-        onBackupsChanged={reloadBackups}
-      />
-    ))
-    body = list ? <SaveListTable name={name}>{rows}</SaveListTable> : rows
+    const rows = shown.map((fit) => {
+      const props = {
+        fit,
+        profile,
+        game,
+        backups: all === null ? null : backupsOf(all, fit.folder),
+        onBackupsChanged: reloadBackups,
+      }
+      return list ? (
+        <SaveListRow key={fit.folder} {...props} recordsMods={recordsMods} />
+      ) : (
+        <SaveRow key={fit.folder} {...props} />
+      )
+    })
+    body = list ? (
+      <SaveListTable name={name} recordsMods={recordsMods}>
+        {rows}
+      </SaveListTable>
+    ) : (
+      rows
+    )
   }
   return (
     <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>

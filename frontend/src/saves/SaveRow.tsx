@@ -4,7 +4,6 @@ import { Box, Typography } from '@mui/material'
 import {
   Archive,
   CircleCheck,
-  CircleHelp,
   Flower2,
   FolderOpen,
   Leaf,
@@ -64,23 +63,18 @@ function useFarmKind(which: number): string {
   return kinds[which] ?? ''
 }
 
-export function FitStatus({ missing, unrecorded }: { missing: number; unrecorded: boolean }) {
+export function FitStatus({ missing }: { missing: number }) {
   const { t } = useLingui()
   let color = 'warning.main'
   let icon = <TriangleAlert size={13} />
   let text = t`Has used ${plural(missing, { one: '# mod it lacks', other: '# mods it lacks' })}`
-  if (unrecorded) {
-    color = 'text.secondary'
-    icon = <CircleHelp size={13} />
-    text = t`Mods not recorded`
-  } else if (missing === 0) {
+  if (missing === 0) {
     color = 'success.main'
     icon = <CircleCheck size={13} />
     text = t`All mods present`
   }
   return (
     <Box
-      title={unrecorded ? t`This game's saves do not record which mods they used.` : undefined}
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -257,7 +251,7 @@ export function SaveRow({
         game={game}
         lastLine={lastLine}
         lastGone={lastGone}
-        status={<FitStatus missing={missing.length} unrecorded={fit.unrecorded} />}
+        status={fit.unrecorded ? null : <FitStatus missing={missing.length} />}
       />
       <SaveGapLine
         key={`${profile.updated}-${fit.lastProfileAt}`}

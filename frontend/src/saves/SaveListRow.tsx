@@ -12,16 +12,16 @@ import { SaveGapLine } from './SaveGapLine.tsx'
 import { FitStatus, SaveButtons } from './SaveRow.tsx'
 import { saveKind, saveName } from './saveName.ts'
 
-// The last column holds up to four icon buttons; a fixed width keeps it aligned when a save has fewer.
-const COLUMNS = 'minmax(0,1fr) 160px 220px 148px'
-
-const rowGrid = {
-  display: 'grid',
-  gridTemplateColumns: COLUMNS,
-  gap: space.gap,
-  alignItems: 'center',
-  px: space.gutter,
-} as const
+// The last column holds up to four icon buttons; a fixed width keeps it aligned when a save has fewer. Season and fit
+// columns appear only for games whose saves record a calendar and their mods (SMAPI's).
+const rowGrid = (recordsMods: boolean) =>
+  ({
+    display: 'grid',
+    gridTemplateColumns: recordsMods ? 'minmax(0,1fr) 160px 220px 148px' : 'minmax(0,1fr) 148px',
+    gap: space.gap,
+    alignItems: 'center',
+    px: space.gutter,
+  }) as const
 
 const cellReset = { p: 0, border: 0, fontSize: 'inherit', color: 'inherit' } as const
 
@@ -35,7 +35,15 @@ function SaveCell({ children, title }: { children: ReactNode; title?: string }) 
 
 // The Mods list's table: a header that stays put while rows scroll, one grid row per save, and ARIA that joins
 // header and rows into one table.
-function SaveListTable({ name, children }: { name: string; children: ReactNode }) {
+function SaveListTable({
+  name,
+  recordsMods,
+  children,
+}: {
+  name: string
+  recordsMods: boolean
+  children: ReactNode
+}) {
   const { t } = useLingui()
   return (
     <Table
@@ -47,7 +55,7 @@ function SaveListTable({ name, children }: { name: string; children: ReactNode }
         <TableRow
           role="row"
           sx={{
-            ...rowGrid,
+            ...rowGrid(recordsMods),
             height: `calc(${space.row} - 6px)`,
             bgcolor: 'var(--mortar-console-90)',
             ...heading,
@@ -57,12 +65,16 @@ function SaveListTable({ name, children }: { name: string; children: ReactNode }
           <TableCell role="columnheader" sx={{ ...cellReset, ...heading }}>
             {t`Save`}
           </TableCell>
-          <TableCell role="columnheader" sx={{ ...cellReset, ...heading }}>
-            {t`Season`}
-          </TableCell>
-          <TableCell role="columnheader" sx={{ ...cellReset, ...heading }}>
-            {t`Fits ${{ name }}`}
-          </TableCell>
+          {recordsMods ? (
+            <>
+              <TableCell role="columnheader" sx={{ ...cellReset, ...heading }}>
+                {t`Season`}
+              </TableCell>
+              <TableCell role="columnheader" sx={{ ...cellReset, ...heading }}>
+                {t`Fits ${{ name }}`}
+              </TableCell>
+            </>
+          ) : null}
           <TableCell role="columnheader" sx={cellReset}>
             <Box component="span" sx={visuallyHidden}>
               {t`Actions`}
@@ -75,14 +87,17 @@ function SaveListTable({ name, children }: { name: string; children: ReactNode }
   )
 }
 
-// The list form of a save: name, Stardew's calendar ("Unknown" with the reason when a save has no date, "—" for games without a calendar), fit and the same actions as the card.
+// The list form of a save: name, Stardew's calendar ("Unknown" with the reason when a save has no date), fit and the
+// same actions as the card.
 function SaveListRow({
   fit,
   profile,
   game,
   backups,
   onBackupsChanged,
+  recordsMods,
 }: {
+  recordsMods: boolean
   fit: Fit
   profile: Profile
   game: string
@@ -93,7 +108,7 @@ function SaveListRow({
   const seasons = [t`Spring`, t`Summer`, t`Fall`, t`Winter`]
   const calendar = saveCalendar(fit)
   const unknown = saveCalendarUnknown(fit)
-  let when = '—'
+  let when = ''
   if (calendar) {
     when = t`Year ${calendar.year} ${seasons[calendar.season] ?? ''}`
   } else if (unknown) {
@@ -106,7 +121,7 @@ function SaveListRow({
       role="row"
       hover={true}
       sx={{
-        ...rowGrid,
+        ...rowGrid(recordsMods),
         minHeight: space.row,
         fontSize: 14,
         borderBottom: '1px solid var(--mortar-hairline-faint)',
@@ -125,22 +140,26 @@ function SaveListRow({
           )}
         </Typography>
       </SaveCell>
-      <SaveCell
-        {...(unknown
-          ? {
-              title: t`This save has no SaveGameInfo date, so Mortar cannot tell when it is in the game.`,
-            }
-          : {})}
-      >
-        <Typography noWrap={true} sx={{ fontSize: 13, color: 'text.secondary' }}>
-          {when}
-        </Typography>
-      </SaveCell>
-      <SaveCell>
-        <Box sx={{ display: 'flex' }}>
-          <FitStatus missing={(fit.missing ?? []).length} unrecorded={fit.unrecorded} />
-        </Box>
-      </SaveCell>
+      {recordsMods ? (
+        <>
+          <SaveCell
+            {...(unknown
+              ? {
+                  title: t`This save has no SaveGameInfo date, so Mortar cannot tell when it is in the game.`,
+                }
+              : {})}
+          >
+            <Typography noWrap={true} sx={{ fontSize: 13, color: 'text.secondary' }}>
+              {when}
+            </Typography>
+          </SaveCell>
+          <SaveCell>
+            <Box sx={{ display: 'flex' }}>
+              <FitStatus missing={(fit.missing ?? []).length} />
+            </Box>
+          </SaveCell>
+        </>
+      ) : null}
       <SaveCell>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <SaveButtons
