@@ -399,6 +399,11 @@ msgstr "Premium and GitHub downloads at once"
 msgid "{0, plural, one {# download failed} other {# downloads failed}}"
 msgstr "{0, plural, one {# download failed} other {# downloads failed}}"
 
+#. placeholder {0}: r.version
+#: src/updates/WhatsNewDialog.tsx:228
+msgid "Also in Mortar {0}"
+msgstr "Also in Mortar {0}"
+
 #: src/share/ImportPreview.tsx:183
 msgid "{name} needs {detail}, which Mortar cannot install"
 msgstr "{name} needs {detail}, which Mortar cannot install"
@@ -1505,7 +1510,9 @@ msgid "Notify when updates are found"
 msgstr "Notify when updates are found"
 
 #. placeholder {0}: formatWhen(item.updated)
-#: src/browse/stats.ts:67
+#. placeholder {0}: formatWhen(page.updated)
+#: src/browse/stats.ts:68
+#: src/browse/stats.ts:87
 msgid "Updated {0}"
 msgstr "Updated {0}"
 
@@ -2041,7 +2048,7 @@ msgstr "Grant Flatpak Steam access?"
 msgid "Could not add the launch preset"
 msgstr "Could not add the launch preset"
 
-#: src/updates/WhatsNewDialog.tsx:218
+#: src/updates/WhatsNewDialog.tsx:236
 msgid "Got it"
 msgstr "Got it"
 
@@ -4601,7 +4608,7 @@ msgstr "Mortar: {label}"
 msgid "{off} switched off"
 msgstr "{off} switched off"
 
-#: src/mods/ModCards.tsx:464
+#: src/mods/ModCards.tsx:510
 #: src/mods/ModList.tsx:369
 #: src/mods/Toolbar.tsx:196
 #: src/mods/typedConfig/ConfigTab.tsx:167
@@ -5692,7 +5699,7 @@ msgstr "Created · updated"
 msgid "Report a bug…"
 msgstr "Report a bug…"
 
-#: src/updates/WhatsNewDialog.tsx:212
+#: src/updates/WhatsNewDialog.tsx:214
 msgid "Read the release notes on GitHub"
 msgstr "Read the release notes on GitHub"
 
@@ -6491,7 +6498,7 @@ msgstr "Config files"
 msgid "Older copy skipped"
 msgstr "Older copy skipped"
 
-#: src/browse/stats.ts:36
+#: src/browse/stats.ts:37
 msgid "{endorsements, plural, one {# like} other {# likes}}"
 msgstr "{endorsements, plural, one {# like} other {# likes}}"
 
@@ -6671,8 +6678,10 @@ msgid "named in the crash log"
 msgstr "named in the crash log"
 
 #. placeholder {0}: item.downloads
-#: src/browse/stats.ts:48
-#: src/browse/stats.ts:64
+#. placeholder {0}: page.downloads
+#: src/browse/stats.ts:49
+#: src/browse/stats.ts:65
+#: src/browse/stats.ts:84
 msgid "{0, plural, one {# download} other {# downloads}}"
 msgstr "{0, plural, one {# download} other {# downloads}}"
 
@@ -9201,7 +9210,7 @@ msgstr "Untagged"
 msgid "nothing saved yet from {name}"
 msgstr "nothing saved yet from {name}"
 
-#: src/browse/stats.ts:34
+#: src/browse/stats.ts:35
 msgid "{stars, plural, one {# star} other {# stars}}"
 msgstr "{stars, plural, one {# star} other {# stars}}"
 
@@ -10212,7 +10221,8 @@ msgstr "{0, plural, one {# save} other {# saves}}"
 msgid "Copy report"
 msgstr "Copy report"
 
-#: src/browse/stats.ts:32
+#: src/browse/stats.ts:33
+#: src/browse/stats.ts:82
 msgid "{endorsements, plural, one {# endorsement} other {# endorsements}}"
 msgstr "{endorsements, plural, one {# endorsement} other {# endorsements}}"
 
@@ -11308,7 +11318,7 @@ msgstr "Deprecated"
 #. placeholder {0}: item.name
 #. placeholder {0}: m.name
 #: src/browse/ResultCard.tsx:105
-#: src/mods/ModCards.tsx:169
+#: src/mods/ModCards.tsx:225
 msgid "Details of {0}"
 msgstr "Details of {0}"
 
@@ -11649,7 +11659,7 @@ msgstr "Could not disable the other copy of {0}"
 msgid "The backup from {when} is deleted for good, with every save in it."
 msgstr "The backup from {when} is deleted for good, with every save in it."
 
-#: src/browse/stats.ts:52
+#: src/browse/stats.ts:53
 msgid "{popularity} · {dl}"
 msgstr "{popularity} · {dl}"
 
@@ -13058,7 +13068,7 @@ msgid "Back up saves before Play"
 msgstr "Back up saves before Play"
 
 #. placeholder {0}: version ?? ''
-#: src/updates/WhatsNewDialog.tsx:200
+#: src/updates/WhatsNewDialog.tsx:202
 msgid "What's new in Mortar {0}"
 msgstr "What's new in Mortar {0}"
 
@@ -14007,7 +14017,7 @@ msgstr "Fish"
 
 #. placeholder {0}: copy.version
 #. placeholder {0}: item.version.replace(leadingV, '')
-#: src/browse/stats.ts:66
+#: src/browse/stats.ts:67
 #: src/mods/DuplicateDialog.tsx:71
 msgid "Version {0}"
 msgstr "Version {0}"
@@ -14458,7 +14468,7 @@ msgstr "Focus the previous mod"
 msgid "Nexus Mods, file unknown"
 msgstr "Nexus Mods, file unknown"
 
-#: src/browse/stats.ts:38
+#: src/browse/stats.ts:39
 msgid "{endorsements, plural, one {# follower} other {# followers}}"
 msgstr "{endorsements, plural, one {# follower} other {# followers}}"
 

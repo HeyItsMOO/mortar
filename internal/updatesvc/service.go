@@ -53,10 +53,12 @@ var (
 	errCheckFailed = errors.New("failed")
 )
 
-// WhatsNew is shown once after Mortar starts on a newer version than last run.
+// WhatsNew is shown once after Mortar starts on a newer version than last run. Earlier holds the releases skipped
+// since then, newest first, so an update over several versions shows all their changes.
 type WhatsNew struct {
-	Version string `json:"version"`
-	Notes   string `json:"notes"`
+	Version string         `json:"version"`
+	Notes   string         `json:"notes"`
+	Earlier []ReleaseNotes `json:"earlier"`
 }
 
 // Service is the updater as the window sees it.
@@ -257,7 +259,7 @@ func (s *Service) WhatsNew(ctx context.Context) (WhatsNew, error) {
 		log.Printf("what's new in %s: %v", cur, noteErr)
 		return none, nil
 	}
-	return WhatsNew{Version: cur, Notes: notes}, nil
+	return WhatsNew{Version: cur, Notes: notes, Earlier: s.skippedReleases(ctx, last, cur)}, nil
 }
 
 // AckWhatsNew records that the user saw this version's notes.

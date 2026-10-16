@@ -3,6 +3,7 @@ package updatesvc
 import (
 	"context"
 	"fmt"
+	"log"
 	"path/filepath"
 	"strings"
 
@@ -31,6 +32,26 @@ func (s *Service) releaseNotes(ctx context.Context, version string) (string, err
 	}
 	owner, repo, _ := strings.Cut(mortarRepo, "/")
 	return s.ghClient().ReleaseNotes(ctx, owner, repo, "v"+v)
+}
+
+// skippedReleases is the notes of the releases newer than last and older than cur, newest first; none when GitHub
+// cannot be read, since the current release's notes still show.
+func (s *Service) skippedReleases(ctx context.Context, last, cur string) []ReleaseNotes {
+	owner, repo, _ := strings.Cut(mortarRepo, "/")
+	rels, err := s.ghClient().ReleasesBetween(ctx, owner, repo, last, cur)
+	if err != nil {
+		log.Printf("what's new since %s: %v", last, err)
+		return nil
+	}
+	var out []ReleaseNotes
+	for _, r := range rels {
+		v := strings.TrimPrefix(r.Tag, "v")
+		if v == cur || strings.TrimSpace(r.Body) == "" {
+			continue
+		}
+		out = append(out, ReleaseNotes{Version: v, Notes: strings.TrimSpace(r.Body), Available: true})
+	}
+	return out
 }
 
 // ReleaseNotes returns the notes of the Mortar release for version. A failed lookup is not an error: the result has

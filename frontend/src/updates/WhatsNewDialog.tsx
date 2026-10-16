@@ -41,8 +41,8 @@ import { showWhatsNew, useWhatsNew } from './whatsNew.ts'
 
 const BULLET = /^[-*]\s+/
 
-// Areas the release notes name (the same ones `bun run changelog` groups by, plus Games and Saves); any other title
-// gets the sparkle.
+// Areas the release notes name (build/release/notes.sh groups commits by the same ones); any other title gets the
+// sparkle.
 const AREA_ICONS: Record<string, LucideIcon> = {
   Games: Gamepad2,
   'Mods and browsing': Search,
@@ -182,7 +182,9 @@ export function WhatsNewDialog() {
   const version = shown?.version
   useEffect(() => {
     LoadWhatsNew()
-      .then((w) => (w.notes && w.version ? showWhatsNew(w.version, w.notes) : undefined))
+      .then((w) =>
+        w.notes && w.version ? showWhatsNew(w.version, w.notes, w.earlier ?? []) : undefined,
+      )
       .catch(reportUnexpected)
   }, [])
   useEffect(() => {
@@ -212,6 +214,22 @@ export function WhatsNewDialog() {
             {t`Read the release notes on GitHub`}
           </Link>
         ) : null}
+        {(shown?.earlier ?? []).map((r) => (
+          <Box
+            key={r.version}
+            component="section"
+            sx={{
+              mt: space.pad,
+              pt: space.pad,
+              borderTop: '1px solid var(--mortar-hairline-faint)',
+            }}
+          >
+            <Typography component="h2" sx={{ fontSize: 16, fontWeight: 700, mb: 1.5 }}>
+              {t`Also in Mortar ${r.version}`}
+            </Typography>
+            <Notes text={r.notes} />
+          </Box>
+        ))}
       </DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={close}>
