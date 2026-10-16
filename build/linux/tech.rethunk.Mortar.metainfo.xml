@@ -65,6 +65,7 @@
           <li>Windows: the installer installs the WebView2 Runtime when it is missing or was removed, says so if that fails, and Mortar asks before starting without it</li>
           <li>Lethal Company's Saves lists each slot once: the backup and temporary files the game writes beside a slot belong to it, and each save says whether it is a save slot, an extra slot added by a mod, or the weekly challenge</li>
           <li>Menus are wide enough for their longest item, so Check mods and Mortar for updates is no longer cut off</li>
+          <li>Game select's letter rail spreads down the whole window, with letters that grow with it</li>
         </ul>
       </description>
     </release>

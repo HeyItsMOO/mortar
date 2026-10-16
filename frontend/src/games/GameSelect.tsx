@@ -330,6 +330,7 @@ function GroupHeading({ children }: { children: string }) {
 const RAIL_MIN_GAMES = 8
 const RAIL_WIDTH_PX = 28
 const RAIL_ROOMY_WIDTH_PX = 44
+const RAIL_LETTER_MAX_PX = 48
 
 // Brings a game's row to the top of the list and focuses it, so Enter opens it.
 function reveal(scroller: HTMLElement | null, id: string) {
@@ -404,7 +405,9 @@ function LetterRail({
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'background.paper',
-        // Centred when the letters fit, scrolling from the first letter when they do not.
+        // The letters share the rail's height and their type follows it, so a tall window does not leave a small
+        // cluster in the middle; centred when capped, scrolling from the first letter when they do not fit.
+        containerType: 'size',
         overflowY: 'auto',
         scrollbarWidth: 'none',
         '&::-webkit-scrollbar': { display: 'none' },
@@ -419,10 +422,11 @@ function LetterRail({
           aria-current={letter === current ? 'true' : undefined}
           onClick={() => onJump(letter)}
           sx={{
-            flex: roomy ? '0 0 auto' : '0 1 22px',
+            flex: roomy ? '0 0 auto' : '1 1 0',
             minHeight: 12,
+            maxHeight: RAIL_LETTER_MAX_PX,
             fontFamily: 'inherit',
-            fontSize: 11,
+            fontSize: roomy ? 11 : 'clamp(11px, 1.6cqh, 15px)',
             fontWeight: 700,
             color: letter === current ? 'var(--mortar-accent-ink)' : 'var(--mortar-ink-sec)',
             '&:hover, &:focus-visible': { color: 'text.primary' },
