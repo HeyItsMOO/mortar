@@ -619,7 +619,7 @@ func (s *Service) playedSaves(gameID, text string, started time.Time, failed boo
 func (s *Service) runText(g game.Game, profileID, modsDir string, since time.Time) string {
 	if path, own, err := s.logPath(g.ID(), profileID); err == nil {
 		if text, ok := readOwnedLog(path, own, s.home, modsDir, since); ok {
-			return text
+			return text + s.crashReport(g.ID(), since)
 		}
 	}
 	s.mu.Lock()
@@ -631,11 +631,33 @@ func (s *Service) runText(g game.Game, profileID, modsDir string, since time.Tim
 	return ""
 }
 
+// crashReport is the game's crash report written since the run began, set off from the log above it; empty when the
+// game keeps none or the run did not write one.
+func (s *Service) crashReport(gameID string, since time.Time) string {
+	if since.IsZero() || s.settings == nil || !game.HasPath(gameID, game.PathCrashLog) {
+		return ""
+	}
+	path, err := game.PathFor(s.home, s.settings.Get(), gameID, "", game.PathCrashLog)
+	if err != nil {
+		return ""
+	}
+	text, ok := readOwnedLog(path, true, s.home, "", since)
+	if !ok || strings.TrimSpace(text) == "" {
+		return ""
+	}
+	return "\n\n" + filepath.Base(path) + ":\n" + text
+}
+
 // logPath is the loader log of the profile's loader. own is true when the loader writes it inside the profile's folder,
 // where it can only be this profile's; a log in a shared place must say which mods folder it loaded.
 func (s *Service) logPath(gameID, profileID string) (path string, own bool, err error) {
 	l, ok := s.loaderOf(gameID, profileID)
 	logs, isLogs := l.(loader.WithLogs)
+	if (!ok || !isLogs) && game.HasPath(gameID, game.PathLog) && s.settings != nil {
+		// The game's own log, written for whichever profile last ran; a run's start time tells its log apart.
+		path, err = game.PathFor(s.home, s.settings.Get(), gameID, "", game.PathLog)
+		return path, true, err
+	}
 	if !ok || !isLogs {
 		return "", false, fmt.Errorf("game %q has no loader log", gameID)
 	}

@@ -19,6 +19,10 @@ import (
 const (
 	PathSaves              = "saves"
 	PathStartupPreferences = "startupPreferences"
+	// PathLog is the game's own log file, which the Console follows when the loader keeps none (Vintage Story's
+	// client-main.log), and PathCrashLog the file it writes a crash report to.
+	PathLog      = "log"
+	PathCrashLog = "crashLog"
 )
 
 // HasPath reports whether the catalog gives game id a path for role: a game has a save folder or startup

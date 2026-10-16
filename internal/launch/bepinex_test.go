@@ -120,3 +120,21 @@ func TestRunFollowsBepInExLogIntoParsedEntries(t *testing.T) {
 		t.Fatalf("entries = %+v\nwant %+v", s, want)
 	}
 }
+
+func TestParserReadsVintageStoryLevels(t *testing.T) {
+	var p Parser
+	cases := []struct {
+		line string
+		want Entry
+	}{
+		{"16.10.2026 05:25:45 [Notification] Game Version: v1.22.7 (Stable)", Entry{Time: "05:25:45", Level: Info, Message: "Game Version: v1.22.7 (Stable)"}},
+		{"16.10.2026 05:25:46 [VerboseDebug] Loaded 3 mods", Entry{Time: "05:25:46", Level: Trace, Message: "Loaded 3 mods"}},
+		{"6.1.2026 05:25:47 [Error] Exception: boom", Entry{Time: "05:25:47", Level: Error, Message: "Exception: boom"}},
+		{"   at Vintagestory.Foo()", Entry{Time: "05:25:47", Level: Error, Message: "   at Vintagestory.Foo()", Cont: true}},
+	}
+	for _, c := range cases {
+		if got, shown := p.Parse(c.line); !shown || got != c.want {
+			t.Errorf("Parse(%q) = %+v, %v; want %+v", c.line, got, shown, c.want)
+		}
+	}
+}

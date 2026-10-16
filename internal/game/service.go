@@ -82,6 +82,7 @@ func loaderRef(gameID string, l components.GameLoader) LoaderRef {
 	if d, ok := LoaderOf(gameID, l.ID); ok {
 		_, ref.Order = d.(loader.WithOrder)
 		_, ref.Console = d.(loader.WithLogs)
+		ref.Console = ref.Console || HasPath(gameID, PathLog)
 		_, hasConsole := d.(loader.Console)
 		_, hasCompanion := d.(loader.WithCompanion)
 		ref.Commands = hasConsole && hasCompanion

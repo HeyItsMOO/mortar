@@ -136,6 +136,10 @@ func (p *Parser) Parse(line string) (Entry, bool) {
 		p.last, p.seen, p.hidden = e, true, false
 		return e, true
 	}
+	if e, ok := parseVintageStory(line); ok {
+		p.last, p.seen, p.hidden = e, true, false
+		return e, true
+	}
 	if !p.seen {
 		return Entry{Level: Info, Message: line}, true
 	}
