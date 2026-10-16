@@ -56,6 +56,8 @@ type Info struct {
 	// PlayStyle is a Vintage Story world's play style code and GameVersion the game version that last saved it.
 	PlayStyle   string `json:"playStyle,omitempty"`
 	GameVersion string `json:"gameVersion,omitempty"`
+	// WorldID is a Vintage Story world's SavegameIdentifier, which names its minimap.
+	WorldID string `json:"worldId,omitempty"`
 }
 
 const scanRev = 5
@@ -83,13 +85,14 @@ type Scanner struct {
 	Companions  []string
 	Copies      []string
 	CopyFolders []string
+	Linked      []string
 	CacheDir    string
 	mu          sync.Mutex
 }
 
 // Layout is the scanned folder and its save shape.
 func (s *Scanner) Layout() Layout {
-	return Layout{Dir: s.Dir, Files: s.Files, Companions: s.Companions, Copies: s.Copies, CopyFolders: s.CopyFolders}
+	return Layout{Dir: s.Dir, Files: s.Files, Companions: s.Companions, Copies: s.Copies, CopyFolders: s.CopyFolders, Linked: s.Linked}
 }
 
 // Scan returns every save in Dir, newest first. A save that cannot be read is left out and reported in the
@@ -193,6 +196,8 @@ type Layout struct {
 	// CopyFolders are folders beside Dir that also hold copies (components.GameInfo.SaveCopyFolders); a copy there is
 	// named "../<folder>/<file>".
 	CopyFolders []string
+	// Linked are patterns for files outside Dir that belong to a save (components.GameInfo.SaveLinked); see LinkedOf.
+	Linked []string
 }
 
 // Copy is one copy of a save that the game itself keeps beside it, named by its slash path under Dir.

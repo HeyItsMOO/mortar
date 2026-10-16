@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -17,7 +18,7 @@ import (
 
 // Restore copies the named saves from zipPath into l's folder. An empty folders list restores every save in the
 // zip. The current saves are zipped first into backupsDir via Saves.
-func Restore(zipPath string, l saves.Layout, backupsDir string, folders []string, keep int, now time.Time) error {
+func Restore(ctx context.Context, zipPath string, l saves.Layout, backupsDir string, folders []string, keep int, now time.Time) error {
 	parent := filepath.Dir(l.Dir)
 	if err := os.MkdirAll(parent, 0o750); err != nil {
 		return err
@@ -27,12 +28,12 @@ func Restore(zipPath string, l saves.Layout, backupsDir string, folders []string
 		return err
 	}
 	defer func() { _ = fsx.RemoveAll(tmp) }()
-	got := saves.Layout{Dir: filepath.Join(tmp, "Saves"), Files: l.Files, Companions: l.Companions}
+	got := saves.Layout{Dir: filepath.Join(tmp, "Saves"), Files: l.Files, Companions: l.Companions, Linked: l.Linked}
 	want, err := extractSaves(zipPath, got, folders)
 	if err != nil {
 		return err
 	}
-	if _, err := Saves(l, backupsDir, keep, now, Cause{Kind: KindRestore}); err != nil {
+	if _, err := Saves(ctx, l, backupsDir, keep, now, Cause{Kind: KindRestore}); err != nil {
 		return err
 	}
 	if err := os.MkdirAll(l.Dir, 0o750); err != nil {
@@ -40,11 +41,18 @@ func Restore(zipPath string, l saves.Layout, backupsDir string, folders []string
 	}
 	for _, folder := range want {
 		parts := got.Paths(folder)
+		linked := got.LinkedOf(ctx, folder)
 		if err := dropCompanions(l, folder, parts); err != nil {
 			return err
 		}
 		for _, part := range parts {
 			if err := replace(filepath.Join(got.Dir, filepath.FromSlash(part)), filepath.Join(l.Dir, filepath.FromSlash(part))); err != nil {
+				return err
+			}
+		}
+		// The world's minimap comes back with it when the backup holds one; an older backup leaves the current map.
+		for _, rel := range linked {
+			if err := replace(filepath.Join(tmp, filepath.FromSlash(rel)), filepath.Join(filepath.Dir(l.Dir), filepath.FromSlash(rel))); err != nil {
 				return err
 			}
 		}
@@ -54,11 +62,11 @@ func Restore(zipPath string, l saves.Layout, backupsDir string, folders []string
 
 // RestoreCopy puts kept, one of the copies the game keeps of save (saves.Layout.CopiesOf), back over save, companions
 // included, after zipping the current saves into backupsDir. The game's copy stays where it is.
-func RestoreCopy(l saves.Layout, backupsDir, save, kept string, keep int, now time.Time) error {
+func RestoreCopy(ctx context.Context, l saves.Layout, backupsDir, save, kept string, keep int, now time.Time) error {
 	if !slices.ContainsFunc(l.CopiesOf(save), func(c saves.Copy) bool { return c.Name == kept }) {
 		return fmt.Errorf("%q is not a copy the game keeps of %q", kept, save)
 	}
-	if _, err := Saves(l, backupsDir, keep, now, Cause{Kind: KindRestore}); err != nil {
+	if _, err := Saves(ctx, l, backupsDir, keep, now, Cause{Kind: KindRestore}); err != nil {
 		return err
 	}
 	pairs := l.CopyPaths(save, kept)

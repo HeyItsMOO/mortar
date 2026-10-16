@@ -19,7 +19,7 @@ import (
 func TestServiceListsAndRestoresWithTempDataDirs(t *testing.T) {
 	s, savesDir := backupService(t)
 	writeFarm(t, savesDir, "Farm_1", "Sunny", "v1")
-	if _, err := backup.Saves(saves.Layout{Dir: savesDir}, filepath.Join(mustData(t), "mortar", "backups", "stardew"), backup.DefaultKeep, time.Date(2026, 7, 1, 0, 0, 0, 0, time.UTC), backup.Cause{Profile: "p1", Kind: backup.KindUpdate}); err != nil {
+	if _, err := backup.Saves(t.Context(), saves.Layout{Dir: savesDir}, filepath.Join(mustData(t), "mortar", "backups", "stardew"), backup.DefaultKeep, time.Date(2026, 7, 1, 0, 0, 0, 0, time.UTC), backup.Cause{Profile: "p1", Kind: backup.KindUpdate}); err != nil {
 		t.Fatal(err)
 	}
 	listed, err := s.ListBackups("stardew", "")
@@ -29,7 +29,7 @@ func TestServiceListsAndRestoresWithTempDataDirs(t *testing.T) {
 	if err := fsx.WriteFile(filepath.Join(savesDir, "Farm_1", "Farm_1"), []byte("v2"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := s.RestoreBackup("stardew", "", listed[0].Name, []string{"Farm_1"}); err != nil {
+	if err := s.RestoreBackup(t.Context(), "stardew", "", listed[0].Name, []string{"Farm_1"}); err != nil {
 		t.Fatal(err)
 	}
 	got, err := fsx.ReadFile(filepath.Join(savesDir, "Farm_1", "Farm_1"))
@@ -43,7 +43,7 @@ func TestServiceRefusesRestoreWhileBusy(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 	t.Setenv("LOCALAPPDATA", t.TempDir())
 	s := &Service{scanners: map[string]*saves.Scanner{"stardew": {Dir: t.TempDir()}}, busy: func() bool { return true }}
-	if err := s.RestoreBackup("stardew", "", "2026-01-01T00-00-00.000.zip", nil); !errors.Is(err, ErrBusy) {
+	if err := s.RestoreBackup(t.Context(), "stardew", "", "2026-01-01T00-00-00.000.zip", nil); !errors.Is(err, ErrBusy) {
 		t.Fatalf("err = %v", err)
 	}
 }
@@ -165,10 +165,10 @@ func TestDeleteBackupRefusesPinned(t *testing.T) {
 	writeFarm(t, savesDir, "Farm_2", "Rainy", "v1")
 	dir := filepath.Join(mustData(t), "mortar", "backups", "stardew")
 	t0 := time.Date(2026, 7, 1, 0, 0, 0, 0, time.UTC)
-	if _, err := backup.Saves(saves.Layout{Dir: savesDir}, dir, backup.DefaultKeep, t0, backup.Cause{Kind: backup.KindLaunch}); err != nil {
+	if _, err := backup.Saves(t.Context(), saves.Layout{Dir: savesDir}, dir, backup.DefaultKeep, t0, backup.Cause{Kind: backup.KindLaunch}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := backup.Folder(saves.Layout{Dir: savesDir}, dir, "Farm_2", backup.DefaultKeep, t0.Add(time.Hour), backup.Cause{Kind: backup.KindManual, Pinned: true}); err != nil {
+	if _, err := backup.Folder(t.Context(), saves.Layout{Dir: savesDir}, dir, "Farm_2", backup.DefaultKeep, t0.Add(time.Hour), backup.Cause{Kind: backup.KindManual, Pinned: true}); err != nil {
 		t.Fatal(err)
 	}
 	s := &Service{scanners: map[string]*saves.Scanner{"stardew": {Dir: savesDir}}}
@@ -202,7 +202,7 @@ func TestListBackupsKeepsToTheGameAndProfile(t *testing.T) {
 	}
 	at := time.Date(2026, 7, 1, 0, 0, 0, 0, time.UTC)
 	for i, c := range []backup.Cause{{Profile: "p1", Kind: backup.KindUpdate}, {Profile: "p2", Kind: backup.KindLaunch}, {Kind: backup.KindRestore}} {
-		if _, err := backup.Saves(saves.Layout{Dir: savesDir}, target.Dir, backup.DefaultKeep, at.Add(time.Duration(i)*time.Hour), c); err != nil {
+		if _, err := backup.Saves(t.Context(), saves.Layout{Dir: savesDir}, target.Dir, backup.DefaultKeep, at.Add(time.Duration(i)*time.Hour), c); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -257,7 +257,7 @@ func TestRestoreRotatesAgainstTheProfilesKeepCount(t *testing.T) {
 		t.Fatalf("list = %+v, %v", listed, err)
 	}
 	for range 3 {
-		if err := s.RestoreBackup("stardew", p.ID, listed[0].Name, nil); err != nil {
+		if err := s.RestoreBackup(t.Context(), "stardew", p.ID, listed[0].Name, nil); err != nil {
 			t.Fatal(err)
 		}
 		// A new pre-restore zip only replaces a recent one when the saves changed since.

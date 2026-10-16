@@ -3,6 +3,7 @@ package backup
 
 import (
 	"archive/zip"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -68,7 +69,21 @@ func FileName(t time.Time) string { return t.UTC().Format(stamp) + ".zip" }
 // Saves zips every save in l into backupsDir/<timestamp>.zip through a temp file and rename, then deletes all but
 // the newest keep backups and temp files a crash left. It returns the zip's path (the newest existing one when that
 // is under MinGap old and no save changed since), or "" when l holds no save.
-func Saves(l saves.Layout, backupsDir string, keep int, now time.Time, cause Cause) (string, error) {
+func Saves(ctx context.Context, l saves.Layout, backupsDir string, keep int, now time.Time, cause Cause) (string, error) {
+	return savesZip(l, backupsDir, keep, now, cause, func(name string) []string { return l.LinkedOf(ctx, name) })
+}
+
+// SavesOnly is Saves without the files a save keeps beside the saves folder (a world's minimap), for a caller with no
+// context to read them under: the backup a profile's mod update takes.
+func SavesOnly(l saves.Layout, backupsDir string, keep int, now time.Time, cause Cause) (string, error) {
+	return savesZip(l, backupsDir, keep, now, cause, nil)
+}
+
+// linker lists the files beside the saves folder that belong to a save; nil leaves them out.
+type linker func(name string) []string
+
+// savesZip is Saves with each save's files beside the saves folder listed by linked.
+func savesZip(l saves.Layout, backupsDir string, keep int, now time.Time, cause Cause, linked linker) (string, error) {
 	names, err := l.Names()
 	if err != nil || len(names) == 0 {
 		return "", err
@@ -104,7 +119,7 @@ func Saves(l saves.Layout, backupsDir string, keep int, now time.Time, cause Cau
 	if err := os.MkdirAll(backupsDir, 0o700); err != nil {
 		return "", err
 	}
-	return finishZip(backupsDir, l, names, keep, now, name, cause)
+	return finishZip(backupsDir, l, names, keep, now, name, cause, linked)
 }
 
 // ErrNoSaves is returned when a requested backup finds nothing to back up.
@@ -124,7 +139,7 @@ func SaveDir(savesDir, folder string) (string, error) {
 
 // Folder zips one save of l into backupsDir the same way Saves does, without the recent-backup stand-in so a
 // requested backup is always a new zip. A name that is not a save is ErrNoSaves.
-func Folder(l saves.Layout, backupsDir, folder string, keep int, now time.Time, cause Cause) (string, error) {
+func Folder(ctx context.Context, l saves.Layout, backupsDir, folder string, keep int, now time.Time, cause Cause) (string, error) {
 	if !l.IsSave(folder) {
 		return "", ErrNoSaves
 	}
@@ -142,13 +157,13 @@ func Folder(l saves.Layout, backupsDir, folder string, keep int, now time.Time, 
 	if err := os.MkdirAll(backupsDir, 0o700); err != nil {
 		return "", err
 	}
-	return finishZip(backupsDir, l, []string{folder}, keep, now, name, cause)
+	return finishZip(backupsDir, l, []string{folder}, keep, now, name, cause, func(name string) []string { return l.LinkedOf(ctx, name) })
 }
 
-func finishZip(backupsDir string, l saves.Layout, names []string, keep int, now, name time.Time, cause Cause) (string, error) {
+func finishZip(backupsDir string, l saves.Layout, names []string, keep int, now, name time.Time, cause Cause, linked linker) (string, error) {
 	dst := filepath.Join(backupsDir, FileName(name))
 	if err := datadir.WriteStream(dst, 0o600, func(w io.Writer) error {
-		return writeZip(w, l, names)
+		return writeZip(w, l, names, linked)
 	}); err != nil {
 		return "", err
 	}
@@ -237,20 +252,28 @@ func lastChange(root string) (time.Time, error) {
 
 // writeZip stores each named save of l, with its companions, under Saves/, the folder a restore reads, whatever
 // l.Dir is called.
-func writeZip(w io.Writer, l saves.Layout, names []string) error {
+func writeZip(w io.Writer, l saves.Layout, names []string, linked linker) error {
 	root := l.Dir
 	zw := zip.NewWriter(w)
 	var errs []error
 	for _, n := range names {
 		for _, part := range l.Paths(n) {
-			errs = append(errs, zipTree(zw, root, filepath.Join(root, filepath.FromSlash(part))))
+			errs = append(errs, zipTree(zw, "Saves", root, filepath.Join(root, filepath.FromSlash(part))))
+		}
+		// A file a save keeps beside the saves folder (a world's minimap) sits at its own path beside Saves/.
+		if linked == nil {
+			continue
+		}
+		for _, rel := range linked(n) {
+			parent := filepath.Dir(root)
+			errs = append(errs, zipTree(zw, "", parent, filepath.Join(parent, filepath.FromSlash(rel))))
 		}
 	}
 	return errors.Join(append(errs, zw.Close())...)
 }
 
-// zipTree stores the files of top, a file or folder under root, at their paths under Saves/.
-func zipTree(zw *zip.Writer, root, top string) error {
+// zipTree stores the files of top, a file or folder under root, at their paths under prefix.
+func zipTree(zw *zip.Writer, prefix, root, top string) error {
 	return filepath.WalkDir(top, func(p string, d fs.DirEntry, err error) error {
 		if err != nil || !d.Type().IsRegular() {
 			return err
@@ -267,7 +290,7 @@ func zipTree(zw *zip.Writer, root, top string) error {
 		if err != nil {
 			return err
 		}
-		h.Name = path.Join("Saves", filepath.ToSlash(rel))
+		h.Name = path.Join(prefix, filepath.ToSlash(rel))
 		h.Method = zip.Deflate
 		zf, err := zw.CreateHeader(h)
 		if err != nil {

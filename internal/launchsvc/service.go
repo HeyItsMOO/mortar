@@ -925,7 +925,7 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 			dep.unwind(ctx)
 			return err
 		}
-		backupErr = s.backupChangedSaves(g.ID(), profileID, t.install, dir)
+		backupErr = s.backupChangedSaves(ctx, g.ID(), profileID, t.install, dir)
 		err = s.swapSaves(ctx, g.ID(), inst, profileID, t.install, dep)
 		if err == nil {
 			err = s.swapOptions(ctx, g.ID(), inst, profileID, t.install, dep)
@@ -1017,7 +1017,7 @@ func (s *Service) playedSavesDir(set settings.Settings, gameID, profileID, insta
 	return game.SavesDir(s.home, set, gameID, s.pinOf(gameID, profileID, installID))
 }
 
-func (s *Service) backupChangedSaves(gameID, profileID, installID, installDir string) error {
+func (s *Service) backupChangedSaves(ctx context.Context, gameID, profileID, installID, installDir string) error {
 	events, err := s.profiles.History(gameID, profileID)
 	if err != nil {
 		return err
@@ -1055,6 +1055,7 @@ func (s *Service) backupChangedSaves(gameID, profileID, installID, installDir st
 		return err
 	}
 	_, err = backup.Saves(
+		ctx,
 		game.SaveLayout(gameID, savesDir),
 		target.Dir,
 		target.Keep,

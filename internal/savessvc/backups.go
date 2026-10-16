@@ -91,7 +91,7 @@ func (s *Service) SetBackupPinned(game, name string, pinned bool) error {
 // RestoreBackup copies folders from the named zip into the saves folder profile reads after zipping its current saves.
 // An empty folders list restores every save in the zip. The backup taken first rotates against profile's
 // saveBackupsKept, as the profile's update and launch backups do.
-func (s *Service) RestoreBackup(game, profile, name string, folders []string) error {
+func (s *Service) RestoreBackup(ctx context.Context, game, profile, name string, folders []string) error {
 	id, err := s.saveGame(game)
 	if err != nil {
 		return err
@@ -111,7 +111,7 @@ func (s *Service) RestoreBackup(game, profile, name string, folders []string) er
 		return err
 	}
 	src := findBackup(target.Reads, name)
-	return backup.Restore(src, sc.Layout(), target.Dir, folders, target.Keep, time.Now())
+	return backup.Restore(ctx, src, sc.Layout(), target.Dir, folders, target.Keep, time.Now())
 }
 
 // SaveCopies lists the copies the game keeps itself of save in the saves folder profile reads, newest first.
@@ -128,7 +128,7 @@ func (s *Service) SaveCopies(game, profile, save string) ([]saves.Copy, error) {
 }
 
 // RestoreSaveCopy puts one of the game's own copies of save back over it, after backing up the current saves.
-func (s *Service) RestoreSaveCopy(game, profile, save, kept string) error {
+func (s *Service) RestoreSaveCopy(ctx context.Context, game, profile, save, kept string) error {
 	id, err := s.saveGame(game)
 	if err != nil {
 		return err
@@ -144,7 +144,7 @@ func (s *Service) RestoreSaveCopy(game, profile, save, kept string) error {
 	if err != nil {
 		return err
 	}
-	return backup.RestoreCopy(sc.Layout(), target.Dir, save, kept, target.Keep, time.Now())
+	return backup.RestoreCopy(ctx, sc.Layout(), target.Dir, save, kept, target.Keep, time.Now())
 }
 
 // OpenBackupsFolder shows the backups folder in the system file manager.
@@ -181,7 +181,7 @@ func (s *Service) CreateBackup(ctx context.Context, game, profile, folder string
 	}
 	now := uniqueBackupTime(target.Reads, time.Now())
 	folder = saveFolder(ctx, sc, folder)
-	_, err = backup.Folder(sc.Layout(), target.Dir, folder, target.Keep, now, backup.Cause{Kind: backup.KindManual, Pinned: true})
+	_, err = backup.Folder(ctx, sc.Layout(), target.Dir, folder, target.Keep, now, backup.Cause{Kind: backup.KindManual, Pinned: true})
 	if errors.Is(err, backup.ErrNoSaves) {
 		return false, nil
 	}

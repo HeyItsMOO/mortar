@@ -67,7 +67,7 @@ func TestScheduledBackupsFollowTheIntervalAndWaitForTheGame(t *testing.T) {
 		}
 	}
 	save(t0.Add(-time.Hour))
-	s.scheduledTick(t0)
+	s.scheduledTick(t.Context(), t0)
 	if n := scheduled(); n != 1 {
 		t.Fatalf("first pass made %d", n)
 	}
@@ -78,28 +78,28 @@ func TestScheduledBackupsFollowTheIntervalAndWaitForTheGame(t *testing.T) {
 		t.Fatalf("last = %d, %v", last, err)
 	}
 	save(t0.Add(time.Hour))
-	s.scheduledTick(t0.Add(5 * time.Hour))
+	s.scheduledTick(t.Context(), t0.Add(5*time.Hour))
 	if n := scheduled(); n != 1 {
 		t.Fatalf("a pass inside the interval made %d", n)
 	}
 	busy = true
-	s.scheduledTick(t0.Add(7 * time.Hour))
+	s.scheduledTick(t.Context(), t0.Add(7*time.Hour))
 	if n := scheduled(); n != 1 {
 		t.Fatalf("a pass while the game runs made %d", n)
 	}
 	busy = false
-	s.scheduledTick(t0.Add(7*time.Hour + 10*time.Minute))
+	s.scheduledTick(t.Context(), t0.Add(7*time.Hour+10*time.Minute))
 	if n := scheduled(); n != 2 {
 		t.Fatalf("the pass after the game closed made %d in all", n)
 	}
 
 	restarted := &Service{settings: store, scanners: map[string]*saves.Scanner{"stardew": {Dir: savesDir}}, busy: func() bool { return false }}
 	save(t0.Add(8 * time.Hour))
-	restarted.scheduledTick(t0.Add(9 * time.Hour))
+	restarted.scheduledTick(t.Context(), t0.Add(9*time.Hour))
 	if n := scheduled(); n != 2 {
 		t.Fatalf("a restart reset the schedule: %d", n)
 	}
-	restarted.scheduledTick(t0.Add(14 * time.Hour))
+	restarted.scheduledTick(t.Context(), t0.Add(14*time.Hour))
 	if n := scheduled(); n != 2 {
 		t.Fatalf("keep 2 per save, got %d", n)
 	}
@@ -137,18 +137,18 @@ func TestScheduledBackupRetriesHalfHourAfterAFailedPass(t *testing.T) {
 			runs = append(runs, run)
 		}
 	}
-	s.scheduledTick(t0)
+	s.scheduledTick(t.Context(), t0)
 	if len(runs) != 1 || runs[0].Failed != 1 {
 		t.Fatalf("first pass = %+v", runs)
 	}
 	if err := os.Chmod(locked, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	s.scheduledTick(t0.Add(scheduleRetry - time.Minute))
+	s.scheduledTick(t.Context(), t0.Add(scheduleRetry-time.Minute))
 	if len(runs) != 1 {
 		t.Fatalf("retried before %v: %+v", scheduleRetry, runs)
 	}
-	s.scheduledTick(t0.Add(scheduleRetry))
+	s.scheduledTick(t.Context(), t0.Add(scheduleRetry))
 	if len(runs) != 2 || runs[1].Saved != 1 || runs[1].Failed != 0 {
 		t.Fatalf("retry = %+v", runs)
 	}

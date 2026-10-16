@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"context"
 	"errors"
 	"io/fs"
 	"path/filepath"
@@ -20,7 +21,7 @@ type Run struct {
 // Scheduled zips each save of l written since its newest scheduled backup and keeps the newest keep scheduled
 // backups per save. profile names the profile whose own saves folder l is, "" for the game's shared one, so a save
 // folder name in both is tracked and rotated apart. A missing saves folder is an empty run.
-func Scheduled(l saves.Layout, backupsDir, profile string, keep int, now time.Time) (Run, error) {
+func Scheduled(ctx context.Context, l saves.Layout, backupsDir, profile string, keep int, now time.Time) (Run, error) {
 	var run Run
 	names, err := l.Names()
 	if err != nil || len(names) == 0 {
@@ -44,7 +45,7 @@ func Scheduled(l saves.Layout, backupsDir, profile string, keep int, now time.Ti
 				continue
 			}
 		}
-		if _, err := Folder(l, backupsDir, folder, keep, now, Cause{Kind: KindScheduled, Save: folder, Profile: profile}); err != nil {
+		if _, err := Folder(ctx, l, backupsDir, folder, keep, now, Cause{Kind: KindScheduled, Save: folder, Profile: profile}); err != nil {
 			run.Failed++
 			errs = append(errs, err)
 			continue

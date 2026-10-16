@@ -557,7 +557,7 @@ func (s *Store) saveBackup(game, profileID string) error {
 	if err != nil {
 		return err
 	}
-	_, err = backup.Saves(gamepkg.SaveLayout(game, savesDir), target.Dir, target.Keep, time.Now(), backup.Cause{Profile: profileID, Kind: backup.KindUpdate})
+	_, err = backup.SavesOnly(gamepkg.SaveLayout(game, savesDir), target.Dir, target.Keep, time.Now(), backup.Cause{Profile: profileID, Kind: backup.KindUpdate})
 	return err
 }
 

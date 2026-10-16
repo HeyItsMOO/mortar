@@ -27,13 +27,13 @@ const scheduleRetry = 30 * time.Minute
 func (s *Service) RunScheduledBackups(ctx context.Context) {
 	tick := time.NewTicker(scheduleCheck)
 	defer tick.Stop()
-	s.scheduledTick(time.Now())
+	s.scheduledTick(ctx, time.Now())
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case now := <-tick.C:
-			s.scheduledTick(now)
+			s.scheduledTick(ctx, now)
 		}
 	}
 }
@@ -41,13 +41,13 @@ func (s *Service) RunScheduledBackups(ctx context.Context) {
 // scheduledTick runs one pass per game when the interval since the game's last pass has passed and the game is not
 // running. The first check after start measures from the newest scheduled backup on disk, so restarting Mortar does
 // not reset a daily schedule.
-func (s *Service) scheduledTick(now time.Time) {
+func (s *Service) scheduledTick(ctx context.Context, now time.Time) {
 	for _, id := range slices.Sorted(maps.Keys(s.scanners)) {
-		s.scheduledTickFor(id, now)
+		s.scheduledTickFor(ctx, id, now)
 	}
 }
 
-func (s *Service) scheduledTickFor(gameID string, now time.Time) {
+func (s *Service) scheduledTickFor(ctx context.Context, gameID string, now time.Time) {
 	set := s.settings.Get()
 	l, backupsDir, err := s.backupDirs(gameID)
 	if err != nil {
@@ -83,7 +83,7 @@ func (s *Service) scheduledTickFor(gameID string, now time.Time) {
 		if err != nil || keep < 1 {
 			keep = backup.DefaultKeep
 		}
-		r, unitErr := backup.Scheduled(u.layout, backupsDir, u.profile, keep, now)
+		r, unitErr := backup.Scheduled(ctx, u.layout, backupsDir, u.profile, keep, now)
 		run.Saved, run.Unchanged, run.Failed = run.Saved+r.Saved, run.Unchanged+r.Unchanged, run.Failed+r.Failed
 		next := now
 		if unitErr != nil || r.Failed > 0 {

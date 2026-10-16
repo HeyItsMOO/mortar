@@ -471,7 +471,7 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 		if err != nil {
 			return nil, err
 		}
-		return nil, s.Saves.RestoreBackup(p.Game, id, p.Name, p.IDs)
+		return nil, s.Saves.RestoreBackup(ctx, p.Game, id, p.Name, p.IDs)
 	case "backups.keep":
 		if s.Saves == nil {
 			return nil, errors.New("backups are unavailable")

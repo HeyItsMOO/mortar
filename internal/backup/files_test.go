@@ -46,7 +46,7 @@ func TestFileSavesBackUpAndRestore(t *testing.T) {
 	l := lethalCompany(t)
 	out := t.TempDir()
 	start := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
-	whole, err := Saves(l, out, DefaultKeep, start, Cause{Kind: KindUpdate})
+	whole, err := Saves(t.Context(), l, out, DefaultKeep, start, Cause{Kind: KindUpdate})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,14 +57,14 @@ func TestFileSavesBackUpAndRestore(t *testing.T) {
 	if err != nil || len(listed) != 1 || len(listed[0].Saves) != 3 || listed[0].Saves[1] != (Snap{Folder: "LCSaveFile1"}) {
 		t.Fatalf("List = %+v, %v; want a save file listed by its folder with no farm name", listed, err)
 	}
-	one, err := Folder(l, out, "LCSaveFile2", DefaultKeep, start.Add(time.Minute), Cause{Kind: KindManual, Pinned: true})
+	one, err := Folder(t.Context(), l, out, "LCSaveFile2", DefaultKeep, start.Add(time.Minute), Cause{Kind: KindManual, Pinned: true})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if got := zipNames(t, one); !slices.Equal(got, []string{"Saves/LCSaveFile2"}) {
 		t.Fatalf("one-save zip = %v", got)
 	}
-	if run, err := Scheduled(l, out, "", DefaultKeep, start.Add(time.Hour)); err != nil || run.Saved != 3 {
+	if run, err := Scheduled(t.Context(), l, out, "", DefaultKeep, start.Add(time.Hour)); err != nil || run.Saved != 3 {
 		t.Fatalf("Scheduled = %+v, %v", run, err)
 	}
 
@@ -73,7 +73,7 @@ func TestFileSavesBackUpAndRestore(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err := Restore(whole, l, out, []string{"LCSaveFile1"}, DefaultKeep, start.Add(2*time.Hour)); err != nil {
+	if err := Restore(t.Context(), whole, l, out, []string{"LCSaveFile1"}, DefaultKeep, start.Add(2*time.Hour)); err != nil {
 		t.Fatal(err)
 	}
 	for name, want := range map[string]string{"LCSaveFile1": "v1 LCSaveFile1", "LCSaveFile2": "v2", "Player.log": "v1 Player.log"} {
@@ -81,7 +81,7 @@ func TestFileSavesBackUpAndRestore(t *testing.T) {
 			t.Errorf("%s = %q, %v; want %q", name, b, err, want)
 		}
 	}
-	if err := Restore(whole, l, out, []string{"LCGeneralSaveData"}, DefaultKeep, start.Add(3*time.Hour)); err == nil {
+	if err := Restore(t.Context(), whole, l, out, []string{"LCGeneralSaveData"}, DefaultKeep, start.Add(3*time.Hour)); err == nil {
 		t.Fatal("restored a file that is not a save")
 	}
 }
@@ -109,7 +109,7 @@ func TestFileSetSavesInFoldersBackUpAndRestore(t *testing.T) {
 	}
 	out := t.TempDir()
 	start := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
-	whole, err := Saves(l, out, DefaultKeep, start, Cause{Kind: KindUpdate})
+	whole, err := Saves(t.Context(), l, out, DefaultKeep, start, Cause{Kind: KindUpdate})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -129,7 +129,7 @@ func TestFileSetSavesInFoldersBackUpAndRestore(t *testing.T) {
 	if err := fsx.WriteFile(filepath.Join(dir, "worlds_local", "Midgard.db-wal"), []byte("v2"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := Restore(whole, l, out, []string{"worlds_local/Midgard.fwl"}, DefaultKeep, start.Add(time.Hour)); err != nil {
+	if err := Restore(t.Context(), whole, l, out, []string{"worlds_local/Midgard.fwl"}, DefaultKeep, start.Add(time.Hour)); err != nil {
 		t.Fatal(err)
 	}
 	if fsx.IsFile(filepath.Join(dir, "worlds_local", "Midgard.db-wal")) {

@@ -45,17 +45,17 @@ func TestRestoreCopyPutsTheGamesOwnCopyBack(t *testing.T) {
 		t.Fatalf("copies = %+v", got)
 	}
 	now := time.Now()
-	if err := RestoreCopy(l, backups, "worlds_local/W.fwl", "worlds_local/W_backup_auto-1.fwl", 5, now); err != nil {
+	if err := RestoreCopy(t.Context(), l, backups, "worlds_local/W.fwl", "worlds_local/W_backup_auto-1.fwl", 5, now); err != nil {
 		t.Fatal(err)
 	}
 	if read("worlds_local/W.fwl") != "then" || read("worlds_local/W.db") != "then db" || read("worlds_local/W_backup_auto-1.fwl") != "then" ||
 		fsx.IsFile(filepath.Join(dir, "worlds_local", "W.db-wal")) {
 		t.Fatal("world not restored from its copy, the copy was moved, or the current write-ahead log was left")
 	}
-	if err := RestoreCopy(l, backups, "Slot_00000002.save", "Slot_00000002.save.ver0", 5, now.Add(time.Second)); err != nil || read("Slot_00000002.save") != "slot then" {
+	if err := RestoreCopy(t.Context(), l, backups, "Slot_00000002.save", "Slot_00000002.save.ver0", 5, now.Add(time.Second)); err != nil || read("Slot_00000002.save") != "slot then" {
 		t.Fatalf("slot restore: %v", err)
 	}
-	if err := RestoreCopy(l, backups, "Slot_00000002.save", "../elsewhere", 5, now); err == nil {
+	if err := RestoreCopy(t.Context(), l, backups, "Slot_00000002.save", "../elsewhere", 5, now); err == nil {
 		t.Fatal("a path that is not one of the save's copies was restored")
 	}
 	// A copy the game keeps in a folder beside the saves folder (Vintage Story's /genbackup).
@@ -73,7 +73,7 @@ func TestRestoreCopyPutsTheGamesOwnCopyBack(t *testing.T) {
 	if got := world.CopiesOf("default.vcdbs"); len(got) != 1 || got[0].Name != "../Backups/default-2026-10-16_05-26-01.vcdbs" {
 		t.Fatalf("copies beside the saves folder = %+v", got)
 	}
-	if err := RestoreCopy(world, t.TempDir(), "default.vcdbs", "../Backups/default-2026-10-16_05-26-01.vcdbs", 5, now); err != nil || read("Saves/default.vcdbs") != "world then" {
+	if err := RestoreCopy(t.Context(), world, t.TempDir(), "default.vcdbs", "../Backups/default-2026-10-16_05-26-01.vcdbs", 5, now); err != nil || read("Saves/default.vcdbs") != "world then" {
 		t.Fatalf("restore from a folder beside the saves folder: %v", err)
 	}
 	if listed, _ := List(backups, l); len(listed) != 2 {

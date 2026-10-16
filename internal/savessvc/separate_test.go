@@ -96,7 +96,7 @@ func TestSeparateSavesBackupRestoreAndOpenActOnTheProfilesOwn(t *testing.T) {
 	}
 	write(ownDir, "Farm_2", "own-v2")
 	write(shared, "Farm_1", "shared-v2")
-	if err := s.RestoreBackup("stardew", own.ID, byFolder["Farm_2"], nil); err != nil {
+	if err := s.RestoreBackup(t.Context(), "stardew", own.ID, byFolder["Farm_2"], nil); err != nil {
 		t.Fatal(err)
 	}
 	if got := read(ownDir, "Farm_2"); got != "own-v1" {
@@ -105,7 +105,7 @@ func TestSeparateSavesBackupRestoreAndOpenActOnTheProfilesOwn(t *testing.T) {
 	if fsx.IsDir(filepath.Join(shared, "Farm_2")) {
 		t.Fatal("restore for the separate profile wrote into the shared saves")
 	}
-	if err := s.RestoreBackup("stardew", plain.ID, byFolder["Farm_1"], nil); err != nil {
+	if err := s.RestoreBackup(t.Context(), "stardew", plain.ID, byFolder["Farm_1"], nil); err != nil {
 		t.Fatal(err)
 	}
 	if got := read(shared, "Farm_1"); got != "shared-v1" {
@@ -157,13 +157,13 @@ func TestScheduledBackupsCoverEachSeparateSavesFolderOnce(t *testing.T) {
 		return out
 	}
 	now := time.Now()
-	s.scheduledTickFor("stardew", now)
+	s.scheduledTickFor(t.Context(), "stardew", now)
 	want := []string{":Farm_1", own.ID + ":Farm_1", own.ID + ":Farm_2"}
 	slices.Sort(want)
 	if got := scheduled(); !slices.Equal(got, want) {
 		t.Fatalf("scheduled = %v, want %v", got, want)
 	}
-	s.scheduledTickFor("stardew", now.Add(7*time.Hour))
+	s.scheduledTickFor(t.Context(), "stardew", now.Add(7*time.Hour))
 	if got := scheduled(); !slices.Equal(got, want) {
 		t.Fatalf("unchanged saves backed up again: %v", got)
 	}
@@ -196,14 +196,14 @@ func TestAProfilesOwnSavesFollowItsOwnBackupSchedule(t *testing.T) {
 		return n
 	}
 	now := time.Now()
-	s.scheduledTickFor("stardew", now)
+	s.scheduledTickFor(t.Context(), "stardew", now)
 	if n := ownBackups(); n != 0 {
 		t.Fatalf("a profile whose schedule is off was backed up %d times", n)
 	}
 	if _, err := s.profiles.SetOverride("stardew", own.ID, "saveBackupHours", "1"); err != nil {
 		t.Fatal(err)
 	}
-	s.scheduledTickFor("stardew", now.Add(2*time.Hour))
+	s.scheduledTickFor(t.Context(), "stardew", now.Add(2*time.Hour))
 	if n := ownBackups(); n == 0 {
 		t.Fatal("a profile on an hourly schedule was not backed up two hours on, though the game's six hours had not passed")
 	}

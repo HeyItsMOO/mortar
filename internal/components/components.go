@@ -157,6 +157,10 @@ type GameInfo struct {
 	// SaveCopyFolders are folders beside the saves folder where the game also keeps copies named by SaveCopies
 	// (Vintage Story's Backups and BackupSaves). An older Mortar ignores the field.
 	SaveCopyFolders []string `json:"saveCopyFolders,omitempty"`
+	// SaveLinked are slash paths beside the saves folder of files that belong to one save, {uuid} standing for the
+	// world's own identifier (Vintage Story's minimap, "Maps/{uuid}.db"); backups and restores carry them with the save.
+	// An older Mortar ignores the field.
+	SaveLinked []string `json:"saveLinked,omitempty"`
 	// FolderNames lists, by a folder name Paths uses, the names the game gives that folder on some installs (The Sims
 	// 4 names its user folder after the game's language). An older Mortar ignores the field and uses the name in Paths.
 	FolderNames map[string][]string `json:"folderNames,omitempty"`
@@ -607,6 +611,11 @@ func (g GameInfo) Validate() error {
 	for _, p := range g.SaveCopies {
 		if !strings.Contains(p, "{") || strings.ContainsAny(p, "/\\") {
 			return fmt.Errorf("game %q has an unusable save copy pattern %q", g.ID, p)
+		}
+	}
+	for _, p := range g.SaveLinked {
+		if !strings.Contains(p, "{uuid}") || strings.Contains(p, "\\") || !fs.ValidPath(strings.ReplaceAll(p, "{uuid}", "x")) {
+			return fmt.Errorf("game %q has an unusable linked save file %q", g.ID, p)
 		}
 	}
 	for _, f := range g.SaveCopyFolders {

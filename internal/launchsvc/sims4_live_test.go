@@ -302,7 +302,7 @@ func TestSims4BackupBeforePlayTakesTheProfilesOwnSaves(t *testing.T) {
 		t.Fatal(err)
 	}
 	w.write(t, filepath.Join(own, "Slot_00000002.save"), "the profile's save")
-	if err := w.svc.backupChangedSaves(sims4, w.profileID, "", w.game); err != nil {
+	if err := w.svc.backupChangedSaves(t.Context(), sims4, w.profileID, "", w.game); err != nil {
 		t.Fatal(err)
 	}
 	dataDir, err := w.svc.dataDir()
