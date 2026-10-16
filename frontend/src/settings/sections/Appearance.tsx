@@ -26,7 +26,7 @@ import { useSettings } from '../store.ts'
 import { isAccent } from '../theme.ts'
 
 // An image above this is decoded whole on every start, and an animated GIF is never shrunk, so it costs memory and GPU.
-const LARGE_BACKGROUND_BYTES = 16 * 1024 * 1024
+const LARGE_BACKGROUND_BYTES = 16_777_216 // 16 MiB
 
 // The chosen background's size, read from the page's own request for it; 0 until known.
 function useBackgroundBytes(src: string): number {
