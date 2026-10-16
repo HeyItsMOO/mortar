@@ -1960,7 +1960,7 @@
     {
       "id": "vintage-story",
       "name": "Vintage Story",
-      "enabled": false,
+      "enabled": true,
       "marker": "Vintagestory.exe",
       "linuxMarker": "Vintagestory",
       "linuxStart": "run.sh",
