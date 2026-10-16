@@ -694,7 +694,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@messageformat/parser@5.1.1
+@messageformat/parser@5.2.0
 licence: MIT
 http://messageformat.github.io/messageformat/api/parser/
 
@@ -888,7 +888,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@tanstack/react-virtual@3.14.17
+@tanstack/react-virtual@3.14.19
 licence: MIT
 https://tanstack.com/virtual
 
@@ -916,7 +916,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@tanstack/virtual-core@3.19.2
+@tanstack/virtual-core@3.19.4
 licence: MIT
 https://tanstack.com/virtual
 
@@ -966,7 +966,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-@wailsio/runtime@3.0.0-beta.28
+@wailsio/runtime@3.0.0-beta.29
 licence: MIT
 https://v3.wails.io
 
@@ -1663,7 +1663,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-github.com/godbus/dbus/v5@v5.2.3
+github.com/godbus/dbus/v5@v5.2.4
 licence: BSD-2-Clause
 https://github.com/godbus/dbus
 
@@ -2578,7 +2578,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-github.com/nwaples/rardecode/v2@v2.4.4
+github.com/nwaples/rardecode/v2@v2.4.5
 licence: BSD-2-Clause
 https://github.com/nwaples/rardecode
 
@@ -2950,7 +2950,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 
-github.com/wailsapp/wails/v3@v3.0.0-beta.28
+github.com/wailsapp/wails/v3@v3.0.0-beta.30
 licence: MIT
 https://github.com/wailsapp/wails
 
@@ -3672,7 +3672,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-lucide-react@1.55.0
+lucide-react@1.57.0
 licence: MIT
 https://lucide.dev
 
@@ -5154,7 +5154,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-react-dom@19.3.0
+react-dom@19.3.1
 licence: MIT
 https://react.dev/
 
@@ -5210,7 +5210,7 @@ SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-react-is@19.3.0
+react-is@19.3.1
 licence: MIT
 https://react.dev/
 
@@ -5303,7 +5303,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 
-react@19.3.0
+react@19.3.1
 licence: MIT
 https://react.dev/
 
