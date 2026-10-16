@@ -19,7 +19,6 @@ import {
 import { ExtensionContact } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/support/service.ts'
 import { When } from '../../i18n/When.tsx'
 import { openPage } from '../../mods/menu.ts'
-import { space } from '../../theme/density.ts'
 import { reportUnexpected, toastError } from '../../toasts/report.ts'
 import { PrefSelect, PrefSwitch } from '../PrefControls.tsx'
 import { PrefByKey, PrefKeys } from '../PrefRow.tsx'
@@ -121,13 +120,17 @@ function ExtensionInstall() {
       <ExtensionConnection />
       <SettingRow
         label={t`Get the extension`}
-        description={t`It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar.`}
+        description={
+          <>
+            {t`It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar.`}
+            <ExtensionSteps />
+          </>
+        }
       >
         <Button variant="outlined" onClick={() => openPage(EXTENSION_ZIP)}>
           {t`Download the extension`}
         </Button>
       </SettingRow>
-      <ExtensionSteps />
     </>
   )
 }
@@ -137,15 +140,8 @@ function ExtensionSteps() {
   return (
     <Box
       component="ol"
-      sx={{
-        m: 0,
-        px: space.pad,
-        pl: 5,
-        pb: space.pad,
-        fontSize: 14,
-        color: 'text.secondary',
-        lineHeight: 1.6,
-      }}
+      // Inside the row's description, so it takes the description's type and only needs the list's indent.
+      sx={{ m: 0, mt: 1, pl: 2.5 }}
     >
       <li>
         {t`Chrome, Edge or another Chromium browser: unzip the download, open chrome://extensions, turn on Developer mode and choose Load unpacked on the unzipped folder.`}

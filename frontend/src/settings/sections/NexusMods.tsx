@@ -246,46 +246,46 @@ export function NexusSignIn() {
   return (
     <Searchable terms={`${t`Nexus account`} Nexus ${t`API key`} ${t`Sign in`}`}>
       {nxm.dialog}
-      <Box
-        component="form"
-        onSubmit={submit}
-        sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
-      >
-        <NexusSSO />
-        {keyAllowed ? (
-          <>
-            <Box component="label" htmlFor={keyId} sx={{ fontSize: 14, fontWeight: 600 }}>
-              {t`Personal API key`}
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: space.gap }}>
+      <NexusSSO />
+      {keyAllowed ? (
+        <SettingRow
+          label={t`Personal API key`}
+          description={t`Kept in your system keyring. Find it on Nexus under Settings, API Keys.`}
+        >
+          <Box
+            component="form"
+            onSubmit={submit}
+            sx={{ display: 'flex', flexDirection: 'column', gap: space.gap }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
               <TextField
                 id={keyId}
+                slotProps={{ htmlInput: { 'aria-label': t`Personal API key` } }}
                 type="password"
                 size="small"
                 autoComplete="off"
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
-                helperText={t`Kept in your system keyring. Find it on Nexus under Settings, API Keys.`}
-                sx={{ width: 420, maxWidth: '100%' }}
+                sx={{ width: 260, maxWidth: '100%' }}
               />
               <Button
                 type="submit"
                 variant="contained"
                 startIcon={<LogIn size={16} />}
                 disabled={busy || key.trim() === ''}
-                sx={{ flexShrink: 0, height: space.control }}
+                sx={{ flexShrink: 0 }}
               >
                 {t`Sign in`}
               </Button>
             </Box>
-          </>
-        ) : null}
-        {error ? (
-          <Alert severity="error" title={error.details}>
-            {error.message}
-          </Alert>
-        ) : null}
-      </Box>
+          </Box>
+        </SettingRow>
+      ) : null}
+      {error ? (
+        <Alert severity="error" title={error.details}>
+          {error.message}
+        </Alert>
+      ) : null}
     </Searchable>
   )
 }
