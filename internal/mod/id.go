@@ -13,6 +13,9 @@ const (
 	FormatThunderstore = "thunderstore"
 	// FormatFolder names a mod of a game with no loader, by the store item that holds its files.
 	FormatFolder = "folder"
+	// FormatModInfo is a folder game's mod by the id its mod-root file gives (Vintage Story's modinfo.json modid),
+	// as a save names it.
+	FormatModInfo = "modinfo"
 )
 
 // ID is "<format>:<local>", for example "smapi:Pathoschild.ContentPatcher". The zero ID is empty.

@@ -40,6 +40,8 @@ type Mod struct {
 	Needs          []mod.ID `json:"needs,omitempty"`
 	Optional       []mod.ID `json:"optional,omitempty"`
 	ContentPackFor mod.ID   `json:"contentPackFor,omitempty"`
+	// ModID is the id the mod's own mod-root file gives (Vintage Story's modinfo.json), which a save names it by.
+	ModID string `json:"modId,omitempty"`
 }
 
 // EnableRef names one mod to switch, matching SetModEnabled's key and mod id.
@@ -849,7 +851,7 @@ func (s *Store) mods(game, id string, bundled bool) ([]Mod, error) {
 				Key: e.Key, ID: m.ID, Name: m.Name, Author: m.Author, Version: m.Version,
 				Enabled: e.Enabled(m.ID),
 				Picture: e.Source.Picture, Endorsements: e.Source.EndorsementCount,
-				Needs: m.Needs, Optional: m.Optional, ContentPackFor: m.ContentPackFor,
+				Needs: m.Needs, Optional: m.Optional, ContentPackFor: m.ContentPackFor, ModID: m.ModID,
 			})
 		}
 	}

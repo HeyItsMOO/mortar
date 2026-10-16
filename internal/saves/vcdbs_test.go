@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"encoding/binary"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
+	"github.com/Rethunk-Tech/mortar/internal/mod"
 )
 
 func protoString(b []byte, num uint64, s string) []byte {
@@ -28,6 +30,24 @@ func TestScanReadsAVintageStoryWorld(t *testing.T) {
 	data = binary.AppendUvarint(data, 7200)
 	data = protoString(data, vsLastSavedVersion, "1.21.4")
 	data = protoString(data, vsPlayStyle, "surviveandbuild")
+	// ModData["BlockIDs"]: a map of block ids to codes, a mod's codes in its own domain.
+	var ids []byte
+	for i, code := range []string{"air", "creative:lamp", "primitivesurvival:fishbasket", "PrimitiveSurvival:weir"} {
+		var pair []byte
+		pair = binary.AppendUvarint(pair, 1<<3)
+		pair = binary.AppendUvarint(pair, uint64(i))
+		pair = protoString(pair, 2, code)
+		ids = binary.AppendUvarint(ids, 1<<3|2)
+		ids = binary.AppendUvarint(ids, uint64(len(pair)))
+		ids = append(ids, pair...)
+	}
+	entry := protoString(nil, 1, "BlockIDs")
+	entry = binary.AppendUvarint(entry, 2<<3|2)
+	entry = binary.AppendUvarint(entry, uint64(len(ids)))
+	entry = append(entry, ids...)
+	data = binary.AppendUvarint(data, vsModData<<3|2)
+	data = binary.AppendUvarint(data, uint64(len(entry)))
+	data = append(data, entry...)
 	conn, err := sql.Open("sqlite", filepath.Join(dir, "Bjornheim.vcdbs"))
 	if err != nil {
 		t.Fatal(err)
@@ -54,7 +74,8 @@ func TestScanReadsAVintageStoryWorld(t *testing.T) {
 	for _, in := range infos {
 		switch in.Folder {
 		case "Bjornheim.vcdbs":
-			if in.Name != "Bjornheim" || in.GameVersion != "1.21.4" || in.PlayStyle != "surviveandbuild" || in.MillisecondsPlayed != 7_200_000 || !in.Unrecorded {
+			if in.Name != "Bjornheim" || in.GameVersion != "1.21.4" || in.PlayStyle != "surviveandbuild" || in.MillisecondsPlayed != 7_200_000 || !in.Unrecorded ||
+				!slices.Equal(in.Used, []mod.ID{"modinfo:primitivesurvival"}) {
 				t.Errorf("world = %+v", in)
 			}
 		case "Broken.vcdbs":

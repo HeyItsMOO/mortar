@@ -9,9 +9,11 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
+	"github.com/Rethunk-Tech/mortar/internal/mod"
 
 	_ "modernc.org/sqlite"
 )
@@ -24,11 +26,16 @@ const (
 	vsLastSavedVersion   = 21
 	vsPlayStyle          = 29
 	vsSavegameIdentifier = 34
+	vsModData            = 11
 )
+
+// vsBaseDomains are the game's own asset domains; every other domain of a block or item code is the mod id of the mod
+// that added it.
+var vsBaseDomains = []string{"game", "creative", "survival"}
 
 var errBadProto = errors.New("the world's game data is not a protobuf message")
 
-// readWorld fills a Vintage Story world's name, play style, game version and play time from the one gamedata row of
+// readWorld fills a Vintage Story world's name, play style, game version, play time and the mods it records from the one gamedata row of
 // its .vcdbs, a SQLite database holding a protobuf SaveGame.
 func readWorld(ctx context.Context, file string, info *Info) error {
 	conn, err := sql.Open("sqlite", fsx.ReadOnlySQLiteURI(file))
@@ -40,7 +47,8 @@ func readWorld(ctx context.Context, file string, info *Info) error {
 	if err := conn.QueryRowContext(ctx, "SELECT data FROM gamedata LIMIT 1").Scan(&data); err != nil {
 		return err
 	}
-	return eachField(data, func(num, v uint64, b []byte) {
+	used := map[string]struct{}{}
+	err = eachField(data, func(num, v uint64, b []byte) {
 		switch num {
 		case vsWorldName:
 			info.Name = string(b)
@@ -55,7 +63,47 @@ func readWorld(ctx context.Context, file string, info *Info) error {
 			info.PlayStyle = string(b)
 		case vsSavegameIdentifier:
 			info.WorldID = string(b)
+		case vsModData:
+			addCodeDomains(b, used)
 		}
+	})
+	if err != nil {
+		return err
+	}
+	info.Used = info.Used[:0]
+	for d := range used {
+		info.Used = append(info.Used, mod.NewID(mod.FormatModInfo, d))
+	}
+	slices.Sort(info.Used)
+	return nil
+}
+
+// addCodeDomains adds to used the mod ids in one ModData entry when it is the world's block or item id map
+// (map<int32,string> of codes, "domain:path" for a mod's content). A world records the mods that added blocks or
+// items; a mod of code alone leaves no trace.
+func addCodeDomains(entry []byte, used map[string]struct{}) {
+	var key string
+	var value []byte
+	_ = eachField(entry, func(num, _ uint64, b []byte) {
+		switch num {
+		case 1:
+			key = string(b)
+		case 2:
+			value = b
+		}
+	})
+	if key != "BlockIDs" && key != "ItemIDs" {
+		return
+	}
+	_ = eachField(value, func(num, _ uint64, pair []byte) {
+		if num != 1 {
+			return
+		}
+		_ = eachField(pair, func(n, _ uint64, code []byte) {
+			if domain, _, ok := strings.Cut(string(code), ":"); n == 2 && ok && domain != "" && !slices.Contains(vsBaseDomains, domain) {
+				used[strings.ToLower(domain)] = struct{}{}
+			}
+		})
 	})
 }
 

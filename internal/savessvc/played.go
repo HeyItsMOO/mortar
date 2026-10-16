@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/mod"
+
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
 
@@ -123,4 +125,28 @@ func (s *Service) NotePlayed(gameID, profileID, saveFolder string) {
 		return
 	}
 	_ = s.last.RecordRun(gameID, saveFolder, profileID, time.Now(), snapshotEnabled(s.profiles, gameID, profileID))
+}
+
+// asProfileIDs names each mod a save records by its mod-root id (modinfo:<id>) as the profile's mod with that id, so
+// it matches, enables and dismisses as that mod; a mod the profile lacks keeps the save's name.
+func asProfileIDs(used []mod.ID, mods []profile.Mod) []mod.ID {
+	byModID := map[string]mod.ID{}
+	for _, m := range mods {
+		if m.ModID != "" {
+			byModID[strings.ToLower(m.ModID)] = m.ID
+		}
+	}
+	if len(byModID) == 0 {
+		return used
+	}
+	out := make([]mod.ID, len(used))
+	for i, id := range used {
+		out[i] = id
+		if id.Format() == mod.FormatModInfo {
+			if own, ok := byModID[strings.ToLower(id.Local())]; ok {
+				out[i] = own
+			}
+		}
+	}
+	return out
 }

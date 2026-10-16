@@ -12,6 +12,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/source/vsmoddb"
+
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
@@ -217,7 +219,7 @@ func (s *Service) Saves(ctx context.Context, game, profileID string) ([]Fit, err
 	fits := make([]Fit, len(infos))
 	wanted := map[mod.ID]bool{}
 	for i, in := range infos {
-		lacks := saves.Lacking(in.Used, enabled, asIDs(dismissed[in.Folder]))
+		lacks := saves.Lacking(asProfileIDs(in.Used, mods), enabled, asIDs(dismissed[in.Folder]))
 		fits[i] = Fit{
 			Folder: in.Folder, Farm: in.Farm, Farmer: in.Farmer, Season: in.Season, Day: in.Day, Year: in.Year,
 			Played: in.Played, WhichFarm: in.WhichFarm, MillisecondsPlayed: in.MillisecondsPlayed, Money: in.Money,
@@ -283,6 +285,13 @@ func (s *Service) describe(ctx context.Context, gameID string, ids map[mod.ID]bo
 		wg.Go(func() {
 			sem <- struct{}{}
 			defer func() { <-sem }()
+			if id.Format() == mod.FormatModInfo {
+				d := modDBDescribed(ctx, id)
+				mu.Lock()
+				out[id] = d
+				mu.Unlock()
+				return
+			}
 			where, _ := problems.Locate(ctx, s.meta, domain, id, "", nil)
 			d := described{name: id.Local(), where: where}
 			if where != nil && where.Site == "Nexus" {
@@ -332,6 +341,7 @@ func (s *Service) LastSaveGap(ctx context.Context, game, profileID string) (fit 
 	if info.Folder == "" {
 		return Fit{}, false, nil
 	}
+	info.Used = asProfileIDs(info.Used, mods)
 	fit, ok = fitFor(info, enabled, asIDs(s.settings.Get().Dismissed[info.Folder]))
 	s.fillLast(game, &fit, present, enabled)
 	if len(fit.LastMissing) > 0 {
@@ -378,4 +388,15 @@ func asIDs(tokens []string) []mod.ID {
 		out[i] = mod.ID(t)
 	}
 	return out
+}
+
+// modDBDescribed names a mod a Vintage Story world records by its modinfo id from the Mod DB, with the page to install
+// it from; just the id when the Mod DB does not answer.
+func modDBDescribed(ctx context.Context, id mod.ID) described {
+	r, err := vsmoddb.Driver{}.Resolve(ctx, id.Local(), "")
+	if err != nil {
+		return described{name: id.Local()}
+	}
+	d := vsmoddb.Driver{}
+	return described{name: r.Name, where: &problems.Ref{Site: problems.SiteVSModDB, Package: r.ID, PageName: r.Name, URL: d.ModPageURL("", r.ID)}}
 }

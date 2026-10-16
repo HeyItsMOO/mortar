@@ -46,10 +46,16 @@ type Environment struct {
 	VersionScheme string
 }
 
+// SiteVSModDB is a Ref to a mod on the Vintage Story Mod DB.
+const SiteVSModDB = "vsmoddb"
+
 // Ref names a mod on the page that hosts it. FileID is 0 unless a Nexus file satisfying the requirement was found.
 // GitHub is "owner/repo" when Site is "GitHub".
 type Ref struct {
-	Site     string `json:"site"`
+	Site string `json:"site"`
+	// Package is the site's own id of the mod where it is not a Nexus page or GitHub repo (a Vintage Story Mod DB
+	// "<modid>-<assetid>").
+	Package  string `json:"package,omitempty"`
 	GitHub   string `json:"github"`
 	PageID   int    `json:"pageId"`
 	PageName string `json:"pageName"`

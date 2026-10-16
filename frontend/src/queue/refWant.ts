@@ -6,6 +6,9 @@ export function refWant(where: Ref, kind: 'dependency' | 'install', name?: strin
   if (where.site === 'GitHub' && where.github !== '') {
     return { kind, repo: where.github, name: where.github }
   }
+  if (where.site === 'vsmoddb' && where.package) {
+    return { kind, source: 'vsmoddb', package: where.package, name: name ?? where.pageName }
+  }
   if (where.site === 'Nexus' && where.pageId > 0) {
     return {
       kind,

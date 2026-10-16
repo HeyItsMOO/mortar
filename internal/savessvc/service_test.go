@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/mod"
+	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/testenv/testfs"
 
 	"github.com/Rethunk-Tech/mortar/internal/saves"
@@ -40,5 +41,14 @@ func TestDismissHidesModForThatSaveOnly(t *testing.T) {
 	d = store.Get().Dismissed
 	if got := saves.Lacking(used, nil, asIDs(d["Farm_1"])); !reflect.DeepEqual(got, []saves.Lack{{ID: "smapi:author.mod"}, {ID: "smapi:other.mod"}}) {
 		t.Fatalf("Farm_1 after restore lacks %+v", got)
+	}
+}
+
+// A Vintage Story world names its mods by modinfo id; one the profile has takes the profile's own id.
+func TestWorldModsTakeTheProfilesIDs(t *testing.T) {
+	used := []mod.ID{"modinfo:carryon", "modinfo:butchering"}
+	got := asProfileIDs(used, []profile.Mod{{ID: "folder:vsmoddb-890-4405", ModID: "CarryOn"}})
+	if !reflect.DeepEqual(got, []mod.ID{"folder:vsmoddb-890-4405", "modinfo:butchering"}) {
+		t.Fatalf("ids = %v", got)
 	}
 }

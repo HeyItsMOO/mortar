@@ -60,7 +60,7 @@ type Info struct {
 	WorldID string `json:"worldId,omitempty"`
 }
 
-const scanRev = 5
+const scanRev = 6
 
 // stamp is what a cached result was computed from; any change recomputes it. Index is the dataset index's size,
 // because a newer index can recognise IDs an older one missed. Rev is this parser's shape, so a new field
