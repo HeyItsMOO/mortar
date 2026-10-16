@@ -1735,7 +1735,7 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:528
+#: src/games/GameSelect.tsx:541
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -3959,7 +3959,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:512
+#: src/games/GameSelect.tsx:522
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4326,7 +4326,7 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:531
+#: src/games/GameSelect.tsx:544
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
@@ -7466,7 +7466,7 @@ msgstr "Could not switch {0}"
 msgid "Asset map"
 msgstr "Asset map"
 
-#: src/games/GameSelect.tsx:426
+#: src/games/GameSelect.tsx:433
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
@@ -8469,7 +8469,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:109
-#: src/games/GameSelect.tsx:508
+#: src/games/GameSelect.tsx:516
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -9980,7 +9980,7 @@ msgstr "Mortar stays on screen beside the game."
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:517
+#: src/games/GameSelect.tsx:529
 msgid "Other games"
 msgstr "Other games"
 
@@ -10177,7 +10177,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
 #: src/game/ProfileWorkspace.tsx:42
-#: src/games/GameSelect.tsx:464
+#: src/games/GameSelect.tsx:471
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -11888,6 +11888,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
+#: src/games/GameSelect.tsx:529
 msgid "All games"
 msgstr "All games"
 
@@ -12402,7 +12403,7 @@ msgstr "Updated fixable mods"
 msgid "Order"
 msgstr "Order"
 
-#: src/games/GameSelect.tsx:405
+#: src/games/GameSelect.tsx:412
 msgid "Jump to a letter"
 msgstr "Jump to a letter"
 

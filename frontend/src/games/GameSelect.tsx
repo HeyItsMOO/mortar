@@ -310,7 +310,8 @@ const hoverFocus = {
   },
 } as const
 
-function GroupHeading({ children }: { children: string }) {
+// The count says how many games the group holds, which the rows below only show by scrolling.
+function GroupHeading({ children, count }: { children: string; count: number }) {
   return (
     <Typography
       component="h2"
@@ -327,6 +328,12 @@ function GroupHeading({ children }: { children: string }) {
       }}
     >
       {children}
+      <Box
+        component="span"
+        sx={{ ml: 1, color: 'var(--mortar-ink-dim-60)', fontVariantNumeric: 'tabular-nums' }}
+      >
+        {count}
+      </Box>
     </Typography>
   )
 }
@@ -505,16 +512,22 @@ function GameSelect() {
           onScroll={rail ? markLetter : undefined}
           onKeyDown={(e) => arrowFocus(e, '[data-tile]')}
         >
-          {recent.length > 0 ? <GroupHeading>{t`Recently played`}</GroupHeading> : null}
+          {recent.length > 0 ? (
+            <GroupHeading count={recent.length}>{t`Recently played`}</GroupHeading>
+          ) : null}
           {recent.map((g) => (
             <Row key={g.id} {...tileProps(g)} />
           ))}
-          {found.length > 0 ? <GroupHeading>{t`On this computer`}</GroupHeading> : null}
+          {found.length > 0 ? (
+            <GroupHeading count={found.length}>{t`On this computer`}</GroupHeading>
+          ) : null}
           {found.map((g) => (
             <Row key={g.id} {...tileProps(g)} />
           ))}
-          {recent.length + found.length > 0 && rest.length > 0 ? (
-            <GroupHeading>{t`Other games`}</GroupHeading>
+          {rest.length > 0 ? (
+            <GroupHeading count={rest.length}>
+              {recent.length + found.length > 0 ? t`Other games` : t`All games`}
+            </GroupHeading>
           ) : null}
           {rest.map((g) => (
             <Row key={g.id} {...tileProps(g)} />

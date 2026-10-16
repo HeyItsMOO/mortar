@@ -161,7 +161,7 @@ To send, use **Share…**, choose **Nearby** and pick the computer. The receiver
 
 ## Switch games
 
-Click the game's name in the title bar. A menu lists the games you played recently and the ones found on this computer, with a tick on the current one. Choose a game and Mortar opens it on the profile you used last. **All games…** opens Game select: recently played games first, then the ones on this computer, then every other game Mortar supports, with a letter rail to jump through them.
+Click the game's name in the title bar. A menu lists the games you played recently and the ones found on this computer, with a tick on the current one. Choose a game and Mortar opens it on the profile you used last. **All games…** opens Game select: recently played games first, then the ones on this computer, then every other game Mortar supports, each heading with how many games it holds, and a letter rail to jump through them.
 
 ## Game installs
 
