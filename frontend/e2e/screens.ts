@@ -167,7 +167,11 @@ const SITE: Scene[] = [
     profile: STARDEW,
     steps: async (page) => {
       await click(page, 'tab', 'Mods')
-      await click(page, 'button', /^Details of Stardew Valley Expanded/)
+      // The list is virtualised, so a mod far down it has no row yet: the first row's details stand in.
+      await page
+        .getByRole('button', { name: /^Details of / })
+        .first()
+        .click({ timeout: STEP_MS })
       await page
         .getByRole('button', { name: 'Pin this version' })
         .or(page.getByRole('button', { name: 'Pin version' }))
