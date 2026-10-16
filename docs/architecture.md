@@ -124,6 +124,7 @@ Each `entries[]` item:
 | `disabled` | Mod ids disabled |
 | `added` | When the entry was put in the profile (zero when absent) |
 | `implicit` | Mortar brought the entry in for another mod (a resolver dependency, a Nexus link download that supplies a required mod the profile lacks, an import entry another listed entry requires); absent means the player asked for it. Set when the entry is created, copied by every path that copies an entry, and changed afterwards only by Mark explicit or Mark implicit. The loader and bridge entries are always implicit |
+| `intentSince`, `intentOffered` (profile) | When Mortar began keeping install reasons for the profile (its creation, or the first change after), and whether the player answered the one-time offer for entries added before then. The offer names those entries that another switched-on mod requires (a required dependency or a content pack's framework, less the members of a cycle nothing outside requires), that sit in a library category (Thunderstore Libraries, Nexus Modding Tools) or that only load tilesheets |
 | `pinned` | Keeps the entry on its version |
 | `skipVersion` | One newer version hidden |
 | `note` | At most 500 characters |
