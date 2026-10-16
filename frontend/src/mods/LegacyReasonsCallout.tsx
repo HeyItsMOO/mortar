@@ -61,8 +61,8 @@ export function LegacyReasonsCallout({ profile, mods }: { profile: Profile; mods
   return (
     <ListCallout
       text={plural(keys.length, {
-        one: '# library or tilesheet pack was added before Mortar kept install reasons',
-        other: '# libraries and tilesheet packs were added before Mortar kept install reasons',
+        one: '# mod looks like a library and was added before Mortar kept install reasons',
+        other: '# mods look like libraries and were added before Mortar kept install reasons',
       })}
       actions={
         <>

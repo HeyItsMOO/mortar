@@ -1349,7 +1349,7 @@ msgstr "slow load {ms}"
 msgid "Update an existing profile…"
 msgstr "Update an existing profile…"
 
-#: src/mods/LegacyReasonsCallout.tsx:55
+#: src/mods/LegacyReasonsCallout.tsx:59
 msgid "Could not save that answer"
 msgstr "Could not save that answer"
 
@@ -1600,7 +1600,7 @@ msgstr "Update check skipped"
 msgid "Skip this version"
 msgstr "Skip this version"
 
-#: src/mods/LegacyReasonsCallout.tsx:69
+#: src/mods/LegacyReasonsCallout.tsx:73
 #: src/mods/ModMenu.tsx:171
 #: src/mods/SelectionBarActions.tsx:90
 msgid "Mark implicit"
@@ -6481,6 +6481,11 @@ msgstr "What happens to files the new version of a mod leaves out"
 msgid "No settings match"
 msgstr "No settings match"
 
+#. placeholder {0}: keys.length
+#: src/mods/LegacyReasonsCallout.tsx:63
+msgid "{0, plural, one {# mod looks like a library and was added before Mortar kept install reasons} other {# mods look like libraries and were added before Mortar kept install reasons}}"
+msgstr "{0, plural, one {# mod looks like a library and was added before Mortar kept install reasons} other {# mods look like libraries and were added before Mortar kept install reasons}}"
+
 #: src/settings/shortcutLabels.ts:8
 msgid "Open the command palette"
 msgstr "Open the command palette"
@@ -9896,11 +9901,6 @@ msgstr "Open the page of {name}"
 msgid "Exploration"
 msgstr "Exploration"
 
-#. placeholder {0}: keys.length
-#: src/mods/LegacyReasonsCallout.tsx:59
-msgid "{0, plural, one {# library or tilesheet pack was added before Mortar kept install reasons} other {# libraries and tilesheet packs were added before Mortar kept install reasons}}"
-msgstr "{0, plural, one {# library or tilesheet pack was added before Mortar kept install reasons} other {# libraries and tilesheet packs were added before Mortar kept install reasons}}"
-
 #: src/settings/sections/GameSettings.tsx:261
 #: src/shell/FlatpakGrant.tsx:87
 msgid "Grant access"
@@ -12963,7 +12963,7 @@ msgstr "{0, plural, one {# warning} other {# warnings}}"
 msgid "Jump to first error"
 msgstr "Jump to first error"
 
-#: src/mods/LegacyReasonsCallout.tsx:66
+#: src/mods/LegacyReasonsCallout.tsx:70
 msgid "Keep explicit"
 msgstr "Keep explicit"
 
