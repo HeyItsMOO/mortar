@@ -102,8 +102,8 @@ func isTilesheetPack(im framework.Mod) bool {
 }
 
 // isSupportingPack is a Content Patcher pack that supplies sheets for other mods: it loads at least one new map,
-// tilesheet or mod asset, and otherwise only redraws those sheets or registers chair tiles on them. A pack that edits
-// a map, or only recolours existing sheets, is something the player chose.
+// tilesheet or mod asset, and otherwise only redraws images or registers chair tiles. A pack that edits a map or data,
+// or only recolours existing sheets, is something the player chose.
 func isSupportingPack(im framework.Mod) bool {
 	if !isContentPatcherPack(im) {
 		return false
@@ -115,9 +115,11 @@ func isSupportingPack(im framework.Mod) bool {
 	loads := false
 	for _, patch := range readContentPack(im).patches {
 		switch {
+		case patch.tokenName != "":
+			// A dynamic token the pack defines, not a change.
 		case patch.kind == "load" && sheet(patch.target):
 			loads = true
-		case patch.action == kindEditImage && (patch.target == "" || sheet(patch.target)):
+		case patch.action == kindEditImage:
 		case patch.target == "data/chairtiles":
 		default:
 			return false

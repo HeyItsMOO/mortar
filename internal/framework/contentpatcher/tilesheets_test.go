@@ -123,7 +123,7 @@ func TestSupportingPacks(t *testing.T) {
 		id, content string
 		want        bool
 	}{
-		{"Sheets.Own", `{"Changes":[{"Action":"Load","Target":"Maps/spring_own, Mods/own/extra"},{"Action":"EditImage","Target":"Maps/fall_own","FromFile":"fall.png"},{"Action":"EditData","Target":"Data/ChairTiles","Entries":{"own/0/0":"1/1/down/default/-1/true"}}]}`, true},
+		{"Sheets.Own", `{"DynamicTokens":[{"Name":"Style","Value":"warm"}],"Changes":[{"Action":"Load","Target":"Maps/spring_own, Mods/own/extra"},{"Action":"EditImage","Target":"Maps/fall_own","FromFile":"fall.png"},{"Action":"EditData","Target":"Data/ChairTiles","Entries":{"own/0/0":"1/1/down/default/-1/true"}}]}`, true},
 		{"Sheets.Recolour", `{"Changes":[{"Action":"EditImage","Target":"Maps/springobjects","FromFile":"a.png"}]}`, false},
 		{"Sheets.MapEdit", `{"Changes":[{"Action":"Load","Target":"Maps/own"},{"Action":"EditMap","Target":"Maps/Saloon","FromFile":"saloon.tmx"}]}`, false},
 	} {
