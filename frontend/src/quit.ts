@@ -26,6 +26,10 @@ function initQuit() {
   Events.On('quit:requested', (event) => {
     handleQuit(event).catch(() => undefined)
   })
+  // Mortar asks after bringing the window up for a second launch; a page that never answers is reloaded.
+  Events.On('window:ping', () => {
+    Events.Emit('window:pong', '').catch(() => undefined)
+  })
   // A quit asked while the window was closed to the tray reaches the page built to answer it here.
   PendingQuit()
     .then((summary) => (summary ? handleQuit({ data: summary }) : undefined))

@@ -123,6 +123,8 @@ func registerEvents() {
 	application.RegisterEvent[[]string](picker.DroppedEvent)
 	application.RegisterEvent[settings.Settings](settings.ChangedEvent)
 	application.RegisterEvent[string](control.ChangedEvent)
+	application.RegisterEvent[string](windowPingEvent)
+	application.RegisterEvent[string](windowPongEvent)
 	application.RegisterEvent[control.InstallAsk](control.InstallAskEvent)
 	application.RegisterEvent[shortcut.Request](shortcut.RequestedEvent)
 	application.RegisterEvent[nexussvc.Account](nexussvc.ChangedEvent)
@@ -241,8 +243,10 @@ func run() error {
 		toPage func(name string, data any)
 		// windowClosed reports whether closing to the tray removed the window.
 		windowClosed func() bool
-		profiles     *profile.Store
-		pictures     *modpic.Cache
+		// pageAnswers reports whether the window's page answered a ping in time.
+		pageAnswers func() bool
+		profiles    *profile.Store
+		pictures    *modpic.Cache
 	)
 	ready := make(chan struct{})
 	plays := &shortcut.Service{}
@@ -262,8 +266,15 @@ func run() error {
 			// keeps the browser in front; the window sends a desktop notification when a link needs a profile chosen.
 			// Only a window closed or hidden to the tray is brought back, since nothing else could show the link.
 			nxmLink := nxmSvc.Receive(d.Args)
-			if shareSvc.Receive(sharesvc.InDir(d.Args, d.WorkingDir)) || plays.Receive(d.Args) || !nxmLink || windowClosed() || !window.IsVisible() {
+			closed, visible := windowClosed(), !windowClosed() && window.IsVisible()
+			if shareSvc.Receive(sharesvc.InDir(d.Args, d.WorkingDir)) || plays.Receive(d.Args) || !nxmLink || closed || !visible {
 				showWindow()
+				log.Printf("second instance: window shown (was closed %v, visible %v)", closed, visible)
+				// A rebuilt window is still loading its page, so only one that was already there is asked.
+				if !closed && !pageAnswers() {
+					log.Printf("second instance: the page did not answer within %s; reloading it", pageAnswerWait)
+					window.ForceReload()
+				}
 			}
 		}
 	}()
@@ -287,6 +298,7 @@ func run() error {
 	if forwardLaunch(dataDir, os.Args[1:]) {
 		return nil
 	}
+	endStuckInstance(dataDir)
 	updates := &updatesvc.Service{}
 	// Run by the shutdown hook or, when the graceful quit stalls, by the quit watchdog; whichever comes first.
 	shutdown := sync.OnceFunc(func() {
@@ -1194,6 +1206,26 @@ func run() error {
 			window.Restore()
 		}
 		window.Show().Focus()
+	}
+	pongs := make(chan struct{}, 1)
+	app.Event.On(windowPongEvent, func(*application.CustomEvent) {
+		select {
+		case pongs <- struct{}{}:
+		default:
+		}
+	})
+	pageAnswers = func() bool {
+		select {
+		case <-pongs:
+		default:
+		}
+		app.Event.Emit(windowPingEvent, "")
+		select {
+		case <-pongs:
+			return true
+		case <-time.After(pageAnswerWait):
+			return false
+		}
 	}
 	// toPage hands an event to the page, showing the window first; one closed to the tray has no page to hear it, so
 	// the event waits for the rebuilt page to replay it.

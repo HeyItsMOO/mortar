@@ -17,6 +17,14 @@ import (
 
 const quitRequestedEvent = "quit:requested"
 
+// The page answers windowPingEvent with windowPongEvent; a window that shows but never answers has lost its page
+// (a WebView2 render process that died) and is reloaded.
+const (
+	windowPingEvent = "window:ping"
+	windowPongEvent = "window:pong"
+	pageAnswerWait  = 10 * time.Second
+)
+
 // quitGrace is how long the graceful quit (window and webview teardown, shutdown hooks) gets before Mortar finishes
 // the shutdown itself and exits: a main thread stuck in a toolkit call must not keep a quit waiting for half a minute.
 const quitGrace = 2 * time.Second

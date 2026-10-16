@@ -76,6 +76,27 @@ func Live(dir string) (int, bool) {
 	return d.PID, true
 }
 
+// Unanswering returns the pid named in dir's control file when its port takes connections but nothing answers hello
+// for wait: a Mortar that is frozen, since the system accepts connections for a listening socket on its own. ok is
+// false when nothing listens or the app answers.
+func Unanswering(dir string, wait time.Duration) (int, bool) {
+	deadline := time.Now().Add(wait)
+	for {
+		d, conn, err := dial(dir)
+		if err != nil {
+			return 0, false
+		}
+		_ = conn.Close()
+		if CallDir(dir, "hello", nil, nil, 2*time.Second) == nil {
+			return 0, false
+		}
+		if time.Now().After(deadline) {
+			return d.PID, d.PID > 0
+		}
+		time.Sleep(500 * time.Millisecond)
+	}
+}
+
 func dial(dir string) (Discovery, net.Conn, error) {
 	var d Discovery
 	root, err := os.OpenRoot(dir)
