@@ -319,7 +319,11 @@ Mortar zips your saves before it changes them. **Back up saves before Play** (Se
 
 To restore, open the **Saves** tab, choose **Save backups…**, pick a backup and choose **Restore**. Mortar names the saves it will overwrite and backs up the current Saves folder first. Stop the game before restoring. **Open backups folder** shows the zips; **Backup location** in the game's settings moves where new ones go.
 
-Each save's backups button lists the backups that hold it. For Valheim and The Sims 4 it also lists the copies the game keeps itself (Valheim's automatic world backups, The Sims 4's rollback copies of a slot), marked **Kept by the game**; restoring one puts it back over the save, and Mortar backs up the current saves first.
+Each save's backups button lists the backups that hold it. For Valheim, The Sims 4 and Vintage Story it also lists the copies the game keeps itself (Valheim's automatic world backups, The Sims 4's rollback copies of a slot), marked **Kept by the game**; restoring one puts it back over the save, and Mortar backs up the current saves first.
+
+## Screenshots
+
+The **Screenshots** tab shows the game's screenshots, newest first: the ones the game saves itself (Vintage Story, Stardew Valley, The Sims 4) and, for a Steam game, the ones Steam takes. Choose one to see it full size, and use the arrow keys to step through. **Open folder** shows where they are.
 
 ## Where your data lives
 

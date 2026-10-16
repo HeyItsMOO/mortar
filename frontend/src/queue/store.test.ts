@@ -90,6 +90,7 @@ beforeEach(() => {
         hasSaves: false,
         hasOptions: false,
         hasCaches: false,
+        hasScreenshots: false,
         startupSettings: false,
         loader: '',
         deploy: '',

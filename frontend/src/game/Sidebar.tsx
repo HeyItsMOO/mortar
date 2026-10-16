@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Gauge,
   House,
+  Images,
   List,
   type LucideIcon,
   Save,
@@ -15,6 +16,7 @@ import {
   TriangleAlert,
 } from 'lucide-react'
 import { type ReactNode, useEffect } from 'react'
+import { useGameInfo } from '../games/info.ts'
 import { PlayControl } from '../launch/PlayControl.tsx'
 import { useBadges } from '../mods/badges.ts'
 import { problemCount } from '../mods/lookup.ts'
@@ -49,6 +51,7 @@ const icons: Record<TabId, LucideIcon> = {
   mods: Table2,
   saves: Save,
   config: SlidersHorizontal,
+  screenshots: Images,
   browse: Search,
   problems: TriangleAlert,
   'load-order': List,
@@ -195,6 +198,7 @@ function useLabels(): Record<TabId, string> & Record<SidebarGroupId, string> {
     mods: t`Mods`,
     saves: t`Saves`,
     config: t`Config`,
+    screenshots: t`Screenshots`,
     browse: t`Browse`,
     problems: t`Problems`,
     'load-order': t`Load order`,
@@ -212,6 +216,7 @@ function Sections({ rail }: { rail: boolean }) {
   const { t } = useLingui()
   const labels = useLabels()
   const loader = useProfileLoader()
+  const gameInfo = useGameInfo()
   const current = useTab((s) => s.tab)
   const setTab = useTab((s) => s.setTab)
   const openId = useProfiles((s) => s.openId)
@@ -221,6 +226,7 @@ function Sections({ rail }: { rail: boolean }) {
     order: Boolean(loader?.order),
     console: Boolean(loader?.console),
     startup: Boolean(loader?.startup),
+    screenshots: Boolean(gameInfo?.hasScreenshots),
   }
   // A section saved from another game or loader is not there; fall back to Mods.
   const unavailable = loader !== undefined && tabUnavailable(current, caps)

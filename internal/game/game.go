@@ -18,14 +18,14 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/deps"
-	"github.com/Rethunk-Tech/mortar/internal/fsx"
-
 	_ "github.com/Rethunk-Tech/mortar/internal/framework/contentpatcher" // registers the frameworks LoaderRef reads
+	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/all"
 	"github.com/Rethunk-Tech/mortar/internal/nexus"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
+	"github.com/Rethunk-Tech/mortar/internal/shots"
 	"github.com/Rethunk-Tech/mortar/internal/steam"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
@@ -33,6 +33,7 @@ import (
 const (
 	artPrefix        = "/steam-art/"
 	installArtPrefix = "/install-art/"
+	screenshotPrefix = "/screenshot/"
 )
 
 // ArtURL is where the frontend loads Steam's hero art for appID from; ArtMiddleware serves it.
@@ -443,4 +444,45 @@ func lookupStoreHero(ctx context.Context, appID string) string {
 		return ""
 	}
 	return storeAssets + strings.Replace(a.Format, "${FILENAME}", file, 1)
+}
+
+// ScreenshotMiddleware serves /screenshot/<game>/<source>/<file>: a picture in one of the game's screenshot folders
+// (ScreenshotDirs), named by a bare file name.
+func ScreenshotMiddleware(home string, current func() settings.Settings) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			rest, ok := strings.CutPrefix(r.URL.Path, screenshotPrefix)
+			if !ok {
+				next.ServeHTTP(w, r)
+				return
+			}
+			parts := strings.SplitN(rest, "/", 3)
+			if r.Method != http.MethodGet || len(parts) != 3 || !shots.IsPicture(parts[2]) {
+				http.NotFound(w, r)
+				return
+			}
+			info, known := catalogGame(parts[0])
+			if !known {
+				http.NotFound(w, r)
+				return
+			}
+			dir, listed := ScreenshotDirs(home, current(), info.ID)[parts[1]]
+			if !listed {
+				http.NotFound(w, r)
+				return
+			}
+			f, err := fsx.Open(filepath.Join(dir, parts[2]))
+			if err != nil {
+				http.NotFound(w, r)
+				return
+			}
+			defer func() { _ = f.Close() }()
+			st, err := f.Stat()
+			if err != nil || !st.Mode().IsRegular() {
+				http.NotFound(w, r)
+				return
+			}
+			http.ServeContent(w, r, parts[2], st.ModTime(), f)
+		})
+	}
 }

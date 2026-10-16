@@ -267,6 +267,15 @@ func (s Steam) userConfigDir() (string, error) {
 	return filepath.Join(s.Root, "userdata", strconv.FormatUint(id64-steamID64Base, 10), "config"), nil
 }
 
+// ScreenshotsDir is the folder Steam keeps appID's screenshots in for the MostRecent account.
+func (s Steam) ScreenshotsDir(appID string) (string, error) {
+	cfg, err := s.userConfigDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(filepath.Dir(cfg), "760", "remote", appID, "screenshots"), nil
+}
+
 // LaunchOptions returns appID's launch options from the MostRecent account's localconfig.vdf, or "" when none are set.
 func (s Steam) LaunchOptions(appID string) (string, error) {
 	dir, err := s.userConfigDir()

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/Rethunk-Tech/mortar/internal/fsx"
-
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/framework"
+	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
+	"github.com/Rethunk-Tech/mortar/internal/shots"
 	"github.com/Rethunk-Tech/mortar/internal/steam"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
@@ -29,9 +29,11 @@ type GameInfo struct {
 	// HasOptions is true when the game has an options file a profile keeps its own copy of.
 	HasOptions bool `json:"hasOptions"`
 	// HasCaches is true when the catalog lists rebuildable cache files Mortar clears after a profile's mod set changes.
-	HasCaches bool   `json:"hasCaches"`
-	Loader    string `json:"loader"`
-	LoaderID  string `json:"loaderId"`
+	HasCaches bool `json:"hasCaches"`
+	// HasScreenshots is true when the game has a screenshots folder of its own or Steam keeps its screenshots.
+	HasScreenshots bool   `json:"hasScreenshots"`
+	Loader         string `json:"loader"`
+	LoaderID       string `json:"loaderId"`
 	// Loaders are all the loaders the catalog lists for the game, the first being the primary.
 	Loaders []LoaderRef `json:"loaders"`
 	Sources []string    `json:"sources"`
@@ -170,7 +172,7 @@ func List(home string, cur settings.Settings) ([]GameInfo, error) {
 	catalog := Catalog()
 	out := make([]GameInfo, 0, len(catalog))
 	for _, c := range catalog {
-		info := GameInfo{ID: c.ID, Name: c.Name, Deploy: c.Deploy, AppID: c.SteamAppID(), HasSaves: HasSaves(c.ID), StartupSettings: HasStartupSettings(c.ID), HasOptions: HasPath(c.ID, "options"), HasCaches: len(c.Caches) > 0, Installs: []Install{}, Sources: make([]string, len(c.Sources)), SourceKeys: map[string]string{}, Graphics: c.Graphics}
+		info := GameInfo{ID: c.ID, Name: c.Name, Deploy: c.Deploy, AppID: c.SteamAppID(), HasSaves: HasSaves(c.ID), StartupSettings: HasStartupSettings(c.ID), HasOptions: HasPath(c.ID, "options"), HasCaches: len(c.Caches) > 0, HasScreenshots: HasScreenshots(c.ID), Installs: []Install{}, Sources: make([]string, len(c.Sources)), SourceKeys: map[string]string{}, Graphics: c.Graphics}
 		info.Loader, info.LoaderID = c.Loaders[0].Name, c.Loaders[0].ID
 		for _, l := range c.Loaders {
 			info.Loaders = append(info.Loaders, loaderRef(c.ID, l))
@@ -287,4 +289,18 @@ func ValidateFolder(id, dir string) error {
 		return fmt.Errorf("%q is not an absolute path", dir)
 	}
 	return g.ValidInstall(dir)
+}
+
+// Screenshots lists the game's screenshots, newest first.
+func (s *Service) Screenshots(gameID string) (shots.Gallery, error) {
+	return shots.List(ScreenshotDirs(s.home, s.store.Get(), gameID))
+}
+
+// OpenScreenshotsFolder shows the folder the screenshots of source are in.
+func (s *Service) OpenScreenshotsFolder(gameID, source string) error {
+	dir, ok := ScreenshotDirs(s.home, s.store.Get(), gameID)[source]
+	if !ok {
+		return usererr.Wrap(usererr.NotFound, fmt.Errorf("%s has no %s screenshots folder", gameID, source))
+	}
+	return datadir.Open(dir)
 }

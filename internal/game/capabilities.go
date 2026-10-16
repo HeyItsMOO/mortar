@@ -8,10 +8,11 @@ import (
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
-
 	"github.com/Rethunk-Tech/mortar/internal/runtime"
 	"github.com/Rethunk-Tech/mortar/internal/saves"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
+	"github.com/Rethunk-Tech/mortar/internal/shots"
+	"github.com/Rethunk-Tech/mortar/internal/steam"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
@@ -23,7 +24,36 @@ const (
 	// client-main.log), and PathCrashLog the file it writes a crash report to.
 	PathLog      = "log"
 	PathCrashLog = "crashLog"
+	// PathScreenshots is the folder the game saves its own screenshots to.
+	PathScreenshots = "screenshots"
 )
+
+// HasScreenshots reports whether game id has a screenshots folder of its own or is a Steam game, whose screenshots
+// Steam keeps.
+func HasScreenshots(id string) bool {
+	info, ok := catalogGame(id)
+	return ok && (HasPath(id, PathScreenshots) || info.SteamAppID() != "")
+}
+
+// ScreenshotDirs is game id's screenshot folders by source: its own folder, and Steam's for a Steam game when Steam
+// is installed.
+func ScreenshotDirs(home string, s settings.Settings, id string) map[string]string {
+	out := map[string]string{}
+	if HasPath(id, PathScreenshots) {
+		if dir, err := PathFor(home, s, id, "", PathScreenshots); err == nil {
+			out[shots.SourceGame] = dir
+		}
+	}
+	info, _ := catalogGame(id)
+	if app := info.SteamAppID(); app != "" {
+		if st, status := steam.Locate(home); status == steam.Found {
+			if dir, err := st.ScreenshotsDir(app); err == nil {
+				out[shots.SourceSteam] = dir
+			}
+		}
+	}
+	return out
+}
 
 // HasPath reports whether the catalog gives game id a path for role: a game has a save folder or startup
 // preferences when its entry says where they live.

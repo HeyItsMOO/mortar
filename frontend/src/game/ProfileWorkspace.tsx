@@ -23,6 +23,9 @@ const ConsoleTab = lazy(() =>
 const LoadOrderTab = lazy(() =>
   import('../mods/LoadOrderTab.tsx').then((m) => ({ default: m.LoadOrderTab })),
 )
+const ScreenshotsTab = lazy(() =>
+  import('../screenshots/ScreenshotsTab.tsx').then((m) => ({ default: m.ScreenshotsTab })),
+)
 const ConfigTab = lazy(() =>
   import('../mods/typedConfig/ConfigTab.tsx').then((m) => ({ default: m.ConfigTab })),
 )
@@ -70,6 +73,7 @@ export function ProfileWorkspace({
           {tab === 'performance' ? <PerformanceTab game={game} /> : null}
           {tab === 'config' ? <ConfigTab profile={profile} game={game} /> : null}
           {tab === 'saves' ? <SavesTab profile={profile} game={game} /> : null}
+          {tab === 'screenshots' ? <ScreenshotsTab game={game} /> : null}
           {tab === 'load-order' ? (
             <LoadOrderTab key={`load-order-${profile.id}`} profile={profile} game={game} />
           ) : null}

@@ -336,6 +336,12 @@ func run() error {
 					}
 					return store.Get()
 				}),
+				game.ScreenshotMiddleware(home, func() settings.Settings {
+					if store == nil {
+						return settings.Defaults()
+					}
+					return store.Get()
+				}),
 				profile.CoverMiddleware(func() *profile.Store { return profiles }),
 				modpic.Middleware(func() *modpic.Cache { return pictures }),
 				backdrop.Middleware(func() settings.Settings {

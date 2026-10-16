@@ -71,6 +71,10 @@
       "marker": "Stardew Valley.dll",
       "metadata": ["smapi-updates", "smapi-compat", "stardew-dataset"],
       "paths": {
+        "screenshots": {
+          "windows": "{appData}/StardewValley/Screenshots",
+          "linux": "{xdgConfig}/StardewValley/Screenshots"
+        },
         "errorLogs": {
           "windows": "{appData}/StardewValley/ErrorLogs",
           "linux": "{xdgConfig}/StardewValley/ErrorLogs",
@@ -1967,6 +1971,10 @@
       "art": "assets/game/textures/gui/backgrounds/mainmenu1.png",
       "metadata": [],
       "paths": {
+        "screenshots": {
+          "windows": "{home}/Pictures/Vintagestory",
+          "linux": "{home}/Pictures/Vintagestory"
+        },
         "mods": {
           "windows": "{appData}/VintagestoryData/Mods",
           "linux": "{xdgConfig}/VintagestoryData/Mods"
@@ -2194,6 +2202,10 @@
       "metadata": [],
       "newProfileSeparateSaves": true,
       "paths": {
+        "screenshots": {
+          "windows": "{documents}/Electronic Arts/The Sims 4/Screenshots",
+          "linux": "{documents}/Electronic Arts/The Sims 4/Screenshots"
+        },
         "mods": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Mods",
           "linux": "{documents}/Electronic Arts/The Sims 4/Mods"

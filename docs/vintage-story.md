@@ -20,6 +20,7 @@ Catalog id `vintage-story`. Sold outside any store app by Anego Studios; native 
 - Mods write their settings to `ModConfig/<name>.json`. Each profile keeps its own copy in `<profile>/ModConfig` (seeded from the game's folder on its first launch), swapped in for each launch the way separate saves are (`savesiso`, journalled and recovered after a crash), so the catalog's `modConfig` path gives every profile its own settings. The Config page edits those files, matched to a mod when the file name holds the mod id its `modinfo.json` gives; the rest list under Other.
 - The client keeps each world's minimap in `Maps/<SavegameIdentifier>.db` (SaveGame field 34). The catalog's `saveLinked` (`Maps/{uuid}.db`) puts it in Mortar's backups beside `Saves/` and back with a restored world; restoring one of the game's own copies leaves it, as restoring that copy by hand does.
 - The game unzips each mod into `Cache/unpack` and recreates a missing folder there, so the catalog lists it under `caches` and the `cacheClearing` setting clears it once after a profile's mod set changes.
+- Screenshots go to `Pictures/Vintagestory` in the user's home on both systems (wiki); the catalog's `screenshots` path shows them on the Screenshots tab.
 - The game takes `--addModPath` and `--dataPath`; Mortar uses neither, since the folder deployer fills and empties the Mods folder for each launch.
 
 ## Sources

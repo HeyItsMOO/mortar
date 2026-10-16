@@ -41,6 +41,7 @@ test('listItems drops bundled SMAPI and the bridge and keeps disabled mods', () 
       hasSaves: false,
       hasOptions: false,
       hasCaches: false,
+      hasScreenshots: false,
       startupSettings: false,
       loader: '',
       loaderId: '',

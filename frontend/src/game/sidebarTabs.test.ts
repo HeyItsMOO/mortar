@@ -1,13 +1,13 @@
 import { expect, test } from 'bun:test'
 import { sidebarGroups, tabUnavailable } from './sidebarTabs.ts'
 
-const full = { order: true, console: true, startup: true }
-const none = { order: false, console: false, startup: false }
+const full = { order: true, console: true, startup: true, screenshots: true }
+const none = { order: false, console: false, startup: false, screenshots: false }
 
 test('the sidebar lists every group for a loader with all capabilities, in order', () => {
   const groups = sidebarGroups(full, { updates: 0, problems: 0 })
   expect(groups.map((g) => [g.id, g.entries.map((e) => e.id)])).toEqual([
-    ['library', ['mods', 'saves', 'config']],
+    ['library', ['mods', 'saves', 'config', 'screenshots']],
     ['get', ['browse']],
     ['health', ['problems', 'load-order', 'performance']],
     ['logs', ['console']],
@@ -49,6 +49,7 @@ test('a saved section the loader lacks is unavailable', () => {
   expect(tabUnavailable('load-order', none)).toBe(true)
   expect(tabUnavailable('console', none)).toBe(true)
   expect(tabUnavailable('performance', none)).toBe(true)
+  expect(tabUnavailable('screenshots', none)).toBe(true)
   expect(tabUnavailable('mods', none)).toBe(false)
   expect(tabUnavailable('console', full)).toBe(false)
 })
