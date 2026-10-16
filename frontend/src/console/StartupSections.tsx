@@ -7,7 +7,14 @@ import { space } from '../theme/density.ts'
 import { useDuration, useSmapiStartup } from './startupHooks.ts'
 import { type Finding, type PhaseId, phaseSegments } from './startupView.ts'
 
-const PCT = 100
+// Each phase's colour in the stacked bar and its legend.
+const PHASE_COLORS: Record<PhaseId, string> = {
+  smapi: 'text.disabled',
+  entry: 'primary.main',
+  content: 'info.main',
+  firstTicks: 'warning.main',
+  intro: 'success.main',
+}
 
 function Section({
   title,
@@ -132,39 +139,37 @@ function Phases({ report }: { report: StartupReport }) {
         intro: t`From the first scene to the main menu. Plugins' work in Start, coroutines and scene hooks lands here, not on the plugin, and so does any wait for a click, such as Lethal Company's Online or LAN choice.`,
       }
   const segments = phaseSegments(report.phases)
-  const total = segments.reduce((n, s) => n + s.ms, 0)
   return (
     <Section title={t`Where the time goes`}>
-      {segments.map((s) => (
-        <Tooltip key={s.id} title={help[s.id]}>
-          <Box
-            tabIndex={0}
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'minmax(120px, 200px) 80px 1fr',
-              alignItems: 'center',
-              columnGap: 2,
-              py: 0.5,
-              borderBottom: '1px solid var(--mortar-hairline-12)',
-            }}
-          >
-            <span>{labels[s.id]}</span>
-            <Box component="span" sx={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
-              {duration(s.ms)}
-            </Box>
-            <Box sx={{ height: 4, borderRadius: 2, bgcolor: 'var(--mortar-hairline-12)' }}>
+      <Box
+        aria-hidden={true}
+        sx={{ display: 'flex', height: 12, mt: 1, borderRadius: 1, overflow: 'hidden', gap: '2px' }}
+      >
+        {segments.map((s) => (
+          <Tooltip key={s.id} title={`${labels[s.id]}: ${duration(s.ms)}. ${help[s.id]}`}>
+            <Box sx={{ flexGrow: s.ms, bgcolor: PHASE_COLORS[s.id] }} />
+          </Tooltip>
+        ))}
+      </Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', columnGap: 2, rowGap: 0.5, mt: 0.5 }}>
+        {segments.map((s) => (
+          <Tooltip key={s.id} title={help[s.id]}>
+            <Box
+              tabIndex={0}
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.75, fontSize: 13 }}
+            >
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: PHASE_COLORS[s.id] }} />
+              <span>{labels[s.id]}</span>
               <Box
-                sx={{
-                  height: '100%',
-                  borderRadius: 2,
-                  bgcolor: 'primary.main',
-                  width: `${(s.ms / total) * PCT}%`,
-                }}
-              />
+                component="span"
+                sx={{ color: 'text.secondary', fontVariantNumeric: 'tabular-nums' }}
+              >
+                {duration(s.ms)}
+              </Box>
             </Box>
-          </Box>
-        </Tooltip>
-      ))}
+          </Tooltip>
+        ))}
+      </Box>
     </Section>
   )
 }
