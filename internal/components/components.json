@@ -1,5 +1,5 @@
 {
-  "serial": 1792187124,
+  "serial": 1792187753,
   "components": [
     {
       "game": "stardew",
@@ -3340,6 +3340,3395 @@
         {
           "id": "thunderstore",
           "key": "waterpark-simulator"
+        }
+      ]
+    },
+    {
+      "id": "project-arrhythmia",
+      "name": "Afterbeat",
+      "enabled": true,
+      "marker": "Project Arrhythmia.exe",
+      "r2modmanFolder": "ProjectArrhythmia",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "440310"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "project-arrhythmia"
+        }
+      ]
+    },
+    {
+      "id": "ale-and-tale-tavern",
+      "name": "Ale & Tale Tavern",
+      "enabled": true,
+      "marker": "Ale and Tale Tavern.exe",
+      "r2modmanFolder": "AleAndTaleTavern",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2683150"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ale-and-tale-tavern"
+        }
+      ]
+    },
+    {
+      "id": "aloft",
+      "name": "Aloft",
+      "enabled": true,
+      "marker": "Aloft.exe",
+      "r2modmanFolder": "Aloft",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1660080"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Aloft"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "aloft"
+        }
+      ]
+    },
+    {
+      "id": "another-crabs-treasure",
+      "name": "Another Crab's Treasure",
+      "enabled": true,
+      "marker": "AnotherCrabsTreasure.exe",
+      "r2modmanFolder": "AnotherCrabsTreasure",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1887840"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "another-crabs-treasure"
+        }
+      ]
+    },
+    {
+      "id": "atomicrops",
+      "name": "Atomicrops",
+      "enabled": true,
+      "marker": "Atomicrops.exe",
+      "r2modmanFolder": "Atomicrops",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "757320"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_x86"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "atomicrops"
+        }
+      ]
+    },
+    {
+      "id": "atrio-the-dark-wild",
+      "name": "Atrio: The Dark Wild",
+      "enabled": true,
+      "marker": "Atrio.exe",
+      "r2modmanFolder": "AtrioTheDarkWild",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1125390"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "atrio-the-dark-wild"
+        }
+      ]
+    },
+    {
+      "id": "bad-north",
+      "name": "Bad North",
+      "enabled": true,
+      "marker": "BadNorth.exe",
+      "r2modmanFolder": "BadNorth",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "688420"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "bad-north"
+        }
+      ]
+    },
+    {
+      "id": "below-the-stone",
+      "name": "Below the Stone",
+      "enabled": true,
+      "marker": "Below The Stone.exe",
+      "r2modmanFolder": "BelowTheStone",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1170230"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "below-the-stone"
+        }
+      ]
+    },
+    {
+      "id": "bendy-and-the-ink-machine",
+      "name": "Bendy and the Ink Machine",
+      "enabled": true,
+      "marker": "Bendy and the Ink Machine.exe",
+      "r2modmanFolder": "BendyAndTheInkMachine",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "622650"
+        },
+        "epic": {
+          "appNames": ["39700e23ec114d7581aedea23779ce2d"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "bendy-and-the-ink-machine"
+        }
+      ]
+    },
+    {
+      "id": "berry-bury-berry",
+      "name": "Berry Bury Berry",
+      "enabled": true,
+      "marker": "BerryBerryBerryBerryBerryBerryBerryBerryBerry.exe",
+      "r2modmanFolder": "BerryBuryBerry",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3370870"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "berry-bury-berry"
+        }
+      ]
+    },
+    {
+      "id": "book-of-travels",
+      "name": "Book of Travels",
+      "enabled": true,
+      "marker": "BookOfTravels.exe",
+      "r2modmanFolder": "BookOfTravels",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1152340"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "book-of-travels"
+        }
+      ]
+    },
+    {
+      "id": "carrier-deck",
+      "name": "Carrier Deck",
+      "enabled": true,
+      "marker": "CD.exe",
+      "r2modmanFolder": "CarrierDeck",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "580720"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "carrier-deck"
+        }
+      ]
+    },
+    {
+      "id": "cities-skylines-ii",
+      "name": "Cities: Skylines II",
+      "enabled": true,
+      "marker": "Cities2.exe",
+      "r2modmanFolder": "CitiesSkylines2",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "949230"
+        },
+        "xbox": {
+          "package": "ParadoxInteractive.CitiesSkylinesII-PCEdition"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cities-skylines-ii"
+        }
+      ]
+    },
+    {
+      "id": "clover-pit",
+      "name": "CloverPit",
+      "enabled": true,
+      "marker": "CloverPit.exe",
+      "r2modmanFolder": "CloverPit",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3314790"
+        },
+        "xbox": {
+          "package": "FutureFriendsGames.CloverPit"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "clover-pit"
+        }
+      ]
+    },
+    {
+      "id": "crashout-crew",
+      "name": "Crashout Crew",
+      "enabled": true,
+      "marker": "CrashoutCrew.exe",
+      "r2modmanFolder": "CrashoutCrew",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3583210"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "crashout-crew"
+        }
+      ]
+    },
+    {
+      "id": "crawl",
+      "name": "Crawl",
+      "enabled": true,
+      "marker": "Crawl.exe",
+      "r2modmanFolder": "Crawl",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "293780"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "crawl"
+        }
+      ]
+    },
+    {
+      "id": "crawlspace-2",
+      "name": "Crawlspace 2",
+      "enabled": true,
+      "marker": "VRFighter.exe",
+      "r2modmanFolder": "Crawlspace2",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2258670"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "crawlspace-2"
+        }
+      ]
+    },
+    {
+      "id": "crime-simulator",
+      "name": "Crime Simulator",
+      "enabled": true,
+      "marker": "Crime Simulator.exe",
+      "r2modmanFolder": "CrimeSimulator",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2737070"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "crime-simulator"
+        }
+      ]
+    },
+    {
+      "id": "cuphead",
+      "name": "Cuphead",
+      "enabled": true,
+      "marker": "Cuphead.exe",
+      "r2modmanFolder": "Cuphead",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "268910"
+        },
+        "xbox": {
+          "package": "StudioMDHR.20872A364DAA1"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cuphead"
+        }
+      ]
+    },
+    {
+      "id": "darkwater",
+      "name": "Darkwater",
+      "enabled": true,
+      "marker": "Darkwater.exe",
+      "r2modmanFolder": "Darkwater",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "619540"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "darkwater"
+        }
+      ]
+    },
+    {
+      "id": "depo",
+      "name": "DEPO : Death Epileptic Pixel Origins",
+      "enabled": true,
+      "marker": "DEPO.exe",
+      "r2modmanFolder": "DEPO",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1091320"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "depo"
+        }
+      ]
+    },
+    {
+      "id": "dredge",
+      "name": "Dredge",
+      "enabled": true,
+      "marker": "DREDGE.exe",
+      "r2modmanFolder": "Dredge",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1562430"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_x86"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "dredge"
+        }
+      ]
+    },
+    {
+      "id": "dyson-sphere-program",
+      "name": "Dyson Sphere Program",
+      "enabled": true,
+      "marker": "DSPGAME.exe",
+      "r2modmanFolder": "DysonSphereProgram",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1366540"
+        },
+        "xbox": {
+          "package": "GameraGame.DysonSphereProgram"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "dyson-sphere-program"
+        }
+      ]
+    },
+    {
+      "id": "easy-delivery-co",
+      "name": "Easy Delivery Co",
+      "enabled": true,
+      "marker": "EasyDeliveryCo.exe",
+      "r2modmanFolder": "EasyDeliveryCo",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3293010"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "easy-delivery-co"
+        }
+      ]
+    },
+    {
+      "id": "electoral-carnage",
+      "name": "Electoral Carnage",
+      "enabled": true,
+      "marker": "Electoral Carnage.exe",
+      "r2modmanFolder": "ElectoralCarnage",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3706810"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "electoral-carnage"
+        }
+      ]
+    },
+    {
+      "id": "ena-dream-bbq",
+      "name": "ENA: Dream BBQ",
+      "enabled": true,
+      "marker": "ENA-4-DreamBBQ.exe",
+      "r2modmanFolder": "ENADreamBBQ",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2134320"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ena-dream-bbq"
+        }
+      ]
+    },
+    {
+      "id": "five-nights-at-freddys-into-the-pit",
+      "name": "Five Nights at Freddy's: Into the Pit",
+      "enabled": true,
+      "marker": "Five Nights at Freddy's Into the Pit.exe",
+      "r2modmanFolder": "FiveNightsAtFreddysIntoThePit",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2638370"
+        },
+        "epic": {
+          "appNames": ["a0fbc3eb950341e290ae20a7d02cc501"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "five-nights-at-freddys-into-the-pit"
+        }
+      ]
+    },
+    {
+      "id": "for-the-king",
+      "name": "For The King",
+      "enabled": true,
+      "marker": "FTK.exe",
+      "r2modmanFolder": "ForTheKing",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "527230"
+        },
+        "epic": {
+          "appNames": ["Discus"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_ForTheKing"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "for-the-king"
+        }
+      ]
+    },
+    {
+      "id": "garfield-kart-furious-racing",
+      "name": "Garfield Kart - Furious Racing",
+      "enabled": true,
+      "marker": "Garfield Kart Furious Racing.exe",
+      "r2modmanFolder": "GarfieldKartFuriousRacing",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1085510"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "garfield-kart-furious-racing"
+        }
+      ]
+    },
+    {
+      "id": "getting-over-it",
+      "name": "Getting Over It with Bennett Foddy",
+      "enabled": true,
+      "marker": "GettingOverIt.exe",
+      "r2modmanFolder": "GettingOverItWithBennettFoddy",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "240720"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "getting-over-it"
+        }
+      ]
+    },
+    {
+      "id": "gladio-mori",
+      "name": "Gladio Mori",
+      "enabled": true,
+      "marker": "Gladio Mori.exe",
+      "r2modmanFolder": "GladioMori",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2689120"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gladio-mori"
+        }
+      ]
+    },
+    {
+      "id": "gloomwood",
+      "name": "Gloomwood",
+      "enabled": true,
+      "marker": "Gloomwood.exe",
+      "r2modmanFolder": "Gloomwood",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1150760"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gloomwood"
+        }
+      ]
+    },
+    {
+      "id": "goblin-buster",
+      "name": "Goblin Buster: Incremental Tower Defense",
+      "enabled": true,
+      "marker": "Goblin Buster.exe",
+      "r2modmanFolder": "GoblinBusterIncrementalTowerDefense",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2482250"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "goblin-buster"
+        }
+      ]
+    },
+    {
+      "id": "goblin-cleanup",
+      "name": "Goblin Cleanup",
+      "enabled": true,
+      "marker": "Goblin Cleanup.exe",
+      "r2modmanFolder": "GoblinCleanup",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2748340"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "GoblinCleanupModding-BepInExPack_GoblinCleanup"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "goblin-cleanup"
+        }
+      ]
+    },
+    {
+      "id": "goodbye-volcano-high",
+      "name": "Goodbye Volcano High",
+      "enabled": true,
+      "marker": "Goodbye Volcano High.exe",
+      "r2modmanFolder": "GoodbyeVolcanoHigh",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1310330"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "goodbye-volcano-high"
+        }
+      ]
+    },
+    {
+      "id": "graveyard-keeper-2",
+      "name": "Graveyard Keeper 2",
+      "enabled": true,
+      "marker": "GraveyardKeeper2.exe",
+      "r2modmanFolder": "GraveyardKeeper2",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4358690"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "graveyard-keeper-2"
+        }
+      ]
+    },
+    {
+      "id": "green-hell-vr",
+      "name": "Green Hell VR",
+      "enabled": true,
+      "marker": "GHVR.exe",
+      "r2modmanFolder": "GreenHellVR",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1782330"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "PCVR_Modders-BepInExPack_GHVR"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "green-hell-vr"
+        }
+      ]
+    },
+    {
+      "id": "grey-hack",
+      "name": "Grey Hack",
+      "enabled": true,
+      "marker": "Grey Hack.exe",
+      "r2modmanFolder": "GreyHack",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "605230"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "grey-hack"
+        }
+      ]
+    },
+    {
+      "id": "guilty-as-sock",
+      "name": "Guilty as Sock!",
+      "enabled": true,
+      "marker": "StandaloneWindows64.exe",
+      "r2modmanFolder": "GuiltyasSock",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3400930"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "guilty-as-sock"
+        }
+      ]
+    },
+    {
+      "id": "hard-time-3",
+      "name": "Hard Time III",
+      "enabled": true,
+      "marker": "Hard Time III.exe",
+      "r2modmanFolder": "HardTime3",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3009850"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "hard-time-3"
+        }
+      ]
+    },
+    {
+      "id": "holdfast-nations-at-war",
+      "name": "Holdfast: Nations At War",
+      "enabled": true,
+      "marker": "Holdfast NaW.exe",
+      "r2modmanFolder": "HoldfastNationsAtWar",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "589290"
+        },
+        "xbox": {
+          "package": "AnvilGameStudios.HoldfastNationsAtWar"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "HoldfastModding-BepInExPack_Holdfast"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "holdfast-nations-at-war"
+        }
+      ]
+    },
+    {
+      "id": "hollow-knight-silksong",
+      "name": "Hollow Knight: Silksong",
+      "enabled": true,
+      "marker": "Hollow Knight Silksong.exe",
+      "r2modmanFolder": "HollowKnightSilksong",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1030300"
+        },
+        "xbox": {
+          "package": "TeamCherry.HollowKnightSilksong"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Silksong"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "hollow-knight-silksong"
+        }
+      ]
+    },
+    {
+      "id": "hot-lava",
+      "name": "Hot Lava",
+      "enabled": true,
+      "marker": "hotlava.exe",
+      "r2modmanFolder": "HotLava",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "382560"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "hot-lava"
+        }
+      ]
+    },
+    {
+      "id": "house-of-legacy",
+      "name": "House of Legacy",
+      "enabled": true,
+      "marker": "House of Legacy.exe",
+      "r2modmanFolder": "HouseOfLegacy",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2503770"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "house-of-legacy"
+        }
+      ]
+    },
+    {
+      "id": "hotds",
+      "name": "House of the Dying Sun",
+      "enabled": true,
+      "marker": "dyingsun.exe",
+      "r2modmanFolder": "HOTDS",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "283160"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_HOTDS"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "hotds"
+        }
+      ]
+    },
+    {
+      "id": "human-fall-flat",
+      "name": "Human Fall Flat",
+      "enabled": true,
+      "marker": "Human.exe",
+      "r2modmanFolder": "HumanFallFlat",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "477160"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_HumanFallFlat"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "human-fall-flat"
+        }
+      ]
+    },
+    {
+      "id": "i-am-your-beast",
+      "name": "I Am Your Beast",
+      "enabled": true,
+      "marker": "I Am Your Beast.exe",
+      "r2modmanFolder": "IAmYourBeast",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1876590"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "i-am-your-beast"
+        }
+      ]
+    },
+    {
+      "id": "last-pirates-die-together",
+      "name": "Last Pirates: Die Together",
+      "enabled": true,
+      "marker": "Last Pirates Die Together.exe",
+      "r2modmanFolder": "LastPiratesDieTogether",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4317790"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "last-pirates-die-together"
+        }
+      ]
+    },
+    {
+      "id": "last-train-outta-wormtown",
+      "name": "Last Train Outta' Wormtown",
+      "enabled": true,
+      "marker": "Last Train Out Of WormTown.exe",
+      "r2modmanFolder": "LastTrainOuttaWormtown",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2318480"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx_Wormtown-BepInExPack"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "last-train-outta-wormtown"
+        }
+      ]
+    },
+    {
+      "id": "lazy-witchs-factory",
+      "name": "Lazy Witch's Factory",
+      "enabled": true,
+      "marker": "LazyWitchsFactory.exe",
+      "r2modmanFolder": "LazyWitchsFactory",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3971650"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lazy-witchs-factory"
+        }
+      ]
+    },
+    {
+      "id": "lens-island",
+      "name": "Len's Island",
+      "enabled": true,
+      "marker": "Len's Island.exe",
+      "r2modmanFolder": "LensIsland",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1335830"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_LensIsland"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lens-island"
+        }
+      ]
+    },
+    {
+      "id": "logic-world",
+      "name": "Logic World",
+      "enabled": true,
+      "marker": "Logic_World.exe",
+      "r2modmanFolder": "LogicWorld",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1054340"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "logic-world"
+        }
+      ]
+    },
+    {
+      "id": "lootun",
+      "name": "Lootun",
+      "enabled": true,
+      "marker": "Lootun.exe",
+      "r2modmanFolder": "Lootun",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1960270"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lootun"
+        }
+      ]
+    },
+    {
+      "id": "lost-skies-ic",
+      "name": "Lost Skies Island Creator",
+      "enabled": true,
+      "marker": "IslandCreator.exe",
+      "r2modmanFolder": "LostSkiesIslandCreator",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2102670"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lost-skies-ic"
+        }
+      ]
+    },
+    {
+      "id": "lucky-shot",
+      "name": "Lucky Shot",
+      "enabled": true,
+      "marker": "LuckyShot.exe",
+      "r2modmanFolder": "LuckyShot",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4092940"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lucky-shot"
+        }
+      ]
+    },
+    {
+      "id": "lycans",
+      "name": "Lycans",
+      "enabled": true,
+      "marker": "Lycans.exe",
+      "r2modmanFolder": "Lycans",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2596100"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lycans"
+        }
+      ]
+    },
+    {
+      "id": "mechanica",
+      "name": "Mechanica",
+      "enabled": true,
+      "marker": "Mechanica.exe",
+      "r2modmanFolder": "Mechanica",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1226990"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "Zinal001-BepInExPack_MECHANICA"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "mechanica"
+        }
+      ]
+    },
+    {
+      "id": "moonlighter",
+      "name": "Moonlighter",
+      "enabled": true,
+      "marker": "Moonlighter.exe",
+      "r2modmanFolder": "Moonlighter",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "606150"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "moonlighter"
+        }
+      ]
+    },
+    {
+      "id": "my-dream-setup",
+      "name": "My Dream Setup",
+      "enabled": true,
+      "marker": "MDS.exe",
+      "r2modmanFolder": "MyDreamSetup",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2200780"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "my-dream-setup"
+        }
+      ]
+    },
+    {
+      "id": "necropolis",
+      "name": "Necropolis",
+      "enabled": true,
+      "marker": "Necropolis.exe",
+      "r2modmanFolder": "Necropolis",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "384490"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Necropolis"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "necropolis"
+        }
+      ]
+    },
+    {
+      "id": "nuclear-option",
+      "name": "Nuclear Option",
+      "enabled": true,
+      "marker": "NuclearOption.exe",
+      "r2modmanFolder": "NuclearOption",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2168680"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "nuclear-option"
+        }
+      ]
+    },
+    {
+      "id": "on-together",
+      "name": "On-Together: Virtual Co-Working",
+      "enabled": true,
+      "marker": "On-Together.exe",
+      "r2modmanFolder": "OnTogetherVirtualCoWorking",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3707400"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "on-together"
+        }
+      ]
+    },
+    {
+      "id": "ostranauts",
+      "name": "Ostranauts",
+      "enabled": true,
+      "marker": "Ostranauts.exe",
+      "r2modmanFolder": "Ostranauts",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1022980"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Ostranauts"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ostranauts"
+        }
+      ]
+    },
+    {
+      "id": "paquerette-down-the-bunburrows",
+      "name": "Paquerette Down the Bunburrows",
+      "enabled": true,
+      "marker": "Paquerette Down the Bunburrows.exe",
+      "r2modmanFolder": "PaqueretteDownTheBunburrows",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1628610"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "paquerette-down-the-bunburrows"
+        }
+      ]
+    },
+    {
+      "id": "paralives",
+      "name": "Paralives",
+      "enabled": true,
+      "marker": "Paralives.exe",
+      "r2modmanFolder": "Paralives",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1118520"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "paralives"
+        }
+      ]
+    },
+    {
+      "id": "peaks-of-yore",
+      "name": "Peaks of Yore",
+      "enabled": true,
+      "marker": "Peaks of Yore.exe",
+      "r2modmanFolder": "PeaksOfYore",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2236070"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "peaks-of-yore"
+        }
+      ]
+    },
+    {
+      "id": "peglin",
+      "name": "Peglin",
+      "enabled": true,
+      "marker": "Peglin.exe",
+      "r2modmanFolder": "Peglin",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1296610"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Peglin"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "peglin"
+        }
+      ]
+    },
+    {
+      "id": "pigface",
+      "name": "PIGFACE",
+      "enabled": true,
+      "marker": "Pigface.exe",
+      "r2modmanFolder": "PIGFACE",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3341650"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "pigface"
+        }
+      ]
+    },
+    {
+      "id": "pikuniku",
+      "name": "Pikuniku",
+      "enabled": true,
+      "marker": "Pikuniku.exe",
+      "r2modmanFolder": "Pikuniku",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "572890"
+        },
+        "epic": {
+          "appNames": ["48619f5656da446abccb727b78cda644"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "pikuniku"
+        }
+      ]
+    },
+    {
+      "id": "plasma",
+      "name": "Plasma",
+      "enabled": true,
+      "marker": "Plasma.exe",
+      "r2modmanFolder": "Plasma",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1409160"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "plasma"
+        }
+      ]
+    },
+    {
+      "id": "pulsar-lost-colony",
+      "name": "Pulsar: Lost Colony",
+      "enabled": true,
+      "marker": "PULSAR_LostColony.exe",
+      "r2modmanFolder": "PulsarLostColony",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "252870"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "pulsar-lost-colony"
+        }
+      ]
+    },
+    {
+      "id": "raft",
+      "name": "Raft",
+      "enabled": true,
+      "marker": "Raft.exe",
+      "r2modmanFolder": "Raft",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "648800"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "raft"
+        }
+      ]
+    },
+    {
+      "id": "ravenfield",
+      "name": "Ravenfield",
+      "enabled": true,
+      "marker": "ravenfield.exe",
+      "r2modmanFolder": "Ravenfield",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "636480"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Ravenfield"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ravenfield"
+        }
+      ]
+    },
+    {
+      "id": "re-legend",
+      "name": "Re:Legend",
+      "enabled": true,
+      "marker": "ReLegend.exe",
+      "r2modmanFolder": "ReLegend",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "823950"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "re-legend"
+        }
+      ]
+    },
+    {
+      "id": "return-of-the-obra-dinn",
+      "name": "Return of the Obra Dinn",
+      "enabled": true,
+      "marker": "ObraDinn.exe",
+      "r2modmanFolder": "ObraDinn",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "653530"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "return-of-the-obra-dinn"
+        }
+      ]
+    },
+    {
+      "id": "rhythm-doctor",
+      "name": "Rhythm Doctor",
+      "enabled": true,
+      "marker": "Rhythm Doctor.exe",
+      "r2modmanFolder": "RhythmDoctor",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "774181"
+        },
+        "xbox": {
+          "package": "KyleLabriolaInc.RhythmDoctor"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "rhythm-doctor"
+        }
+      ]
+    },
+    {
+      "id": "screw-drivers",
+      "name": "Screw Drivers",
+      "enabled": true,
+      "marker": "Screw Drivers.exe",
+      "r2modmanFolder": "ScrewDrivers",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1279510"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "screw-drivers"
+        }
+      ]
+    },
+    {
+      "id": "shapez-2",
+      "name": "Shapez 2",
+      "enabled": true,
+      "marker": "shapez 2.exe",
+      "r2modmanFolder": "Shapez2",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2162800"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "shapez-2"
+        }
+      ]
+    },
+    {
+      "id": "slipstream-rogue-space",
+      "name": "Slipstream: Rogue Space",
+      "enabled": true,
+      "marker": "Slipstream_Win.exe",
+      "r2modmanFolder": "SlipstreamRogueSpace",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2765860"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "slipstream-rogue-space"
+        }
+      ]
+    },
+    {
+      "id": "jump-scare-mansion",
+      "name": "Spooky's Jump Scare Mansion: HD Renovation",
+      "enabled": true,
+      "marker": "SpookyUnity.exe",
+      "r2modmanFolder": "SpookysJumpScareMansionHdRenovation",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "577690"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "jump-scare-mansion"
+        }
+      ]
+    },
+    {
+      "id": "starsand",
+      "name": "Starsand",
+      "enabled": true,
+      "marker": "Starsand.exe",
+      "r2modmanFolder": "Starsand",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1380220"
+        },
+        "epic": {
+          "appNames": ["a774278c0813447c96a76b053cbf73ff"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Starsand"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "starsand"
+        }
+      ]
+    },
+    {
+      "id": "stolen-realm",
+      "name": "Stolen Realm",
+      "enabled": true,
+      "marker": "Stolen Realm.exe",
+      "r2modmanFolder": "StolenRealm",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1330000"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "stolen-realm"
+        }
+      ]
+    },
+    {
+      "id": "stonewards",
+      "name": "Stonewards",
+      "enabled": true,
+      "marker": "Stonewards.exe",
+      "r2modmanFolder": "Stonewards",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4502710"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "stonewards"
+        }
+      ]
+    },
+    {
+      "id": "subterranauts",
+      "name": "Subterranauts",
+      "enabled": true,
+      "marker": "Subterranauts.exe",
+      "r2modmanFolder": "Subterranauts",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3075800"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "subterranauts"
+        }
+      ]
+    },
+    {
+      "id": "subterror",
+      "name": "Subterror",
+      "enabled": true,
+      "marker": "Subterror.exe",
+      "r2modmanFolder": "Subterror",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2846060"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "subterror"
+        }
+      ]
+    },
+    {
+      "id": "sulfur",
+      "name": "SULFUR",
+      "enabled": true,
+      "marker": "Sulfur.exe",
+      "r2modmanFolder": "SULFUR",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2124120"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "sulfur"
+        }
+      ]
+    },
+    {
+      "id": "sunkenland",
+      "name": "Sunkenland",
+      "enabled": true,
+      "marker": "Sunkenland.exe",
+      "r2modmanFolder": "Sunkenland",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2080690"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "SunkenlandModding-BepInExPack_Sunkenland"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "sunkenland"
+        }
+      ]
+    },
+    {
+      "id": "super-fantasy-kingdom",
+      "name": "Super Fantasy Kingdom",
+      "enabled": true,
+      "marker": "Super Fantasy Kingdom.exe",
+      "r2modmanFolder": "SuperFantasyKingdom",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2289750"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "super-fantasy-kingdom"
+        }
+      ]
+    },
+    {
+      "id": "super-psycho-baseball",
+      "name": "Super Psycho Baseball",
+      "enabled": true,
+      "marker": "SuperPsychoBaseball.exe",
+      "r2modmanFolder": "SuperPsychoBaseball",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2216960"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "super-psycho-baseball"
+        }
+      ]
+    },
+    {
+      "id": "tcg-card-shop-simulator",
+      "name": "TCG Card Shop Simulator",
+      "enabled": true,
+      "marker": "Card Shop Simulator.exe",
+      "r2modmanFolder": "TCGCardShopSimulator",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3070070"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "tcg-card-shop-simulator"
+        }
+      ]
+    },
+    {
+      "id": "the-farmer-was-replaced",
+      "name": "The Farmer Was Replaced",
+      "enabled": true,
+      "marker": "TheFarmerWasReplaced.exe",
+      "r2modmanFolder": "TheFarmerWasReplaced",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2060160"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "the-farmer-was-replaced"
+        }
+      ]
+    },
+    {
+      "id": "the-lab",
+      "name": "The Lab",
+      "enabled": true,
+      "marker": "TheLab.exe",
+      "r2modmanFolder": "TheLab",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "450390"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "the-lab"
+        }
+      ]
+    },
+    {
+      "id": "the-message-from-deep-space",
+      "name": "The Message from Deep Space",
+      "enabled": true,
+      "marker": "The Message From Deep Space.exe",
+      "r2modmanFolder": "TheMessageFromDeepSpace",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4080030"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "the-message-from-deep-space"
+        }
+      ]
+    },
+    {
+      "id": "the-planet-crafter",
+      "name": "The Planet Crafter",
+      "enabled": true,
+      "marker": "Planet Crafter.exe",
+      "r2modmanFolder": "ThePlanetCrafter",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1284190"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "the-planet-crafter"
+        }
+      ]
+    },
+    {
+      "id": "thronefall",
+      "name": "Thronefall",
+      "enabled": true,
+      "marker": "Thronefall.exe",
+      "r2modmanFolder": "Thronefall",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2239150"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_Thronefall"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "thronefall"
+        }
+      ]
+    },
+    {
+      "id": "unfair-flips",
+      "name": "Unfair Flips",
+      "enabled": true,
+      "marker": "Unfair Flips.exe",
+      "r2modmanFolder": "UnfairFlips",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3925760"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "unfair-flips"
+        }
+      ]
+    },
+    {
+      "id": "vertigo-2",
+      "name": "Vertigo 2",
+      "enabled": true,
+      "marker": "vertigo2.exe",
+      "r2modmanFolder": "Vertigo2",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "843390"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "vertigo-2"
+        }
+      ]
+    },
+    {
+      "id": "west-of-loathing",
+      "name": "West of Loathing",
+      "enabled": true,
+      "marker": "West of Loathing.exe",
+      "r2modmanFolder": "WestofLoathing",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "597220"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "west-of-loathing"
+        }
+      ]
+    },
+    {
+      "id": "whisper-of-the-house",
+      "name": "Whisper of the House",
+      "enabled": true,
+      "marker": "Whisper of the House.exe",
+      "r2modmanFolder": "WhisperOfTheHouse",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2589500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "WhisperOfTheHouse_Modding-BepInExPack_WhisperOfTheHouse"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "whisper-of-the-house"
+        }
+      ]
+    },
+    {
+      "id": "wizard-of-legend",
+      "name": "Wizard of Legend",
+      "enabled": true,
+      "marker": "WizardOfLegend.exe",
+      "r2modmanFolder": "WizardOfLegend",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "445980"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "Modding_Council-BepInExPack_of_Legend"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "wizard-of-legend"
+        }
+      ]
+    },
+    {
+      "id": "wizard-with-a-gun",
+      "name": "Wizard with a Gun",
+      "enabled": true,
+      "marker": "wizardwithagun.exe",
+      "r2modmanFolder": "WizardWithAGun",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1150530"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "wizard-with-a-gun"
+        }
+      ]
+    },
+    {
+      "id": "wobbly-life",
+      "name": "Wobbly Life",
+      "enabled": true,
+      "marker": "Wobbly Life.exe",
+      "r2modmanFolder": "WobblyLife",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1211020"
+        },
+        "xbox": {
+          "package": "10192RubberBandGames.WobblyLife"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "wobbly-life"
+        }
+      ]
+    },
+    {
+      "id": "word-play",
+      "name": "Word Play",
+      "enabled": true,
+      "marker": "Word Play.exe",
+      "r2modmanFolder": "WordPlay",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3586660"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "word-play"
+        }
+      ]
+    },
+    {
+      "id": "zort",
+      "name": "Zort",
+      "enabled": true,
+      "marker": "Zort.exe",
+      "r2modmanFolder": "Zort",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3121110"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "zort"
         }
       ]
     },
