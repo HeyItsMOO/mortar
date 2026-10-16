@@ -128,3 +128,11 @@ func InferImplicit(requires map[string][]string) map[string]bool {
 	}
 	return out
 }
+
+// SetIntentOffered records that the player answered the offer to mark a profile's older libraries implicit.
+func (s *Store) SetIntentOffered(game, id string) (Profile, error) {
+	return s.update(game, id, func(p *Profile, _ string) error {
+		p.IntentOffered = true
+		return nil
+	})
+}

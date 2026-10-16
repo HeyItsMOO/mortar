@@ -17,6 +17,8 @@ type Findings struct {
 	Settings       []SettingHint
 	Cleanup        []Cleanup
 	Redundant      []Redundant
+	// Supporting are the keys of mods that only supply assets for other mods (a pack that only loads tilesheets).
+	Supporting []string
 }
 
 // Framework is a framework mod's driver, keyed by the framework's mod id.

@@ -458,6 +458,11 @@ func (s *Service) SetPinnedMany(game, id string, keys []string, pinned bool, pin
 	return s.store.SetPinnedMany(game, id, keys, pinned, pinReason)
 }
 
+// SetIntentOffered records that the player answered the offer to mark the profile's older libraries implicit.
+func (s *Service) SetIntentOffered(game, id string) (Profile, error) {
+	return s.store.SetIntentOffered(game, id)
+}
+
 // SetImplicitMany marks each named entry implicit (brought in for another mod) or explicit (asked for).
 func (s *Service) SetImplicitMany(game, id string, keys []string, implicit bool) (Profile, error) {
 	return s.store.SetImplicitMany(game, id, keys, implicit)

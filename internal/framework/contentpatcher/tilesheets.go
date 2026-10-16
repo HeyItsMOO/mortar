@@ -74,38 +74,48 @@ type tilesheetUse struct {
 	names   []string
 }
 
+// isTilesheetPack is a Content Patcher pack whose every patch loads new map or tilesheet assets.
+func isTilesheetPack(im framework.Mod) bool {
+	if !isContentPatcherPack(im) {
+		return false
+	}
+	pack := readContentPack(im)
+	if len(pack.patches) == 0 {
+		return false
+	}
+	named := false
+	for _, patch := range pack.patches {
+		targets := splitTargets(patch.target)
+		// Only a pack that loads new sheets can go unused: editing an existing sheet retextures
+		// something the game always draws.
+		if patch.kind != "load" || len(targets) == 0 {
+			return false
+		}
+		for _, target := range targets {
+			if !isTilesheetTarget(target) {
+				return false
+			}
+			named = named || normalizeAsset(target) != ""
+		}
+	}
+	return named
+}
+
+// tilesheetPackKeys are the keys of the packs that only load tilesheets, switched on or off.
+func tilesheetPackKeys(mods []framework.Mod) []string {
+	var out []string
+	for _, im := range mods {
+		if isTilesheetPack(im) && !slices.Contains(out, im.Key) {
+			out = append(out, im.Key)
+		}
+	}
+	return out
+}
+
 func unusedTilesheetPacks(mods []framework.Mod) []framework.Cleanup {
 	var candidates []framework.Mod
 	for _, im := range mods {
-		if !im.Enabled || !isContentPatcherPack(im) {
-			continue
-		}
-		pack := readContentPack(im)
-		if len(pack.patches) == 0 {
-			continue
-		}
-		assets := map[string]bool{}
-		eligible := true
-		for _, patch := range pack.patches {
-			targets := splitTargets(patch.target)
-			// Only a pack that loads new sheets can go unused: editing an existing sheet retextures
-			// something the game always draws.
-			if patch.kind != "load" || len(targets) == 0 {
-				eligible = false
-				break
-			}
-			for _, target := range targets {
-				if !isTilesheetTarget(target) {
-					eligible = false
-					break
-				}
-				addAssetNames(assets, target)
-			}
-			if !eligible {
-				break
-			}
-		}
-		if eligible && len(assets) > 0 {
+		if im.Enabled && isTilesheetPack(im) {
 			candidates = append(candidates, im)
 		}
 	}

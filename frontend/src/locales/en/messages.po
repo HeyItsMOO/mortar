@@ -1332,7 +1332,7 @@ msgstr "Sort: most downloaded"
 msgid "Scan command"
 msgstr "Scan command"
 
-#: src/mods/ModsTab.tsx:133
+#: src/mods/ModsTab.tsx:134
 msgid "Show all mods"
 msgstr "Show all mods"
 
@@ -1348,6 +1348,10 @@ msgstr "slow load {ms}"
 #: src/lan/IncomingPrompt.tsx:262
 msgid "Update an existing profile…"
 msgstr "Update an existing profile…"
+
+#: src/mods/LegacyReasonsCallout.tsx:55
+msgid "Could not save that answer"
+msgstr "Could not save that answer"
 
 #: src/mods/DuplicateDialog.tsx:35
 msgid "Bundled with SMAPI"
@@ -1596,6 +1600,7 @@ msgstr "Update check skipped"
 msgid "Skip this version"
 msgstr "Skip this version"
 
+#: src/mods/LegacyReasonsCallout.tsx:69
 #: src/mods/ModMenu.tsx:171
 #: src/mods/SelectionBarActions.tsx:90
 msgid "Mark implicit"
@@ -1880,7 +1885,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/lan/SendPanel.tsx:194
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:394
-#: src/mods/ModsTab.tsx:108
+#: src/mods/ModsTab.tsx:109
 #: src/mods/typedConfig/ConfigPane.tsx:386
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
@@ -3948,7 +3953,7 @@ msgstr "Console"
 msgid "{both, plural, one {# mod is in both} other {# mods are in both}}"
 msgstr "{both, plural, one {# mod is in both} other {# mods are in both}}"
 
-#: src/mods/ModsTab.tsx:135
+#: src/mods/ModsTab.tsx:136
 msgid "Try a different search or filter."
 msgstr "Try a different search or filter."
 
@@ -9219,7 +9224,7 @@ msgstr "Launchers"
 msgid "Could not save the template"
 msgstr "Could not save the template"
 
-#: src/mods/ModsTab.tsx:106
+#: src/mods/ModsTab.tsx:107
 msgid "Could not read the mods: {loadError}"
 msgstr "Could not read the mods: {loadError}"
 
@@ -9890,6 +9895,11 @@ msgstr "Open the page of {name}"
 #: src/saves/saveName.ts:54
 msgid "Exploration"
 msgstr "Exploration"
+
+#. placeholder {0}: keys.length
+#: src/mods/LegacyReasonsCallout.tsx:59
+msgid "{0, plural, one {# library or tilesheet pack was added before Mortar kept install reasons} other {# libraries and tilesheet packs were added before Mortar kept install reasons}}"
+msgstr "{0, plural, one {# library or tilesheet pack was added before Mortar kept install reasons} other {# libraries and tilesheet packs were added before Mortar kept install reasons}}"
 
 #: src/settings/sections/GameSettings.tsx:261
 #: src/shell/FlatpakGrant.tsx:87
@@ -12662,7 +12672,7 @@ msgstr "Could not use that image"
 msgid "{0}'s {1} is {2}; it can match {installed} instead."
 msgstr "{0}'s {1} is {2}; it can match {installed} instead."
 
-#: src/mods/ModsTab.tsx:114
+#: src/mods/ModsTab.tsx:115
 msgid "Loading mods"
 msgstr "Loading mods"
 
@@ -12952,6 +12962,10 @@ msgstr "{0, plural, one {# warning} other {# warnings}}"
 #: src/console/LogActions.tsx:112
 msgid "Jump to first error"
 msgstr "Jump to first error"
+
+#: src/mods/LegacyReasonsCallout.tsx:66
+msgid "Keep explicit"
+msgstr "Keep explicit"
 
 #. placeholder {0}: listNames(added)
 #: src/mods/updateReview/Row.tsx:85
@@ -13933,7 +13947,7 @@ msgstr "imported from a .mortar file"
 msgid "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 msgstr "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 
-#: src/mods/ModsTab.tsx:280
+#: src/mods/ModsTab.tsx:281
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
@@ -14630,7 +14644,7 @@ msgstr "Personal API key"
 msgid "Template deleted"
 msgstr "Template deleted"
 
-#: src/mods/ModsTab.tsx:132
+#: src/mods/ModsTab.tsx:133
 #: src/mods/typedConfig/ConfigTab.tsx:363
 msgid "No mods match"
 msgstr "No mods match"

@@ -165,17 +165,19 @@ type Result struct {
 	AssetConflicts []framework.AssetConflict `json:"assetConflicts"`
 	Settings       []framework.SettingHint   `json:"settings"`
 	Cleanup        []framework.Cleanup       `json:"cleanup,omitempty"`
-	Compat         []Compat                  `json:"compat,omitempty"`
-	Redundant      []framework.Redundant     `json:"redundant,omitempty"`
-	RunErrors      []RunError                `json:"runErrors"`
-	LoadFailures   []LoadFailure             `json:"loadFailures,omitempty"`
-	PluginClashes  []PluginClash             `json:"pluginClashes,omitempty"`
-	Deprecated     []DeprecatedPackage       `json:"deprecated,omitempty"`
-	Drift          []profile.Drift           `json:"drift,omitempty"`
-	Damaged        []Damaged                 `json:"damaged,omitempty"`
-	Dismissed      []DismissedProblem        `json:"dismissed"`
-	Unknown        bool                      `json:"unknown"`
-	Timings        []CheckTiming             `json:"timings,omitempty"`
+	// Supporting are the keys of mods that only supply assets for others; it counts as no problem.
+	Supporting    []string              `json:"supporting,omitempty"`
+	Compat        []Compat              `json:"compat,omitempty"`
+	Redundant     []framework.Redundant `json:"redundant,omitempty"`
+	RunErrors     []RunError            `json:"runErrors"`
+	LoadFailures  []LoadFailure         `json:"loadFailures,omitempty"`
+	PluginClashes []PluginClash         `json:"pluginClashes,omitempty"`
+	Deprecated    []DeprecatedPackage   `json:"deprecated,omitempty"`
+	Drift         []profile.Drift       `json:"drift,omitempty"`
+	Damaged       []Damaged             `json:"damaged,omitempty"`
+	Dismissed     []DismissedProblem    `json:"dismissed"`
+	Unknown       bool                  `json:"unknown"`
+	Timings       []CheckTiming         `json:"timings,omitempty"`
 }
 
 // CheckTiming is one check family's duration and item count from the last Problems run for a profile.
@@ -252,6 +254,7 @@ func Check(ctx context.Context, m Meta, env Environment, mods []framework.Mod, r
 	r.Duplicates = duplicatesWithNexus(ctx, m, env.VersionScheme, enabled)
 	r.Settings = found.Settings
 	r.Cleanup = cleanupHints(mods, found.Cleanup)
+	r.Supporting = found.Supporting
 	broken, unknown := brokenMods(ctx, m, env, enabled)
 	broken = append(broken, dependencyCycles(enabled)...)
 	r.Broken = broken
@@ -276,6 +279,7 @@ func runFrameworks(in framework.Input) (framework.Findings, []CheckTiming) {
 		all.Settings = append(all.Settings, got.Settings...)
 		all.Cleanup = append(all.Cleanup, got.Cleanup...)
 		all.Redundant = append(all.Redundant, got.Redundant...)
+		all.Supporting = append(all.Supporting, got.Supporting...)
 	}
 	return all, timings
 }

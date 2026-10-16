@@ -19,6 +19,7 @@ import { useCustomCategories } from './customCategories.ts'
 import { useDetail } from './detail.ts'
 import { EndorsePrompt } from './EndorsePrompt.tsx'
 import { customCategoryById, profileTags } from './group.ts'
+import { LegacyReasonsCallout } from './LegacyReasonsCallout.tsx'
 import { LockedNote } from './LockedNote.tsx'
 import { useLastRun } from './lastRun.ts'
 import { entryOf, modId, modStatusProblem, updateFor } from './lookup.ts'
@@ -283,6 +284,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
       <UpdateBar />
       <OldFilesCallouts profile={profile} />
       <NewFoldersCallout profile={profile} />
+      <LegacyReasonsCallout profile={profile} mods={mods} />
       <Toolbar
         query={query}
         onQuery={(value) => setQuery(profile.id, value)}

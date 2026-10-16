@@ -43,6 +43,9 @@ func TestSetImplicitMany(t *testing.T) {
 	t.Parallel()
 	s := newStore(t)
 	p := pinTestProfile(t, s)
+	if p.IntentSince.IsZero() {
+		t.Fatal("a new profile keeps reasons from its creation, but has no IntentSince")
+	}
 	p, err := s.SetImplicitMany("stardew", p.ID, []string{"nexus-1-1"}, true)
 	if err != nil || !p.Entries[0].Implicit {
 		t.Fatalf("mark implicit = %+v, %v", p.Entries, err)
@@ -63,6 +66,9 @@ func TestSetImplicitMany(t *testing.T) {
 	}
 	if _, err := s.SetImplicitMany("stardew", p.ID, []string{"smapi"}, false); err == nil {
 		t.Fatal("marked Mortar's own entry explicit")
+	}
+	if p, err = s.SetIntentOffered("stardew", p.ID); err != nil || !p.IntentOffered {
+		t.Fatalf("answering the offer = %v, %v", p.IntentOffered, err)
 	}
 }
 

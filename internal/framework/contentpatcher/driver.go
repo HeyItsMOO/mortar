@@ -48,6 +48,7 @@ func (Driver) Analyze(in framework.Input) framework.Findings {
 		Settings:       append(compatibilitySettings(in.Enabled, run), conflictSettings...),
 		Redundant:      shadowed,
 		Cleanup:        append(cleanup, recolourAddons(in.All)...),
+		Supporting:     tilesheetPackKeys(in.All),
 	}
 	files, complete := reads()
 	if complete {

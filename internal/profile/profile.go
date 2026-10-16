@@ -217,6 +217,11 @@ type Profile struct {
 	Created       time.Time `json:"created"`
 	Updated       time.Time `json:"updated"`
 	Entries       []Entry   `json:"entries"`
+	// IntentSince is when Mortar began keeping install reasons for the profile: its creation, or the first change to
+	// a profile made before then. Entries added earlier have no reason of their own.
+	IntentSince time.Time `json:"intentSince,omitzero"`
+	// IntentOffered records that the player answered the one-time offer to mark those entries' libraries implicit.
+	IntentOffered bool `json:"intentOffered,omitempty"`
 	// LastChange is the id of the history event the change that returned this profile recorded, so a notification
 	// about that change can stand in for the event. Only set on a returned value; never written to disk.
 	LastChange string `json:"lastChange,omitempty"`
@@ -630,7 +635,7 @@ func (s *Store) create(game, name string) (Profile, error) {
 		return Profile{}, err
 	}
 	now := time.Now().UTC().Truncate(time.Second)
-	p := Profile{ID: id, Name: name, Order: len(existing), Created: now, Updated: now, Entries: []Entry{}}
+	p := Profile{ID: id, Name: name, Order: len(existing), Created: now, Updated: now, Entries: []Entry{}, IntentSince: now}
 	if info, ok := components.Game(game); ok {
 		p.SeparateSaves = info.NewProfileSeparateSaves
 	}
@@ -706,6 +711,9 @@ func (s *Store) updateLockedCommit(game, id string, fn func(p *Profile, dir stri
 	}
 	before := cloneEntries(p.Entries)
 	stateBefore := stateOf(p)
+	if p.IntentSince.IsZero() {
+		p.IntentSince = time.Now().UTC()
+	}
 	if err := fn(&p, dir); err != nil {
 		s.historyKind, s.historyNote, s.historyConfigs = "", HistoryEvent{}, nil
 		return Profile{}, err
