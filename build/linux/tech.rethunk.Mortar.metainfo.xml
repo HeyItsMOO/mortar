@@ -54,6 +54,7 @@
       <description>
         <p>New</p>
         <ul>
+          <li>What's new groups each release's changes by area, with a New or Fixed label on every line</li>
           <li>Browse cards can show downloads, endorsements, likes or stars, file size, version and last updated under the summary: tick the ones you want under Show › Card details</li>
         </ul>
         <p>Fixed</p>

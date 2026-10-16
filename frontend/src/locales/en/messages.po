@@ -318,6 +318,10 @@ msgstr "Edit notes"
 msgid "Snapshot diff"
 msgstr "Snapshot diff"
 
+#: src/updates/WhatsNewDialog.tsx:143
+msgid "No notes for this release."
+msgstr "No notes for this release."
+
 #: src/profiles/HealthDialog.tsx:56
 msgid "{name} is missing from the store"
 msgstr "{name} is missing from the store"
@@ -2041,7 +2045,7 @@ msgstr "Grant Flatpak Steam access?"
 msgid "Could not add the launch preset"
 msgstr "Could not add the launch preset"
 
-#: src/updates/WhatsNewDialog.tsx:139
+#: src/updates/WhatsNewDialog.tsx:218
 msgid "Got it"
 msgstr "Got it"
 
@@ -4035,6 +4039,8 @@ msgstr "Not checked yet."
 #: src/mods/typedConfig/ConfigTab.tsx:53
 #: src/mods/typedConfig/ConfigTab.tsx:98
 #: src/mods/typedConfig/ConfigTab.tsx:218
+#: src/updates/WhatsNewDialog.tsx:73
+#: src/updates/WhatsNewDialog.tsx:87
 msgid "Changed"
 msgstr "Changed"
 
@@ -5689,7 +5695,7 @@ msgstr "Created · updated"
 msgid "Report a bug…"
 msgstr "Report a bug…"
 
-#: src/updates/WhatsNewDialog.tsx:133
+#: src/updates/WhatsNewDialog.tsx:212
 msgid "Read the release notes on GitHub"
 msgstr "Read the release notes on GitHub"
 
@@ -5724,6 +5730,11 @@ msgstr "Warn"
 #: src/commandPalette/paletteLabels.ts:25
 msgid "Switch to Home"
 msgstr "Switch to Home"
+
+#. placeholder {0}: count('fixed')
+#: src/updates/WhatsNewDialog.tsx:138
+msgid "{0, plural, one {# fix} other {# fixes}}"
+msgstr "{0, plural, one {# fix} other {# fixes}}"
 
 #: src/mods/columnLabel.ts:18
 #: src/mods/ModDependencyTree.tsx:198
@@ -5967,8 +5978,10 @@ msgstr "Profiles: {holderNames}"
 msgid "Start minimised to tray"
 msgstr "Start minimised to tray"
 
+#. placeholder {0}: count('changed')
 #. placeholder {0}: usage.events
 #: src/settings/sections/DataHistory.tsx:50
+#: src/updates/WhatsNewDialog.tsx:137
 msgid "{0, plural, one {# change} other {# changes}}"
 msgstr "{0, plural, one {# change} other {# changes}}"
 
@@ -7055,6 +7068,8 @@ msgstr "Press Play to start."
 #: src/mods/ChangelogDialog.tsx:36
 #: src/mods/NewSince.tsx:14
 #: src/toasts/HistoryButton.tsx:165
+#: src/updates/WhatsNewDialog.tsx:73
+#: src/updates/WhatsNewDialog.tsx:87
 msgid "New"
 msgstr "New"
 
@@ -11709,6 +11724,11 @@ msgstr "Checking the mods for problems…"
 msgid "Dismiss {name} for this save"
 msgstr "Dismiss {name} for this save"
 
+#: src/updates/WhatsNewDialog.tsx:73
+#: src/updates/WhatsNewDialog.tsx:87
+msgid "Fixed"
+msgstr "Fixed"
+
 #: src/sync/SyncOffers.tsx:66
 msgid "Keep mine"
 msgstr "Keep mine"
@@ -13041,7 +13061,7 @@ msgid "Back up saves before Play"
 msgstr "Back up saves before Play"
 
 #. placeholder {0}: version ?? ''
-#: src/updates/WhatsNewDialog.tsx:112
+#: src/updates/WhatsNewDialog.tsx:200
 msgid "What's new in Mortar {0}"
 msgstr "What's new in Mortar {0}"
 
@@ -14139,6 +14159,11 @@ msgstr "Could not change {0}"
 #: src/share/ImportPreview.tsx:234
 msgid "Leave out"
 msgstr "Leave out"
+
+#. placeholder {0}: count('new')
+#: src/updates/WhatsNewDialog.tsx:136
+msgid "{0, plural, one {# new feature} other {# new features}}"
+msgstr "{0, plural, one {# new feature} other {# new features}}"
 
 #: src/game/Home.tsx:104
 #: src/saves/SavesTab.tsx:65

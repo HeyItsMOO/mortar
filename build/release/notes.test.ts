@@ -82,6 +82,18 @@ describe('notes.sh', () => {
     expect(out).not.toContain('Back up')
   })
 
+  test('area headings in a release notes file group the release page and stay out of the AppStream description', () => {
+    const file = join(repo, 'v0.2.0.md')
+    writeFileSync(
+      file,
+      '## Fixed\n\n### Saves\n\n- Slots list once\n\n### Games\n\n- Profiles start\n',
+    )
+    const out = run([script, 'v0.2.0', 'HEAD'], { NOTES_FILE: file })
+    expect(out).toContain(
+      '## Fixed\n\n### Saves\n\n- Slots list once\n\n### Games\n\n- Profiles start\n',
+    )
+  })
+
   test('writes an escaped AppStream description into the release element', () => {
     const file = join(repo, 'metainfo.xml')
     writeFileSync(

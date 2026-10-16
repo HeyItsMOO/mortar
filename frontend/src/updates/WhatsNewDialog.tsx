@@ -1,15 +1,30 @@
+import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Link,
   Typography,
 } from '@mui/material'
+import {
+  Download,
+  Gamepad2,
+  type LucideIcon,
+  RefreshCw,
+  Rocket,
+  Save,
+  Search,
+  Settings2,
+  Sparkles,
+  TriangleAlert,
+  Users,
+  Wrench,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { ReleaseNotes as ReleaseNotesResult } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/updatesvc/models.ts'
 import {
@@ -19,71 +34,144 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/updatesvc/service.ts'
 import { openPage } from '../mods/menu.ts'
 import { PageLink } from '../share/CollectionNotes.tsx'
-import { parseInstructions } from '../share/instructions.ts'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
+import { groupNotes, type NoteArea, type NoteKind, type NoteLine } from './releaseNotes.ts'
 import { showWhatsNew, useWhatsNew } from './whatsNew.ts'
-
-const HEADING = /^#+\s*/
 
 const BULLET = /^[-*]\s+/
 
-function NoteParts({ line }: { line: ReturnType<typeof parseInstructions>[number] }) {
-  const first = line.parts[0]?.text ?? ''
-  const strip = [HEADING, BULLET].find((marker) => marker.test(first))
+// Areas the release notes name (the same ones `bun run changelog` groups by, plus Games and Saves); any other title
+// gets the sparkle.
+const AREA_ICONS: Record<string, LucideIcon> = {
+  Games: Gamepad2,
+  'Mods and browsing': Search,
+  'Profiles and sharing': Users,
+  'Launching and loaders': Rocket,
+  'Problems and diagnostics': TriangleAlert,
+  'Downloads and updates': Download,
+  Saves: Save,
+  'Interface and settings': Settings2,
+}
+const KIND_ICONS: Record<NoteKind, LucideIcon> = {
+  new: Sparkles,
+  changed: RefreshCw,
+  fixed: Wrench,
+}
+
+function LineText({ line }: { line: NoteLine }) {
   return line.parts.map((part, i) => (
     <PageLink
       key={part.at}
-      part={i === 0 && strip ? { ...part, text: part.text.replace(strip, '') } : part}
+      part={i === 0 ? { ...part, text: part.text.replace(BULLET, '') } : part}
     />
   ))
 }
 
-type Line = ReturnType<typeof parseInstructions>[number]
-
-const isBullet = (line: Line) => BULLET.test(line.parts[0]?.text ?? '')
-
-function NoteLine({ line }: { line: Line }) {
-  const heading = HEADING.test(line.parts[0]?.text ?? '')
-  const bullet = isBullet(line)
-  let component: 'h3' | 'li' | 'p' = 'p'
-  if (heading) {
-    component = 'h3'
-  } else if (bullet) {
-    component = 'li'
-  }
+function KindChip({ kind }: { kind: NoteKind }) {
+  const { t } = useLingui()
+  const label = { new: t`New`, changed: t`Changed`, fixed: t`Fixed` }[kind]
   return (
-    <Typography
-      component={component}
-      variant={heading ? 'subtitle2' : 'body2'}
-      sx={{ m: 0, minHeight: '1.4em', color: heading ? 'text.primary' : 'var(--mortar-ink-sec)' }}
-    >
-      <NoteParts line={line} />
-    </Typography>
+    <Chip
+      size="small"
+      label={label}
+      color={kind === 'new' ? 'primary' : 'default'}
+      variant={kind === 'new' ? 'filled' : 'outlined'}
+      sx={{ height: 20, fontSize: 11, fontWeight: 600, flexShrink: 0, minWidth: 64, mt: '1px' }}
+    />
   )
 }
 
-// Consecutive bullet lines share one list; every other line stands alone.
-function Notes({ text }: { text: string }) {
-  const groups: Line[][] = []
-  for (const line of parseInstructions(text)) {
-    const last = groups.at(-1)
-    if (last && isBullet(line) && isBullet(last[0] as Line)) {
-      last.push(line)
-    } else {
-      groups.push([line])
-    }
-  }
-  return groups.map((group) =>
-    isBullet(group[0] as Line) ? (
-      <Box key={group[0]?.at} component="ul" sx={{ m: 0, pl: space.pad }}>
-        {group.map((line) => (
-          <NoteLine key={line.at} line={line} />
+function AreaSection({ area }: { area: NoteArea }) {
+  const { t } = useLingui()
+  const kindTitles: Record<NoteKind, string> = { new: t`New`, changed: t`Changed`, fixed: t`Fixed` }
+  const title = area.byKind ? kindTitles[area.title as NoteKind] : area.title
+  const Icon = area.byKind
+    ? KIND_ICONS[area.title as NoteKind]
+    : (AREA_ICONS[area.title] ?? Sparkles)
+  return (
+    <Box component="section" sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
+        <Icon size={16} aria-hidden={true} />
+        <Typography
+          component="h3"
+          sx={{
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+          }}
+        >
+          {title}
+        </Typography>
+        <Typography sx={{ fontSize: 12 }}>{area.items.length}</Typography>
+      </Box>
+      <Box
+        component="ul"
+        sx={{ m: 0, p: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 1 }}
+      >
+        {area.items.map((item) => (
+          <Box
+            component="li"
+            key={item.line.at}
+            sx={{ display: 'flex', gap: 1.25, alignItems: 'flex-start' }}
+          >
+            {area.byKind ? null : <KindChip kind={item.kind} />}
+            <Typography sx={{ fontSize: 14, lineHeight: 1.45, color: 'var(--mortar-ink-sec)' }}>
+              <LineText line={item.line} />
+            </Typography>
+          </Box>
         ))}
       </Box>
-    ) : (
-      <NoteLine key={group[0]?.at} line={group[0] as Line} />
-    ),
+    </Box>
+  )
+}
+
+function Notes({ text }: { text: string }) {
+  const { t } = useLingui()
+  const { areas, extra } = groupNotes(text)
+  const items = areas.flatMap((a) => a.items)
+  const count = (kind: NoteKind) => items.filter((i) => i.kind === kind).length
+  const summary = [
+    count('new') ? plural(count('new'), { one: '# new feature', other: '# new features' }) : '',
+    count('changed') ? plural(count('changed'), { one: '# change', other: '# changes' }) : '',
+    count('fixed') ? plural(count('fixed'), { one: '# fix', other: '# fixes' }) : '',
+  ].filter(Boolean)
+  if (areas.length === 0) {
+    return (
+      <Typography sx={{ whiteSpace: 'pre-wrap', fontSize: 14, color: 'var(--mortar-ink-sec)' }}>
+        {text || t`No notes for this release.`}
+      </Typography>
+    )
+  }
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: space.pad }}>
+      {summary.length > 0 ? (
+        <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+          {summary.join(' · ')}
+        </Typography>
+      ) : null}
+      {areas.map((area) => (
+        <AreaSection key={`${area.byKind}:${area.title}`} area={area} />
+      ))}
+      {extra.length > 0 ? (
+        <Box
+          sx={{
+            borderTop: '1px solid var(--mortar-hairline-faint)',
+            pt: 1.5,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0.5,
+          }}
+        >
+          {extra.map((line) => (
+            <Typography key={line.at} sx={{ fontSize: 12, color: 'text.secondary' }}>
+              <LineText line={line} />
+            </Typography>
+          ))}
+        </Box>
+      ) : null}
+    </Box>
   )
 }
 
@@ -108,24 +196,15 @@ export function WhatsNewDialog() {
     AckWhatsNew().catch(reportUnexpected)
   }
   return (
-    <Dialog open={shown !== null} onClose={close} slotProps={{ paper: { sx: { maxWidth: 520 } } }}>
+    <Dialog open={shown !== null} onClose={close} fullWidth={true} maxWidth="md">
       <DialogTitle>{t`What's new in Mortar ${version ?? ''}`}</DialogTitle>
       <DialogContent>
-        {release?.available ? (
-          <Notes text={release.notes} />
-        ) : (
-          <DialogContentText
-            component="div"
-            sx={{ whiteSpace: 'pre-wrap', fontSize: 14, color: 'var(--mortar-ink-sec)' }}
-          >
-            {shown?.fallback}
-          </DialogContentText>
-        )}
+        <Notes text={release?.available ? release.notes : (shown?.fallback ?? '')} />
         {release && !release.available ? (
           <Link
             component="button"
             type="button"
-            sx={{ mt: 1, fontSize: 13 }}
+            sx={{ mt: 1.5, fontSize: 13 }}
             onClick={() =>
               openPage(`https://github.com/Rethunk-Tech/mortar/releases/tag/v${version}`)
             }

@@ -37,10 +37,12 @@ new="$(lines feat)"
 changed=""
 fixed="$(lines 'fix|perf')"
 # A release with notes written for players (build/release/notes/TAG.md: "## New", "## Changed" and "## Fixed" lists)
-# uses them whole instead of commit subjects, which cannot rank a large release's headlines first.
+# uses them whole instead of commit subjects, which cannot rank a large release's headlines first. A "### Area"
+# heading inside a list groups the lines under it: the release page keeps it (the app's What's new groups by it) and
+# the AppStream description, which has no sub-headings, leaves it out.
 curated="${NOTES_FILE:-$(dirname "$0")/notes/$tag.md}"
 if [ -f "$curated" ]; then
-  section() { awk -v want="## $1" '/^## /{ on = ($0 == want); next } on && /^- /{ print substr($0, 3) }' "$curated"; }
+  section() { awk -v want="## $1" '/^## /{ on = ($0 == want); next } on && /^### / { print "\x1e" substr($0, 5); next } on && /^- /{ print substr($0, 3) }' "$curated"; }
   new="$(section New)"
   changed="$(section Changed)"
   fixed="$(section Fixed)"
@@ -73,7 +75,7 @@ markdown() {
   local title body
   for title in New Changed Fixed; do
     body="$(group "$title")"
-    [ -n "$body" ] && printf '## %s\n\n%s\n\n' "$title" "$(capped "$body" | sed 's/^/- /')"
+    [ -n "$body" ] && printf '## %s\n\n%s\n\n' "$title" "$(capped "$body" | sed -e '/^\x1e/!s/^/- /' -e 's/^\x1e\(.*\)/\n### \1\n/')"
   done
   if [ -z "$new$changed$fixed" ]; then
     printf 'No user-facing changes.\n\n'
@@ -91,7 +93,7 @@ description() { # the AppStream <description>, indented for the <release> elemen
     body="$(group "$title")"
     if [ -n "$body" ]; then
       printf '        <p>%s</p>\n        <ul>\n' "$title"
-      capped "$body" | xml_escape | sed 's|.*|          <li>&</li>|'
+      capped "$body" | grep -v $'^\x1e' | xml_escape | sed 's|.*|          <li>&</li>|'
       printf '        </ul>\n'
     fi
   done
@@ -102,7 +104,7 @@ description() { # the AppStream <description>, indented for the <release> elemen
 }
 
 if [ -z "$metainfo" ]; then
-  markdown
+  markdown | cat -s
   exit 0
 fi
 
