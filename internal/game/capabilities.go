@@ -2,6 +2,10 @@ package game
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 
@@ -49,7 +53,34 @@ func PathIn(home string, s settings.Settings, id, pin string, t components.PathT
 	if err != nil {
 		return "", err
 	}
-	return runtime.Resolve(in.runtime(g, home), t)
+	p, err := runtime.Resolve(in.runtime(g, home), t)
+	if err != nil {
+		return "", err
+	}
+	return localizedFolder(p, g.FolderNames), nil
+}
+
+// localizedFolder swaps the first folder of p that names lists other names for to whichever of them exists and changed
+// last, so a game that names its folder after its language is found in the language in use.
+// ponytail: "changed last" is the folder's own time, which moves when the game adds or removes a file in it.
+func localizedFolder(p string, names map[string][]string) string {
+	sep := string(filepath.Separator)
+	parts := strings.Split(p, sep)
+	for i, part := range parts {
+		alts, ok := names[part]
+		if !ok || i == 0 {
+			continue
+		}
+		parent := strings.Join(parts[:i], sep)
+		var newest time.Time
+		for _, name := range append([]string{part}, alts...) {
+			if fi, err := os.Stat(parent + sep + name); err == nil && fi.IsDir() && fi.ModTime().After(newest) {
+				parts[i], newest = name, fi.ModTime()
+			}
+		}
+		return strings.Join(parts, sep)
+	}
+	return p
 }
 
 // SavesDir is game id's saves folder for the install pin names (the selected install when empty).

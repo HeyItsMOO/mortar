@@ -2105,6 +2105,7 @@
       },
       "saveFiles": ["Slot_*.save"],
       "saveCopies": ["{name}.ver?"],
+      "folderNames": { "The Sims 4": ["Die Sims 4", "Les Sims 4", "Los Sims 4", "De Sims 4"] },
       "requiredSettings": [
         {
           "path": "options",
