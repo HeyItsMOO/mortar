@@ -38,6 +38,21 @@ func Game(id string) (GameInfo, bool) {
 	return bundledGame(id)
 }
 
+// HasComponent reports whether the catalog in use (else the bundled one) has the game's component of that name, which
+// is what Mortar installs for a loader's companion.
+func HasComponent(game, name string) bool {
+	if c := active.Load(); c != nil {
+		_, ok := c.Component(game, name)
+		return ok
+	}
+	m, err := BundledManifest()
+	if err != nil {
+		return false
+	}
+	_, ok := findComponent(m.Components, game, name)
+	return ok
+}
+
 // GameByNexusDomain is the catalog game whose Nexus source key (the v1 URL segment) is domain; the browser extension
 // names games by that domain.
 func GameByNexusDomain(domain string) (GameInfo, bool) {

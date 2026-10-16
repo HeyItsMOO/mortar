@@ -85,9 +85,10 @@ func loaderRef(gameID string, l components.GameLoader) LoaderRef {
 		_, ref.Order = d.(loader.WithOrder)
 		_, ref.Console = d.(loader.WithLogs)
 		ref.Console = ref.Console || HasPath(gameID, PathLog)
-		// Commands, startup timing, in-game performance, the overlay and intro skipping all run in the bridge, so a
-		// game whose catalog installs none (Cat Mail Co.'s IL2CPP BepInEx) offers none of them.
-		bridge := l.Companion != ""
+		// Commands, startup timing, in-game performance, the overlay and intro skipping all run in the bridge, which
+		// Mortar installs only from the game's own bridge component, so a game without one (Cat Mail Co.'s IL2CPP
+		// BepInEx, or a BepInEx 5 game whose bridge is not built) offers none of them.
+		bridge := l.Companion != "" && components.HasComponent(gameID, l.Companion)
 		_, hasConsole := d.(loader.Console)
 		_, hasCompanion := d.(loader.WithCompanion)
 		ref.Commands = bridge && hasConsole && hasCompanion
