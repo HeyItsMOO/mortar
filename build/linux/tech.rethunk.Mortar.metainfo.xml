@@ -62,6 +62,7 @@
         <ul>
           <li>Restoring a save no longer leaves the current save's leftover files beside it</li>
           <li>Mortar finds your Steam account on current Steam clients</li>
+          <li>On Linux laptops with an NVIDIA graphics card beside an AMD or Intel one, Mortar no longer renders at a crawl</li>
           <li>Menu items no longer say "Stop the game to change mods." when no game is running</li>
         </ul>
       </description>
