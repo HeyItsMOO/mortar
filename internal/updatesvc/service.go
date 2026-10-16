@@ -233,7 +233,9 @@ func (s *Service) Restart(ctx context.Context) error {
 	return s.u.Restart(ctx)
 }
 
-// WhatsNew returns release notes when this build is newer than the last one Mortar ran; offline returns empty.
+// WhatsNew returns release notes when this build is newer than the last one Mortar ran. Notes that cannot be fetched
+// (offline, or a build whose release is not published yet) return empty and keep the last run, so a later start asks
+// again; that is not an error to show.
 func (s *Service) WhatsNew(ctx context.Context) (WhatsNew, error) {
 	var none WhatsNew
 	if s.info.Off != "" || s.dir == "" {
@@ -252,7 +254,8 @@ func (s *Service) WhatsNew(ctx context.Context) (WhatsNew, error) {
 	}
 	notes, noteErr := s.releaseNotes(ctx, cur)
 	if noteErr != nil {
-		return none, noteErr
+		log.Printf("what's new in %s: %v", cur, noteErr)
+		return none, nil
 	}
 	return WhatsNew{Version: cur, Notes: notes}, nil
 }

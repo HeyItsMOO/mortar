@@ -12,7 +12,7 @@ func TestWhatsNewOfflineKeepsLastRun(t *testing.T) {
 	}
 	s := &Service{info: Info{Version: "1.1.0"}, dir: dir}
 	got, err := s.WhatsNew(context.Background())
-	if err == nil || got.Version != "" {
+	if err != nil || got.Version != "" {
 		t.Fatalf("offline skip: %+v, %v", got, err)
 	}
 	last, err := readLastRun(dir)
