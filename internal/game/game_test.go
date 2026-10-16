@@ -248,6 +248,10 @@ func TestLoaderRefsSayWhichTabsApply(t *testing.T) {
 	if b := caps["lethal-company"]; !b.Order || !b.Console || b.Commands || !b.Startup || b.Assets || b.Frameworks || !b.Overlay || !b.IntroSkip {
 		t.Fatalf("BepInEx = %+v", b)
 	}
+	// Cat Mail Co.'s IL2CPP BepInEx runs without the bridge, so nothing that needs it is offered.
+	if c := caps["cat-mail-co"]; !c.Order || !c.Console || c.Commands || c.Startup || c.Perf || c.Overlay || c.IntroSkip {
+		t.Fatalf("BepInEx without a bridge = %+v", c)
+	}
 	if _, err := opener.Web(caps["lethal-company"].Paste); err != nil || caps["stardew"].Paste != "" {
 		t.Fatalf("paste sites: BepInEx %q (%v), SMAPI %q", caps["lethal-company"].Paste, err, caps["stardew"].Paste)
 	}

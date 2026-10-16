@@ -108,6 +108,64 @@ func TestAnOlderPackOverANewerOneKeepsNoneOfItsFiles(t *testing.T) {
 	}
 }
 
+// An IL2CPP pack (BepInEx 6, BepInExPack_IL2CPP) starts through its own entry assembly on the .NET runtime it ships,
+// which Doorstop finds only through absolute paths, since it reads relative ones from the game folder.
+func TestAnIL2CPPPackStartsThroughItsRuntime(t *testing.T) {
+	p := filepath.Join(t.TempDir(), "pack.zip")
+	var buf bytes.Buffer
+	zw := zip.NewWriter(&buf)
+	for name, body := range map[string]string{
+		"manifest.json":                                     `{"name":"BepInExPack_IL2CPP","version_number":"6.0.788"}`,
+		"BepInExPack/winhttp.dll":                           "proxy",
+		"BepInExPack/.doorstop_version":                     "4.5.0",
+		"BepInExPack/doorstop_config.ini":                   "[General]\r\ntarget_assembly = BepInEx\\core\\BepInEx.Unity.IL2CPP.dll\r\n[Il2Cpp]\r\ncoreclr_path = dotnet\\coreclr.dll\r\ncorlib_dir = dotnet\r\n",
+		"BepInExPack/BepInEx/core/BepInEx.Unity.IL2CPP.dll": "entry",
+		"BepInExPack/dotnet/coreclr.dll":                    "clr",
+	} {
+		w, _ := zw.Create(name)
+		_, _ = w.Write([]byte(body))
+	}
+	if err := zw.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := fsx.WriteFile(p, buf.Bytes(), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	ctx := t.Context()
+	tgt := loader.Target{ProfileDir: filepath.Join(t.TempDir(), "profile")}
+	if ver, err := (Loader{}).Install(ctx, tgt, loader.Package{Archive: p}, nil); err != nil || ver != "6.0.788" {
+		t.Fatalf("install %q %v", ver, err)
+	}
+	if st, _ := (Loader{}).Status(tgt); !st.Installed {
+		t.Fatal("an IL2CPP pack reads as not installed")
+	}
+	plan := launchplan.New(launchplan.ModeProfile)
+	if err := (Loader{}).Contribute(ctx, plan, loader.ProfileView{Dir: tgt.ProfileDir, Runtime: "proton"}); err != nil {
+		t.Fatal(err)
+	}
+	z := `Z:` + strings.ReplaceAll(filepath.ToSlash(tgt.ProfileDir), "/", `\`)
+	want := "--doorstop-enabled true --doorstop-target-assembly " + z + `\BepInEx\core\BepInEx.Unity.IL2CPP.dll` +
+		" --doorstop-clr-corlib-dir " + z + `\dotnet --doorstop-clr-runtime-coreclr-path ` + z + `\dotnet\coreclr.dll`
+	if got := strings.Join(plan.Args, " "); got != want {
+		t.Fatalf("args\n got %q\nwant %q", got, want)
+	}
+	cfg, err := os.ReadFile(plan.Files[0].Src)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, line := range []string{"corlib_dir=" + z + `\dotnet` + "\r", "coreclr_path=" + z + `\dotnet\coreclr.dll` + "\r"} {
+		if !strings.Contains(string(cfg), line) {
+			t.Fatalf("config lacks %q:\n%s", line, cfg)
+		}
+	}
+	if _, err := InstallPack(buildPack(t, "4.3.0.0"), tgt.ProfileDir); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(filepath.Join(tgt.ProfileDir, "dotnet")); err == nil || hasCLR(tgt.ProfileDir) {
+		t.Fatal("a BepInEx 5 pack over an IL2CPP one kept its runtime")
+	}
+}
+
 func TestLaunchArgs(t *testing.T) {
 	root := "/home/u/mortar/profile one"
 	pre := "/home/u/mortar/profile one/BepInEx/core/BepInEx.Preloader.dll"

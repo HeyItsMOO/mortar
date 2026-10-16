@@ -434,6 +434,9 @@ type GameLoader struct {
 	// Package is the Thunderstore package (Namespace-Name) the loader ships as, for a community that packs its own
 	// build of it (Valheim's denikson-BepInExPack_Valheim); empty means DefaultLoaderPackage.
 	Package string `json:"package,omitempty"`
+	// Major is the loader's major version the game runs, when it is not the loader's own default: BepInEx 6 for an
+	// IL2CPP game such as Cat Mail Co., whose pack is BepInEx-BepInExPack_IL2CPP.
+	Major int `json:"major,omitempty"`
 }
 
 // saveFilePattern reports whether p names files in the saves folder or in one plain folder below it; an exclusion
@@ -461,6 +464,16 @@ func (g GameInfo) LoaderPackage() string {
 		}
 	}
 	return DefaultLoaderPackage
+}
+
+// LoaderMajor is the major version the game's loader id runs, or 0 when its catalog entry names none.
+func (g GameInfo) LoaderMajor(id string) int {
+	for _, l := range g.Loaders {
+		if l.ID == id {
+			return l.Major
+		}
+	}
+	return 0
 }
 
 // IsLoaderPackage reports whether the Thunderstore package id (Namespace-Name) is a BepInEx pack some catalog game's

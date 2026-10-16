@@ -31,8 +31,35 @@ const (
 	defaultDoorstop = 3
 )
 
-// preloader is the file BepInEx takes its root from, relative to the profile root.
-var preloader = filepath.Join("BepInEx", "core", "BepInEx.Preloader.dll")
+// entries are the assemblies Doorstop can start BepInEx through, relative to the profile root, which BepInEx takes
+// its root from: BepInEx 5's preloader, and BepInEx 6's IL2CPP entry, which runs on the .NET runtime its pack ships in
+// dotnet/.
+var entries = []string{
+	filepath.Join("BepInEx", "core", "BepInEx.Preloader.dll"),
+	filepath.Join("BepInEx", "core", "BepInEx.Unity.IL2CPP.dll"),
+}
+
+// entry is the entry assembly of the pack installed in profileRoot, relative to it.
+func entry(profileRoot string) string {
+	for _, e := range entries {
+		if _, err := os.Stat(filepath.Join(profileRoot, e)); err == nil {
+			return e
+		}
+	}
+	return entries[0]
+}
+
+// The .NET runtime of an IL2CPP pack, relative to the profile root: Doorstop 4 reads the corlib folder and coreclr
+// from its [Il2Cpp] settings or its CLR flags.
+var (
+	corlibDir = "dotnet"
+	coreclr   = filepath.Join("dotnet", "coreclr.dll")
+)
+
+func hasCLR(profileRoot string) bool {
+	_, err := os.Stat(filepath.Join(profileRoot, coreclr))
+	return err == nil
+}
 
 // Installed is what InstallPack found in the pack.
 type Installed struct {
@@ -43,7 +70,7 @@ type Installed struct {
 }
 
 // InstallPack lays the pack zip's root folder (BepInExPack/, or a community build's own name such as
-// BepInExPack_Valheim/: whichever holds the preloader) out into profileRoot, replacing files already there.
+// BepInExPack_Valheim/: whichever holds an entry assembly) out into profileRoot, replacing files already there.
 func InstallPack(zipPath, profileRoot string) (Installed, error) {
 	if err := os.MkdirAll(profileRoot, 0o750); err != nil {
 		return Installed{}, err
@@ -96,7 +123,7 @@ func InstallPack(zipPath, profileRoot string) (Installed, error) {
 // pass Doorstop 4 flags to a Doorstop 3 proxy, which then never starts BepInEx. A package's own core files sit in
 // folders below core and stay.
 func clearPack(profileRoot string) error {
-	for _, name := range []string{doorstopFile, "winhttp.dll", "doorstop_config.ini", "doorstop_libs"} {
+	for _, name := range []string{doorstopFile, "winhttp.dll", "doorstop_config.ini", "doorstop_libs", corlibDir} {
 		if err := fsx.RemoveAll(filepath.Join(profileRoot, name)); err != nil {
 			return err
 		}
@@ -118,18 +145,23 @@ func clearPack(profileRoot string) error {
 	return nil
 }
 
-// packRoot is the top-level folder of the extracted pack that holds BepInEx's preloader.
+// packRoot is the top-level folder of the extracted pack that holds a BepInEx entry assembly.
 func packRoot(dir string) (string, error) {
 	ents, err := os.ReadDir(dir)
 	if err != nil {
 		return "", err
 	}
 	for _, e := range ents {
-		if _, err := os.Stat(filepath.Join(dir, e.Name(), preloader)); err == nil && e.IsDir() {
-			return filepath.Join(dir, e.Name()), nil
+		if !e.IsDir() {
+			continue
+		}
+		for _, entry := range entries {
+			if _, err := os.Stat(filepath.Join(dir, e.Name(), entry)); err == nil {
+				return filepath.Join(dir, e.Name()), nil
+			}
 		}
 	}
-	return "", errors.New("the zip has no folder holding " + filepath.ToSlash(preloader))
+	return "", errors.New("the zip has no folder holding " + filepath.ToSlash(entries[0]) + " or " + filepath.ToSlash(entries[1]))
 }
 
 func doorstopMajor(profileRoot string) int {
@@ -162,25 +194,35 @@ const (
 	relayConfig = ".mortar-doorstop_config.ini"
 )
 
-// absoluteDoorstopConfig writes the profile's Doorstop config with its target assembly set to target (added, in the
-// spelling of Doorstop doorstopMajor, when the config names none), and returns the copy's path: the game folder's
-// config then loads the profile's BepInEx even when a start cannot pass Doorstop's flags, as the Epic Games
-// Launcher's link cannot.
-func absoluteDoorstopConfig(profileRoot string, doorstopMajor int, target string) (string, error) {
+// absoluteDoorstopConfig writes the profile's Doorstop config with its target assembly set to the profile's entry
+// (added, in the spelling of Doorstop doorstopMajor, when the config names none) and an IL2CPP pack's runtime paths
+// made absolute, and returns the copy's path: the game folder's config then loads the profile's BepInEx even when a
+// start cannot pass Doorstop's flags, as the Epic Games Launcher's link cannot. Doorstop reads relative paths from
+// the game folder, where the profile's files are not.
+func absoluteDoorstopConfig(profileRoot string, doorstopMajor int, proton bool) (string, error) {
 	b, err := fsx.ReadFile(filepath.Join(profileRoot, doorstopConfig))
 	if err != nil {
 		return "", err
+	}
+	target := targetPath(profileRoot, proton)
+	values := map[string]string{"targetAssembly": target, "target_assembly": target}
+	if hasCLR(profileRoot) {
+		values["corlib_dir"] = hostPath(profileRoot, corlibDir, proton)
+		values["coreclr_path"] = hostPath(profileRoot, coreclr, proton)
 	}
 	lines := strings.Split(string(b), "\n")
 	found := false
 	for i, line := range lines {
 		key, _, ok := strings.Cut(line, "=")
-		if k := strings.TrimSpace(key); ok && (k == "targetAssembly" || k == "target_assembly") {
-			found = true
-			lines[i] = k + "=" + target
-			if strings.HasSuffix(line, "\r") {
-				lines[i] += "\r"
-			}
+		k := strings.TrimSpace(key)
+		v, known := values[k]
+		if !ok || !known {
+			continue
+		}
+		found = found || v == target
+		lines[i] = k + "=" + v
+		if strings.HasSuffix(line, "\r") {
+			lines[i] += "\r"
 		}
 	}
 	if !found {
@@ -195,9 +237,14 @@ func absoluteDoorstopConfig(profileRoot string, doorstopMajor int, target string
 }
 
 func targetPath(profileRoot string, proton bool) string {
-	p, err := filepath.Abs(filepath.Join(profileRoot, preloader))
+	return hostPath(profileRoot, entry(profileRoot), proton)
+}
+
+// hostPath is rel under profileRoot as an absolute path, in the Wine Z: form for proton.
+func hostPath(profileRoot, rel string, proton bool) string {
+	p, err := filepath.Abs(filepath.Join(profileRoot, rel))
 	if err != nil {
-		p = filepath.Join(profileRoot, preloader)
+		p = filepath.Join(profileRoot, rel)
 	}
 	if proton {
 		// Wine maps the host's root to Z:.
@@ -206,12 +253,18 @@ func targetPath(profileRoot string, proton bool) string {
 	return p
 }
 
-// LaunchArgs are the Doorstop flags that start the game with BepInEx rooted in profileRoot. Doorstop 3 and 4 spell the
-// flags differently; proton gives the target in the Wine Z: form.
+// LaunchArgs are the Doorstop flags that start the game with BepInEx rooted in profileRoot, with an IL2CPP pack's
+// .NET runtime. Doorstop 3 and 4 spell the flags differently; proton gives the paths in the Wine Z: form.
 func LaunchArgs(profileRoot string, doorstopMajor int, proton bool) []string {
 	target := targetPath(profileRoot, proton)
 	if doorstopMajor >= 4 {
-		return []string{"--doorstop-enabled", "true", "--doorstop-target-assembly", target}
+		args := []string{"--doorstop-enabled", "true", "--doorstop-target-assembly", target}
+		if hasCLR(profileRoot) {
+			args = append(args,
+				"--doorstop-clr-corlib-dir", hostPath(profileRoot, corlibDir, proton),
+				"--doorstop-clr-runtime-coreclr-path", hostPath(profileRoot, coreclr, proton))
+		}
+		return args
 	}
 	return []string{"--doorstop-enable", "true", "--doorstop-target", target}
 }

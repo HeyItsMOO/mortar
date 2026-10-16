@@ -27,7 +27,7 @@ var _ = loader.Register(Loader{})
 // markerFile records what Mortar installed, since BepInEx's own files do not say which pack they came from.
 const markerFile = ".mortar-bepinex.json"
 
-// Loader is the BepInEx 5 loader. The zero value is the real loader; the fields let tests point the network elsewhere.
+// Loader is the BepInEx loader: BepInEx 5 on Mono, and BepInEx 6 on IL2CPP where a game's catalog pack is one. The zero value is the real loader; the fields let tests point the network elsewhere.
 type Loader struct {
 	// Index is the Thunderstore driver the pack is looked up in; nil means the registered one.
 	Index *thunderstore.Driver
@@ -70,7 +70,7 @@ func (Loader) VersionScheme() string { return deps.SemverStrict }
 func (Loader) Formats() []string { return []string{"bepinplugin"} }
 
 func (Loader) Status(t loader.Target) (loader.Status, error) {
-	if _, err := os.Stat(filepath.Join(t.ProfileDir, preloader)); errors.Is(err, fs.ErrNotExist) {
+	if _, err := os.Stat(filepath.Join(t.ProfileDir, entry(t.ProfileDir))); errors.Is(err, fs.ErrNotExist) {
 		return loader.Status{}, nil
 	} else if err != nil {
 		return loader.Status{}, err
@@ -96,7 +96,7 @@ func (Loader) Install(_ context.Context, t loader.Target, pkg loader.Package, pr
 	return got.Version, nil
 }
 
-// Contribute points Doorstop at the profile's preloader, declares the proxy files for the game folder and, under
+// Contribute points Doorstop at the profile's entry assembly, declares the proxy files for the game folder and, under
 // Proton, asks for the winhttp override. A native Linux build is started through LD_PRELOAD instead (see contributeLinux).
 func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.ProfileView) error {
 	m := readMarker(p.Dir)
@@ -109,7 +109,7 @@ func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.Prof
 		src := filepath.Join(p.Dir, filepath.FromSlash(f))
 		if f == doorstopConfig {
 			var err error
-			if src, err = absoluteDoorstopConfig(p.Dir, m.Doorstop, targetPath(p.Dir, proton)); err != nil {
+			if src, err = absoluteDoorstopConfig(p.Dir, m.Doorstop, proton); err != nil {
 				return err
 			}
 		}
@@ -165,7 +165,7 @@ func linuxDoorstop(profileDir string) (string, error) {
 	return filepath.Abs(p)
 }
 
-// Owns is true for a game process whose Doorstop target is this profile's preloader, in either the host or the Wine
+// Owns is true for a game process whose Doorstop target is this profile's entry assembly, in either the host or the Wine
 // Z: form Contribute passes it in. A game started without Mortar's flags runs no profile Mortar can name.
 func (Loader) Owns(p loader.Process, prof loader.ProfileView) bool {
 	for i, a := range p.Args[:max(len(p.Args)-1, 0)] {

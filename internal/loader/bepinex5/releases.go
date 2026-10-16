@@ -1,11 +1,13 @@
 package bepinex5
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
@@ -21,7 +23,7 @@ const lastReleases = 10
 // ProfileFiles are what InstallPack lays out in each profile's folder (BepInEx's files sit there, not in the game's
 // install), with the marker that records the installed version.
 func (Loader) ProfileFiles() []string {
-	return []string{"BepInEx", "winhttp.dll", "doorstop_config.ini", "doorstop_libs", doorstopFile, markerFile}
+	return []string{"BepInEx", "winhttp.dll", "doorstop_config.ini", "doorstop_libs", corlibDir, doorstopFile, markerFile}
 }
 
 // thunderstoreDriver is the registered Thunderstore source, so the pack is read from the index the rest of Mortar
@@ -52,7 +54,9 @@ func communityOf(g components.GameInfo) (string, error) {
 	return s.Key, nil
 }
 
-// Versions are the BepInEx 5 releases of the game's BepInEx pack in its community index, newest first.
+// Versions are the releases of the game's BepInEx pack in its community index, newest first, of the BepInEx major the
+// catalog names for the game (5 unless it says otherwise): plugins do not load across majors, and Mortar starts only
+// BepInEx 5 on Mono and BepInEx 6 on IL2CPP.
 func (l Loader) Versions(ctx context.Context, g components.GameInfo) ([]string, error) {
 	key, err := communityOf(g)
 	if err != nil {
@@ -63,9 +67,10 @@ func (l Loader) Versions(ctx context.Context, g components.GameInfo) ([]string, 
 	if err != nil {
 		return nil, fmt.Errorf("look up BepInEx releases: %w", err)
 	}
+	major := strconv.Itoa(cmp.Or(g.LoaderMajor(ID), 5)) + "."
 	var out []string
 	for _, v := range all {
-		if strings.HasPrefix(v, "5.") {
+		if strings.HasPrefix(v, major) {
 			out = append(out, v)
 		}
 		if len(out) == lastReleases {
@@ -75,14 +80,14 @@ func (l Loader) Versions(ctx context.Context, g components.GameInfo) ([]string, 
 	return out, nil
 }
 
-// Latest is the newest BepInEx 5 release.
+// Latest is the pack's newest release.
 func (l Loader) Latest(ctx context.Context, g components.GameInfo) (string, error) {
 	all, err := l.Versions(ctx, g)
 	if err != nil {
 		return "", err
 	}
 	if len(all) == 0 {
-		return "", errors.New("the Thunderstore index lists no BepInEx 5 release")
+		return "", errors.New("the Thunderstore index lists no BepInEx release")
 	}
 	return all[0], nil
 }

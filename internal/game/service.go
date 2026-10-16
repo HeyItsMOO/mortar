@@ -85,13 +85,17 @@ func loaderRef(gameID string, l components.GameLoader) LoaderRef {
 		_, ref.Order = d.(loader.WithOrder)
 		_, ref.Console = d.(loader.WithLogs)
 		ref.Console = ref.Console || HasPath(gameID, PathLog)
+		// Commands, startup timing, in-game performance, the overlay and intro skipping all run in the bridge, so a
+		// game whose catalog installs none (Cat Mail Co.'s IL2CPP BepInEx) offers none of them.
+		bridge := l.Companion != ""
 		_, hasConsole := d.(loader.Console)
 		_, hasCompanion := d.(loader.WithCompanion)
-		ref.Commands = hasConsole && hasCompanion
+		ref.Commands = bridge && hasConsole && hasCompanion
 		_, ref.Startup = d.(loader.StartupTimings)
 		_, ref.Perf = d.(loader.InGamePerf)
 		_, ref.Overlay = d.(loader.StreamOverlay)
 		_, ref.IntroSkip = d.(loader.IntroSkipper)
+		ref.Startup, ref.Perf, ref.Overlay, ref.IntroSkip = bridge && ref.Startup, bridge && ref.Perf, bridge && ref.Overlay, bridge && ref.IntroSkip
 		_, ref.Builtin = d.(loader.Builtin)
 		ref.Share = loader.SharesLog(d)
 		if p, ok := d.(loader.LogPaste); ok {

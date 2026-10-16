@@ -52,6 +52,10 @@ func TestReleasesComeFromTheGamesThunderstoreCommunity(t *testing.T) {
 	if got, _ := fsx.ReadFile(dst); string(got) != string(pack) {
 		t.Fatal("downloaded file differs")
 	}
+	g.Loaders = []components.GameLoader{{ID: ID, Major: 6}}
+	if v, err := l.Versions(ctx, g); err != nil || !slices.Equal(v, []string{"6.0.0"}) {
+		t.Fatalf("BepInEx 6 versions %v %v", v, err)
+	}
 	if _, err := l.Versions(ctx, components.GameInfo{Name: "No Community"}); err == nil {
 		t.Fatal("a game without a Thunderstore community must be refused")
 	}
