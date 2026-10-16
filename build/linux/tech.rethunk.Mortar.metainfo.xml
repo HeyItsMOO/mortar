@@ -60,6 +60,9 @@
         <p>Fixed</p>
         <ul>
           <li>Creating a Lethal Company or Valheim profile no longer fails with "does not say who published it"</li>
+          <li>Newer Steam games, such as Super Battle Golf, show their art in Game select and the game menu</li>
+          <li>When Mortar cannot start, it says why in a message instead of closing without a word</li>
+          <li>Windows: the installer installs the WebView2 Runtime when it is missing or was removed, says so if that fails, and Mortar asks before starting without it</li>
           <li>Lethal Company's Saves lists each slot once: the backup and temporary files the game writes beside a slot belong to it, and each save says whether it is a save slot, an extra slot added by a mod, or the weekly challenge</li>
           <li>Menus are wide enough for their longest item, so Check mods and Mortar for updates is no longer cut off</li>
         </ul>
