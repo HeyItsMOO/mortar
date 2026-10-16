@@ -1,5 +1,5 @@
 {
-  "serial": 1792145673,
+  "serial": 1792169638,
   "components": [
     {
       "game": "stardew",
@@ -71,10 +71,6 @@
       "marker": "Stardew Valley.dll",
       "metadata": ["smapi-updates", "smapi-compat", "stardew-dataset"],
       "paths": {
-        "screenshots": {
-          "windows": "{appData}/StardewValley/Screenshots",
-          "linux": "{xdgConfig}/StardewValley/Screenshots"
-        },
         "errorLogs": {
           "windows": "{appData}/StardewValley/ErrorLogs",
           "linux": "{xdgConfig}/StardewValley/ErrorLogs",
@@ -84,6 +80,10 @@
           "windows": "{appData}/StardewValley/Saves",
           "linux": "{xdgConfig}/StardewValley/Saves",
           "darwin": "{xdgConfig}/StardewValley/Saves"
+        },
+        "screenshots": {
+          "windows": "{appData}/StardewValley/Screenshots",
+          "linux": "{xdgConfig}/StardewValley/Screenshots"
         },
         "startupPreferences": {
           "windows": "{appData}/StardewValley/startup_preferences",
@@ -1971,9 +1971,17 @@
       "art": "assets/game/textures/gui/backgrounds/mainmenu1.png",
       "metadata": [],
       "paths": {
-        "screenshots": {
-          "windows": "{home}/Pictures/Vintagestory",
-          "linux": "{home}/Pictures/Vintagestory"
+        "crashLog": {
+          "windows": "{appData}/VintagestoryData/Logs/client-crash.log",
+          "linux": "{xdgConfig}/VintagestoryData/Logs/client-crash.log"
+        },
+        "log": {
+          "windows": "{appData}/VintagestoryData/Logs/client-main.log",
+          "linux": "{xdgConfig}/VintagestoryData/Logs/client-main.log"
+        },
+        "modConfig": {
+          "windows": "{appData}/VintagestoryData/ModConfig",
+          "linux": "{xdgConfig}/VintagestoryData/ModConfig"
         },
         "mods": {
           "windows": "{appData}/VintagestoryData/Mods",
@@ -1983,17 +1991,9 @@
           "windows": "{appData}/VintagestoryData/Saves",
           "linux": "{xdgConfig}/VintagestoryData/Saves"
         },
-        "log": {
-          "windows": "{appData}/VintagestoryData/Logs/client-main.log",
-          "linux": "{xdgConfig}/VintagestoryData/Logs/client-main.log"
-        },
-        "crashLog": {
-          "windows": "{appData}/VintagestoryData/Logs/client-crash.log",
-          "linux": "{xdgConfig}/VintagestoryData/Logs/client-crash.log"
-        },
-        "modConfig": {
-          "windows": "{appData}/VintagestoryData/ModConfig",
-          "linux": "{xdgConfig}/VintagestoryData/ModConfig"
+        "screenshots": {
+          "windows": "{home}/Pictures/Vintagestory",
+          "linux": "{home}/Pictures/Vintagestory"
         },
         "userData": {
           "windows": "{appData}/VintagestoryData",
@@ -2008,7 +2008,12 @@
       ],
       "saveCopyFolders": ["Backups", "BackupSaves"],
       "saveLinked": ["Maps/{uuid}.db"],
-      "caches": [{ "role": "userData", "path": "Cache/unpack" }],
+      "caches": [
+        {
+          "role": "userData",
+          "path": "Cache/unpack"
+        }
+      ],
       "deploy": "profile",
       "targets": [
         {
@@ -2194,6 +2199,45 @@
       ]
     },
     {
+      "id": "cat-mail-co",
+      "name": "Cat Mail Co.",
+      "enabled": true,
+      "marker": "CatMailCo.exe",
+      "r2modmanFolder": "CatMailCo",
+      "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Maracas Studio/CatMailCo/Player.log"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4380490"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cat-mail-co"
+        }
+      ]
+    },
+    {
       "id": "sims4",
       "name": "The Sims 4",
       "enabled": true,
@@ -2202,10 +2246,6 @@
       "metadata": [],
       "newProfileSeparateSaves": true,
       "paths": {
-        "screenshots": {
-          "windows": "{documents}/Electronic Arts/The Sims 4/Screenshots",
-          "linux": "{documents}/Electronic Arts/The Sims 4/Screenshots"
-        },
         "mods": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Mods",
           "linux": "{documents}/Electronic Arts/The Sims 4/Mods"
@@ -2217,6 +2257,10 @@
         "saves": {
           "windows": "{documents}/Electronic Arts/The Sims 4/saves",
           "linux": "{documents}/Electronic Arts/The Sims 4/saves"
+        },
+        "screenshots": {
+          "windows": "{documents}/Electronic Arts/The Sims 4/Screenshots",
+          "linux": "{documents}/Electronic Arts/The Sims 4/Screenshots"
         },
         "tray": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Tray",

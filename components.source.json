@@ -76,6 +76,10 @@
           "windows": "{appData}/StardewValley/startup_preferences",
           "linux": "{xdgConfig}/StardewValley/startup_preferences",
           "darwin": "{xdgConfig}/StardewValley/startup_preferences"
+        },
+        "screenshots": {
+          "windows": "{appData}/StardewValley/Screenshots",
+          "linux": "{xdgConfig}/StardewValley/Screenshots"
         }
       },
       "deploy": "redirect",
@@ -1969,6 +1973,22 @@
         "userData": {
           "windows": "{appData}/VintagestoryData",
           "linux": "{xdgConfig}/VintagestoryData"
+        },
+        "screenshots": {
+          "windows": "{home}/Pictures/Vintagestory",
+          "linux": "{home}/Pictures/Vintagestory"
+        },
+        "log": {
+          "windows": "{appData}/VintagestoryData/Logs/client-main.log",
+          "linux": "{xdgConfig}/VintagestoryData/Logs/client-main.log"
+        },
+        "crashLog": {
+          "windows": "{appData}/VintagestoryData/Logs/client-crash.log",
+          "linux": "{xdgConfig}/VintagestoryData/Logs/client-crash.log"
+        },
+        "modConfig": {
+          "windows": "{appData}/VintagestoryData/ModConfig",
+          "linux": "{xdgConfig}/VintagestoryData/ModConfig"
         }
       },
       "saveFiles": ["*.vcdbs"],
@@ -2017,7 +2037,19 @@
           "id": "github",
           "key": "vintagestory-mod"
         }
-      ]
+      ],
+      "caches": [
+        {
+          "role": "userData",
+          "path": "Cache/unpack"
+        }
+      ],
+      "saveCopies": [
+        "{stem}-bkp-*{ext}",
+        "{stem}-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_*{ext}"
+      ],
+      "saveCopyFolders": ["Backups", "BackupSaves"],
+      "saveLinked": ["Maps/{uuid}.db"]
     },
     {
       "id": "void-crew",
@@ -2157,6 +2189,45 @@
       ]
     },
     {
+      "id": "cat-mail-co",
+      "name": "Cat Mail Co.",
+      "enabled": true,
+      "marker": "CatMailCo.exe",
+      "r2modmanFolder": "CatMailCo",
+      "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Maracas Studio/CatMailCo/Player.log"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4380490"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cat-mail-co"
+        }
+      ]
+    },
+    {
       "id": "sims4",
       "name": "The Sims 4",
       "enabled": true,
@@ -2183,6 +2254,10 @@
         "tray": {
           "windows": "{documents}/Electronic Arts/The Sims 4/Tray",
           "linux": "{documents}/Electronic Arts/The Sims 4/Tray"
+        },
+        "screenshots": {
+          "windows": "{documents}/Electronic Arts/The Sims 4/Screenshots",
+          "linux": "{documents}/Electronic Arts/The Sims 4/Screenshots"
         }
       },
       "saveFiles": ["Slot_*.save"],

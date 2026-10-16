@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strconv"
 	"strings"
@@ -644,5 +645,27 @@ func TestDecodeSkipsAGameThisBuildCannotRead(t *testing.T) {
 	got, err := Decode(b)
 	if err != nil || len(got.Games) != want {
 		t.Fatalf("decode = %d games, %v; want %d", len(got.Games), err, want)
+	}
+}
+
+// The bundled catalog is generated from components.source.json, which is also what the signed catalog is published
+// from, so a game field edited into the bundled copy alone would ship to nobody who has the published catalog.
+func TestBundledGamesAreTheSourcesGames(t *testing.T) {
+	raw, err := os.ReadFile("../../components.source.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var src struct {
+		Games []GameInfo `json:"games"`
+	}
+	if err := json.Unmarshal(raw, &src); err != nil {
+		t.Fatal(err)
+	}
+	m, err := BundledManifest()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(m.Games, src.Games) {
+		t.Fatal("internal/components/components.json's games differ from components.source.json's: edit the source and run wails3 task components:refresh")
 	}
 }
