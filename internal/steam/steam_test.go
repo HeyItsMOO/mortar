@@ -146,6 +146,11 @@ func TestLaunchOptions(t *testing.T) {
 	if err != nil || !strings.Contains(got, "StardewModdingAPI.exe") || !strings.Contains(got, "%command%") {
 		t.Fatalf("launch options = %q, %v", got, err)
 	}
+	// A current client marks no account MostRecent, only each one's last sign-in.
+	write("config/loginusers.vdf", `"users" { "76561198000000001" { "AccountName" "a" "Timestamp" "100" } "76561198000000002" { "AccountName" "b" "Timestamp" "200" } }`)
+	if got, err := s.LaunchOptions("413150"); err != nil || !strings.Contains(got, "StardewModdingAPI.exe") {
+		t.Fatalf("launch options by newest sign-in = %q, %v", got, err)
+	}
 	if got, err := s.LaunchOptions("1966720"); err != nil || got != "" {
 		t.Fatalf("app without options = %q, %v", got, err)
 	}

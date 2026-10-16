@@ -207,16 +207,30 @@ func (s Steam) CurrentAccount() (Account, error) {
 		return Account{}, err
 	}
 	users, _ := m["users"].(map[string]any)
+	// Older clients mark the signed-in account MostRecent; current ones (2026) keep only each account's last sign-in
+	// Timestamp, so the newest one is the account in use.
+	var best Account
+	var bestAt int64 = -1
 	for id, u := range users {
 		e, ok := u.(map[string]any)
-		if !ok || e["MostRecent"] != "1" {
+		if !ok {
 			continue
 		}
 		name, _ := e["AccountName"].(string)
 		persona, _ := e["PersonaName"].(string)
-		return Account{ID: id, AccountName: name, PersonaName: persona}, nil
+		acct := Account{ID: id, AccountName: name, PersonaName: persona}
+		if e["MostRecent"] == "1" {
+			return acct, nil
+		}
+		ts, _ := e["Timestamp"].(string)
+		if at, err := strconv.ParseInt(ts, 10, 64); err == nil && (at > bestAt || at == bestAt && id < best.ID) {
+			best, bestAt = acct, at
+		}
 	}
-	return Account{}, errors.New("no Steam account is marked MostRecent")
+	if bestAt < 0 {
+		return Account{}, errors.New("no Steam account is signed in")
+	}
+	return best, nil
 }
 
 // HeroArt returns the path of appID's library_hero.jpg, or "" when Steam has not cached it.
