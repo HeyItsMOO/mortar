@@ -357,4 +357,4 @@ function createMortarTheme(
   return responsiveFontSizes(theme)
 }
 
-export { createMortarTheme, MONO, PAD_FOCUS }
+export { BUTTON_LARGE_HEIGHT, createMortarTheme, MONO, PAD_FOCUS }

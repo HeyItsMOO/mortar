@@ -238,7 +238,7 @@ export function FindStep({
               color="inherit"
               startIcon={<FolderOpen size={16} />}
               onClick={browse}
-              sx={{ height: 40, flexShrink: 0 }}
+              sx={{ flexShrink: 0 }}
             >
               {t`Change folder…`}
             </Button>

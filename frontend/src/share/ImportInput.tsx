@@ -4,6 +4,7 @@ import { ClipboardPaste, FolderOpen } from 'lucide-react'
 import { liveHandoff, useHandoff } from '../install/handoff.ts'
 import { useCurrentGame } from '../nav/currentGame.ts'
 import { space } from '../theme/density.ts'
+import { BUTTON_LARGE_HEIGHT } from '../theme/theme.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import type { ImportFlow } from './useImportFlow.ts'
 
@@ -58,7 +59,8 @@ export function ImportInput({ flow }: { flow: ImportFlow }) {
               slotProps={{
                 htmlInput: { 'aria-label': t`Share link`, spellCheck: false },
               }}
-              sx={{ userSelect: 'text', '& .MuiInputBase-root': { height: 44 } }}
+              // As tall as the large button beside it.
+              sx={{ userSelect: 'text', '& .MuiInputBase-root': { height: BUTTON_LARGE_HEIGHT } }}
             />
             <Button
               variant="outlined"

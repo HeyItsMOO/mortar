@@ -155,7 +155,7 @@ function ListWidget({ entry, label, onChange }: WidgetProps) {
           slotProps={{ htmlInput: { 'aria-label': t`New ${label} item` } }}
           sx={{ width: TEXT_WIDTH_PX }}
         />
-        <Button size="small" startIcon={<Plus size={14} />} onClick={add}>
+        <Button startIcon={<Plus size={14} />} onClick={add}>
           {t`Add`}
         </Button>
       </Box>
