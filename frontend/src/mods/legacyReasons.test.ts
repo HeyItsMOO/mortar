@@ -14,17 +14,8 @@ const entry = (key: string, over: Partial<Entry> = {}): Entry =>
 
 test('the legacy offer names what other mods require, libraries and tilesheet packs added before reasons', () => {
   const keys = [
-    'cp',
-    'pack',
-    'lib',
-    'core',
-    'tiles',
-    'new-lib',
-    'done',
-    'plain',
-    'cycA',
-    'cycB',
-    'opt',
+    ...['cp', 'pack', 'lib', 'core', 'tiles', 'new-lib', 'done', 'plain', 'cycA', 'cycB', 'opt'],
+    ...['sve', 'sveAddon', 'maps', 'mapsPatch', 'mapsNpcs'],
   ]
   const entries = keys.map((k) =>
     entry(k, {
@@ -49,7 +40,24 @@ test('the legacy offer names what other mods require, libraries and tilesheet pa
     { key: 'cycA', id: 'H.A', enabled: true, needs: ['H.B'] },
     { key: 'cycB', id: 'H.B', enabled: true, needs: ['H.A'] },
     { key: 'opt', id: 'G.Opt', enabled: true },
-  ]
+    // An expansion its add-ons need, and a mod only its own add-ons need, stay explicit.
+    { key: 'sve', id: 'I.SVE', enabled: true, contentPackFor: 'pathoschild.contentpatcher' },
+    { key: 'sveAddon', id: 'J.Addon', enabled: true, needs: ['I.SVE'] },
+    { key: 'maps', id: 'Bouhm.NPCMapLocations', name: 'NPC Map Locations', enabled: true },
+    {
+      key: 'mapsPatch',
+      id: 'Z.NPCMapLocationsPatch',
+      enabled: true,
+      needs: ['bouhm.npcmaplocations'],
+    },
+    {
+      key: 'mapsNpcs',
+      id: 'Y.Custom',
+      name: 'Custom NPCs for NPC Map Locations',
+      enabled: true,
+      needs: ['Bouhm.NPCMapLocations'],
+    },
+  ].map((m) => ({ name: '', ...m }))
   const category = (e: Entry) =>
     e.key === 'lib' || e.key === 'new-lib' ? 'Modding Tools' : 'Gameplay'
   expect(
