@@ -382,10 +382,6 @@ a.chip:hover {
     rgba(25, 25, 30, 1) 100%
   );
 }
-.bleed.plain {
-  min-height: 0;
-  padding-top: 4rem;
-}
 .bleed.plain::after {
   content: none;
 }
