@@ -131,7 +131,11 @@ function Toolbar({
   onReset: () => void
 }) {
   const { t } = useLingui()
-  const fileLabel = (f: PaneFile) => (f.format === 'gmcm' ? t`In-game menu` : f.label || f.name)
+  const labelOf = (f: PaneFile) => (f.format === 'gmcm' ? t`In-game menu` : f.label || f.name)
+  const labels = files.map(labelOf)
+  // Two files labelled alike (one plugin's .cfg and .json) are told apart by their file names.
+  const fileLabel = (f: PaneFile) =>
+    labels.filter((l) => l === labelOf(f)).length > 1 ? f.name : labelOf(f)
   // One file is named; several are picked from a dropdown in the same place, so the editor keeps the width.
   return (
     <Box
@@ -153,7 +157,7 @@ function Toolbar({
             value={file?.name ?? ''}
             onChange={(e) => onSelect(e.target.value)}
             slotProps={{ htmlInput: { 'aria-label': t`Config file` } }}
-            sx={{ width: FILE_PICKER_WIDTH_PX, maxWidth: '100%' }}
+            sx={{ minWidth: FILE_PICKER_WIDTH_PX, maxWidth: '100%' }}
           >
             {files.map((f) => (
               <MenuItem key={f.name} value={f.name} title={f.name}>
@@ -264,6 +268,7 @@ function TextFile({ target, name }: { target: Target; name: string }) {
       sx={{
         flex: 1,
         minWidth: 0,
+        minHeight: 0,
         display: 'flex',
         flexDirection: 'column',
         gap: space.gap,
@@ -275,8 +280,10 @@ function TextFile({ target, name }: { target: Target; name: string }) {
           {saved === null ? t`Could not open: ${error}` : t`Could not save: ${error}`}
         </Typography>
       ) : null}
+      {/* MUI sizes a multiline textarea inline to its rows; it is forced to fill the pane instead and scrolls. */}
       <TextField
         multiline={true}
+        rows={1}
         fullWidth={true}
         disabled={saved === null}
         value={text}
@@ -287,8 +294,13 @@ function TextFile({ target, name }: { target: Target; name: string }) {
         sx={{
           flex: 1,
           minHeight: 0,
-          '& .MuiInputBase-root': { height: '100%', alignItems: 'flex-start', overflowY: 'auto' },
-          '& textarea': { fontFamily: 'monospace', fontSize: 13 },
+          '& .MuiInputBase-root': { height: '100%', alignItems: 'stretch' },
+          '& textarea': {
+            height: '100% !important',
+            overflow: 'auto',
+            fontFamily: 'monospace',
+            fontSize: 13,
+          },
         }}
       />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: space.gap }}>
