@@ -380,3 +380,26 @@ a.fact-icon:hover {
     display: none;
   }
 }
+details.release summary {
+  cursor: pointer;
+  list-style: none;
+}
+details.release summary::-webkit-details-marker {
+  display: none;
+}
+details.release summary h2 {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+details.release summary h2::before {
+  content: "›";
+  color: var(--muted);
+  transition: transform 0.15s;
+}
+details.release[open] summary h2::before {
+  transform: rotate(90deg);
+}
+.release-link {
+  font-size: 0.9rem;
+}

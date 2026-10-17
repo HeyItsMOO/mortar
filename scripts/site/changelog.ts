@@ -71,11 +71,13 @@ function releases(): Release[] {
 }
 
 export function changelogPage(): string {
+  // The newest release reads open; older ones fold, so the page is a list of versions rather than one long wall.
   const sections = releases().map(
-    (r) => `      <section class="release" id="v${r.version}">
-        <h2><a href="${REPO}/releases/tag/v${r.version}">${r.version}</a> <time datetime="${r.date}">${r.date}</time></h2>
+    (r, i) => `      <details class="release" id="v${r.version}"${i === 0 ? ' open' : ''}>
+        <summary><h2>${r.version} <time datetime="${r.date}">${r.date}</time></h2></summary>
+        <p class="release-link"><a href="${REPO}/releases/tag/v${r.version}">Downloads and full changelog for ${r.version}</a></p>
 ${r.html}
-      </section>`,
+      </details>`,
   )
   return page({
     path: 'site/changelog/index.html',
