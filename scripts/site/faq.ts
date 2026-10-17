@@ -1,6 +1,6 @@
 // /faq/ from scripts/site/faq.md, the "Why Mortar?" pages from scripts/site/why/<manager>.md, and the landing page's
 // short list of questions that links into the FAQ.
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { brandIcon } from './brands.ts'
 import { escapeHTML, page } from './chrome.ts'
 import { SOURCE_NAMES } from './games.ts'
@@ -115,6 +115,38 @@ const sourceIcons = (html: string) =>
     return `<span class="icon-row">${icons}</span>${run.endsWith(' ') ? ' ' : ''}`
   })
 
+// Other managers' game counts, read from their own repositories by `bun scripts/site.ts --refresh` and committed, so
+// building the site stays offline. A page names one as R2MODMAN_COUNT or GALE_COUNT.
+const RIVALS = 'scripts/site/rival-counts.json'
+const RIVAL_SOURCES: Record<string, { url: string; count: (body: unknown) => number }> = {
+  r2modman: {
+    url: 'https://raw.githubusercontent.com/ebkr/r2modmanPlus/develop/src/assets/data/ecosystem.json',
+    count: (body) =>
+      Object.values((body as { games: Record<string, { r2modman?: unknown }> }).games).filter(
+        (g) => g.r2modman,
+      ).length,
+  },
+  gale: {
+    url: 'https://raw.githubusercontent.com/Kesomannen/gale/master/src-tauri/games.json',
+    count: (body) => (body as unknown[]).length,
+  },
+}
+
+export async function refreshRivalCounts(): Promise<void> {
+  const out: Record<string, number> = {}
+  for (const [id, src] of Object.entries(RIVAL_SOURCES)) {
+    const res = await fetch(src.url)
+    if (!res.ok) {
+      throw new Error(`${src.url} answered ${res.status}`)
+    }
+    out[id] = src.count(await res.json())
+  }
+  writeFileSync(RIVALS, `${JSON.stringify(out, null, 2)}\n`)
+}
+
+const rivalCounts = (): Record<string, number> =>
+  JSON.parse(readFileSync(RIVALS, 'utf8')) as Record<string, number>
+
 /** Mortar's own counts, filled into a comparison page's GAME_COUNT and THUNDERSTORE_COUNT. */
 interface Counts {
   games: number
@@ -134,9 +166,17 @@ function gamesWinner(md: string, games: number): string {
 }
 
 export function whyPage(w: Why, counts: Counts): string {
-  const md = gamesWinner(w.md, counts.games)
+  const filled = w.md
     .replaceAll('GAME_COUNT', String(counts.games))
     .replaceAll('THUNDERSTORE_COUNT', String(counts.thunderstore))
+    .replace(/\b([A-Z0-9]+)_COUNT\b/g, (token, id: string) => {
+      const n = rivalCounts()[id.toLowerCase()]
+      if (n === undefined) {
+        throw new Error(`site: ${w.id}.md names ${token}, which ${RIVALS} lacks`)
+      }
+      return String(n)
+    })
+  const md = gamesWinner(filled, counts.games)
   return page({
     path: `site/why/${w.id}/index.html`,
     title: `Why Mortar? (vs ${w.name})`,

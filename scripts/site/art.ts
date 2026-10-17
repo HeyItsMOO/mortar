@@ -1,6 +1,6 @@
 // Each Steam game's store art (the library capsule for its card, the library hero for its page's banner, the header
 // where a game has neither), as the addresses on Steam's CDN its store names. Newer games keep their art under hashed
-// paths only the store API reveals, so the addresses are looked up once by `bun scripts/site.ts --refresh-art` and
+// paths only the store API reveals, so the addresses are looked up once by `bun scripts/site.ts --refresh` and
 // committed, which keeps building the site offline.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 

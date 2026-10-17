@@ -9,7 +9,7 @@ import { refreshSteamArt, steamArt } from './site/art.ts'
 import { brandArt, brandSprite } from './site/brands.ts'
 import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
-import { faqPage, landingFaq, whyPage, whyPages } from './site/faq.ts'
+import { faqPage, landingFaq, refreshRivalCounts, whyPage, whyPages } from './site/faq.ts'
 import { gamePage, gamesBand, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
 import { guidePage } from './site/guide.ts'
 
@@ -117,7 +117,8 @@ function notFoundPage(): string {
 }
 
 const games = playableGames()
-if (process.argv.includes('--refresh-art')) {
+if (process.argv.includes('--refresh')) {
+  await refreshRivalCounts()
   await refreshSteamArt(
     games.flatMap((g) => (g.stores?.steam as { appId?: string } | undefined)?.appId ?? []),
   )
@@ -129,7 +130,7 @@ const missingArt = games.filter((g) => {
 })
 if (missingArt.length > 0) {
   console.error(
-    `site: no Steam art address for ${missingArt.map((g) => g.id).join(', ')}: run bun scripts/site.ts --refresh-art`,
+    `site: no Steam art address for ${missingArt.map((g) => g.id).join(', ')}: run bun scripts/site.ts --refresh`,
   )
   process.exit(1)
 }
