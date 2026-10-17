@@ -213,6 +213,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
   const updates = useUpdates((s) => s.updates)
   const filter = useMods((s) => s.filters[profile.id]) ?? storedFilter(profile.id)
   const setFilter = useMods((s) => s.setFilter)
+  const implicitView = useSettings((s) => s.implicitModsView)
   const selectedTags = useSelectedTags(profile.id)
   const setTagFilter = useMods((s) => s.setTagFilter)
   const nexusById = useNexusDetails((s) => s.byId)
@@ -289,8 +290,13 @@ export function ModsTab({ profile }: { profile: Profile }) {
   const q = query.trim().toLowerCase()
   const customById = customCategoryById(customCategories)
   const parts = supportParts(mods)
+  // Hidden implicit mods still show when the search or the Show filter asks for them.
+  const hideImplicit = implicitView === 'hidden' && q === '' && filter !== 'implicit'
   const shown = mods.filter((m) => {
     const entry = entryOf(profile, m.key)
+    if (hideImplicit && (Boolean(entry?.implicit) || parts.has(partKey(m)))) {
+      return false
+    }
     const searchable = searchFields(m, entry, nexusById, customById)
     if (!(matchesQuery(q, searchable) && hasAllTags(entry?.tags, selectedTags))) {
       return false

@@ -2,6 +2,7 @@ import type { I18n } from '@lingui/core'
 import { msg } from '@lingui/core/macro'
 import { antivirusPrefs, type PrefCopy } from './prefCopyAntivirus.ts'
 import { gamePrefs } from './prefCopyGame.ts'
+import { modsViewPrefs } from './prefCopyModsView.ts'
 
 function windowAndMods(i18n: I18n): Record<string, PrefCopy> {
   return {
@@ -80,26 +81,6 @@ function windowAndMods(i18n: I18n): Record<string, PrefCopy> {
         msg`Off, only computers on your local network can connect. Turn on to allow others, such as over a VPN.`,
       ),
     },
-    defaultModsView: {
-      label: i18n._(msg`Default mods view`),
-      description: i18n._(msg`Grid or list for new sessions`),
-      options: [
-        { value: 'grid', label: i18n._(msg`Grid`) },
-        { value: 'list', label: i18n._(msg`List`) },
-      ],
-    },
-    gridCardSize: {
-      label: i18n._(msg`Grid card size`),
-      options: [
-        { value: 'small', label: i18n._(msg`Small`) },
-        { value: 'medium', label: i18n._(msg`Medium`) },
-        { value: 'large', label: i18n._(msg`Large`) },
-      ],
-    },
-    showAuthorOnCards: {
-      label: i18n._(msg`Author on cards`),
-      description: i18n._(msg`Show the author line on grid cards`),
-    },
     browseCardStats: {
       label: i18n._(msg`Card details in Browse`),
       description: i18n._(
@@ -129,21 +110,6 @@ function windowAndMods(i18n: I18n): Record<string, PrefCopy> {
     reuseFomodChoices: {
       label: i18n._(msg`Reuse FOMOD choices`),
       description: i18n._(msg`Skip the installer wizard when saved choices still fit`),
-    },
-    listGroupBy: {
-      label: i18n._(msg`Default grouping`),
-      options: [
-        { value: 'none', label: i18n._(msg`None`) },
-        { value: 'status', label: i18n._(msg`Status`) },
-        { value: 'category', label: i18n._(msg`Category`) },
-        { value: 'source', label: i18n._(msg`Source`) },
-        { value: 'tag', label: i18n._(msg`Tag`) },
-        { value: 'framework', label: i18n._(msg`Framework`) },
-        { value: 'download', label: i18n._(msg`Download`) },
-        { value: 'author', label: i18n._(msg`Author`) },
-        { value: 'group', label: i18n._(msg`Group`) },
-        { value: 'reason', label: i18n._(msg`Install reason`) },
-      ],
     },
   }
 }
@@ -490,6 +456,7 @@ export function prefCopy(i18n: I18n, key: string): PrefCopy {
     displayAndData(i18n)[key] ??
     logsAndNexus(i18n)[key] ??
     batchPrefs(i18n)[key] ??
+    modsViewPrefs(i18n)[key] ??
     gamePrefs(i18n)[key] ?? { label: key }
   )
 }

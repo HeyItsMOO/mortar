@@ -108,6 +108,7 @@ var registry = withDefaults([]pref{
 	boolPref("keepDownloadArchives", ScopeApp, func(s Settings, _ string) bool { return s.KeepDownloadArchives }, func(s *Settings, _ string, on bool) { s.KeepDownloadArchives = on }),
 	intPref("storeRetentionDays", ScopeApp, MinStoreRetentionDays, MaxStoreRetentionDays, func(s Settings, _ string) int { return s.StoreRetentionDays }, func(s *Settings, _ string, n int) { s.StoreRetentionDays = n }),
 	enumPref("defaultModsView", ScopeApp, modsViewValues, func(s Settings, _ string) string { return s.DefaultModsView }, func(s *Settings, _, v string) { s.DefaultModsView = v }),
+	enumPref("implicitModsView", ScopeApp, implicitModsValues, func(s Settings, _ string) string { return s.ImplicitModsView }, func(s *Settings, _, v string) { s.ImplicitModsView = v }),
 	strPref("listGroupBy", ScopeApp, func(s Settings, _ string) string { return s.ListGroupBy }, func(s *Settings, _, v string) { s.ListGroupBy = v }),
 	strPref("listSortColumn", ScopeApp, func(s Settings, _ string) string { return s.ListSortColumn }, func(s *Settings, _, v string) { s.ListSortColumn = v }),
 	strPref("listSortDir", ScopeApp, func(s Settings, _ string) string { return s.ListSortDir }, func(s *Settings, _, v string) { s.ListSortDir = v }),

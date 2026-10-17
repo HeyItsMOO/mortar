@@ -18,6 +18,7 @@ import {
 import { compareListRows, sanitizeListSort } from './listColumns.ts'
 import { toListRows, useEntrySizes, usePackageOverrides, useStartupCosts } from './listRows.ts'
 import { modId, modStatusProblem, nexusIdOf, updateFor } from './lookup.ts'
+import { nestImplicit } from './nestImplicit.ts'
 import { primeDetails, useNexusDetails } from './nexusDetails.ts'
 import { useMods } from './store.ts'
 import { useUpdates } from './updates.ts'
@@ -68,6 +69,7 @@ export function useModGroups(mods: Mod[], profile: Profile) {
   const wins = usePackageOverrides(gameId, profile, useProfiles((s) => s.game?.deploy) ?? '')
   const problems = useMods((s) => s.problems)
   const updates = useUpdates((s) => s.updates)
+  const nested = useSettings((s) => s.implicitModsView) === 'nested'
   useEffect(() => {
     setCollapsed(loadCollapsed(gameId))
   }, [gameId])
@@ -79,16 +81,28 @@ export function useModGroups(mods: Mod[], profile: Profile) {
   useEffect(() => {
     primeDetails(nexusIds === '' ? [] : nexusIds.split(',').map(Number)).catch(reportUnexpected)
   }, [nexusIds])
-  const groups = useMemo(
-    () =>
-      buildModGroups(
-        mods,
-        profile,
-        { byId, customById, sizes, costs, wins },
-        { groupBy, sort, problems, updates },
-      ),
-    [mods, profile, byId, groupBy, problems, updates, customById, sort, sizes, costs, wins],
-  )
+  const groups = useMemo(() => {
+    const built = buildModGroups(
+      mods,
+      profile,
+      { byId, customById, sizes, costs, wins },
+      { groupBy, sort, problems, updates },
+    )
+    return nested ? nestImplicit(built) : built
+  }, [
+    mods,
+    profile,
+    byId,
+    groupBy,
+    problems,
+    updates,
+    customById,
+    sort,
+    sizes,
+    costs,
+    wins,
+    nested,
+  ])
   // Rows are memoised on this list's identity, so an unchanged order keeps the previous array.
   const lastIds = useRef<string[]>([])
   const orderedIds = useMemo(() => {

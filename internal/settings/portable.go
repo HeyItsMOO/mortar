@@ -16,7 +16,7 @@ var portableFields = []string{
 	"nexusPreferredDownloadServer", "nxmRedirectOtherGames",
 	"onPlay", "parallelDownloads", "updateCheckIntervalMinutes",
 	"notifyModUpdates", "keepDownloadArchives", "storeRetentionDays",
-	"defaultModsView", "confirmRemovals", "backgroundBadgeChecks",
+	"defaultModsView", "implicitModsView", "confirmRemovals", "backgroundBadgeChecks",
 	"startScreen", "antivirus", "dates", "trashRetentionDays", "historyEventsKept",
 	"notifyDownloadFinished", "notifyDownloadFailed", "notifyRunCrashed",
 	"desktopDownloadFinished", "desktopDownloadFailed", "desktopRunCrashed", "desktopModUpdates",

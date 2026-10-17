@@ -77,6 +77,7 @@ const defaults: Settings = {
   keepDownloadArchives: false,
   storeRetentionDays: 30,
   defaultModsView: 'grid',
+  implicitModsView: 'shown',
   confirmRemovals: true,
   backgroundBadgeChecks: true,
   startScreen: 'last',

@@ -8,6 +8,7 @@ import {
   CircularProgress,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   Menu,
   MenuItem,
   Tooltip,
@@ -124,6 +125,37 @@ function TagChips({
   )
 }
 
+// How implicit mods appear in the list, kept as the implicitModsView setting.
+function ImplicitViewItems() {
+  const { t } = useLingui()
+  const view = useSettings((s) => s.implicitModsView)
+  return (
+    <>
+      <ListSubheader sx={{ bgcolor: 'transparent', lineHeight: '28px', fontSize: 12 }}>
+        {t`Implicit mods`}
+      </ListSubheader>
+      {[
+        { id: 'shown', label: t`Always shown` },
+        { id: 'nested', label: t`Nested` },
+        { id: 'hidden', label: t`Hidden` },
+      ].map((item) => (
+        <MenuItem
+          key={item.id}
+          role="menuitemradio"
+          aria-checked={view === item.id}
+          selected={view === item.id}
+          onClick={() => useSettings.setState({ implicitModsView: item.id })}
+        >
+          <ListItemIcon sx={{ color: 'inherit' }}>
+            {view === item.id ? <Check size={16} aria-hidden={true} /> : null}
+          </ListItemIcon>
+          <ListItemText>{item.label}</ListItemText>
+        </MenuItem>
+      ))}
+    </>
+  )
+}
+
 function ShowFilterControl({
   filter,
   onFilter,
@@ -181,6 +213,8 @@ function ShowFilterControl({
             <ListItemText>{item.label}</ListItemText>
           </MenuItem>
         ))}
+        <MenuRule />
+        <ImplicitViewItems />
         {tags.length > 0 ? <MenuRule /> : null}
         {tags.length > 0 ? <TagChips tags={tags} selected={selectedTags} onTags={onTags} /> : null}
       </Menu>

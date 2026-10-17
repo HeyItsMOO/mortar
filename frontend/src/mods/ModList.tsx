@@ -1,7 +1,7 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { alpha, Box, TableCell, type TableCellProps, TableRow, useMediaQuery } from '@mui/material'
-import { Pin } from 'lucide-react'
+import { CornerDownRight, Pin } from 'lucide-react'
 import { type MouseEvent, memo, type ReactNode, useMemo, useState } from 'react'
 import type {
   Mod,
@@ -116,6 +116,37 @@ function OverridesNote({ count }: { count: number }) {
   )
 }
 
+// The name with its chips, beneath a ↳ when the list nests it under the mod that requires it.
+function NameCell({ row, profile }: { row: ListRow; profile: Profile }) {
+  const m = row.mod
+  return (
+    <Cell title={m.name} sx={{ ...ellipsis, fontWeight: 500 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minWidth: 0 }}>
+        {row.depth ? (
+          <Box
+            component="span"
+            sx={{
+              display: 'flex',
+              flexShrink: 0,
+              ml: (row.depth - 1) * 2,
+              color: 'text.secondary',
+            }}
+          >
+            <CornerDownRight size={14} aria-hidden={true} />
+          </Box>
+        ) : null}
+        <Box component="span" sx={{ ...ellipsis, minWidth: 0 }}>
+          {m.name}
+        </Box>
+        <ExtraFilesChip mod={m} profile={profile} />
+        <OverlayCountChip mod={m} profile={profile} />
+        <ProblemBadge mod={m} />
+        {row.overrides ? <OverridesNote count={row.overrides} /> : null}
+      </Box>
+    </Cell>
+  )
+}
+
 function cellsFor(id: ListColumnId, row: ListRow, locale: string, profile: Profile) {
   const m = row.mod
   const page = row.details?.page
@@ -127,19 +158,7 @@ function cellsFor(id: ListColumnId, row: ListRow, locale: string, profile: Profi
         </Cell>
       )
     case 'name':
-      return (
-        <Cell key="name" title={m.name} sx={{ ...ellipsis, fontWeight: 500 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minWidth: 0 }}>
-            <Box component="span" sx={{ ...ellipsis, minWidth: 0 }}>
-              {m.name}
-            </Box>
-            <ExtraFilesChip mod={m} profile={profile} />
-            <OverlayCountChip mod={m} profile={profile} />
-            <ProblemBadge mod={m} />
-            {row.overrides ? <OverridesNote count={row.overrides} /> : null}
-          </Box>
-        </Cell>
-      )
+      return <NameCell key="name" row={row} profile={profile} />
     case 'version':
       return (
         <Cell key="version" title={dash(m.version)} sx={{ ...ellipsis, color: 'text.secondary' }}>

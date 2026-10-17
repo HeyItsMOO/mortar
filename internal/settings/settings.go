@@ -159,6 +159,7 @@ type Settings struct {
 	// StoreRetentionDays is unused store-item lifetime; 0 means keep forever.
 	StoreRetentionDays int    `json:"storeRetentionDays"`
 	DefaultModsView    string `json:"defaultModsView"`
+	ImplicitModsView   string `json:"implicitModsView"`
 	// ConfirmRemovals asks before removing mods. Nil means on.
 	ConfirmRemovals *bool `json:"confirmRemovals"`
 	// BackgroundBadgeChecks fills sidebar badges for other profiles. Nil means on.

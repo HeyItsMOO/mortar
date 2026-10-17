@@ -217,7 +217,15 @@ export function Appearance() {
         <PrefKeys keys={['dates', 'density', 'reduceMotion', 'profileHero']} />
       </SettingsSection>
       <SettingsSection title={t`Mods view`}>
-        <PrefKeys keys={['defaultModsView', 'gridCardSize', 'showAuthorOnCards', 'listGroupBy']} />
+        <PrefKeys
+          keys={[
+            'defaultModsView',
+            'gridCardSize',
+            'showAuthorOnCards',
+            'listGroupBy',
+            'implicitModsView',
+          ]}
+        />
         <DefaultSort />
       </SettingsSection>
       <SettingsSection title={t`Sidebar`}>

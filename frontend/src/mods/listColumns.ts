@@ -111,6 +111,8 @@ interface ListRow {
   download?: string
   pinned?: boolean
   implicit?: boolean
+  /** How far an implicit mod sits beneath the mod that requires it, when the list nests them. */
+  depth?: number
   /** Explicit or Implicit, in the reader's language. */
   reason: string
   details?: Details

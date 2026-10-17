@@ -33,6 +33,10 @@ const (
 
 	ModsViewGrid = "grid"
 	ModsViewList = "list"
+	// How the Mods list shows implicit mods: in place, beneath the mods that require them, or not at all.
+	ImplicitModsShown  = "shown"
+	ImplicitModsNested = "nested"
+	ImplicitModsHidden = "hidden"
 
 	DensityComfortable = "comfortable"
 	DensityCompact     = "compact"
@@ -144,6 +148,7 @@ func defaultPrefs() Settings {
 		KeepDownloadArchives:       false,
 		StoreRetentionDays:         DefaultStoreRetentionDays,
 		DefaultModsView:            ModsViewGrid,
+		ImplicitModsView:           ImplicitModsShown,
 		ConfirmRemovals:            on(),
 		BackgroundBadgeChecks:      on(),
 		StartScreen:                StartScreenLast,
@@ -218,6 +223,9 @@ func normalizePrefs(s *Settings) {
 	}
 	if !slices.Contains(modsViewValues, s.DefaultModsView) {
 		s.DefaultModsView = ModsViewGrid
+	}
+	if !slices.Contains(implicitModsValues, s.ImplicitModsView) {
+		s.ImplicitModsView = ImplicitModsShown
 	}
 	if s.ConfirmRemovals == nil {
 		s.ConfirmRemovals = on()
@@ -342,6 +350,9 @@ func validatePrefs(s Settings) error {
 	if !slices.Contains(modsViewValues, s.DefaultModsView) {
 		return fmt.Errorf("default mods view must be grid or list, got %q", s.DefaultModsView)
 	}
+	if !slices.Contains(implicitModsValues, s.ImplicitModsView) {
+		return fmt.Errorf("implicit mods view must be shown, nested or hidden, got %q", s.ImplicitModsView)
+	}
 	if !slices.Contains(startScreenValues, s.StartScreen) {
 		return fmt.Errorf("start screen must be last or gameselect, got %q", s.StartScreen)
 	}
@@ -406,6 +417,7 @@ var (
 	antivirusValues           = []string{AntivirusAutomatic, AntivirusClamd, AntivirusCommand, AntivirusOff}
 	datesValues               = []string{DatesRelative, DatesAbsolute}
 	modsViewValues            = []string{ModsViewGrid, ModsViewList}
+	implicitModsValues        = []string{ImplicitModsShown, ImplicitModsNested, ImplicitModsHidden}
 	densityValues             = []string{DensityComfortable, DensityCompact}
 	themeValues               = []string{ThemeDark, ThemeLight, ThemeSystem}
 	gridCardValues            = []string{GridCardSmall, GridCardMedium, GridCardLarge}
