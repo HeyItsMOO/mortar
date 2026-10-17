@@ -37,6 +37,7 @@ beforeAll(() => {
   commit('feat(regress): the matrix measures launch (a)')
   commit('feat(launch): a server build honours MORTAR_LAUNCH_WRAPPER')
   commit('feat(saves)!: back up <saves> & restore')
+  commit('feat(games): 104 more BepInEx 5 games from Thunderstore')
 })
 
 afterAll(() => rmSync(repo, { recursive: true, force: true }))
@@ -47,6 +48,10 @@ describe('notes.sh', () => {
     expect(out).toBe(
       [
         '## New',
+        '',
+        '### Games',
+        '',
+        '- 104 more BepInEx 5 games from Thunderstore',
         '',
         '### Mods and browsing',
         '',
@@ -77,9 +82,9 @@ describe('notes.sh', () => {
   test('caps each group and counts the rest', () => {
     const out = run([script, 'v0.2.0', 'HEAD'], { NOTES_CAP: '1' })
     expect(out).toContain(
-      '### Mods and browsing\n\n- Search matches category names\n- …and 1 more\n',
+      '### Games\n\n- 104 more BepInEx 5 games from Thunderstore\n- …and 2 more\n',
     )
-    expect(out).not.toContain('### Saves')
+    expect(out).not.toContain('### Mods and browsing')
   })
 
   test('a release notes file replaces the commit subjects, uncapped, with a Changed group', () => {

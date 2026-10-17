@@ -21,6 +21,8 @@ subjects="$(git log --no-merges --format=%s "${prev:+$prev..}$ref")"
 # (camelCase or snake_case identifiers, backticks) or tooling.
 internal='^([a-z-]*svc|main|release|gate|lint|deps|build|ci|tests?|selftest|regress|e2e|dotnet|taskfile|scripts|server|control|doctor|dev|fsx|datadir|data|meta|usererr|github|site|sampler|notices|credits|migrate|config|components|nativehost|errors|logs?|cli)$'
 codeish='[a-z][A-Z]|[A-Z]+_[A-Z]|[a-z]_[a-z]|`|(^|[^a-z])(selftest|gate|lint|biome|knip|golangci|gui-design|frontend build|api types)([^a-z]|$)'
+# Product names spelled in camel case are words a player knows, not identifiers.
+products='BepInEx|WebKit|GitHub|SpaceCore|ModConfig|PlayStation|YouTube|macOS|iOS'
 
 # The areas the app's What's new groups a release by, in the order it shows them.
 areas=(Games 'Mods and browsing' 'Profiles and sharing' 'Launching and loaders' 'Problems and diagnostics' 'Downloads and updates' Saves 'Interface and settings' Other)
@@ -41,7 +43,7 @@ area_of() { # scope -> area
 lines() { # types regex -> one "area<US>sentence-case line" per user-facing subject
   printf '%s\n' "$subjects" | sed -nE "s/^($1)(\(([^)]*)\))?!?: (.+)\$/\3\x1f\4/p" |
     while IFS=$'\x1f' read -r scope text; do
-      if { [ -n "$scope" ] && [[ "$scope" =~ $internal ]]; } || [[ "$text" =~ $codeish ]]; then
+      if { [ -n "$scope" ] && [[ "$scope" =~ $internal ]]; } || [[ "$(sed -E "s/(^|[^A-Za-z])($products)([^A-Za-z]|\$)/\1\3/g" <<<"$text")" =~ $codeish ]]; then
         continue
       fi
       text="${text%.}"
