@@ -7,7 +7,6 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  ListSubheader,
   Menu,
   MenuItem,
   Typography,
@@ -192,11 +191,16 @@ function WithoutConfig({ count }: { count: number }) {
   )
 }
 
+// Shares the mod groups' collapse state under a key no group name can take.
+const OTHER_GROUP_KEY = '\u0000loader-and-other'
+
 function OtherFiles({
+  view,
   other,
   selection,
   onChoose,
 }: {
+  view: GroupsView
   other: { name: string; changed?: boolean }[]
   selection: string | undefined
   onChoose: (selection: string) => void
@@ -204,20 +208,30 @@ function OtherFiles({
   const { t } = useLingui()
   return (
     <>
-      <ListSubheader component="div" sx={{ bgcolor: 'transparent', lineHeight: '32px' }}>
-        {t`Loader and other`}
-      </ListSubheader>
-      {other.map((f) => (
-        <ListItemButton
-          key={f.name}
-          selected={fileSelection(f.name) === selection}
-          onClick={() => onChoose(fileSelection(f.name))}
-          sx={{ minHeight: space.row }}
-        >
-          <ListItemText primary={f.name} slotProps={{ primary: { noWrap: true } }} />
-          {f.changed ? <Chip size="small" variant="outlined" label={t`Changed`} /> : null}
-        </ListItemButton>
-      ))}
+      <GroupHeaderRow
+        groupKey={OTHER_GROUP_KEY}
+        count={other.length}
+        label={t`Loader and other`}
+        collapsed={view.collapsed}
+        gameId={view.gameId}
+        setCollapsed={view.setCollapsed}
+        groupBy="none"
+        tagHint=""
+        groups={[]}
+      />
+      {view.collapsed[OTHER_GROUP_KEY] === true
+        ? null
+        : other.map((f) => (
+            <ListItemButton
+              key={f.name}
+              selected={fileSelection(f.name) === selection}
+              onClick={() => onChoose(fileSelection(f.name))}
+              sx={{ minHeight: space.row }}
+            >
+              <ListItemText primary={f.name} slotProps={{ primary: { noWrap: true } }} />
+              {f.changed ? <Chip size="small" variant="outlined" label={t`Changed`} /> : null}
+            </ListItemButton>
+          ))}
     </>
   )
 }
@@ -364,7 +378,7 @@ function ModsColumn({
           </Typography>
         ) : null}
         {other.length > 0 && showOther && !filtered ? (
-          <OtherFiles other={other} selection={selection} onChoose={onChoose} />
+          <OtherFiles view={view} other={other} selection={selection} onChoose={onChoose} />
         ) : null}
       </List>
       {without > 0 ? <WithoutConfig count={without} /> : null}
