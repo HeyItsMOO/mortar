@@ -69,8 +69,13 @@ test('Browse defaults to All sources and a search shows results from more than o
     'true',
   )
   await page.getByLabel('Search all mod sites').fill('farm')
-  await expect(page.getByLabel('Open on Nexus').first()).toBeVisible({ timeout: SEARCH_WAIT_MS })
-  await expect(page.getByLabel('Open on GitHub').first()).toBeVisible({ timeout: SEARCH_WAIT_MS })
+  // A grid card has no open-page button; each card is keyed by its source.
+  await expect(page.locator('[data-hit^="nexus:"]').first()).toBeVisible({
+    timeout: SEARCH_WAIT_MS,
+  })
+  await expect(page.locator('[data-hit^="github:"]').first()).toBeVisible({
+    timeout: SEARCH_WAIT_MS,
+  })
 })
 
 test('the game title opens a switcher listing both playable games', async ({ page }) => {

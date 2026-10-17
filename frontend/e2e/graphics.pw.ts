@@ -63,7 +63,7 @@ async function openPeak(page: Page) {
   await page.goto('/')
   const welcome = page.getByRole('button', { name: 'Continue' })
   const tabs = page.getByRole('tablist', { name: 'Profile sections' })
-  const tile = page.getByRole('button', { name: 'Open PEAK' })
+  const tile = page.getByRole('button', { name: 'Open PEAK', exact: true })
   await expect(welcome.or(tabs).or(tile).first()).toBeVisible({ timeout: 30_000 })
   if (await welcome.isVisible()) {
     await welcome.click()
