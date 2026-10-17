@@ -34,7 +34,7 @@ import {
 } from './listColumns.ts'
 import { modId, nexusIdOf } from './lookup.ts'
 import { ModListTable } from './ModListVirtual.tsx'
-import { useMarked, useRowFocus } from './marked.ts'
+import { useMarked, useRowFocus, useTabStop } from './marked.ts'
 import { contextMenuProps } from './menu.ts'
 import { useNexusFresh } from './nexusDetails.ts'
 import { formatCount, isNewer } from './nexusFormat.ts'
@@ -266,7 +266,7 @@ interface ModRowProps {
   row: ListRow
   cols: readonly ListColumnId[]
   locale: string
-  tabStop: boolean
+  fallback: boolean
   // The current order for a shift-click range, read from a ref so a mod moving group re-renders only its own row.
   orderedRef: { readonly current: readonly string[] }
   profile: Profile
@@ -284,7 +284,7 @@ function sameRowFields(a: ListRow, b: ListRow) {
 
 const sameRow = (a: ModRowProps, b: ModRowProps) =>
   a.locale === b.locale &&
-  a.tabStop === b.tabStop &&
+  a.fallback === b.fallback &&
   a.orderedRef === b.orderedRef &&
   a.onArrow === b.onArrow &&
   a.cols.join() === b.cols.join() &&
@@ -292,12 +292,13 @@ const sameRow = (a: ModRowProps, b: ModRowProps) =>
   (a.profile === b.profile ||
     ownSlice(a.profile, a.row.mod.key) === ownSlice(b.profile, b.row.mod.key))
 
-function ModRowView({ row, cols, locale, tabStop, orderedRef, profile, onArrow }: ModRowProps) {
+function ModRowView({ row, cols, locale, fallback, orderedRef, profile, onArrow }: ModRowProps) {
   const show = useDetail((s) => s.show)
   const askRemove = useMods((s) => s.askRemove)
   const m = row.mod
   const rowId = modId(m)
   const marked = useMarked(rowId)
+  const tabStop = useTabStop(rowId, fallback)
   const menu = contextMenuProps(m)
   const fresh = useNexusFresh(nexusIdOf(profile, m))
   return (
@@ -373,7 +374,7 @@ export function ModList({ profile, mods }: { profile: Profile; mods: Mod[] }) {
     mods,
     profile,
   )
-  const { tabStopId, orderedRef } = useRowFocus(orderedIds)
+  const { fallbackId, orderedRef } = useRowFocus(orderedIds)
   const narrow = useMediaQuery(compactQuery)
   const listColumns = useSavedColumns()
   const available = useColumnAvailable()
@@ -434,7 +435,7 @@ export function ModList({ profile, mods }: { profile: Profile; mods: Mod[] }) {
             row={row}
             cols={cols}
             locale={i18n.locale}
-            tabStop={tabStopId === modId(row.mod)}
+            fallback={fallbackId === modId(row.mod)}
             orderedRef={orderedRef}
             profile={profile}
             onArrow={onArrow}

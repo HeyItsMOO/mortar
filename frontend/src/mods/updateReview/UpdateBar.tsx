@@ -2,6 +2,7 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Typography } from '@mui/material'
 import { ArrowUp } from 'lucide-react'
+import { memo } from 'react'
 import { useProfiles } from '../../profiles/store.ts'
 import { space } from '../../theme/density.ts'
 import { useBadges } from '../badges.ts'
@@ -9,7 +10,8 @@ import { visibleUpdates } from '../lookup.ts'
 import { accent } from '../paper.ts'
 import { useUpdates } from '../updates.ts'
 
-export function UpdateBar() {
+// Takes no props, so a re-render of the tab around it skips it.
+export const UpdateBar = memo(function UpdateBarView() {
   const { t } = useLingui()
   const updates = useUpdates((s) => s.updates)
   const setReviewing = useUpdates((s) => s.setReviewing)
@@ -73,4 +75,4 @@ export function UpdateBar() {
       </Button>
     </Box>
   )
-}
+})

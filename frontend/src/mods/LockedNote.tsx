@@ -1,13 +1,14 @@
 import { useLingui } from '@lingui/react/macro'
 import { Alert, Button } from '@mui/material'
 import { Lock } from 'lucide-react'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { StopDialog } from '../launch/StopDialog.tsx'
 import { useProfiles } from '../profiles/store.ts'
 import { space } from '../theme/density.ts'
 import { useLocked } from './useLocked.ts'
 
-export function LockedNote() {
+// Takes no props, so a re-render of the tab around it skips it.
+export const LockedNote = memo(function LockedNoteView() {
   const { t } = useLingui()
   const locked = useLocked()
   const game = useProfiles((s) => s.game?.id ?? '')
@@ -34,4 +35,4 @@ export function LockedNote() {
       <StopDialog open={asking} game={game} onClose={() => setAsking(false)} />
     </>
   )
-}
+})

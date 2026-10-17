@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { RefreshCw } from 'lucide-react'
+import { memo } from 'react'
 import { PageActions } from '../game/PageActions.tsx'
 import { checkForUpdates } from '../shell/checkForUpdates.ts'
 import { IconAction } from '../shell/IconAction.tsx'
@@ -7,7 +8,8 @@ import { reportUnexpected } from '../toasts/report.ts'
 import { AddArchive } from './Toolbar.tsx'
 
 // The Mods tab's buttons in the tab header: the update check (F5) and the Add split button.
-export function ModsHeaderActions() {
+// Takes no props, so a re-render of the tab around it skips it.
+export const ModsHeaderActions = memo(function ModsHeaderActionsView() {
   const { t } = useLingui()
   return (
     <PageActions>
@@ -21,4 +23,4 @@ export function ModsHeaderActions() {
       <AddArchive variant="outlined" toolbar={true} />
     </PageActions>
   )
-}
+})

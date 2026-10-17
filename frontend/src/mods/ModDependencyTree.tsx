@@ -9,7 +9,7 @@ import {
   type LucideIcon,
   TriangleAlert,
 } from 'lucide-react'
-import { memo, useDeferredValue, useMemo } from 'react'
+import { memo, useDeferredValue, useMemo, useRef } from 'react'
 import type { Broken } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/models.ts'
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { useProfiles } from '../profiles/store.ts'
@@ -18,6 +18,7 @@ import { refWant } from '../queue/refWant.ts'
 import { useQueue } from '../queue/store.ts'
 import { pendingFor } from '../queue/totals.ts'
 import { StableLabel } from '../shell/StableLabel.tsx'
+import { sameValue } from '../shell/sameValue.ts'
 import { Tooltip } from '../shell/Tooltip.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import {
@@ -120,7 +121,17 @@ function Mark({ icon: Icon, label, color }: { icon: LucideIcon; label: string; c
   )
 }
 
-function NodeRow({ node, mods, depth }: { node: DepViewNode; mods: Mod[]; depth: number }) {
+// Memoised, with Branch: a framework's Used by list runs to hundreds of rows, and the trees' nodes are kept until the
+// mods or problems change, so a re-render of the panel around them skips every row.
+const NodeRow = memo(function NodeRowView({
+  node,
+  mods,
+  depth,
+}: {
+  node: DepViewNode
+  mods: Mod[]
+  depth: number
+}) {
   const { t } = useLingui()
   const show = useDetail((s) => s.show)
   const listed = mods.find((m) => sameId(m.id, node.id))
@@ -193,9 +204,17 @@ function NodeRow({ node, mods, depth }: { node: DepViewNode; mods: Mod[]; depth:
       ))}
     </Box>
   )
-}
+})
 
-function Branch({ title, nodes, mods }: { title: string; nodes: DepViewNode[]; mods: Mod[] }) {
+const Branch = memo(function BranchView({
+  title,
+  nodes,
+  mods,
+}: {
+  title: string
+  nodes: DepViewNode[]
+  mods: Mod[]
+}) {
   const { t } = useLingui()
   return (
     <Box>
@@ -209,7 +228,7 @@ function Branch({ title, nodes, mods }: { title: string; nodes: DepViewNode[]; m
       )}
     </Box>
   )
-}
+})
 
 function TreesView({
   mod,
@@ -223,7 +242,8 @@ function TreesView({
   const { t } = useLingui()
   // The trees walk every mod in the profile, so they are rebuilt only when the mods or the problems change.
   const manifests = useMemo(() => manifestsFromMods(mods), [mods])
-  const { needs, neededBy } = useMemo(() => {
+  const lastTrees = useRef<{ needs: DepViewNode[]; neededBy: DepViewNode[] } | null>(null)
+  const built = useMemo(() => {
     const trees = buildDependencyTrees(manifests, mod.id)
     const installed = mods.map((m) => ({
       id: m.id,
@@ -235,6 +255,10 @@ function TreesView({
       neededBy: annotateTree(trees.neededBy, installed),
     }
   }, [manifests, mods, mod.id, broken])
+  // A rebuild that changes nothing keeps the previous nodes, so the memoised rows skip it.
+  const trees = lastTrees.current && sameValue(lastTrees.current, built) ? lastTrees.current : built
+  lastTrees.current = trees
+  const { needs, neededBy } = trees
   return (
     <Box>
       <Typography sx={heading}>{t`Dependencies`}</Typography>

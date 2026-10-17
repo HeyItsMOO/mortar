@@ -153,16 +153,23 @@ function DepChips({
   )
 }
 
-// A row's contents, apart from its position: the list re-renders whenever it measures a row, and this skips that.
-const OrderRowBody = memo(function OrderRowContent({
-  row,
-  names,
-  onScroll,
-}: {
+interface RowBodyProps {
   row: Row
   names: Map<string, string>
   onScroll: (id: string) => boolean
-}) {
+}
+
+// The names map grows when the dependency names arrive; a row redraws only when one of its own dependencies changed.
+const sameRowBody = (a: RowBodyProps, b: RowBodyProps) =>
+  a.row === b.row &&
+  a.onScroll === b.onScroll &&
+  (a.names === b.names ||
+    [...(a.row.required ?? []), ...(a.row.optional ?? [])].every(
+      (id) => a.names.get(idKey(id)) === b.names.get(idKey(id)),
+    ))
+
+// A row's contents, apart from its position: the list re-renders whenever it measures a row, and this skips that.
+const OrderRowBody = memo(function OrderRowContent({ row, names, onScroll }: RowBodyProps) {
   const { t } = useLingui()
   return (
     <>
@@ -210,7 +217,7 @@ const OrderRowBody = memo(function OrderRowContent({
       </Box>
     </>
   )
-})
+}, sameRowBody)
 
 function OrderList({
   rows,

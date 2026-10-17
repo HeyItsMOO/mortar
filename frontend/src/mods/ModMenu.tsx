@@ -19,7 +19,7 @@ import {
   UserCheck,
   Workflow,
 } from 'lucide-react'
-import { type ReactNode, useState } from 'react'
+import { memo, type ReactNode, useState } from 'react'
 import type {
   Mod,
   Profile,
@@ -425,11 +425,12 @@ export function ModMenu({ mod }: { mod: Mod }) {
 }
 
 // The right-click menu, shared by every card and row of the mods screen.
-export function ModContextMenu() {
+// Takes no props, so a re-render of the tab around it skips it.
+export const ModContextMenu = memo(function ModContextMenuView() {
   const target = useContextMenu((s) => s.target)
   const close = useContextMenu((s) => s.close)
   if (!target) {
     return null
   }
   return <ModActionMenu {...target} onClose={close} />
-}
+})

@@ -22,7 +22,7 @@ import type { ListRow } from './listColumns.ts'
 import { entryOf, modId, nexusIdOf } from './lookup.ts'
 import { ModMenu } from './ModMenu.tsx'
 import { GroupHeaderRow, StickyGroupSlot } from './ModsGroupHeader.tsx'
-import { useMarked, useRowFocus } from './marked.ts'
+import { useMarked, useRowFocus, useTabStop } from './marked.ts'
 import { contextMenuProps } from './menu.ts'
 import { useNexusFresh } from './nexusDetails.ts'
 import { OverlayCountChip } from './OverlayRow.tsx'
@@ -88,7 +88,7 @@ const ARROWS: Record<string, string | undefined> = { ArrowLeft: 'left', ArrowRig
 interface ModCardProps {
   mod: Mod
   row: ListRow
-  tabStop: boolean
+  fallback: boolean
   // The current order for a shift-click range, read from a ref so a mod moving group re-renders only its own card.
   orderedRef: { readonly current: readonly string[] }
   profile: Profile
@@ -102,7 +102,7 @@ const sameCard = (a: ModCardProps, b: ModCardProps) =>
   a.mod === b.mod &&
   a.row.size === b.row.size &&
   a.row.details === b.row.details &&
-  a.tabStop === b.tabStop &&
+  a.fallback === b.fallback &&
   a.orderedRef === b.orderedRef &&
   a.onMove === b.onMove &&
   (a.profile === b.profile || ownSlice(a.profile, a.mod.key) === ownSlice(b.profile, b.mod.key))
@@ -110,7 +110,7 @@ const sameCard = (a: ModCardProps, b: ModCardProps) =>
 function ModCardView({
   mod: m,
   row,
-  tabStop,
+  fallback,
   orderedRef,
   profile,
   columnsRef,
@@ -121,6 +121,7 @@ function ModCardView({
   const askRemove = useMods((s) => s.askRemove)
   const id = modId(m)
   const marked = useMarked(id)
+  const tabStop = useTabStop(id, fallback)
   const fresh = useNexusFresh(nexusIdOf(profile, m))
   const tag = firstTag(entryOf(profile, m.key)?.tags)
   const cardSize = useSettings((s) => s.gridCardSize) || 'medium'
@@ -266,7 +267,7 @@ function GridWindow({
   tagHint,
   columns,
   columnsRef,
-  tabStopId,
+  fallbackId,
   orderedRef,
   profile,
   groups,
@@ -282,7 +283,7 @@ function GridWindow({
   tagHint: string
   columns: number
   columnsRef: { readonly current: number }
-  tabStopId: string
+  fallbackId: string
   orderedRef: { readonly current: readonly string[] }
   profile: Profile
   groups: readonly { key: string; items: readonly ListRow[] }[]
@@ -332,7 +333,7 @@ function GridWindow({
             key={modId(r.mod)}
             mod={r.mod}
             row={r}
-            tabStop={tabStopId === modId(r.mod)}
+            fallback={fallbackId === modId(r.mod)}
             orderedRef={orderedRef}
             profile={profile}
             columnsRef={columnsRef}
@@ -393,7 +394,7 @@ function CardsPane({
   const visibleStart = virtualItems[0]?.start ?? 0
   const stuck = stuckHeader(items, virtualizer.measurementsCache, virtualizer.scrollOffset ?? 0)
   const detailId = useDetail((s) => s.detailId)
-  const { tabStopId, orderedRef } = useRowFocus(orderedIds)
+  const { fallbackId, orderedRef } = useRowFocus(orderedIds)
   // Measured before paint, so the first frame lays out the real column count rather than one column.
   useLayoutEffect(() => {
     const el = parentRef.current
@@ -472,7 +473,7 @@ function CardsPane({
           tagHint={tagHint}
           columns={columns}
           columnsRef={columnsRef}
-          tabStopId={tabStopId}
+          fallbackId={fallbackId}
           orderedRef={orderedRef}
           profile={profile}
           groups={groups}

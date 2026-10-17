@@ -30,7 +30,7 @@ import {
   User,
   UserCheck,
 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { SetListGroupBy } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { compact, compactQuery, searchFieldOpen } from '../game/compact.ts'
 import { useTab } from '../game/tab.ts'
@@ -156,7 +156,7 @@ function ImplicitViewItems() {
   )
 }
 
-function ShowFilterControl({
+const ShowFilterControl = memo(function ShowFilterMenu({
   filter,
   onFilter,
   tags,
@@ -220,9 +220,9 @@ function ShowFilterControl({
       </Menu>
     </>
   )
-}
+})
 
-function GroupByControl() {
+const GroupByControl = memo(function GroupByMenu() {
   const { t } = useLingui()
   const by = useListGroupBy()
   const loader = useProfileLoader()
@@ -292,7 +292,7 @@ function GroupByControl() {
       <CategoryEditorDialog open={editorOpen} onClose={() => setEditorOpen(false)} />
     </>
   )
-}
+})
 
 // Only the empty list offers this; with mods present the Browse tab above the toolbar is the way in.
 function BrowseMods() {

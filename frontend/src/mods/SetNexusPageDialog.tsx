@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import { Link2 } from 'lucide-react'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { create } from 'zustand'
 import { SetNexusPage } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexussvc/service.ts'
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
@@ -57,7 +57,8 @@ export function NexusPageMenuItem({ mod, close }: { mod: Mod; close: () => void 
 }
 
 // Names the Nexus page one mod comes from, for a mod Mortar could not place or placed on the wrong page.
-export function SetNexusPageDialog() {
+// Takes no props, so a re-render of the tab around it skips it.
+export const SetNexusPageDialog = memo(function SetNexusPageDialogView() {
   const target = useNexusPage((s) => s.target)
   const onClose = () => useNexusPage.getState().show(null)
   const { game = '', profileId = '', modKey = '', name = '' } = target ?? {}
@@ -123,4 +124,4 @@ export function SetNexusPageDialog() {
       </DialogActions>
     </Dialog>
   )
-}
+})
