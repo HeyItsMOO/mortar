@@ -4,12 +4,12 @@ Vortex is the Nexus Mods manager, with the widest game list here. Mortar works w
 
 | | Mortar | Vortex |
 |---|---|---|
-| Platforms | Windows, Linux, Steam Deck | Windows ([v2.8.2 assets](https://github.com/Nexus-Mods/Vortex/releases/tag/v2.8.2)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
-| Games | 188 | Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
-| Mod sites | Nexus Mods, Thunderstore, CurseForge, Modrinth, GitHub, Vintage Story Mod DB | Nexus Mods ([README](https://github.com/Nexus-Mods/Vortex)) |
-| Account | None needed; Nexus sign-in only for Nexus downloads | Nexus login to download from Nexus |
+| Platforms | !win Windows, Linux, Steam Deck | Windows ([v2.8.2 assets](https://github.com/Nexus-Mods/Vortex/releases/tag/v2.8.2)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
+| Games | 188 | !win Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
+| Mod sites | !win Nexus Mods, Thunderstore, CurseForge, Modrinth, GitHub, Vintage Story Mod DB | Nexus Mods ([README](https://github.com/Nexus-Mods/Vortex)) |
+| Account | !win None needed; Nexus sign-in only for Nexus downloads | Nexus login to download from Nexus |
 | Sharing | A link or a `.mortar` file | Nexus Collections ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/mod-management/collections.md)) |
-| Usage analytics | None | Mixpanel, keyed to the Nexus user id ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/analytics.md)) |
+| Usage analytics | !win None | Mixpanel, keyed to the Nexus user id ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/analytics.md)) |
 | Licence | AGPL-3.0 | GPL-3.0 |
 
 ## Where Mortar differs

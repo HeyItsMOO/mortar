@@ -108,7 +108,12 @@ export function whyPage(w: Why): string {
     title: `Why Mortar? (vs ${w.name})`,
     description: `How Mortar compares with ${w.name}, with sources for every claim about ${w.name}.`,
     body: `      <h1 class="ext-title">Why Mortar? (vs ${escapeHTML(w.name)})</h1>
-${render(w.md)}
+${render(w.md)
+  .replaceAll('<td>!win ', '<td class="win">')
+  .replace(
+    '</table></div>',
+    '</table></div>\n<p class="table-note">Highlighted: the stronger of the two. A row without one is even.</p>',
+  )}
       <div class="cta ext-cta">
         <a class="btn" href="/download/">Download Mortar</a>
         <a class="btn-ghost" href="/faq/">All questions</a>

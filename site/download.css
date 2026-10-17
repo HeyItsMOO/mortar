@@ -396,3 +396,14 @@ details.release[open] summary h2::before {
 .release-link {
   font-size: 0.9rem;
 }
+/* The stronger side of a "Why Mortar?" comparison row. */
+td.win {
+  background: rgba(214, 177, 122, 0.1);
+  box-shadow: inset 3px 0 0 var(--sand);
+  color: var(--text);
+}
+.table-note {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}

@@ -5,10 +5,10 @@ Gale is a fast, open source Thunderstore manager, and Mortar reads its profiles.
 | | Mortar | Gale |
 |---|---|---|
 | Platforms | Windows, Linux, Steam Deck | Windows, Linux ([README](https://github.com/Kesomannen/gale)) |
-| Games | 188, including Stardew Valley, Vintage Story and The Sims 4 | 237 Thunderstore games ([games.json](https://github.com/Kesomannen/gale/blob/master/src-tauri/games.json)) |
-| Mod sites | Nexus Mods, Thunderstore, CurseForge, Modrinth, GitHub, Vintage Story Mod DB | Thunderstore and Hexium ([README](https://github.com/Kesomannen/gale)) |
-| Sharing | A link or a `.mortar` file | Codes and files compatible with r2modman, modpack upload to Thunderstore ([Features](https://github.com/Kesomannen/gale/wiki/Features)) |
-| Import from other managers | r2modman, Gale, Vortex, Mod Organizer 2, Stardrop | r2modman and Thunderstore Mod Manager ([Features](https://github.com/Kesomannen/gale/wiki/Features)) |
+| Games | 188, including Stardew Valley, Vintage Story and The Sims 4 | !win 237 Thunderstore games ([games.json](https://github.com/Kesomannen/gale/blob/master/src-tauri/games.json)) |
+| Mod sites | !win Nexus Mods, Thunderstore, CurseForge, Modrinth, GitHub, Vintage Story Mod DB | Thunderstore and Hexium ([README](https://github.com/Kesomannen/gale)) |
+| Sharing | A link or a `.mortar` file | !win Codes and files compatible with r2modman, modpack upload to Thunderstore ([Features](https://github.com/Kesomannen/gale/wiki/Features)) |
+| Import from other managers | !win r2modman, Gale, Vortex, Mod Organizer 2, Stardrop | r2modman and Thunderstore Mod Manager ([Features](https://github.com/Kesomannen/gale/wiki/Features)) |
 | Licence | AGPL-3.0 | GPL-3.0 |
 
 ## Where Mortar differs
