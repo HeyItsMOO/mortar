@@ -4,9 +4,31 @@ import { ArrowLeft } from 'lucide-react'
 import { SearchField } from '../shell/SearchField.tsx'
 import { space } from '../theme/density.ts'
 import type { ShellPage } from './SettingsShell.tsx'
+import { setSettingsQuery, useSettingsSearch } from './useSettingsSearch.ts'
 
 const ACTIVE_WEIGHT = 600
 const ICON_SIZE = 18
+
+// Its own component: only the field follows each key typed, not the nav around it.
+function NavSearch() {
+  const { t } = useLingui()
+  const query = useSettingsSearch()
+  return (
+    <SearchField
+      label={t`Search settings`}
+      value={query}
+      onChange={setSettingsQuery}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' && query) {
+          e.preventDefault()
+          e.stopPropagation()
+          setSettingsQuery('')
+        }
+      }}
+      sx={{ width: '100%', mb: 0.5 }}
+    />
+  )
+}
 
 export function SettingsNav<Id extends string>({
   title,
@@ -15,8 +37,6 @@ export function SettingsNav<Id extends string>({
   pages,
   current,
   onPage,
-  query,
-  setQuery,
 }: {
   title: string
   backLabel: string
@@ -24,8 +44,6 @@ export function SettingsNav<Id extends string>({
   pages: ShellPage<Id>[]
   current: Id
   onPage: (id: Id) => void
-  query: string
-  setQuery: (query: string) => void
 }) {
   const { t } = useLingui()
   return (
@@ -68,19 +86,7 @@ export function SettingsNav<Id extends string>({
           {title}
         </Typography>
       </Box>
-      <SearchField
-        label={t`Search settings`}
-        value={query}
-        onChange={setQuery}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape' && query) {
-            e.preventDefault()
-            e.stopPropagation()
-            setQuery('')
-          }
-        }}
-        sx={{ width: '100%', mb: 0.5 }}
-      />
+      <NavSearch />
       {pages.map((s) => {
         const active = current === s.id
         const Icon = s.icon

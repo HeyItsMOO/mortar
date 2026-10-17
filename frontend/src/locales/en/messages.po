@@ -1748,11 +1748,11 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:569
+#: src/games/GameSelect.tsx:508
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
-#: src/settings/SettingsShell.tsx:183
+#: src/settings/SettingsShell.tsx:178
 msgid "Search results"
 msgstr "Search results"
 
@@ -4005,7 +4005,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:550
+#: src/games/GameSelect.tsx:489
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4377,7 +4377,7 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:572
+#: src/games/GameSelect.tsx:511
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
@@ -5638,7 +5638,7 @@ msgstr "Pause downloads while the game runs"
 msgid "{0} of saves"
 msgstr "{0} of saves"
 
-#: src/settings/SettingsShell.tsx:199
+#: src/settings/SettingsShell.tsx:194
 msgid "Try another word, or clear the search."
 msgstr "Try another word, or clear the search."
 
@@ -6547,7 +6547,7 @@ msgstr "Copy"
 msgid "What happens to files the new version of a mod leaves out"
 msgstr "What happens to files the new version of a mod leaves out"
 
-#: src/settings/SettingsShell.tsx:198
+#: src/settings/SettingsShell.tsx:193
 msgid "No settings match"
 msgstr "No settings match"
 
@@ -7588,7 +7588,7 @@ msgstr "Could not switch {0}"
 msgid "Asset map"
 msgstr "Asset map"
 
-#: src/games/GameSelect.tsx:461
+#: src/games/LetterRail.tsx:46
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
@@ -8598,7 +8598,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:109
-#: src/games/GameSelect.tsx:544
+#: src/games/GameSelect.tsx:483
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -10112,7 +10112,7 @@ msgstr "A saved group keeps at least one mod; delete the saved group instead"
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:557
+#: src/games/GameSelect.tsx:496
 msgid "Other games"
 msgstr "Other games"
 
@@ -10308,7 +10308,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/FirstRun.tsx:47
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
-#: src/games/GameSelect.tsx:499
+#: src/games/GameSelect.tsx:438
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -12055,7 +12055,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:557
+#: src/games/GameSelect.tsx:496
 msgid "All games"
 msgstr "All games"
 
@@ -12569,7 +12569,7 @@ msgstr "Updated fixable mods"
 msgid "Order"
 msgstr "Order"
 
-#: src/games/GameSelect.tsx:440
+#: src/games/LetterRail.tsx:25
 msgid "Jump to a letter"
 msgstr "Jump to a letter"
 

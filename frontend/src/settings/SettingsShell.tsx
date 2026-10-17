@@ -8,7 +8,13 @@ import { SEARCH_HIT } from './prefFilter.ts'
 import { SettingsNav } from './SettingsNav.tsx'
 import { dialogOpen } from './shortcuts.ts'
 import { shouldLeavePageOnEscape } from './shouldLeavePageOnEscape.ts'
-import { setSettingsQuery, useShellQuery } from './useSettingsSearch.ts'
+import {
+  setSettingsQuery,
+  settingsQuery,
+  useSettingsSearch,
+  useSettingsSearching,
+  useShellQuery,
+} from './useSettingsSearch.ts'
 
 // One readable column: wider rows push controls too far from their labels, so the content stops growing here.
 const CONTENT_MAX = 880
@@ -53,6 +59,41 @@ function SearchLeads({
   )
 }
 
+// Follows the search text: counts the matching rows after they render, and says when none match or what else does.
+function SearchStatus({
+  results,
+  related,
+  elsewhere,
+}: {
+  results: { readonly current: HTMLDivElement | null }
+  related: Related
+  elsewhere: Elsewhere
+}) {
+  const { t } = useLingui()
+  const query = useSettingsSearch()
+  const [hits, setHits] = useState(0)
+  useLayoutEffect(() => {
+    setHits(query ? (results.current?.querySelectorAll(SEARCH_HIT).length ?? 0) : 0)
+  }, [query, results])
+  const relatedLabels = query && related ? related.match(query) : []
+  return (
+    <>
+      {query && hits === 0 && relatedLabels.length === 0 ? (
+        <EmptyState icon={<SearchX />} title={t`No settings match`} compact={true}>
+          {t`Try another word, or clear the search.`}
+        </EmptyState>
+      ) : null}
+      <SearchLeads
+        query={query}
+        hits={hits}
+        relatedLabels={relatedLabels}
+        related={related}
+        elsewhere={elsewhere}
+      />
+    </>
+  )
+}
+
 export interface ShellPage<Id extends string> {
   id: Id
   label: string
@@ -92,14 +133,14 @@ export function SettingsShell<Id extends string>({
   related?: Related
 }) {
   const { t } = useLingui()
-  const query = useShellQuery(initialQuery)
+  useShellQuery(initialQuery)
+  // Whether a search runs, not its text: the rows follow the text themselves, so typing re-renders only them.
+  const searching = useSettingsSearching()
   const pane = useRef<HTMLDivElement>(null)
   const results = useRef<HTMLDivElement>(null)
-  const [hits, setHits] = useState(0)
-  const relatedLabels = query && related ? related.match(query) : []
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && query) {
+      if (e.key === 'Escape' && settingsQuery()) {
         setSettingsQuery('')
         e.preventDefault()
         return
@@ -110,13 +151,10 @@ export function SettingsShell<Id extends string>({
     }
     globalThis.addEventListener('keydown', onKey)
     return () => globalThis.removeEventListener('keydown', onKey)
-  }, [onBack, query])
-  useLayoutEffect(() => {
-    setHits(query ? (results.current?.querySelectorAll(SEARCH_HIT).length ?? 0) : 0)
-  }, [query])
+  }, [onBack])
   const pick = (id: Id) => {
     onPage(id)
-    if (query) {
+    if (searching) {
       document.getElementById(`settings-section-${id}`)?.scrollIntoView({ block: 'start' })
       return
     }
@@ -140,8 +178,6 @@ export function SettingsShell<Id extends string>({
         pages={pages}
         current={current}
         onPage={pick}
-        query={query}
-        setQuery={setSettingsQuery}
       />
       <Box
         ref={pane}
@@ -175,9 +211,9 @@ export function SettingsShell<Id extends string>({
               alignItems: 'center',
             }}
           >
-            {query ? t`Search results` : pages.find((p) => p.id === current)?.label}
+            {searching ? t`Search results` : pages.find((p) => p.id === current)?.label}
           </Typography>
-          {query ? null : actions[current]}
+          {searching ? null : actions[current]}
         </Box>
         <Box
           ref={results}
@@ -189,19 +225,8 @@ export function SettingsShell<Id extends string>({
             gap: space.pad,
           }}
         >
-          {query && hits === 0 && relatedLabels.length === 0 ? (
-            <EmptyState icon={<SearchX />} title={t`No settings match`} compact={true}>
-              {t`Try another word, or clear the search.`}
-            </EmptyState>
-          ) : null}
-          <SearchLeads
-            query={query}
-            hits={hits}
-            relatedLabels={relatedLabels}
-            related={related}
-            elsewhere={elsewhere}
-          />
-          {query
+          <SearchStatus results={results} related={related} elsewhere={elsewhere} />
+          {searching
             ? pages.map((p) => (
                 <Box
                   key={p.id}

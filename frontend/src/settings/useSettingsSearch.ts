@@ -20,11 +20,12 @@ export function useSettingsMatch(label: string, description = ''): boolean {
 
 export const setSettingsQuery = (query: string) => useSettingsQuery.setState({ query })
 
-/** The shell's query: starts at initial and clears when the shell closes. */
-export function useShellQuery(initial: string): string {
+export const settingsQuery = () => useSettingsQuery.getState().query
+
+/** Starts the shell's search at initial and clears it when the shell closes. */
+export function useShellQuery(initial: string) {
   useLayoutEffect(() => {
     setSettingsQuery(initial)
     return () => setSettingsQuery('')
   }, [initial])
-  return useSettingsSearch()
 }
