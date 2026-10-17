@@ -2,6 +2,7 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import process from 'node:process'
 import { chromium, type Page } from '@playwright/test'
+import { openProfile } from './app.ts'
 import { browserRoot, cpuSeconds, MIB, pssKiB, sample, serverPid, tree } from './mem-proc.ts'
 import { sandboxPort, selftest, serverEnv } from './sandbox.ts'
 
@@ -176,38 +177,6 @@ function pickProfile(): Profile {
   }
   return best
 }
-
-async function openProfile(page: Page, name: string) {
-  await page.goto('/')
-  const welcome = page.getByRole('button', { name: 'Continue' })
-  const profile = page
-    .getByRole('button', { name: new RegExp(`^(Open )?${escapeRegExp(name)}`) })
-    .first()
-  const tabs = page.getByRole('tablist', { name: 'Profile sections' })
-  await welcome.or(profile).or(tabs).first().waitFor({ timeout: 30_000 })
-  if (await welcome.isVisible()) {
-    await welcome.click()
-  }
-  if (!(await profile.isVisible())) {
-    await page.getByRole('button', { name: /^(Switch game|Choose a game)/ }).click()
-    await page.getByRole('menuitem', { name: /^All games/ }).click()
-  }
-  const mods = page.getByRole('tab', { name: 'Mods' })
-  // The tiles animate under the pointer, so a click can land between them; clicking again settles it.
-  for (let attempt = 0; attempt < 3 && !(await mods.isVisible()); attempt++) {
-    if (await profile.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await profile.click()
-    }
-    await mods.waitFor({ timeout: 8000 }).catch(() => undefined)
-  }
-  await mods.waitFor({ timeout: 1000 })
-  const skip = page.getByRole('button', { name: 'Skip tour' })
-  if (await skip.isVisible({ timeout: 1500 }).catch(() => false)) {
-    await skip.click()
-  }
-}
-
-const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 /** A zip of many files holding one SMAPI mod, in the sandbox's own scratch folder. */
 function bigZip(): string {

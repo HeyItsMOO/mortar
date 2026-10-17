@@ -13,6 +13,7 @@
         "lingui.config.ts",
         "vite.config.ts",
         "e2e/mem-budget.ts",
+        "e2e/render-budget.ts",
         "e2e/screens.ts"
       ],
       "vite": false,

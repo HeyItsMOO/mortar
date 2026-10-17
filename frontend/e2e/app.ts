@@ -38,6 +38,39 @@ export async function openSeedFarm(page: Page) {
   }
 }
 
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** Opens the named profile of whichever game holds it, past the welcome screen and the first-run tour. */
+export async function openProfile(page: Page, name: string) {
+  await page.goto('/')
+  const welcome = page.getByRole('button', { name: 'Continue' })
+  const profile = page
+    .getByRole('button', { name: new RegExp(`^(Open )?${escapeRegExp(name)}`) })
+    .first()
+  const tabs = page.getByRole('tablist', { name: 'Profile sections' })
+  await welcome.or(profile).or(tabs).first().waitFor({ timeout: 30_000 })
+  if (await welcome.isVisible()) {
+    await welcome.click()
+  }
+  if (!(await profile.isVisible())) {
+    await page.getByRole('button', { name: /^(Switch game|Choose a game)/ }).click()
+    await page.getByRole('menuitem', { name: /^All games/ }).click()
+  }
+  const mods = page.getByRole('tab', { name: 'Mods' })
+  // The tiles animate under the pointer, so a click can land between them; clicking again settles it.
+  for (let attempt = 0; attempt < 3 && !(await mods.isVisible()); attempt++) {
+    if (await profile.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await profile.click()
+    }
+    await mods.waitFor({ timeout: 8000 }).catch(() => undefined)
+  }
+  await mods.waitFor({ timeout: 1000 })
+  const skip = page.getByRole('button', { name: 'Skip tour' })
+  if (await skip.isVisible({ timeout: 1500 }).catch(() => false)) {
+    await skip.click()
+  }
+}
+
 /** Switches the open game's profile from the title bar's profile menu. */
 export async function switchProfile(page: Page, name: string) {
   await page.getByRole('button', { name: /^Switch profile/ }).click()

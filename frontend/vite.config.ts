@@ -16,6 +16,8 @@ export default defineConfig({
   build: {
     rolldownOptions: {
       output: {
+        // Component names survive minifying, so the render budget (e2e/render-budget.ts) and error stacks name them.
+        keepNames: true,
         // Libraries change less often than the app, and one bundle of everything passed Vite's 500 kB chunk warning.
         codeSplitting: {
           groups: [
