@@ -443,6 +443,12 @@ function batchPrefs(i18n: I18n): Record<string, PrefCopy> {
       label: i18n._(msg`Share problem choices`),
       description: i18n._(msg`Default for Share and Export. You can change it per share.`),
     },
+    shareIncludeLibraries: {
+      label: i18n._(msg`Share libraries and supporting mods`),
+      description: i18n._(
+        msg`Off, a share names only the mods you chose, and the receiver gets what they need. Default for Share and Export.`,
+      ),
+    },
     showAdultContent: {
       label: i18n._(msg`Show adult mods in browse`),
       description: i18n._(

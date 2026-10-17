@@ -187,6 +187,7 @@ function Sharing() {
           'shareIncludeNotes',
           'shareIncludeConfigFiles',
           'shareIncludeProblemChoices',
+          'shareIncludeLibraries',
         ]}
       />
       {lanSharing ? <PairedComputers /> : null}

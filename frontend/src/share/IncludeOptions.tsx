@@ -55,6 +55,7 @@ export function IncludeOptions({
       {row('notes', file ? t`Include notes` : t`Include mod notes`)}
       {row('configFiles', t`Include config files`)}
       {row('problemChoices', t`Include problem choices`)}
+      {row('libraries', t`Include libraries and supporting mods`)}
     </Box>
   )
 }

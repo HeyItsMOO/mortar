@@ -14,6 +14,7 @@ const on = {
   notes: true,
   configFiles: true,
   problemChoices: true,
+  libraries: true,
 }
 
 test('thunderstore is listed only for games that have it', () => {
@@ -77,6 +78,7 @@ test('a paired computer gets every setting, an unpaired one only what is safe to
     notes: null,
     configFiles: 'paired-only',
     problemChoices: null,
+    libraries: null,
   })
   expect(includedKeys(on, { target: 'unpaired', fomod: false })).toEqual([
     'notes',

@@ -4,6 +4,7 @@ export interface ShareInclude {
   notes: boolean
   configFiles: boolean
   problemChoices: boolean
+  libraries: boolean
 }
 
 export function shareIncludeDefaults(s: {
@@ -12,6 +13,7 @@ export function shareIncludeDefaults(s: {
   shareIncludeNotes?: boolean | null
   shareIncludeConfigFiles?: boolean | null
   shareIncludeProblemChoices?: boolean | null
+  shareIncludeLibraries?: boolean | null
 }): ShareInclude {
   return {
     disabledMods: s.shareIncludeDisabledMods === true,
@@ -19,6 +21,7 @@ export function shareIncludeDefaults(s: {
     notes: s.shareIncludeNotes !== false,
     configFiles: s.shareIncludeConfigFiles !== false,
     problemChoices: s.shareIncludeProblemChoices !== false,
+    libraries: s.shareIncludeLibraries !== false,
   }
 }
 
@@ -29,6 +32,7 @@ export function toShareInclude(value: ShareInclude) {
     notes: value.notes,
     configFiles: value.configFiles,
     problemChoices: value.problemChoices,
+    libraries: value.libraries,
   }
 }
 

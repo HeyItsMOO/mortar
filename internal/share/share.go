@@ -138,6 +138,9 @@ type Include struct {
 	ConfigFiles  bool `json:"configFiles"`
 	// ProblemChoices carries the dismissed problems and conflict winners; only a .mortar file has room for them.
 	ProblemChoices bool `json:"problemChoices"`
+	// Libraries carries implicit mods too; without it the share names the mods the player chose and the receiver's
+	// resolver brings what they need.
+	Libraries bool `json:"libraries"`
 	// Dismissed are the profile's dismissed-problem tokens, which live in the player's settings; the caller reads
 	// them when ProblemChoices is set.
 	Dismissed []string `json:"-"`
@@ -156,6 +159,7 @@ func IncludeOf(set settings.Settings) Include {
 		Notes:          on(set.ShareIncludeNotes),
 		ConfigFiles:    on(set.ShareIncludeConfigFiles),
 		ProblemChoices: on(set.ShareIncludeProblemChoices),
+		Libraries:      on(set.ShareIncludeLibraries),
 	}
 }
 
@@ -165,7 +169,7 @@ func DefaultInclude() Include { return IncludeOf(settings.Settings{}) }
 // OwnInclude is what goes between the player's own computers (sync, a paired LAN send): everything, switched-off mods
 // too, since a payload without them would remove them on the other side.
 func OwnInclude() Include {
-	return Include{DisabledMods: true, FomodChoices: true, Notes: true, ConfigFiles: true, ProblemChoices: true}
+	return Include{DisabledMods: true, FomodChoices: true, Notes: true, ConfigFiles: true, ProblemChoices: true, Libraries: true}
 }
 
 // Result is an encoded profile: the payload, both link forms, and the entries left out.
@@ -775,6 +779,9 @@ func Collect(p profile.Profile, include ...Include) (s Shared, left []LeftOut, o
 			if !o.Source.Bundled() && o.StoreKey() == key {
 				group = append(group, o)
 			}
+		}
+		if !inc.Libraries && !slices.ContainsFunc(group, func(o profile.Entry) bool { return !o.Implicit }) {
+			continue
 		}
 		if !slices.ContainsFunc(group, Enabled) && !inc.DisabledMods {
 			off = append(off, key)

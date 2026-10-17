@@ -114,6 +114,7 @@ const defaults: Settings = {
   shareIncludeNotes: true,
   shareIncludeConfigFiles: true,
   shareIncludeProblemChoices: true,
+  shareIncludeLibraries: true,
   verifyNexusMD5: true,
   showAdultContent: false,
   launchAtLogin: false,

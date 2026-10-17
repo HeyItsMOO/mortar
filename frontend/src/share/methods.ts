@@ -77,6 +77,7 @@ export function includeAvailability(
     notes: null,
     configFiles: target === 'unpaired' ? 'paired-only' : linkOnly,
     problemChoices: linkOnly,
+    libraries: null,
   }
 }
 

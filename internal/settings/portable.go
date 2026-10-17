@@ -25,7 +25,7 @@ var portableFields = []string{
 	"autoInstallMortarUpdates", "autoTrackNexus",
 	"lanSharing", "lanPort", "lanAllowAnyAddress", "lanName", "lanAutoAcceptPaired", "downloadFolder", "watchFolders", "syncFolder", "vortexFolder",
 	"profileOrder", "autoRetryDownloads", "pauseDownloadsWhilePlaying", "sidebarBadges",
-	"shareIncludeDisabledMods", "shareIncludeFomodChoices", "shareIncludeNotes", "shareIncludeConfigFiles", "shareIncludeProblemChoices",
+	"shareIncludeDisabledMods", "shareIncludeFomodChoices", "shareIncludeNotes", "shareIncludeConfigFiles", "shareIncludeProblemChoices", "shareIncludeLibraries",
 	"updateDigest", "verifyNexusMD5", "showAdultContent", "launchAtLogin", "startMinimised", "rememberWindow", "extensionConnection",
 	"games",
 }

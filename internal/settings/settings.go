@@ -220,6 +220,9 @@ type Settings struct {
 	ShareIncludeNotes          *bool  `json:"shareIncludeNotes"`
 	ShareIncludeConfigFiles    *bool  `json:"shareIncludeConfigFiles"`
 	ShareIncludeProblemChoices *bool  `json:"shareIncludeProblemChoices"`
+	// ShareIncludeLibraries sends implicit mods too; off, a share names the mods the player chose and the receiver
+	// resolves what they need.
+	ShareIncludeLibraries *bool `json:"shareIncludeLibraries"`
 	// VerifyNexusMD5 compares a Nexus download with the md5 in the mod's file list, which the queue usually read already
 	// to choose the file; a file named up front (a link, a share) costs one file-list request.
 	VerifyNexusMD5 bool `json:"verifyNexusMD5"`

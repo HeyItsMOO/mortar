@@ -153,6 +153,7 @@ var registry = withDefaults([]pref{
 	ptrPref("shareIncludeNotes", ScopeApp, func(s Settings, _ string) *bool { return s.ShareIncludeNotes }, func(s *Settings, _ string, on bool) { s.ShareIncludeNotes = &on }),
 	ptrPref("shareIncludeConfigFiles", ScopeApp, func(s Settings, _ string) *bool { return s.ShareIncludeConfigFiles }, func(s *Settings, _ string, on bool) { s.ShareIncludeConfigFiles = &on }),
 	ptrPref("shareIncludeProblemChoices", ScopeApp, func(s Settings, _ string) *bool { return s.ShareIncludeProblemChoices }, func(s *Settings, _ string, on bool) { s.ShareIncludeProblemChoices = &on }),
+	ptrPref("shareIncludeLibraries", ScopeApp, func(s Settings, _ string) *bool { return s.ShareIncludeLibraries }, func(s *Settings, _ string, on bool) { s.ShareIncludeLibraries = &on }),
 	sourcePref("nexus", boolPref("verifyNexusMD5", ScopeSource, func(s Settings, _ string) bool { return s.VerifyNexusMD5 }, func(s *Settings, _ string, on bool) { s.VerifyNexusMD5 = on })),
 	boolPref("keepInTray", ScopeApp, func(s Settings, _ string) bool { return s.KeepInTray }, func(s *Settings, _ string, on bool) { s.KeepInTray = on }),
 	boolPref("includeBetaReleases", ScopeApp, func(s Settings, _ string) bool { return s.IncludeBetaReleases }, func(s *Settings, _ string, on bool) { s.IncludeBetaReleases = on }),

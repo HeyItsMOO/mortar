@@ -177,6 +177,7 @@ func defaultPrefs() Settings {
 		ShareIncludeNotes:          on(),
 		ShareIncludeConfigFiles:    on(),
 		ShareIncludeProblemChoices: on(),
+		ShareIncludeLibraries:      on(),
 		VerifyNexusMD5:             true,
 		ShowAdultContent:           false,
 		LaunchAtLogin:              false,
@@ -296,6 +297,9 @@ func normalizePrefs(s *Settings) {
 	}
 	if s.ShareIncludeConfigFiles == nil {
 		s.ShareIncludeConfigFiles = on()
+	}
+	if s.ShareIncludeLibraries == nil {
+		s.ShareIncludeLibraries = on()
 	}
 	if s.ShareIncludeProblemChoices == nil {
 		s.ShareIncludeProblemChoices = on()

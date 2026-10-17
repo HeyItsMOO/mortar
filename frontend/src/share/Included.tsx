@@ -95,6 +95,7 @@ export function Included({
     configFiles: t`Config files`.toLocaleLowerCase(i18n.locale),
     disabledMods: '',
     problemChoices: t`Problem choices`.toLocaleLowerCase(i18n.locale),
+    libraries: '',
   }
   const shared = sharedMods(info)
   const count = total

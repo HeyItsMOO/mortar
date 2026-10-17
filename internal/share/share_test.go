@@ -792,3 +792,17 @@ func TestAPatreonEntryTravelsAsItsPostIDAlone(t *testing.T) {
 		}
 	}
 }
+
+// Without libraries a share names only the mods the player chose; the receiver's resolver brings the rest.
+func TestCollectLeavesOutLibrariesWhenAsked(t *testing.T) {
+	p := profile.Profile{Name: "P", Entries: []profile.Entry{nexus("chosen", 1, 2), nexus("lib", 3, 4)}}
+	p.Entries[1].Implicit = true
+	inc := DefaultInclude()
+	if s, _, _ := Collect(p, inc); len(s.Entries) != 2 {
+		t.Fatalf("with libraries = %+v", s.Entries)
+	}
+	inc.Libraries = false
+	if s, left, _ := Collect(p, inc); len(s.Entries) != 1 || s.Entries[0].ModID != 1 || len(left) != 0 {
+		t.Fatalf("without libraries = %+v, left out %+v", s.Entries, left)
+	}
+}
