@@ -29,7 +29,6 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/backdrop"
 	"github.com/Rethunk-Tech/mortar/internal/bisect"
 	"github.com/Rethunk-Tech/mortar/internal/browse"
-	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/cli"
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/configsvc"
@@ -62,6 +61,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/problems"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/queue"
+	"github.com/Rethunk-Tech/mortar/internal/savedgroups"
 	"github.com/Rethunk-Tech/mortar/internal/savessvc"
 	"github.com/Rethunk-Tech/mortar/internal/secret"
 	"github.com/Rethunk-Tech/mortar/internal/selfexe"
@@ -668,7 +668,7 @@ func run() error {
 	profileSvc.QueueProfileRestored = queueSvc.RestoreProfile
 	savesSvc.Enqueue = queueSvc.Add
 	profileSvc.Version = version
-	bundlesSvc := bundles.NewService(profiles, dataDir)
+	savedGroupsSvc := savedgroups.NewService(profiles, dataDir)
 	problemsSvc := problems.NewService(home, store, profiles, modMeta)
 	problemsSvc.Runs = launches
 	problemsSvc.SaveFarms = savesSvc.FarmTypes
@@ -824,12 +824,12 @@ func run() error {
 		},
 	})
 	templatesSvc := templates.NewService(templates.Deps{
-		Profiles: profiles, Bundles: bundlesSvc,
+		Profiles: profiles, SavedGroups: savedGroupsSvc,
 		GameSettings: launches.GameSettings, SetGameSettings: launches.SetGameSettings,
 	}, dataDir)
 
 	keepSources := []datasvc.KeySource{
-		bundlesSvc.ReferencedStoreKeys, templatesSvc.ReferencedStoreKeys,
+		savedGroupsSvc.ReferencedStoreKeys, templatesSvc.ReferencedStoreKeys,
 		func() (map[string][]string, error) { return queueSvc.StagedKeys(), nil },
 	}
 	dataSvc := datasvc.NewService(items, profiles, keepSources,
@@ -911,7 +911,7 @@ func run() error {
 		application.NewService(launches),
 		application.NewService(pick),
 		application.NewService(openSvc),
-		application.NewService(bundlesSvc),
+		application.NewService(savedGroupsSvc),
 		application.NewService(templatesSvc),
 		application.NewService(archivesSvc),
 		application.NewService(savesSvc),
@@ -983,7 +983,7 @@ func run() error {
 	}()
 	ctl := &control.Services{
 		Version: version, Settings: store, SettingsSvc: svc, Games: gamesSvc, Store: profiles, Profiles: profileSvc,
-		Problems: problemsSvc, Launches: launches, Saves: savesSvc, Queue: queueSvc, Tools: toolsSvc, Bundles: bundlesSvc,
+		Problems: problemsSvc, Launches: launches, Saves: savesSvc, Queue: queueSvc, Tools: toolsSvc, SavedGroups: savedGroupsSvc,
 		Nexus: nexusSvc, Shares: shareSvc, Data: dataSvc, Plays: plays, Loaders: loaders, Templates: templatesSvc, Archives: archivesSvc, Bisect: bisectSvc, StoreCheck: checkSvc, Lan: lanSvc, Updates: updates, Nxm: nxmSvc, Support: supportSvc, Packs: packs,
 		Emit: func(name string, data any) {
 			if name == control.InstallAskEvent {

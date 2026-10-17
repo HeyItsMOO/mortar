@@ -19,7 +19,6 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/avscan"
 	"github.com/Rethunk-Tech/mortar/internal/backup"
 	"github.com/Rethunk-Tech/mortar/internal/bisect"
-	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/datasvc"
 	"github.com/Rethunk-Tech/mortar/internal/game"
@@ -33,6 +32,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/problems"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/queue"
+	"github.com/Rethunk-Tech/mortar/internal/savedgroups"
 	"github.com/Rethunk-Tech/mortar/internal/savessvc"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/share"
@@ -80,7 +80,7 @@ type Services struct {
 	Saves       *savessvc.Service
 	Queue       *queue.Service
 	Tools       *tools.Service
-	Bundles     *bundles.Service
+	SavedGroups *savedgroups.Service
 	Nexus       *nexussvc.Service
 	Shares      *sharesvc.Service
 	Data        *datasvc.Service
@@ -199,14 +199,15 @@ type Doctor struct {
 	NxmPrevious string                          `json:"nxmPrevious"`
 }
 
-type BundleRow struct {
-	bundles.Bundle
+type SavedGroupRow struct {
+	savedgroups.SavedGroup
 	Profiles []string `json:"profiles"`
 }
 
-type BundleApply struct {
+type SavedGroupApply struct {
 	Added   int      `json:"added"`
 	Missing []string `json:"missing"`
+	Group   string   `json:"group"`
 }
 
 type NexusUntrack struct {
@@ -286,13 +287,25 @@ func modProblems(p profile.Profile, result problems.Result, source, id string) [
 	return out
 }
 
-func resolveBundle(list []bundles.Bundle, name string) (bundles.Bundle, error) {
-	for _, bundle := range list {
-		if bundle.ID == name || bundle.Name == name {
-			return bundle, nil
+func resolveSavedGroup(list []savedgroups.SavedGroup, name string) (savedgroups.SavedGroup, error) {
+	for _, group := range list {
+		if group.ID == name || group.Name == name {
+			return group, nil
 		}
 	}
-	return bundles.Bundle{}, fmt.Errorf("bundle %q not found", name)
+	return savedgroups.SavedGroup{}, fmt.Errorf("saved group %q not found", name)
+}
+
+// holdsAll reports whether the profile has every mod of the saved group. Optional files have no id and travel with
+// their main mod, so they are not counted.
+func holdsAll(prof profile.Profile, g savedgroups.SavedGroup) bool {
+	have := map[string]bool{}
+	for _, entry := range prof.Entries {
+		for _, m := range entry.Mods {
+			have[m.ID.Fold()] = true
+		}
+	}
+	return !slices.ContainsFunc(g.Mods, func(m savedgroups.Mod) bool { return m.ID != "" && !have[m.ID.Fold()] })
 }
 
 // Handle runs one method against the live services.
@@ -495,11 +508,11 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 			err = backup.ErrNoSaves
 		}
 		return nil, err
-	case "bundles":
-		if s.Bundles == nil {
-			return nil, errors.New("bundles are unavailable")
+	case "groups":
+		if s.SavedGroups == nil {
+			return nil, errors.New("saved groups are unavailable")
 		}
-		list, err := s.Bundles.List(p.Game)
+		list, err := s.SavedGroups.List(p.Game)
 		if err != nil {
 			return nil, err
 		}
@@ -507,58 +520,40 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 		if err != nil {
 			return nil, err
 		}
-		out := make([]BundleRow, 0, len(list))
-		for _, b := range list {
-			ids := make(map[mod.ID]bool)
-			for _, m := range b.Mods {
-				ids[m.ID] = true
-			}
+		out := make([]SavedGroupRow, 0, len(list))
+		for _, g := range list {
 			var names []string
 			for _, prof := range profiles {
-				if prof.Error != "" {
-					continue
-				}
-				have := make(map[mod.ID]bool)
-				for _, entry := range prof.Entries {
-					for _, im := range entry.Mods {
-						have[im.ID] = true
-					}
-				}
-				ok := true
-				for id := range ids {
-					if !have[id] {
-						ok = false
-						break
-					}
-				}
-				if ok {
+				if prof.Error == "" && holdsAll(prof, g) {
 					names = append(names, prof.Name)
 				}
 			}
-			out = append(out, BundleRow{Bundle: b, Profiles: names})
+			out = append(out, SavedGroupRow{SavedGroup: g, Profiles: names})
 		}
 		return out, nil
-	case "bundles.apply":
-		if s.Bundles == nil {
-			return nil, errors.New("bundles are unavailable")
+	case "groups.apply":
+		if s.SavedGroups == nil {
+			return nil, errors.New("saved groups are unavailable")
 		}
 		prof, err := s.resolve(p.Game, p.Profile)
 		if err != nil {
 			return nil, err
 		}
-		list, err := s.Bundles.List(p.Game)
+		list, err := s.SavedGroups.List(p.Game)
 		if err != nil {
 			return nil, err
 		}
-		bundle, err := resolveBundle(list, p.Name)
+		group, err := resolveSavedGroup(list, p.Name)
 		if err != nil {
 			return nil, err
 		}
-		result, err := s.Bundles.Apply(p.Game, bundle.ID, prof.ID)
-		if err != nil {
-			return nil, err
-		}
-		return BundleApply{Added: result.Added, Missing: result.Missing}, nil
+		return s.changed(p.Game, func() (any, error) {
+			result, err := s.SavedGroups.Apply(p.Game, group.ID, prof.ID)
+			if err != nil {
+				return nil, err
+			}
+			return SavedGroupApply{Added: result.Added, Missing: result.Missing, Group: result.Group}, nil
+		})
 	case "source.untrack":
 		if err := trackingSource(p.Source); err != nil {
 			return nil, err

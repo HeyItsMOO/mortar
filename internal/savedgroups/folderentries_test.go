@@ -1,4 +1,4 @@
-package bundles
+package savedgroups
 
 import (
 	"testing"

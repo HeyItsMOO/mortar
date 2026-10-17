@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/gamesettings"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
+	"github.com/Rethunk-Tech/mortar/internal/savedgroups"
 	"github.com/Rethunk-Tech/mortar/internal/testenv"
 )
 
@@ -44,8 +44,8 @@ func TestTemplateRoundTripFromProfileToNewProfile(t *testing.T) {
 	mode := "borderless"
 	stored := map[string]gamesettings.Settings{from.ID: {WindowMode: &mode}}
 	svc := NewService(Deps{
-		Profiles: profiles,
-		Bundles:  bundles.NewService(profiles, dataDir),
+		Profiles:    profiles,
+		SavedGroups: savedgroups.NewService(profiles, dataDir),
 		GameSettings: func(_, id string) (gamesettings.Settings, error) {
 			return stored[id], nil
 		},
@@ -56,7 +56,7 @@ func TestTemplateRoundTripFromProfileToNewProfile(t *testing.T) {
 	}, dataDir)
 
 	saved, err := svc.SaveTemplateFromProfile("stardew", from.ID, " Starter ")
-	if err != nil || saved.Name != "Starter" || len(saved.Bundle) != 1 || saved.LaunchOptions != "--no-gui" {
+	if err != nil || saved.Name != "Starter" || len(saved.Mods) != 1 || saved.LaunchOptions != "--no-gui" {
 		t.Fatalf("saved = %+v, %v", saved, err)
 	}
 	if _, err := svc.SaveTemplateFromProfile("stardew", from.ID, "starter"); err != nil {
@@ -183,12 +183,12 @@ func TestTemplateCarriesDisabledLaunchStateAndSkipsLoaderMods(t *testing.T) {
 		t.Fatal(err)
 	}
 	svc := NewService(Deps{
-		Profiles: profiles, Bundles: bundles.NewService(profiles, dataDir),
+		Profiles: profiles, SavedGroups: savedgroups.NewService(profiles, dataDir),
 		GameSettings:    func(string, string) (gamesettings.Settings, error) { return gamesettings.Settings{}, nil },
 		SetGameSettings: func(string, string, gamesettings.Settings) error { return nil },
 	}, dataDir)
 	saved, err := svc.SaveTemplateFromProfile("stardew", from.ID, "T")
-	if err != nil || len(saved.Bundle) != 2 || len(saved.Disabled) != 1 {
+	if err != nil || len(saved.Mods) != 2 || len(saved.Disabled) != 1 {
 		t.Fatalf("saved = %+v, %v", saved, err)
 	}
 	keys, err := svc.ReferencedStoreKeys()

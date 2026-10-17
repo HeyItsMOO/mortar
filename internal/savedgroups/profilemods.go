@@ -1,8 +1,6 @@
-package bundles
+package savedgroups
 
-import "github.com/Rethunk-Tech/mortar/internal/mod"
-
-// ProfileMods snapshots every mod of a profile in the form bundles store them.
+// ProfileMods snapshots every mod of a profile in the form saved groups store them.
 //
 //wails:ignore
 func (s *Service) ProfileMods(gameID, profileID string) ([]Mod, error) {
@@ -14,15 +12,7 @@ func (s *Service) ProfileMods(gameID, profileID string) ([]Mod, error) {
 	if err != nil {
 		return nil, err
 	}
-	var ids []mod.ID
-	for _, e := range p.Entries {
-		if e.Source.Bundled() {
-			continue
-		}
-		for _, m := range e.Mods {
-			ids = append(ids, m.ID)
-		}
-	}
+	ids := profileModIDs(p)
 	if len(ids) == 0 {
 		return []Mod{}, nil
 	}

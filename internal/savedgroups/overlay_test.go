@@ -1,4 +1,4 @@
-package bundles
+package savedgroups
 
 import (
 	"os"
@@ -29,7 +29,7 @@ func addFiles(t *testing.T, items *modstore.Store, key string, files map[string]
 	}
 }
 
-func TestBundleCarriesOptionalFiles(t *testing.T) {
+func TestSavedGroupCarriesOptionalFiles(t *testing.T) {
 	svc, profiles, items := testService(t)
 	main, opt := modstore.NexusKey(5, 1), modstore.NexusKey(5, 2)
 	addFiles(t, items, main, map[string]string{"Mod/manifest.json": `{"Name":"M","UniqueID":"M.One","Version":"1.0.0"}`, "Mod/a.png": "main"})
@@ -51,7 +51,7 @@ func TestBundleCarriesOptionalFiles(t *testing.T) {
 	}
 	b, err := svc.Create("stardew", "Set", from.ID, []mod.ID{"smapi:M.One"})
 	if err != nil || len(b.Mods) != 2 || b.Mods[1].OverlayOf != main || b.Mods[1].OverlayTo != "Mod" {
-		t.Fatalf("bundle = %+v, %v", b.Mods, err)
+		t.Fatalf("saved group = %+v, %v", b.Mods, err)
 	}
 	to, err := profiles.Create("stardew", "To")
 	if err != nil {

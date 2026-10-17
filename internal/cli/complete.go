@@ -45,7 +45,7 @@ var subverbs = map[string][]string{
 	"history":    {"diff", "revert", "usage", "trim"},
 	"mods":       {"enable", "disable", "pin", "unpin", "remove", "tag", "untag", "category", "channel", "note", "skip-version", "split", "combine", "files", "config", "preset", "menu", "compat", "report", "by-author", "win", "group"},
 	"game":       {"steam-launch-option", "launch-preset-templates", "reset-install", "steam-status"},
-	"bundles":    {"apply", "create", "delete", "rename", "add", "remove"},
+	"groups":     {"apply", "create", "delete", "rename", "add", "remove"},
 	"lan":        {"peers", "send", "inbox", "accept", "decline"},
 	"app":        {"update"},
 	"support":    {"diagnostics"},
@@ -102,7 +102,7 @@ func positions(words []string) (gameAt, profileAt, modAt int) {
 		return 0, 0, 0
 	case "game":
 		return 2, 0, 0
-	case "bundles":
+	case "groups":
 		return 1, 0, 0
 	case "source":
 		if len(words) > 1 && words[1] == "tracked" {

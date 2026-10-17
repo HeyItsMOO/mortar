@@ -1,4 +1,4 @@
-package bundles
+package savedgroups
 
 import (
 	"errors"
@@ -47,7 +47,7 @@ func addItem(t *testing.T, items *modstore.Store, key, uniqueID, name string) {
 	}
 }
 
-func TestBundleStoreSnapshotsAndPersistsMods(t *testing.T) {
+func TestSavedGroupsSnapshotAndPersistMods(t *testing.T) {
 	svc, profiles, items := testService(t)
 	addItem(t, items, "local-a", "A.One", "A One")
 	addItem(t, items, "local-b", "B.Two", "B Two")
@@ -68,7 +68,7 @@ func TestBundleStoreSnapshotsAndPersistsMods(t *testing.T) {
 		t.Fatal(err)
 	}
 	if b.ID == "" || b.Name != "SVE core" || len(b.Mods) != 2 {
-		t.Fatalf("created bundle = %+v", b)
+		t.Fatalf("created saved group = %+v", b)
 	}
 	if b.Mods[0].EntryKey != "local-b" || b.Mods[0].Source.Name != "b.zip" {
 		t.Fatalf("first snapshot = %+v", b.Mods[0])
@@ -78,14 +78,14 @@ func TestBundleStoreSnapshotsAndPersistsMods(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(list) != 1 || !slices.Equal([]string{list[0].Mods[0].ID.Local(), list[0].Mods[1].ID.Local()}, []string{"B.Two", "A.One"}) {
-		t.Fatalf("listed bundles = %+v", list)
+		t.Fatalf("listed saved groups = %+v", list)
 	}
 	b, err = svc.Rename("stardew", b.ID, "SVE essentials")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if b.Name != "SVE essentials" {
-		t.Fatalf("renamed bundle = %+v", b)
+		t.Fatalf("renamed saved group = %+v", b)
 	}
 	if b, err = svc.RemoveMods("stardew", b.ID, []mod.ID{"smapi:b.two"}); err != nil || len(b.Mods) != 1 || b.Mods[0].ID != "smapi:A.One" {
 		t.Fatalf("after remove = %+v, %v", b, err)
@@ -101,15 +101,15 @@ func TestBundleStoreSnapshotsAndPersistsMods(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(list) != 0 {
-		t.Fatalf("bundles after delete = %+v", list)
+		t.Fatalf("saved groups after delete = %+v", list)
 	}
 }
 
-func TestReferencedKeysKeepProfileExtrasAndBundlesDuringCollect(t *testing.T) {
+func TestReferencedKeysKeepProfileExtrasAndSavedGroupsDuringCollect(t *testing.T) {
 	svc, profiles, items := testService(t)
 	addItem(t, items, "profile-main", "Profile.Main", "Profile Main")
 	addItem(t, items, "profile-extra", "Profile.Extra", "Profile Extra")
-	addItem(t, items, "bundle-only", "Bundle.Only", "Bundle Only")
+	addItem(t, items, "group-only", "Group.Only", "Group Only")
 	addItem(t, items, "unused", "Unused.Mod", "Unused")
 
 	profileSource, err := profiles.Create("stardew", "Profile")
@@ -123,20 +123,20 @@ func TestReferencedKeysKeepProfileExtrasAndBundlesDuringCollect(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	bundleSource, err := profiles.Create("stardew", "Bundle source")
+	groupSource, err := profiles.Create("stardew", "Group source")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := profiles.AddEntry("stardew", bundleSource.ID, "bundle-only", profile.Source{}); err != nil {
+	if _, err := profiles.AddEntry("stardew", groupSource.ID, "group-only", profile.Source{}); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := svc.Create("stardew", "Saved bundle", bundleSource.ID, []mod.ID{"smapi:Bundle.Only"}); err != nil {
+	if _, err := svc.Create("stardew", "Saved group", groupSource.ID, []mod.ID{"smapi:Group.Only"}); err != nil {
 		t.Fatal(err)
 	}
-	if err := profiles.Delete("stardew", bundleSource.ID); err != nil {
+	if err := profiles.Delete("stardew", groupSource.ID); err != nil {
 		t.Fatal(err)
 	}
-	if err := profiles.Purge("stardew", bundleSource.ID); err != nil {
+	if err := profiles.Purge("stardew", groupSource.ID); err != nil {
 		t.Fatal(err)
 	}
 
@@ -144,17 +144,17 @@ func TestReferencedKeysKeepProfileExtrasAndBundlesDuringCollect(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	bundleKeys, err := svc.ReferencedStoreKeys()
+	groupKeys, err := svc.ReferencedStoreKeys()
 	if err != nil {
 		t.Fatal(err)
 	}
-	for game, referenced := range bundleKeys {
+	for game, referenced := range groupKeys {
 		keys[game] = append(keys[game], referenced...)
 	}
 	if err := items.Collect(keys, time.Now().Add(31*24*time.Hour)); err != nil {
 		t.Fatal(err)
 	}
-	for _, key := range []string{"profile-main", "profile-extra", "bundle-only"} {
+	for _, key := range []string{"profile-main", "profile-extra", "group-only"} {
 		if _, err := items.Path("stardew", key); err != nil {
 			t.Fatalf("referenced item %q was collected: %v", key, err)
 		}
@@ -183,7 +183,7 @@ func TestApplyAddsStoreEntriesAndReportsMissingMods(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	b, err := svc.Create("stardew", "Bundle", source.ID, []mod.ID{"smapi:A.One", "smapi:B.Two"})
+	b, err := svc.Create("stardew", "Group", source.ID, []mod.ID{"smapi:A.One", "smapi:B.Two"})
 	if err != nil {
 		t.Fatal(err)
 	}

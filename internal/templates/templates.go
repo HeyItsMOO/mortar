@@ -1,4 +1,4 @@
-// Package templates stores profile templates: a bundle of mods plus game settings and launch options that a new
+// Package templates stores profile templates: a set of mods plus game settings and launch options that a new
 // profile starts from.
 package templates
 
@@ -12,13 +12,13 @@ import (
 	"sync"
 	"unicode/utf8"
 
-	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	gamepkg "github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/gamesettings"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
+	"github.com/Rethunk-Tech/mortar/internal/savedgroups"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
@@ -38,7 +38,7 @@ type LaunchConfig struct {
 type Template struct {
 	Name          string                `json:"name"`
 	Game          string                `json:"game"`
-	Bundle        []bundles.Mod         `json:"bundle"`
+	Mods          []savedgroups.Mod     `json:"mods"`
 	Disabled      []mod.ID              `json:"disabled"`
 	GameSettings  gamesettings.Settings `json:"gameSettings"`
 	LaunchOptions string                `json:"launchOptions"`
@@ -48,7 +48,7 @@ type Template struct {
 // Deps wires the service to the stores that hold the pieces a template captures.
 type Deps struct {
 	Profiles        *profile.Store
-	Bundles         *bundles.Service
+	SavedGroups     *savedgroups.Service
 	GameSettings    func(game, profileID string) (gamesettings.Settings, error)
 	SetGameSettings func(game, profileID string, s gamesettings.Settings) error
 }
@@ -148,7 +148,7 @@ func (s *Service) SaveTemplateFromProfile(game, profileID, name string) (Templat
 	if err != nil {
 		return Template{}, err
 	}
-	mods, err := s.d.Bundles.ProfileMods(game, profileID)
+	mods, err := s.d.SavedGroups.ProfileMods(game, profileID)
 	if err != nil {
 		return Template{}, err
 	}
@@ -164,7 +164,7 @@ func (s *Service) SaveTemplateFromProfile(game, profileID, name string) (Templat
 	if err != nil {
 		return Template{}, err
 	}
-	t := Template{Name: name, Game: game, Bundle: mods, Disabled: disabledMods(p), GameSettings: settings, LaunchOptions: options, LaunchConfig: launchOf(p)}
+	t := Template{Name: name, Game: game, Mods: mods, Disabled: disabledMods(p), GameSettings: settings, LaunchOptions: options, LaunchConfig: launchOf(p)}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	list, err := s.read(game)
@@ -196,19 +196,19 @@ func (s *Service) DeleteTemplate(game, name string) error {
 
 // NewProfileFromTemplate creates a profile and fills it from the template. Mods the store lacks come back in Missing
 // for the caller to download. A failure after the profile exists moves it to the trash again.
-func (s *Service) NewProfileFromTemplate(game, templateName, profileName string) (bundles.ApplyResult, error) {
+func (s *Service) NewProfileFromTemplate(game, templateName, profileName string) (savedgroups.ApplyResult, error) {
 	t, err := s.find(game, templateName)
 	if err != nil {
-		return bundles.ApplyResult{}, err
+		return savedgroups.ApplyResult{}, err
 	}
 	p, err := s.d.Profiles.Create(game, profileName)
 	if err != nil {
-		return bundles.ApplyResult{}, err
+		return savedgroups.ApplyResult{}, err
 	}
-	add, _, _ := split(p, t.Bundle)
+	add, _, _ := split(p, t.Mods)
 	res, err := s.fill(game, p.ID, t, add)
 	if err != nil {
-		return bundles.ApplyResult{}, errors.Join(err, s.d.Profiles.Delete(game, p.ID))
+		return savedgroups.ApplyResult{}, errors.Join(err, s.d.Profiles.Delete(game, p.ID))
 	}
 	return res, nil
 }
@@ -235,7 +235,7 @@ func (s *Service) ReferencedStoreKeys() (map[string][]string, error) {
 			return nil, err
 		}
 		for _, t := range list {
-			for _, m := range t.Bundle {
+			for _, m := range t.Mods {
 				if m.EntryKey != "" {
 					out[game] = append(out[game], m.EntryKey)
 				}

@@ -9,7 +9,7 @@ import (
 )
 
 func (c *cmd) modsGroup() error {
-	a, err := c.need(2, "a game", "a profile", "list, create, delete, add, remove, on, or off")
+	a, err := c.need(2, "a game", "a profile", "list, create, rename, delete, add, remove, on, or off")
 	if err != nil {
 		return err
 	}
@@ -35,6 +35,14 @@ func (c *cmd) modsGroup() error {
 		return show(c, "mods.group", p, func(got profile.Profile) {
 			fmt.Fprintf(c.out, "Group %s %s.\n", p.Name, a[2])
 		})
+	case "rename":
+		if len(a) < 5 {
+			return usageError{"mods group rename needs a group name and a new name"}
+		}
+		p.Name, p.Value = a[3], strings.Join(a[4:], " ")
+		return show(c, "mods.group", p, func(got profile.Profile) {
+			fmt.Fprintf(c.out, "Group %s renamed to %s.\n", p.Name, p.Value)
+		})
 	case "add", "remove":
 		if len(a) < 5 {
 			return usageError{"mods group " + a[2] + " needs a group name and a mod id"}
@@ -45,6 +53,6 @@ func (c *cmd) modsGroup() error {
 			fmt.Fprintf(c.out, "%s %s %s.\n", strings.ToUpper(a[2][:1])+a[2][1:], p.IDs[0], p.Name)
 		})
 	default:
-		return usageError{"mods group needs list, create, delete, add, remove, on, or off"}
+		return usageError{"mods group needs list, create, rename, delete, add, remove, on, or off"}
 	}
 }

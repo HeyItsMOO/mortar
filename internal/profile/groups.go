@@ -82,6 +82,46 @@ func (s *Store) CreateGroup(game, id, name string) (Profile, error) {
 	})
 }
 
+// freeGroupName is name, or when the profile has a group by that name the first of "name (2)", "name (3)" and so on
+// that it does not, cut to fit the length limit.
+func (p Profile) freeGroupName(name string) string {
+	if p.groupIndex(name) < 0 {
+		return name
+	}
+	for n := 2; ; n++ {
+		suffix := fmt.Sprintf(" (%d)", n)
+		base := []rune(name)
+		if over := len(base) + utf8.RuneCountInString(suffix) - maxGroupName; over > 0 {
+			base = base[:len(base)-over]
+		}
+		if candidate := string(base) + suffix; p.groupIndex(candidate) < 0 {
+			return candidate
+		}
+	}
+}
+
+// AddGroup creates a group holding those of keys that name entries of the profile, under the first free name from
+// freeGroupName, and returns the profile and the name it took.
+func (s *Store) AddGroup(game, id, name string, keys []string) (Profile, string, error) {
+	name, err := s.unlockedGroupName(game, id, name)
+	if err != nil {
+		return Profile{}, "", err
+	}
+	var used string
+	p, err := s.update(game, id, func(p *Profile, _ string) error {
+		used = p.freeGroupName(name)
+		held := make([]string, 0, len(keys))
+		for _, key := range keys {
+			if entryIndex(p.Entries, key) >= 0 && !slices.Contains(held, key) {
+				held = append(held, key)
+			}
+		}
+		p.Groups = append(p.Groups, Group{Name: used, Keys: held})
+		return nil
+	})
+	return p, used, err
+}
+
 // RenameGroup changes a group's name.
 func (s *Store) RenameGroup(game, id, name, next string) (Profile, error) {
 	next, err := cleanGroupName(next)

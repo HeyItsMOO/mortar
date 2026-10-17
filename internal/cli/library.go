@@ -7,11 +7,11 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/archive"
 	"github.com/Rethunk-Tech/mortar/internal/archivesvc"
-	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/control"
 	"github.com/Rethunk-Tech/mortar/internal/datasvc"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/queue"
+	"github.com/Rethunk-Tech/mortar/internal/savedgroups"
 	"github.com/Rethunk-Tech/mortar/internal/savessvc"
 	"github.com/Rethunk-Tech/mortar/internal/templates"
 )
@@ -45,7 +45,7 @@ func (c *cmd) templatesCmd() error {
 		return show(c, "templates", control.Params{Game: a[0]}, func(list []templates.Template) {
 			rows := make([][]string, 0, len(list))
 			for _, t := range list {
-				rows = append(rows, []string{t.Name, strconv.Itoa(len(t.Bundle))})
+				rows = append(rows, []string{t.Name, strconv.Itoa(len(t.Mods))})
 			}
 			c.table("NAME\tMODS", rows)
 		})
@@ -55,7 +55,7 @@ func (c *cmd) templatesCmd() error {
 			return err
 		}
 		return show(c, "templates.save", control.Params{Game: a[0], Profile: a[1], Name: strings.Join(a[2:], " ")}, func(t templates.Template) {
-			fmt.Fprintf(c.out, "Saved template %s with %d mods.\n", t.Name, len(t.Bundle))
+			fmt.Fprintf(c.out, "Saved template %s with %d mods.\n", t.Name, len(t.Mods))
 		})
 	case "delete":
 		a, err := c.need(2, "a game", "a template name")
@@ -72,7 +72,7 @@ func (c *cmd) templatesCmd() error {
 		if err != nil {
 			return err
 		}
-		var res bundles.ApplyResult
+		var res savedgroups.ApplyResult
 		p := control.Params{Game: a[0], Name: a[1], Value: strings.Join(a[2:], " ")}
 		if err := c.call("templates.new", p, &res, installTimeout); err != nil {
 			return err

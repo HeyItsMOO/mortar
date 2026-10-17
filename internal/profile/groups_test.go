@@ -2,7 +2,9 @@ package profile
 
 import (
 	"slices"
+	"strings"
 	"testing"
+	"unicode/utf8"
 )
 
 func TestSetGroupEnabledOneHistoryEvent(t *testing.T) {
@@ -71,5 +73,20 @@ func TestRemoveEntryDropsGroupKeys(t *testing.T) {
 	}
 	if slices.ContainsFunc(p.Groups, func(g Group) bool { return slices.Contains(g.Keys, key) }) {
 		t.Fatalf("groups still name %s: %+v", key, p.Groups)
+	}
+}
+
+func TestFreeGroupNameCountsUpAndStaysWithinTheLimit(t *testing.T) {
+	t.Parallel()
+	long := strings.Repeat("g", maxGroupName)
+	p := Profile{Groups: []Group{{Name: "Core"}, {Name: "core (2)"}, {Name: long}}}
+	if got := p.freeGroupName("Fresh"); got != "Fresh" {
+		t.Fatalf("free name = %q", got)
+	}
+	if got := p.freeGroupName("CORE"); got != "CORE (3)" {
+		t.Fatalf("taken name = %q", got)
+	}
+	if got := p.freeGroupName(long); utf8.RuneCountInString(got) != maxGroupName || !strings.HasSuffix(got, " (2)") {
+		t.Fatalf("long name = %q", got)
 	}
 }

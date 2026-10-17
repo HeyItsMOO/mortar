@@ -41,12 +41,12 @@ func TestKeepSetSourcesProtectItemsFromCleanupAndCollect(t *testing.T) {
 	t.Setenv("XDG_DATA_HOME", t.TempDir())
 	t.Setenv("LOCALAPPDATA", t.TempDir())
 	items, profiles := testenv.Stores(t)
-	// A bundle-only and a template-only local item: no profile names either.
-	for _, key := range []string{"local-bundle", "local-template"} {
+	// A saved-group-only and a template-only local item: no profile names either.
+	for _, key := range []string{"local-saved-group", "local-template"} {
 		addItem(t, items, key, map[string]string{"m.bin": "mod"})
 	}
 	sources := []KeySource{
-		func() (map[string][]string, error) { return map[string][]string{"stardew": {"local-bundle"}}, nil },
+		func() (map[string][]string, error) { return map[string][]string{"stardew": {"local-saved-group"}}, nil },
 		func() (map[string][]string, error) { return map[string][]string{"stardew": {"local-template"}}, nil },
 	}
 	svc := NewService(items, profiles, sources)
@@ -69,7 +69,7 @@ func TestKeepSetSourcesProtectItemsFromCleanupAndCollect(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	for _, key := range []string{"local-bundle", "local-template"} {
+	for _, key := range []string{"local-saved-group", "local-template"} {
 		if _, err := items.Dir("stardew", key); err != nil {
 			t.Fatalf("collect removed %s: %v", key, err)
 		}

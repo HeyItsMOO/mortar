@@ -19,12 +19,12 @@ import (
 
 var errNoLinks = errors.New("link handling is unavailable")
 
-// handleMore answers the bundle, template, tool, LAN, data-folder, update and link methods; ok is false for any
+// handleMore answers the saved-group, template, tool, LAN, data-folder, update and link methods; ok is false for any
 // other method.
 func (s *Services) handleMore(ctx context.Context, method string, p Params) (res any, ok bool, err error) {
 	switch method {
-	case "bundles.create", "bundles.delete", "bundles.rename", "bundles.add", "bundles.remove":
-		res, err = s.bundlesWrite(method, p)
+	case "groups.create", "groups.delete", "groups.rename", "groups.add", "groups.remove":
+		res, err = s.savedGroupsWrite(method, p)
 	case "templates.apply", "templates.preview", "templates.undo", "templates.rename", "templates.restore":
 		res, err = s.templatesWrite(method, p)
 	case "tools.add", "tools.update", "tools.remove":
@@ -63,30 +63,32 @@ func (s *Services) handleMore(ctx context.Context, method string, p Params) (res
 	return res, true, err
 }
 
-func (s *Services) bundlesWrite(method string, p Params) (any, error) {
-	if s.Bundles == nil {
-		return nil, errors.New("bundles are unavailable")
+func (s *Services) savedGroupsWrite(method string, p Params) (any, error) {
+	if s.SavedGroups == nil {
+		return nil, errors.New("saved groups are unavailable")
 	}
-	if method == "bundles.create" {
-		return s.profileCall(p, func(id string) (any, error) { return s.Bundles.Create(p.Game, p.Name, id, typedIDs(p.IDs)) })
+	if method == "groups.create" {
+		return s.profileCall(p, func(id string) (any, error) {
+			return s.SavedGroups.Create(p.Game, p.Name, id, typedIDs(p.IDs))
+		})
 	}
-	list, err := s.Bundles.List(p.Game)
+	list, err := s.SavedGroups.List(p.Game)
 	if err != nil {
 		return nil, err
 	}
-	b, err := resolveBundle(list, p.Name)
+	g, err := resolveSavedGroup(list, p.Name)
 	if err != nil {
 		return nil, err
 	}
 	switch method {
-	case "bundles.delete":
-		return nil, s.Bundles.Delete(p.Game, b.ID)
-	case "bundles.rename":
-		return s.Bundles.Rename(p.Game, b.ID, p.Value)
-	case "bundles.add":
-		return s.profileCall(p, func(id string) (any, error) { return s.Bundles.AddMods(p.Game, b.ID, id, typedIDs(p.IDs)) })
+	case "groups.delete":
+		return nil, s.SavedGroups.Delete(p.Game, g.ID)
+	case "groups.rename":
+		return s.SavedGroups.Rename(p.Game, g.ID, p.Value)
+	case "groups.add":
+		return s.profileCall(p, func(id string) (any, error) { return s.SavedGroups.AddMods(p.Game, g.ID, id, typedIDs(p.IDs)) })
 	default:
-		return s.Bundles.RemoveMods(p.Game, b.ID, typedIDs(p.IDs))
+		return s.SavedGroups.RemoveMods(p.Game, g.ID, typedIDs(p.IDs))
 	}
 }
 

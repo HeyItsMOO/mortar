@@ -6,10 +6,10 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/Rethunk-Tech/mortar/internal/bundles"
 	"github.com/Rethunk-Tech/mortar/internal/gamesettings"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
+	"github.com/Rethunk-Tech/mortar/internal/savedgroups"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
@@ -39,7 +39,7 @@ func (s *Service) find(game, name string) (Template, error) {
 
 // split sorts the template's mods against what the profile holds: same entry is already there, same mod id under
 // another entry is a different version and is left alone, anything else is added.
-func split(p profile.Profile, mods []bundles.Mod) (add, have, differs []bundles.Mod) {
+func split(p profile.Profile, mods []savedgroups.Mod) (add, have, differs []savedgroups.Mod) {
 	keys := map[string]bool{}
 	ids := map[string]bool{}
 	for _, e := range p.Entries {
@@ -61,7 +61,7 @@ func split(p profile.Profile, mods []bundles.Mod) (add, have, differs []bundles.
 	return add, have, differs
 }
 
-func names(mods []bundles.Mod) []string {
+func names(mods []savedgroups.Mod) []string {
 	out := make([]string, 0, len(mods))
 	for _, m := range mods {
 		out = append(out, m.Name)
@@ -122,7 +122,7 @@ func (s *Service) PreviewApplyTemplate(game, templateName, profileID string) (Pr
 	if err != nil {
 		return Preview{}, err
 	}
-	add, have, differs := split(p, t.Bundle)
+	add, have, differs := split(p, t.Mods)
 	out := Preview{Add: names(add), AlreadyHave: names(have), VersionDiffers: names(differs), SettingsChanges: []string{}, Missing: []string{}}
 	for _, m := range add {
 		if !s.d.Profiles.HasStoreItem(game, m.EntryKey) {
@@ -155,7 +155,7 @@ type Undo struct {
 
 // Applied is the result of ApplyTemplate with the means to undo it.
 type Applied struct {
-	bundles.ApplyResult
+	savedgroups.ApplyResult
 	Undo Undo `json:"undo"`
 }
 
@@ -182,7 +182,7 @@ func (s *Service) ApplyTemplate(game, templateName, profileID string) (Applied, 
 	if undo.EventID, err = s.d.Profiles.Baseline(game, profileID); err != nil {
 		return Applied{}, err
 	}
-	add, _, _ := split(p, t.Bundle)
+	add, _, _ := split(p, t.Mods)
 	res, err := s.fill(game, profileID, t, add)
 	if err != nil {
 		return Applied{}, err
@@ -251,36 +251,36 @@ func launchDiff(have profile.Profile, want LaunchConfig) []string {
 	return out
 }
 
-func (s *Service) fill(game, id string, t Template, mods []bundles.Mod) (bundles.ApplyResult, error) {
+func (s *Service) fill(game, id string, t Template, mods []savedgroups.Mod) (savedgroups.ApplyResult, error) {
 	mods = slices.Clone(mods)
 	for i := range mods {
 		mods[i].Source = mods[i].Source.WithDisabled(t.Disabled)
 	}
-	res, err := s.d.Bundles.ApplyMods(game, "template", mods, id)
+	res, err := s.d.SavedGroups.ApplyMods(game, "template", mods, id)
 	if err != nil {
-		return bundles.ApplyResult{}, err
+		return savedgroups.ApplyResult{}, err
 	}
 	if err := s.d.SetGameSettings(game, id, t.GameSettings); err != nil {
-		return bundles.ApplyResult{}, err
+		return savedgroups.ApplyResult{}, err
 	}
 	if t.LaunchOptions != "" {
 		if res.Profile, err = s.d.Profiles.SetLaunchOptions(game, id, t.LaunchOptions); err != nil {
-			return bundles.ApplyResult{}, err
+			return savedgroups.ApplyResult{}, err
 		}
 	}
 	if t.LaunchPrefix != "" || t.LaunchEnv != "" {
 		if res.Profile, err = s.d.Profiles.SetLaunchSettings(game, id, t.LaunchPrefix, t.LaunchEnv); err != nil {
-			return bundles.ApplyResult{}, err
+			return savedgroups.ApplyResult{}, err
 		}
 	}
 	if len(t.Overrides) > 0 {
 		if res.Profile, err = s.d.Profiles.SetOverrides(game, id, t.Overrides); err != nil {
-			return bundles.ApplyResult{}, err
+			return savedgroups.ApplyResult{}, err
 		}
 	}
 	if len(t.LaunchPresets) > 0 {
 		if res.Profile, err = s.d.Profiles.SetLaunchPresets(game, id, t.LaunchPresets, t.DefaultLaunchPreset); err != nil {
-			return bundles.ApplyResult{}, err
+			return savedgroups.ApplyResult{}, err
 		}
 	}
 	return res, nil

@@ -57,8 +57,8 @@ var verbs = map[string]bool{
 	"conflicts": true, "problems": true, "who": true, "updates": true, "share": true, "export": true, "open": true, "play": true,
 	"runs": true, "logs": true, "saves": true, "launch": true, "perf": true, "stop": true, "status": true, "queue": true,
 	"templates": true, "library": true, "archive": true,
-	"browse":  true,
-	"bundles": true, "source": true, "trash": true, "cache": true, "data": true, "store": true, "bisect": true, "lan": true, "app": true, "support": true, "links": true,
+	"browse": true,
+	"groups": true, "source": true, "trash": true, "cache": true, "data": true, "store": true, "bisect": true, "lan": true, "app": true, "support": true, "links": true,
 	"update": true, "backups": true, "doctor": true, "launchers": true, "tools": true, "settings": true, "antivirus": true, "loader": true, "sweep": true, "uninstall-cleanup": true, "quit": true, "version": true, "--version": true, "completion": true, "help": true, "--help": true, "-h": true, "__complete": true,
 }
 
@@ -577,8 +577,8 @@ func (c *cmd) dispatch() error {
 		return c.settings()
 	case "antivirus":
 		return c.antivirus()
-	case "bundles":
-		return c.bundles()
+	case "groups":
+		return c.savedGroups()
 	case "source":
 		return c.source()
 	case "bisect":
@@ -1106,14 +1106,17 @@ func (c *cmd) historyAll() error {
 	})
 }
 
-func (c *cmd) bundles() error {
+func (c *cmd) savedGroups() error {
 	if len(c.args) > 1 && c.args[1] == "apply" {
-		a, err := c.need(2, "a game", "a bundle", "a profile")
+		a, err := c.need(2, "a game", "a saved group", "a profile")
 		if err != nil {
 			return err
 		}
-		return show(c, "bundles.apply", control.Params{Game: a[0], Name: a[1], Profile: a[2]}, func(result control.BundleApply) {
+		return show(c, "groups.apply", control.Params{Game: a[0], Name: a[1], Profile: a[2]}, func(result control.SavedGroupApply) {
 			fmt.Fprintf(c.out, "Added %d mods.\n", result.Added)
+			if result.Group != "" {
+				fmt.Fprintf(c.out, "Created the group %s.\n", result.Group)
+			}
 			if len(result.Missing) > 0 {
 				fmt.Fprintf(c.out, "Not in Mortar's store: %s\n", strings.Join(result.Missing, ", "))
 			}
@@ -1123,7 +1126,7 @@ func (c *cmd) bundles() error {
 	if err != nil {
 		return err
 	}
-	return show(c, "bundles", control.Params{Game: a[0]}, func(list []control.BundleRow) {
+	return show(c, "groups", control.Params{Game: a[0]}, func(list []control.SavedGroupRow) {
 		rows := make([][]string, 0, len(list))
 		for _, b := range list {
 			rows = append(rows, []string{b.ID, b.Name, fmt.Sprint(len(b.Mods)), strings.Join(b.Profiles, ", ")})
@@ -2491,11 +2494,11 @@ takes --game <id>, which may be left out when exactly one game is installed.
   profile copy <game> <profile> [name]
   profile match <game> <profile> <link-or-file> preview a friend's profile
   profile collection <game> <profile> [--update|--unlink]  collection link, revision, latest
-  bundles <game>                         list saved bundles
-  bundles apply <game> <bundle> <profile> apply a bundle
-  bundles create <game> <name> <profile> [mod id...]  save a bundle of a profile's mods (all when none named)
-  bundles delete <game> <bundle> | rename <game> <bundle> <name>
-  bundles add <game> <bundle> <profile> <mod id>... | remove <game> <bundle> <mod id>...
+  groups <game>                          list saved groups
+  groups apply <game> <saved group> <profile>  add a saved group's mods to a profile and create the group there
+  groups create <game> <name> <profile> [mod id...]  save a profile's mods as a saved group (all when none named)
+  groups delete <game> <saved group> | rename <game> <saved group> <name>
+  groups add <game> <saved group> <profile> <mod id>... | remove <game> <saved group> <mod id>...
   source untrack <game> --source nexus --all|--unused  bulk untrack a source's tracked mods
   source tracked <game> <profile> --source nexus --missing  tracked at the source but not in profile
   profile delete <game> <profile>         moves it to Mortar's trash
@@ -2538,7 +2541,7 @@ takes --game <id>, which may be left out when exactly one game is installed.
                                           its ARCHIVE value to act on all its files and Tray files, one file by its id, e.g. folder:<archive>#a.package)
   mods tag|untag|category|note|skip-version <game> <profile> <mod> [value]
   mods channel <game> <profile> <mod> main|optional|beta
-  mods group <game> <profile> list|create|delete|add|remove|on|off …
+  mods group <game> <profile> list|create|rename|delete|add|remove|on|off …
   mods split <game> <profile> <mod> <file>
   mods combine <game> <profile> <mod> <into-mod>
   mods win <game> <profile> <winner> <loser> [--undo]

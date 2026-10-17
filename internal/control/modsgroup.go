@@ -17,6 +17,8 @@ func (s *Services) modsGroup(p Params, prof profile.Profile, id string) (any, er
 		return s.changed(p.Game, func() (any, error) { return s.Profiles.CreateGroup(p.Game, id, p.Name) })
 	case "delete":
 		return s.changed(p.Game, func() (any, error) { return s.Profiles.DeleteGroup(p.Game, id, p.Name) })
+	case "rename":
+		return s.changed(p.Game, func() (any, error) { return s.Profiles.RenameGroup(p.Game, id, p.Name, p.Value) })
 	case "add", "remove":
 		if len(p.IDs) == 0 {
 			return nil, fmt.Errorf("mods group %s needs a mod id", p.Sub)
@@ -37,6 +39,6 @@ func (s *Services) modsGroup(p Params, prof profile.Profile, id string) (any, er
 			return s.Profiles.SetGroupEnabled(p.Game, id, p.Name, p.Sub == "on")
 		})
 	default:
-		return nil, fmt.Errorf("mods group needs list, create, delete, add, remove, on, or off")
+		return nil, fmt.Errorf("mods group needs list, create, rename, delete, add, remove, on, or off")
 	}
 }

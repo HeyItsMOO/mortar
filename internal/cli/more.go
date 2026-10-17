@@ -35,30 +35,30 @@ func rest(a []string, from int) []string {
 func readBody(path string) ([]byte, error) { return fsx.ReadFile(path) }
 
 var moreVerbs = map[string]moreVerb{
-	"bundles create": {
-		method: "bundles.create", args: []string{"a game", "a bundle name", "a profile"}, msg: "Created the bundle.",
+	"groups create": {
+		method: "groups.create", args: []string{"a game", "a saved group name", "a profile"}, msg: "Saved the group.",
 		params: func(a []string, _ *cmd) (control.Params, error) {
 			return control.Params{Game: a[0], Name: a[1], Profile: a[2], IDs: rest(a, 3)}, nil
 		},
 	},
-	"bundles delete": {
-		method: "bundles.delete", args: []string{"a game", "a bundle"}, msg: "Deleted the bundle.",
+	"groups delete": {
+		method: "groups.delete", args: []string{"a game", "a saved group"}, msg: "Deleted the saved group.",
 		params: func(a []string, _ *cmd) (control.Params, error) { return control.Params{Game: a[0], Name: a[1]}, nil },
 	},
-	"bundles rename": {
-		method: "bundles.rename", args: []string{"a game", "a bundle", "a new name"}, msg: "Renamed the bundle.",
+	"groups rename": {
+		method: "groups.rename", args: []string{"a game", "a saved group", "a new name"}, msg: "Renamed the saved group.",
 		params: func(a []string, _ *cmd) (control.Params, error) {
 			return control.Params{Game: a[0], Name: a[1], Value: strings.Join(a[2:], " ")}, nil
 		},
 	},
-	"bundles add": {
-		method: "bundles.add", args: []string{"a game", "a bundle", "a profile", "a mod id"}, msg: "Added the mods to the bundle.",
+	"groups add": {
+		method: "groups.add", args: []string{"a game", "a saved group", "a profile", "a mod id"}, msg: "Added the mods to the saved group.",
 		params: func(a []string, _ *cmd) (control.Params, error) {
 			return control.Params{Game: a[0], Name: a[1], Profile: a[2], IDs: a[3:]}, nil
 		},
 	},
-	"bundles remove": {
-		method: "bundles.remove", args: []string{"a game", "a bundle", "a mod id"}, msg: "Removed the mods from the bundle.",
+	"groups remove": {
+		method: "groups.remove", args: []string{"a game", "a saved group", "a mod id"}, msg: "Removed the mods from the saved group.",
 		params: func(a []string, _ *cmd) (control.Params, error) {
 			return control.Params{Game: a[0], Name: a[1], IDs: a[2:]}, nil
 		},
