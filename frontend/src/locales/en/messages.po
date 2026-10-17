@@ -74,7 +74,7 @@ msgstr "Keep the game's current value"
 msgid "Interface tour"
 msgstr "Interface tour"
 
-#: src/mods/updateReview/SourceGroups.tsx:12
+#: src/mods/updateReview/SourceGroups.tsx:29
 #: src/settings/sections/DataUsage.tsx:212
 msgid "Other"
 msgstr "Other"
@@ -10554,7 +10554,7 @@ msgid "Free account: one click on Nexus per download"
 msgstr "Free account: one click on Nexus per download"
 
 #. placeholder {0}: g.list.length
-#: src/mods/updateReview/SourceGroups.tsx:16
+#: src/mods/updateReview/SourceGroups.tsx:32
 msgid "{name} ({0})"
 msgstr "{name} ({0})"
 
@@ -11700,6 +11700,11 @@ msgstr "From launch until BepInEx's preloader runs"
 #: src/mods/HealthTooltipContent.tsx:25
 msgid "{clean} clean"
 msgstr "{clean} clean"
+
+#. placeholder {0}: libraries.length
+#: src/mods/updateReview/SourceGroups.tsx:39
+msgid "Libraries ({0})"
+msgstr "Libraries ({0})"
 
 #: src/settings/sections/ItchAccount.tsx:64
 msgid "Kept in your system keyring. Create one on itch.io under Settings, API keys."
