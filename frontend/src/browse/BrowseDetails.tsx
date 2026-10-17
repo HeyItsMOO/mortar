@@ -225,7 +225,14 @@ function Panel({
       }}
     >
       <DetailsHeader
-        picture={<CardPicture picture={item.picture} size={PICTURE} dim={1} />}
+        picture={
+          <CardPicture
+            picture={item.picture}
+            size={PICTURE}
+            dim={1}
+            source={{ id: source, name: sourceNames.get(source) ?? source }}
+          />
+        }
         title={item.name}
         subtitle={formatAuthors(item.author)}
         onClose={() => useBrowseSelection.getState().select(null)}

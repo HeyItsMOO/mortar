@@ -1,6 +1,8 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase, Card, Typography } from '@mui/material'
 import { type MouseEvent, memo, useState } from 'react'
+import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
+import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
 import { formatAuthors } from '../mods/authorNormalize.ts'
 import { useSettings } from '../settings/store.ts'
 import { BUTTON_RADIUS_PX, BUTTON_SMALL_HEIGHT } from '../theme/theme.ts'
@@ -14,21 +16,64 @@ import { hitKey, useBrowseSelection } from './selection.ts'
 import { parseCardStats, useCardStats } from './stats.ts'
 import { useCardAction } from './useCardAction.tsx'
 
-function CardPicture({ picture, size, dim }: { picture: string; size: number; dim: number }) {
+// The source mark in the picture's corner is about a third of the picture, within what stays legible.
+const MARK_SHARE = 0.3
+const MARK_MIN_PX = 12
+const MARK_MAX_PX = 16
+
+// A mod's picture, with the mark of the site Add installs from in its corner, so every card says where it comes from.
+function CardPicture({
+  picture,
+  size,
+  dim,
+  source,
+}: {
+  picture: string
+  size: number
+  dim: number
+  source?: { id: string; name: string }
+}) {
   const sx = { width: size, height: size, flexShrink: 0, borderRadius: '4px', opacity: dim }
   const [failed, setFailed] = useState(false)
-  if (picture === '' || failed) {
-    return <Box sx={{ ...sx, bgcolor: 'var(--mortar-raised)' }} />
+  const image =
+    picture === '' || failed ? (
+      <Box sx={{ ...sx, bgcolor: 'var(--mortar-raised)' }} />
+    ) : (
+      <Box
+        component="img"
+        src={pictureSrc(picture)}
+        alt=""
+        loading="lazy"
+        onError={() => setFailed(true)}
+        sx={{ ...sx, objectFit: 'cover' }}
+      />
+    )
+  if (!(source && hasSourceLogo(source.id))) {
+    return image
   }
+  const mark = Math.min(MARK_MAX_PX, Math.max(MARK_MIN_PX, Math.round(size * MARK_SHARE)))
   return (
-    <Box
-      component="img"
-      src={pictureSrc(picture)}
-      alt=""
-      loading="lazy"
-      onError={() => setFailed(true)}
-      sx={{ ...sx, objectFit: 'cover' }}
-    />
+    <Box sx={{ position: 'relative', flexShrink: 0, display: 'flex' }}>
+      {image}
+      <Box
+        role="img"
+        aria-label={source.name}
+        title={source.name}
+        sx={{
+          position: 'absolute',
+          right: -4,
+          bottom: -4,
+          display: 'grid',
+          placeItems: 'center',
+          p: '3px',
+          borderRadius: '6px',
+          bgcolor: 'var(--mortar-raised)',
+          border: '1px solid var(--mortar-hairline)',
+        }}
+      >
+        <SourceLogo id={source.id} size={mark} />
+      </Box>
+    </Box>
   )
 }
 
@@ -75,6 +120,7 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
   const sources = [item.source, ...(item.alts ?? []).map((a) => a.source)]
   const [picked, setPicked] = useState(item.source)
   const source = sources.includes(picked) ? picked : item.source
+  const mark = { id: source, name: sourceNames.get(source) ?? source }
   const { shownItem, installed, action } = useCardAction(props, item, source)
   const shownStats = parseCardStats(useSettings((s) => s.browseCardStats))
   const stats = useCardStats(shownItem, shownStats)
@@ -111,7 +157,7 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
       }}
     >
       {row ? (
-        <CardPicture picture={item.picture} size={ROW_PICTURE_PX} dim={dim} />
+        <CardPicture picture={item.picture} size={ROW_PICTURE_PX} dim={dim} source={mark} />
       ) : (
         <Box
           sx={{
@@ -123,7 +169,7 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
             ...underPictureSx,
           }}
         >
-          <CardPicture picture={item.picture} size={PICTURE_PX} dim={dim} />
+          <CardPicture picture={item.picture} size={PICTURE_PX} dim={dim} source={mark} />
           {action}
         </Box>
       )}
