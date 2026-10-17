@@ -12,6 +12,7 @@ import { space } from '../../theme/density.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 import { Searchable, SettingRow, SettingsSection } from '../SettingsSection.tsx'
 import { MoveDataButton } from './DataMove.tsx'
+import { useUsageBytes } from './DataUsageLoad.ts'
 import { nowrap } from './dataStyles.ts'
 import { type SegmentId, storageSegments } from './storageSegments.ts'
 
@@ -120,15 +121,14 @@ function Legend({
 function StorageBar({
   usage,
   labels,
-  bytes,
   actions,
 }: {
   usage: DiskUse | null
   labels: Record<SegmentId, string>
-  bytes: number
   actions: ReactNode
 }) {
   const { t } = useLingui()
+  const bytes = useUsageBytes((s) => s.bytes)
   const colors = useSegmentColors()
   const segs = usage ? storageSegments(usage).filter((s) => s.size > 0) : []
   const sizes = usage
@@ -189,13 +189,11 @@ function StorageBar({
 
 export function UsageRows({
   usage,
-  bytes,
   onCleanUp,
   onClearCache,
   onDeletedProfiles,
 }: {
   usage: DiskUse | null
-  bytes: number
   onCleanUp: () => void
   onClearCache: () => void
   onDeletedProfiles: () => void
@@ -231,7 +229,7 @@ export function UsageRows({
         <Searchable
           terms={`${t`Usage`} ${t`Storage`} ${t`Disk space`} ${Object.values(labels).join(' ')} ${t`Clean up…`} ${t`Clear cache…`} ${t`Open recently deleted`}`}
         >
-          <StorageBar usage={usage} labels={labels} bytes={bytes} actions={actions} />
+          <StorageBar usage={usage} labels={labels} actions={actions} />
         </Searchable>
       </SettingsSection>
       <SettingsSection title={t`By game`}>

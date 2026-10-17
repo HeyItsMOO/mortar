@@ -63,7 +63,7 @@ function useMove() {
 export function Storage() {
   const { t } = useLingui()
   const openProfiles = useNav((s) => s.openProfiles)
-  const { usage, bytes, restart, error } = useDataUsage()
+  const { usage, restart, error } = useDataUsage()
   const move = useMove()
   const [clearing, setClearing] = useState(false)
   const [cleaning, setCleaning] = useState(false)
@@ -90,7 +90,6 @@ export function Storage() {
       ) : (
         <UsageRows
           usage={usage}
-          bytes={bytes}
           onCleanUp={() => setCleaning(true)}
           onClearCache={() => setClearing(true)}
           onDeletedProfiles={openProfiles}

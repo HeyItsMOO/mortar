@@ -44,6 +44,17 @@ function useBackgroundBytes(src: string): number {
   return bytes.src === src ? bytes.n : 0
 }
 
+// Its own component, so the size arriving re-renders this line and not the whole Appearance page.
+function LargeBackgroundNote({ src }: { src: string }) {
+  const { t } = useLingui()
+  const bytes = useBackgroundBytes(src)
+  return bytes > LARGE_BACKGROUND_BYTES ? (
+    <Typography sx={{ maxWidth: 420, fontSize: 12, textAlign: 'right', color: 'warning.main' }}>
+      {t`This image is ${formatBytes(bytes)}, which costs memory and GPU while Mortar is open. The same picture or animation saved as WebP is often a tenth of the size.`}
+    </Typography>
+  ) : null
+}
+
 function DefaultSort() {
   const { t } = useLingui()
   const stored = sanitizeListSort(
@@ -82,7 +93,6 @@ export function Appearance() {
   const backgroundImage = useSettings((s) => s.backgroundImage)
   const reportFailure = reportError(t`Could not save that setting`)
   const backdropSrc = `/backdrop?mode=image&v=${encodeURIComponent(backgroundImage)}`
-  const backdropBytes = useBackgroundBytes(backdropSrc)
   const cards: { name: AccentName; label: string; note: string }[] = [
     { name: 'sand', label: t`Sand`, note: t`Default` },
     { name: 'moss', label: t`Moss`, note: t`Earthy green` },
@@ -202,13 +212,7 @@ export function Appearance() {
                   {t`Use default`}
                 </Button>
               </Box>
-              {backgroundImage !== '' && backdropBytes > LARGE_BACKGROUND_BYTES ? (
-                <Typography
-                  sx={{ maxWidth: 420, fontSize: 12, textAlign: 'right', color: 'warning.main' }}
-                >
-                  {t`This image is ${formatBytes(backdropBytes)}, which costs memory and GPU while Mortar is open. The same picture or animation saved as WebP is often a tenth of the size.`}
-                </Typography>
-              ) : null}
+              {backgroundImage === '' ? null : <LargeBackgroundNote src={backdropSrc} />}
             </Box>
           </SettingRow>
         ) : null}

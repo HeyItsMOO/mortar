@@ -19,7 +19,6 @@ import {
   takeableFrom,
 } from '../shortcuts.ts'
 import { useSettings } from '../store.ts'
-import { useSettingsSearch } from '../useSettingsSearch.ts'
 
 type Labels = Record<ShortcutId, string>
 
@@ -124,7 +123,6 @@ export function ResetAllShortcuts() {
 
 export function Shortcuts() {
   const { t } = useLingui()
-  const query = useSettingsSearch()
   const [recording, setRecording] = useState<ShortcutId | null>(null)
   // keys is set when the chord is another action's default, which the user may take from it.
   const [conflict, setConflict] = useState<{
@@ -172,7 +170,6 @@ export function Shortcuts() {
       setShortcutCapturing(false)
     }
   }, [recording, bindings])
-  const q = query.toLowerCase()
   const groups: [Shortcut['group'], string][] = [
     ['General', t`General`],
     ['Navigation', t`Navigation`],
@@ -180,11 +177,10 @@ export function Shortcuts() {
     ['Mods list', t`Mods list`],
     ['Tabs', t`Tabs`],
   ]
-  const rows = SHORTCUTS.filter((row) => labels[row.id].toLowerCase().includes(q))
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: space.pad, fontSize: 14 }}>
       {groups.map(([group, name]) => {
-        const grouped = rows.filter((row) => row.group === group)
+        const grouped = SHORTCUTS.filter((row) => row.group === group)
         return grouped.length > 0 ? (
           <SettingsSection key={group} title={name}>
             {grouped.map((row) => (

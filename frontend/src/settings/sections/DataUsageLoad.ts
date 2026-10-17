@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { create } from 'zustand'
 import type { Usage as DiskUse } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/datasvc/models.ts'
 import {
   Usage,
@@ -7,14 +8,19 @@ import {
 import { reportUnexpected } from '../../toasts/report.ts'
 import { beginUsageLoad } from '../usageLoad.ts'
 
+// Bytes counted so far while disk use is measured. Only the bar's Measuring line reads it, so a progress tick
+// re-renders that line and not the whole Storage page.
+export const useUsageBytes = create<{ bytes: number }>(() => ({ bytes: 0 }))
+const setBytes = (bytes: number) => useUsageBytes.setState({ bytes })
+
 export function useDataUsage() {
   const [usage, setUsage] = useState<DiskUse | null>(null)
-  const [bytes, setBytes] = useState(0)
   const [error, setError] = useState(false)
   const stopRef = useRef<() => void>(() => undefined)
   const load = useCallback((fresh: boolean) => {
     stopRef.current()
     setUsage(null)
+    setBytes(0)
     setError(false)
     stopRef.current = beginUsageLoad({
       usage: () => Usage(fresh),
@@ -32,5 +38,5 @@ export function useDataUsage() {
     load(false)
     return () => stopRef.current()
   }, [load])
-  return { usage, bytes, restart, error }
+  return { usage, restart, error }
 }
