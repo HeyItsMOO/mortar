@@ -8,8 +8,8 @@ import { sandboxPort, selftest } from './sandbox.ts'
 // measures, per case, what React did (commits, components mounted, components re-rendered and which), what the browser
 // did (DOM mutations, layouts, style recalcs, script time, long tasks), what the page holds (JS heap, DOM nodes, event
 // listeners) and how many backend calls it made: once over the action itself, and once while the screen sits idle.
-// The build measured is the shipped production bundle (keepNames keeps component names), not the dev server, whose
-// StrictMode doubles effects.
+// The build measured is the production bundle the sandbox serves (built with MORTAR_KEEP_NAMES=1 so components keep
+// their names), not the dev server, whose StrictMode doubles effects.
 //
 //   MORTAR_RENDER_DATA=<data folder>   measure a copy of that data (default: the maintainer's own, selftest --copy-data)
 //   MORTAR_RENDER_SEEDED=1             the small seeded sandbox instead (a smoke run)
@@ -56,6 +56,8 @@ interface Sample {
   mounts: number
   updates: number
   top: [string, number][]
+  /** The components cascades of re-renders started at, with how many re-renders each started, most first. */
+  startedBy: [string, number][]
   mutations: number
   longTasks: number
   longMs: number
@@ -72,7 +74,7 @@ interface Sample {
 // component counts when React did work on it in that commit (PerformedWork), as a mount without a previous fiber or as
 // an update with one; subtrees React reused untouched are not walked.
 const HOOK = `(() => {
-  const st = { commits: 0, mounts: 0, updates: 0, names: {}, mutations: 0, longTasks: 0, longMs: 0 }
+  const st = { commits: 0, mounts: 0, updates: 0, names: {}, roots: {}, mutations: 0, longTasks: 0, longMs: 0 }
   const COMPONENT = new Set([0, 1, 11, 14, 15])
   const nameOf = (f) => {
     const t = f.type
@@ -80,19 +82,28 @@ const HOOK = `(() => {
     const inner = t && (t.type || t.render)
     return (inner && (inner.displayName || inner.name)) || (t && t.displayName) || 'anonymous'
   }
-  const walk = (f) => {
+  // root: the component a cascade of updates started at (one whose nearest component above did not render), which
+  // every update in the cascade is counted against; null while walking components React did not touch.
+  const walk = (f, root) => {
     for (; f; f = f.sibling) {
       const a = f.alternate
-      if (COMPONENT.has(f.tag) && (f.flags & 1)) {
-        if (a) {
-          st.updates++
+      const component = COMPONENT.has(f.tag)
+      const worked = component ? (f.flags & 1) !== 0 : root !== null
+      let here = root
+      if (component) {
+        here = null
+        if (worked && a) {
           const n = nameOf(f)
+          here = root ?? n
+          st.updates++
           st.names[n] = (st.names[n] || 0) + 1
-        } else {
+          st.roots[here] = (st.roots[here] || 0) + 1
+        } else if (worked) {
           st.mounts++
+          here = root
         }
       }
-      if (f.child && (!a || a.child !== f.child)) walk(f.child)
+      if (f.child && (!a || a.child !== f.child)) walk(f.child, here)
     }
   }
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
@@ -100,7 +111,7 @@ const HOOK = `(() => {
     renderers: new Map(),
     inject(r) { this.renderers.set(this.renderers.size + 1, r); return this.renderers.size },
     onScheduleFiberRoot() {},
-    onCommitFiberRoot(_id, root) { st.commits++; try { walk(root.current.child) } catch {} },
+    onCommitFiberRoot(_id, root) { st.commits++; try { walk(root.current.child, null) } catch {} },
     onCommitFiberUnmount() {},
     onPostCommitFiberRoot() {},
     checkDCE() {},
@@ -114,8 +125,8 @@ const HOOK = `(() => {
     })
   })
   window.mortarRenders = {
-    reset() { Object.assign(st, { commits: 0, mounts: 0, updates: 0, names: {}, mutations: 0, longTasks: 0, longMs: 0 }) },
-    read() { return { ...st, names: { ...st.names } } },
+    reset() { Object.assign(st, { commits: 0, mounts: 0, updates: 0, names: {}, roots: {}, mutations: 0, longTasks: 0, longMs: 0 }) },
+    read() { return { ...st, names: { ...st.names }, roots: { ...st.roots } } },
   }
 })()`
 
@@ -124,6 +135,7 @@ interface PageCounts {
   mounts: number
   updates: number
   names: Record<string, number>
+  roots: Record<string, number>
   mutations: number
   longTasks: number
   longMs: number
@@ -170,6 +182,9 @@ class Meter {
       updates: c.updates,
       top: Object.entries(c.names)
         .filter(([n]) => !LIBRARY.test(n))
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, TOP),
+      startedBy: Object.entries(c.roots)
         .sort((a, b) => b[1] - a[1])
         .slice(0, TOP),
       mutations: c.mutations,
@@ -364,6 +379,7 @@ function perIdle(s: Sample): Sample {
     styles: scale(s.styles),
     scriptMs: scale(s.scriptMs),
     top: s.top.map(([n, v]) => [n, scale(v)]),
+    startedBy: s.startedBy.map(([n, v]) => [n, scale(v)]),
   }
 }
 
@@ -407,6 +423,13 @@ function report(results: Result[]): string {
       lines.push(
         `${' '.repeat(18)}most re-rendered: ${top.map(([n, v]) => `${n} ${v}`).join(', ')}`,
       )
+    }
+    const started = [
+      ...a.startedBy,
+      ...i.startedBy.map(([n, v]) => [`idle ${n}`, v] as [string, number]),
+    ]
+    if (r.over.length > 0 && started.length > 0) {
+      lines.push(`${' '.repeat(18)}started by: ${started.map(([n, v]) => `${n} ${v}`).join(', ')}`)
     }
   }
   return lines.join('\n')

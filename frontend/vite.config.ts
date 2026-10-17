@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { lingui } from '@lingui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import wails from '@wailsio/runtime/plugins/vite'
@@ -16,8 +17,9 @@ export default defineConfig({
   build: {
     rolldownOptions: {
       output: {
-        // Component names survive minifying, so the render budget (e2e/render-budget.ts) and error stacks name them.
-        keepNames: true,
+        // Self-test sandboxes keep component names, so the render budget (e2e/render-budget.ts) can name them; the
+        // shipped bundle stays mangled, as names add 230 kB.
+        keepNames: process.env.MORTAR_KEEP_NAMES === '1',
         // Libraries change less often than the app, and one bundle of everything passed Vite's 500 kB chunk warning.
         codeSplitting: {
           groups: [

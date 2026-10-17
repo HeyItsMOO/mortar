@@ -74,7 +74,8 @@ BUILD_CACHE=/var/tmp/mortar-selftest-build
 # Every file the build reads that git sees; specs and docs change no binary.
 tree_key() {
   (cd "$REPO" && git ls-files -co --exclude-standard -z -- . ':!frontend/e2e' ':!docs' ':!*.md' |
-    xargs -0 sha256sum 2>/dev/null | sha256sum | cut -d' ' -f1)
+    # A tracked file deleted in the working tree is listed but cannot be read; it drops out of the key instead.
+    { xargs -0 sha256sum 2>/dev/null || true; } | sha256sum | cut -d' ' -f1)
 }
 
 build() {
@@ -93,7 +94,7 @@ build() {
     if [ ! -d "$REPO/frontend/bindings" ]; then
       (cd "$REPO" && wails3 generate bindings -clean=true -ts -i >"$ROOT/bindings.log" 2>&1)
     fi
-    (cd "$REPO" && bun run --cwd frontend build >"$ROOT/frontend-build.log" 2>&1)
+    (cd "$REPO" && MORTAR_KEEP_NAMES=1 bun run --cwd frontend build >"$ROOT/frontend-build.log" 2>&1)
     (cd "$REPO" && go build -tags server -o "$ROOT/mortar-server.new" .)
     # Filed under the key taken before the build: the tree can change while it runs (another worker's edit), and a
     # key taken after would file an older binary under the newer tree.
