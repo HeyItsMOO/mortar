@@ -195,6 +195,10 @@ var registry = withDefaults([]pref{
 	loaderPref("smapi", pinPref("smapiPin", "smapi")),
 	loaderPref("bepinex5", pinPref("bepinex5Pin", "bepinex5")),
 	loaderPref("melonloader", pinPref("melonloaderPin", "melonloader")),
+	loaderPref("returnofmodding", pinPref("returnofmoddingPin", "returnofmodding")),
+	loaderPref("gdweave", pinPref("gdweavePin", "gdweave")),
+	loaderPref("lovely", pinPref("lovelyPin", "lovely")),
+	loaderPref("northstar", pinPref("northstarPin", "northstar")),
 	overridable(enumPref("defaultLaunchMethod", ScopeGame, launchMethodValues, func(s Settings, g string) string { return s.GamePrefs(g).DefaultLaunchMethod }, func(s *Settings, g, v string) { gp := s.GamePrefs(g); gp.DefaultLaunchMethod = v; putGame(s, g, gp) })),
 	overridable(loaderPref("smapi", ptrPref("showSmapiConsole", ScopeLoader, func(s Settings, _ string) *bool { return s.ShowSmapiConsole }, func(s *Settings, _ string, on bool) { s.ShowSmapiConsole = &on }))),
 	overridable(boolPref("skipPlayCheck", ScopeGame, func(s Settings, g string) bool { return s.GamePrefs(g).SkipPlayCheck }, func(s *Settings, g string, on bool) {

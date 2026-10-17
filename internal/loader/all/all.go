@@ -6,4 +6,5 @@ import (
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/folder"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/melonloader"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/smapi"
+	_ "github.com/Rethunk-Tech/mortar/internal/loader/thunderpack"
 )

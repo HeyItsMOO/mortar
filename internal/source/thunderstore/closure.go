@@ -39,7 +39,7 @@ func newer(a, b string) bool {
 // still serves; else exactly the named one.
 func pick(p pkg, ref Ref, minimum bool) (string, error) {
 	id := packageID(p.Owner, p.Name)
-	if components.IsLoaderPackage(p.Owner + "-" + p.Name) {
+	if components.IsBepInExPackage(p.Owner + "-" + p.Name) {
 		major := components.LoaderPackageMajor(p.Owner + "-" + p.Name)
 		series, inSeries := "5.4.x", func(v [3]int) bool { return v[0] == 5 && v[1] == 4 }
 		if major != 5 {

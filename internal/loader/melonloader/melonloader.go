@@ -27,48 +27,23 @@ const (
 	generatedMono   = "Managed"
 )
 
-// packMeta are the files Thunderstore requires at a package's top, which never reach the profile.
-var packMeta = map[string]bool{"manifest.json": true, "icon.png": true, "readme.md": true, "licence": true}
-
 // Route is where a file of Thunderstore package pkg (Namespace-Name) goes in the profile root, from its path relPath
 // inside the package, or "" when the file is package metadata or unsafe. It follows r2modman's MelonLoader rules.
-// A game whose catalog entry lists routes keeps the classic layout: the first folder on the path named like a route's
-// last segment, at any depth, takes the folder's contents; otherwise the file's longest matching extension picks the
-// route, and the default route takes the rest. A game with no routes runs MelonLoader 0.7's recursive layout: a
-// top-level UserData folder goes to UserData/<package>, anything else to Mods/<package> with its structure.
+// A game whose catalog entry lists routes keeps the classic layout (components.PlaceByRules). A game with no routes
+// runs MelonLoader 0.7's recursive layout: a top-level UserData folder goes to UserData/<package>, anything else to
+// Mods/<package> with its structure.
 func Route(relPath, pkg string, routes []components.LoaderRoute) string {
-	if pkg == "" || strings.ContainsAny(pkg, `/\:`) || pkg == "." || pkg == ".." {
+	p, ok := components.PackageFile(relPath, pkg)
+	if !ok {
 		return ""
 	}
-	p := path.Clean(strings.ReplaceAll(relPath, `\`, "/"))
-	if p == "." || strings.HasPrefix(p, "/") || p == ".." || strings.HasPrefix(p, "../") || strings.Contains(p, ":") {
-		return ""
+	if len(routes) > 0 {
+		return components.PlaceByRules(p, pkg, routes)
 	}
-	segs := strings.Split(p, "/")
-	if len(segs) == 1 && packMeta[strings.ToLower(p)] {
-		return ""
+	if segs := strings.Split(p, "/"); len(segs) > 1 && strings.EqualFold(segs[0], "UserData") {
+		return path.Join("UserData", pkg, path.Join(segs[1:]...))
 	}
-	if len(routes) == 0 {
-		if len(segs) > 1 && strings.EqualFold(segs[0], "UserData") {
-			return path.Join("UserData", pkg, path.Join(segs[1:]...))
-		}
-		return path.Join("Mods", pkg, p)
-	}
-	for i, dir := range segs[:len(segs)-1] {
-		if r, ok := components.RouteByFolder(routes, dir); ok {
-			return r.Place(pkg, path.Join(segs[i+1:]...), p)
-		}
-	}
-	name := segs[len(segs)-1]
-	if r, ok := components.RouteByExtension(routes, name); ok {
-		return r.Place(pkg, name, p)
-	}
-	for _, r := range routes {
-		if r.Default {
-			return r.Place(pkg, name, p)
-		}
-	}
-	return ""
+	return path.Join("Mods", pkg, p)
 }
 
 // packRoot is the folder of the extracted release that holds the proxy and the loader folder: dir itself, or the one

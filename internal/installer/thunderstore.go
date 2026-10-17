@@ -8,12 +8,13 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
 	"github.com/Rethunk-Tech/mortar/internal/loader/melonloader"
+	"github.com/Rethunk-Tech/mortar/internal/loader/thunderpack"
 )
 
 var _ = Register(thunderstoreRules{})
 
-// thunderstoreRules places a Thunderstore package's files by the rules of the game's loader (BepInEx or MelonLoader),
-// below the profile's root.
+// thunderstoreRules places a Thunderstore package's files by the rules of the game's loader (BepInEx, MelonLoader or
+// one of the thunderpack loaders), below the profile's root.
 type thunderstoreRules struct{}
 
 func (thunderstoreRules) ID() string { return "thunderstore-rules" }
@@ -32,9 +33,13 @@ func manifestOf(a Archive) (name string, ok bool) {
 
 // Detect takes a Thunderstore package, and for a BepInEx or MelonLoader game also an archive from another site that
 // holds no manifest but plainly is a mod of the loader: a DLL or the loader's folder. r2modman installs those by the
-// same rules.
+// same rules. A thunderpack game takes only a Thunderstore package.
 func (thunderstoreRules) Detect(a Archive, g Game) bool {
 	loaderFolder := ""
+	if _, ok := thunderpack.Of(g.Loaders); ok {
+		_, isPackage := manifestOf(a)
+		return isPackage
+	}
 	switch {
 	case slices.Contains(g.Loaders, bepinex5.ID):
 		loaderFolder = "BepInEx"
@@ -53,12 +58,16 @@ func (thunderstoreRules) Detect(a Archive, g Game) bool {
 	})
 }
 
-// route is where the game's loader puts file f of package pkg, "" for a file it drops.
-func route(g Game, f, pkg string) string {
-	if slices.Contains(g.Loaders, melonloader.ID) {
-		return melonloader.Route(f, pkg, g.Routes)
+// router is where the game's loader puts each file of package pkg, "" for a file it drops.
+func router(g Game, all []string, pkg string) func(f string) string {
+	if id, ok := thunderpack.Of(g.Loaders); ok {
+		dests := thunderpack.Layout(id, all, pkg, g.Routes)
+		return func(f string) string { return dests[f] }
 	}
-	return bepinex5.Route(f, pkg, g.Routes)
+	if slices.Contains(g.Loaders, melonloader.ID) {
+		return func(f string) string { return melonloader.Route(f, pkg, g.Routes) }
+	}
+	return func(f string) string { return bepinex5.Route(f, pkg, g.Routes) }
 }
 
 func (thunderstoreRules) Layout(a Archive, g Game, _ Choices) (Layout, error) {
@@ -75,8 +84,9 @@ func (thunderstoreRules) Layout(a Archive, g Game, _ Choices) (Layout, error) {
 	slices.SortStableFunc(all, filesFirst)
 	var l Layout
 	at := map[string]int{}
+	route := router(g, all, pkg)
 	for _, f := range all {
-		dest := route(g, f, pkg)
+		dest := route(f)
 		if dest == "" {
 			continue
 		}

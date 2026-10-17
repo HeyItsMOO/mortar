@@ -47,6 +47,9 @@ func TestLayoutGoldens(t *testing.T) {
 		{Dir: "Mods", Extensions: []string{".dll"}, Default: true},
 		{Dir: "Plugins", Extensions: []string{".plugin.dll"}},
 	}
+	pack := func(id string) Game { return Game{Loaders: []string{id}, Targets: []Target{{ID: TargetProfile}}} }
+	northstar := pack("northstar")
+	northstar.Routes = []components.LoaderRoute{{Dir: "R2Northstar/mods"}}
 	cases := []struct {
 		name    string
 		game    Game
@@ -154,6 +157,38 @@ func TestLayoutGoldens(t *testing.T) {
 			map[string]string{"manifest.json": `{"name":"Old","version_number":"1.0.0"}`, "Old.dll": "m", "Helper.plugin.dll": "p", "notes.txt": "n"},
 			nil, "thunderstore-rules",
 			"profile:Mods/Old.dll<-Old.dll profile:Mods/notes.txt<-notes.txt profile:Plugins/Helper.plugin.dll<-Helper.plugin.dll",
+		},
+		{
+			"ReturnOfModding package", pack("returnofmodding"), "Ns-Rom",
+			map[string]string{"manifest.json": `{"name":"Rom","version_number":"1.0.0"}`, "main.lua": "m", "config/a.cfg": "c"},
+			nil, "thunderstore-rules",
+			"profile:ReturnOfModding/config/Ns-Rom/a.cfg<-config/a.cfg profile:ReturnOfModding/plugins/Ns-Rom/main.lua<-main.lua",
+		},
+		{
+			"GDWeave package", pack("gdweave"), "Ns-Fish",
+			map[string]string{"manifest.json": `{"name":"Fish","version_number":"1.0.0"}`, "GDWeave/mods/Fish/manifest.json": "{}", "GDWeave/mods/Fish/Fish.dll": "d"},
+			nil, "thunderstore-rules",
+			"profile:GDWeave/mods/Ns-Fish/Fish.dll<-GDWeave/mods/Fish/Fish.dll profile:GDWeave/mods/Ns-Fish/manifest.json<-GDWeave/mods/Fish/manifest.json",
+		},
+		{
+			"Lovely package", pack("lovely"), "Ns-Smods",
+			map[string]string{"manifest.json": `{"name":"Smods","version_number":"1.0.0"}`, "lovely.toml": "t", "src/a.lua": "l"},
+			nil, "thunderstore-rules",
+			"profile:mods/Ns-Smods/lovely.toml<-lovely.toml profile:mods/Ns-Smods/src/a.lua<-src/a.lua",
+		},
+		{
+			"Northstar package", northstar, "Ns-Skin",
+			map[string]string{"manifest.json": `{"name":"Skin","version_number":"1.0.0"}`, "mods/Skin/mod.json": "{}", "notes.txt": "n"},
+			nil, "thunderstore-rules",
+			"profile:R2Northstar/mods/Skin/mod.json<-mods/Skin/mod.json",
+		},
+		{
+			"a Lovely game takes only a Thunderstore package",
+			Game{Loaders: []string{"lovely"}, Targets: []Target{{ID: TargetProfile}, {ID: TargetMods}}},
+			"k",
+			map[string]string{"mod.dll": "m"},
+			nil, "plain",
+			"mods:k/mod.dll<-mod.dll",
 		},
 		{
 			"no manifest and no BepInEx content stays plain", bep, "k",

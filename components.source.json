@@ -9460,6 +9460,180 @@
           "gameId": 3333
         }
       ]
+    },
+    {
+      "id": "titanfall-2",
+      "name": "Titanfall 2",
+      "enabled": true,
+      "marker": "Titanfall2.exe",
+      "r2modmanFolder": "Titanfall2",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1237970"
+        }
+      },
+      "loaders": [
+        {
+          "id": "northstar",
+          "name": "Northstar",
+          "package": "northstar-Northstar",
+          "routes": [
+            {
+              "dir": "R2Northstar/mods"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "northstar"
+        }
+      ]
+    },
+    {
+      "id": "hades-ii",
+      "name": "Hades II",
+      "enabled": true,
+      "marker": "Hades2.exe",
+      "markerDir": "Ship",
+      "r2modmanFolder": "HadesII",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1145350"
+        },
+        "epic": {
+          "appNames": ["07c634c7291a49b5b2455e14b9a83950"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "returnofmodding",
+          "name": "Hell2Modding",
+          "package": "Hell2Modding-Hell2Modding"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "hades-ii"
+        }
+      ]
+    },
+    {
+      "id": "risk-of-rain-returns",
+      "name": "Risk of Rain Returns",
+      "enabled": true,
+      "marker": "Risk of Rain Returns.exe",
+      "r2modmanFolder": "RiskofRainReturns",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1337520"
+        }
+      },
+      "loaders": [
+        {
+          "id": "returnofmodding",
+          "name": "ReturnOfModding",
+          "package": "ReturnOfModding-ReturnOfModding"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "risk-of-rain-returns"
+        }
+      ]
+    },
+    {
+      "id": "webfishing",
+      "name": "WEBFISHING",
+      "enabled": true,
+      "marker": "webfishing.exe",
+      "r2modmanFolder": "WEBFISHING",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3146520"
+        }
+      },
+      "loaders": [
+        {
+          "id": "gdweave",
+          "name": "GDWeave",
+          "package": "NotNet-GDWeave"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "webfishing"
+        }
+      ]
+    },
+    {
+      "id": "balatro",
+      "name": "Balatro",
+      "enabled": true,
+      "marker": "Balatro.exe",
+      "r2modmanFolder": "Balatro",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2379780"
+        }
+      },
+      "loaders": [
+        {
+          "id": "lovely",
+          "name": "Lovely",
+          "package": "Thunderstore-lovely"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "balatro"
+        }
+      ]
     }
   ]
 }

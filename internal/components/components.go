@@ -515,6 +515,47 @@ func RouteByExtension(routes []LoaderRoute, name string) (best LoaderRoute, ok b
 	return best, ok
 }
 
+// packMeta are the files Thunderstore requires at a package's top, which never reach a profile.
+var packMeta = map[string]bool{"manifest.json": true, "icon.png": true, "readme.md": true, "licence": true}
+
+// PackageFile cleans file relPath of Thunderstore package pkg (Namespace-Name) to a slash path below the package's top.
+// ok is false for a path that climbs out of it or names a drive, a package name with a separator, and package metadata.
+func PackageFile(relPath, pkg string) (clean string, ok bool) {
+	if pkg == "" || strings.ContainsAny(pkg, `/\:`) || pkg == "." || pkg == ".." {
+		return "", false
+	}
+	p := path.Clean(strings.ReplaceAll(relPath, `\`, "/"))
+	if p == "." || strings.HasPrefix(p, "/") || p == ".." || strings.HasPrefix(p, "../") || strings.Contains(p, ":") {
+		return "", false
+	}
+	if !strings.Contains(p, "/") && packMeta[strings.ToLower(p)] {
+		return "", false
+	}
+	return p, true
+}
+
+// PlaceByRules is where r2modman's install rules put file p (from PackageFile) of package pkg: the first folder on the
+// path named like a route's last segment takes the folder's contents, else the file's longest matching extension
+// picks the route, and the default route takes the rest. "" means no route takes it.
+func PlaceByRules(p, pkg string, routes []LoaderRoute) string {
+	segs := strings.Split(p, "/")
+	for i, dir := range segs[:len(segs)-1] {
+		if r, ok := RouteByFolder(routes, dir); ok {
+			return r.Place(pkg, path.Join(segs[i+1:]...), p)
+		}
+	}
+	name := segs[len(segs)-1]
+	if r, ok := RouteByExtension(routes, name); ok {
+		return r.Place(pkg, name, p)
+	}
+	for _, r := range routes {
+		if r.Default {
+			return r.Place(pkg, name, p)
+		}
+	}
+	return ""
+}
+
 // saveFilePattern reports whether p names files in the saves folder or in one plain folder below it; an exclusion
 // ("!" first) names files in any of them by name alone.
 func saveFilePattern(p string) bool {
@@ -562,6 +603,22 @@ func IsLoaderPackage(id string) bool {
 	for _, g := range Games() {
 		if strings.EqualFold(id, g.LoaderPackage()) {
 			return true
+		}
+	}
+	return false
+}
+
+// IsBepInExPackage reports whether the Thunderstore package id (Namespace-Name) is a BepInEx pack: the default one or a
+// BepInEx loader's own in some catalog game. Another loader's package (MelonLoader, Northstar) versions on its own.
+func IsBepInExPackage(id string) bool {
+	if strings.EqualFold(id, DefaultLoaderPackage) {
+		return true
+	}
+	for _, g := range Games() {
+		for _, l := range g.Loaders {
+			if strings.HasPrefix(l.ID, "bepinex") && strings.EqualFold(id, cmp.Or(l.Package, DefaultLoaderPackage)) {
+				return true
+			}
 		}
 	}
 	return false
