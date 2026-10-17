@@ -135,7 +135,7 @@ export function gamePage(g: Game, art: Record<string, string>, games: Game[]): s
     : `Pick ${name}. Mortar makes your first profile and keeps its mods apart from every other profile's.`
   const more = neighbours(g, games)
   const hero = artImage(g, art, HEADER.width, HEADER.height)
-  const body = `      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Mortar</a> › <a href="/games/">Games</a></nav>
+  const body = `      <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore><a href="/">Mortar</a> › <a href="/games/">Games</a></nav>
       <div class="game-hero${hero ? '' : ' no-art'}">
         ${hero}
         <div>
@@ -174,11 +174,13 @@ export function gamePage(g: Game, art: Record<string, string>, games: Game[]): s
       <p>A ${name} profile shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click; the profile never leaves their browser.</p>${
         more.length > 0
           ? `
+      <div data-pagefind-ignore>
       <h2>${f.loader ? `More games on ${escapeHTML(f.loader)}` : 'More games without a mod loader'}</h2>
       <ul class="game-grid">
 ${more.map((o) => gameCard(o, art)).join('\n')}
       </ul>
-      <p><a href="/games/">All ${games.length} supported games</a></p>`
+      <p><a href="/games/">All ${games.length} supported games</a></p>
+      </div>`
           : ''
       }`
   const loaderText = f.loader ? `installs ${f.loader}, ` : ''
