@@ -1,0 +1,59 @@
+/* Game cards, shared by the landing page, /games/ and the game pages. */
+.game-grid,
+.prose .game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.game-grid li {
+  margin: 0;
+}
+.game-grid a {
+  display: grid;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+}
+.game-grid a:hover {
+  border-color: var(--sand);
+}
+.game-grid .game-art {
+  margin: 0 0 0.35rem;
+  border-radius: 4px;
+}
+.game-name {
+  font-weight: 600;
+}
+.game-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.game-grid .game-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.game-grid.band {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 2.5rem;
+}
+@media (max-width: 60rem) {
+  .game-grid.band {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 30rem) {
+  .game-grid.band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.band-more {
+  margin-top: 2rem;
+}

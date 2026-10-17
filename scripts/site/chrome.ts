@@ -159,7 +159,8 @@ export function page(p: {
     <link rel="apple-touch-icon" href="/img/icon-192.png" />
     <link rel="stylesheet" href="/base.css" />
     <link rel="stylesheet" href="/landing.css" />
-    <link rel="stylesheet" href="/download.css" />${p.css ? `\n    <link rel="stylesheet" href="${p.css}" />` : ''}
+    <link rel="stylesheet" href="/download.css" />
+    <link rel="stylesheet" href="/cards.css" />${p.css ? `\n    <link rel="stylesheet" href="${p.css}" />` : ''}
   </head>
   <body>
     ${nav(frame)}

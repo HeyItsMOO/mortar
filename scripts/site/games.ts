@@ -297,3 +297,25 @@ ${cards}
       </ul>`,
   })
 }
+
+const BAND = 12
+
+/** The landing page's Games section: the first games in catalog order, the best known, and a link to the rest. */
+export function gamesBand(games: Game[], art: Record<string, SteamArt>): string {
+  return `
+      <section class="block" id="games">
+        <div class="center">
+          <p class="kicker">Games</p>
+          <h2>${games.length} games, ready to mod</h2>
+          <p class="lede">Each one with its mod loader and mod sites set up for you.</p>
+        </div>
+        <ul class="game-grid band">
+${games
+  .slice(0, BAND)
+  .map((g) => gameCard(g, art))
+  .join('\n')}
+        </ul>
+        <p class="center band-more"><a class="btn-ghost" href="/games/">All ${games.length} games</a></p>
+      </section>
+      `
+}

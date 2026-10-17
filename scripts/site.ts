@@ -9,7 +9,14 @@ import { refreshSteamArt, steamArt } from './site/art.ts'
 import { brandArt, brandSprite } from './site/brands.ts'
 import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
-import { gameList, gamePage, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
+import {
+  gameList,
+  gamePage,
+  gamesBand,
+  gamesIndexPage,
+  playableGames,
+  sharePage,
+} from './site/games.ts'
 import { guidePage } from './site/guide.ts'
 
 const block = (name: string) =>
@@ -75,7 +82,11 @@ function faqLd(html: string): object {
 }
 
 /** A hand-written page with its nav, footer, metadata and (on the landing page) game list filled in. */
-function handPage(p: Page, playable: ReturnType<typeof playableGames>): string {
+function handPage(
+  p: Page,
+  playable: ReturnType<typeof playableGames>,
+  steam: ReturnType<typeof steamArt>,
+): string {
   const before = readFileSync(p.path, 'utf8')
   // Function replacements, so `$&` in a game name is not read as a replacement pattern.
   const fill = (src: string, name: string, body: string) =>
@@ -93,6 +104,7 @@ function handPage(p: Page, playable: ReturnType<typeof playableGames>): string {
   if (landing) {
     after = fill(after, 'games', gameList(playable))
     after = fill(after, 'game-count', String(playable.length))
+    after = fill(after, 'games-band', gamesBand(playable, steam))
   }
   after = fill(
     after,
@@ -150,7 +162,7 @@ for (const g of games) {
   files.set(`site/${g.id}/p/index.html`, sharePage(g, art))
 }
 for (const p of PAGES) {
-  files.set(p.path, handPage(p, games))
+  files.set(p.path, handPage(p, games, art))
 }
 files.set('site/changelog/index.html', changelogPage())
 files.set('site/changelog/feed.xml', changelogFeed())

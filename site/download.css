@@ -278,41 +278,6 @@ code {
   color: var(--muted);
   font-size: 0.9rem;
 }
-.prose .game-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.game-grid li {
-  margin: 0;
-}
-.game-grid a {
-  display: grid;
-  gap: 0.25rem;
-  height: 100%;
-  padding: 0.6rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--text);
-  text-decoration: none;
-}
-.game-grid a:hover {
-  border-color: var(--sand);
-}
-.game-grid .game-art {
-  margin: 0 0 0.35rem;
-  border-radius: 4px;
-}
-.game-name {
-  font-weight: 600;
-}
-.game-meta {
-  color: var(--muted);
-  font-size: 0.85rem;
-}
 .game-grid + p {
   margin-top: 1rem;
 }
