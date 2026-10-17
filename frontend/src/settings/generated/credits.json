@@ -90,6 +90,11 @@
     "url": "https://react.dev/"
   },
   {
+    "name": "react-colorful",
+    "licence": "MIT",
+    "url": "https://omgovich.github.io/react-colorful"
+  },
+  {
     "name": "react-dom",
     "licence": "MIT",
     "url": "https://react.dev/"
