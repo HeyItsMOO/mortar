@@ -91,7 +91,7 @@ Optional: it marks Nexus pages with what your profile already has and sends Mod 
 
 - **Include categories** and **Exclude categories** filter by category; sites without categories (GitHub, or Nexus while signed out) turn them off.
 - **Sort** orders each site's results.
-- **Show** has rows for **Mods in this profile**, **Obsolete** and **Broken**, each **Off**, **Gray out** or **Hide** (counted as "N hidden"). **Broken** needs a compatibility list, which Stardew Valley has.
+- **Show** has rows for **Mods in this profile**, **Obsolete** and **Broken**, each **Off**, **Gray out** or **Hide** (counted as "N hidden"); **Obsolete** and **Broken** can also **Flag** a mod with a warning mark before its name. **Broken** needs a compatibility list, which Stardew Valley has.
 
 Mods already in the profile show **Added**, whichever site they came from. A helper Mortar installs for a loader shows **Built in**.
 

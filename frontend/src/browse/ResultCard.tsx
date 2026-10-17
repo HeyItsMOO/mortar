@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase, Card, Typography } from '@mui/material'
+import { TriangleAlert } from 'lucide-react'
 import { type MouseEvent, memo, useState } from 'react'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
 import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
@@ -61,12 +62,12 @@ function CardPicture({
         title={source.name}
         sx={{
           position: 'absolute',
-          right: -4,
-          bottom: -4,
+          top: 2,
+          right: 2,
           display: 'grid',
           placeItems: 'center',
-          p: '3px',
-          borderRadius: '6px',
+          p: '1px',
+          borderRadius: '4px',
           bgcolor: 'var(--mortar-raised)',
           border: '1px solid var(--mortar-hairline)',
         }}
@@ -84,6 +85,14 @@ function isGray(modes: BrowseModes, item: BrowseItem, installed: boolean): boole
     (modes.obsolete === 'gray' && item.obsolete) ||
     (modes.broken === 'gray' && item.broken)
   )
+}
+
+// Flag marks a broken mod in the error colour and an obsolete one in the warning colour; broken wins when both apply.
+function flagOf(modes: BrowseModes, item: BrowseItem): 'error' | 'warning' | null {
+  if (modes.broken === 'flag' && item.broken) {
+    return 'error'
+  }
+  return modes.obsolete === 'flag' && item.obsolete ? 'warning' : null
 }
 
 // Under a grid card's picture the action is as wide as the picture: a button's label wraps rather than widening the
@@ -108,13 +117,49 @@ const underPictureSx = {
   },
 } as const
 
+// The title is the card's keyboard stop: Enter opens the details, the menu key the card's menu. A flagged mod's
+// warning leads it and its accessible name.
+function CardTitle(props: { name: string; flag: 'error' | 'warning' | null; onOpen: () => void }) {
+  const { name, flag, onOpen } = props
+  const { t } = useLingui()
+  const flagText = flag === 'error' ? t`Marked broken` : t`Deprecated or obsolete`
+  const details = t`Details of ${props.name}`
+  return (
+    <ButtonBase
+      aria-label={flag ? `${flagText}. ${details}` : details}
+      onClick={onOpen}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: 0.5,
+        minWidth: 0,
+        textAlign: 'left',
+        fontFamily: 'inherit',
+      }}
+    >
+      {flag ? (
+        <Box
+          component="span"
+          title={flagText}
+          sx={{ display: 'inline-flex', flexShrink: 0, color: `${flag}.main` }}
+        >
+          <TriangleAlert size={15} aria-hidden={true} />
+        </Box>
+      ) : null}
+      <Typography noWrap={true} title={name} sx={{ fontSize: 15, fontWeight: 600 }}>
+        {name}
+      </Typography>
+    </ButtonBase>
+  )
+}
+
 // A click on the card's own buttons and links does what they say, not select the card.
 const onControl = (e: MouseEvent<HTMLElement>) =>
   e.target instanceof Element && e.target.closest('button, a, [role="button"]') !== null
 
 const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
   const { row, item, modes, sourceNames } = props
-  const { t } = useLingui()
   const { name, summary, author } = item
   // The same mod found on several sources is one card; its first source is the default and a badge picks another.
   const sources = [item.source, ...(item.alts ?? []).map((a) => a.source)]
@@ -128,6 +173,7 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
     (s) => s.selected !== null && hitKey(s.selected.item) === hitKey(item),
   )
   const dim = isGray(modes, shownItem, installed) ? GRAY_OPACITY : 1
+  const flag = flagOf(modes, shownItem)
   return (
     <Card
       data-hit={hitKey(item)}
@@ -183,16 +229,11 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
           opacity: dim,
         }}
       >
-        {/* The title is the card's keyboard stop: Enter opens the details, the menu key the card's menu. */}
-        <ButtonBase
-          aria-label={t`Details of ${item.name}`}
-          onClick={() => useBrowseSelection.getState().select({ item, source })}
-          sx={{ display: 'block', minWidth: 0, textAlign: 'left', fontFamily: 'inherit' }}
-        >
-          <Typography noWrap={true} title={name} sx={{ fontSize: 15, fontWeight: 600 }}>
-            {name}
-          </Typography>
-        </ButtonBase>
+        <CardTitle
+          name={name}
+          flag={flag}
+          onOpen={() => useBrowseSelection.getState().select({ item, source })}
+        />
         {author === '' ? null : (
           <Typography
             noWrap={true}

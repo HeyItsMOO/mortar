@@ -48,6 +48,7 @@ function BrowseShow({
   }
   const choices: { value: Mode; label: string }[] = [
     { value: 'off', label: t`Off` },
+    { value: 'flag', label: t`Flag` },
     { value: 'gray', label: t`Gray out` },
     { value: 'hide', label: t`Hide` },
   ]
@@ -82,10 +83,13 @@ function BrowseShow({
               <PrefSegmented
                 label={labels[row]}
                 value={modes[row]}
-                options={choices.map((c) => ({
-                  ...c,
-                  ...(row === 'broken' && !hasCompat ? { unavailable: noCompat } : {}),
-                }))}
+                options={choices
+                  // An installed mod already wears its Added chip; Flag is for warnings.
+                  .filter((c) => row !== 'installed' || c.value !== 'flag')
+                  .map((c) => ({
+                    ...c,
+                    ...(row === 'broken' && !hasCompat ? { unavailable: noCompat } : {}),
+                  }))}
                 onChange={(next) => onModes({ ...modes, [row]: next as Mode })}
               />
             </Box>
