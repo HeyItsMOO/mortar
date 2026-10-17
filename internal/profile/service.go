@@ -69,11 +69,23 @@ func (s *Service) gameModsDir(id string) (string, error) {
 	return filepath.Join(dir, "Mods"), nil
 }
 
+// errModsFolderIsInstall is the refusal for a folder game whose mods are laid out as packed from the install folder
+// itself (The Witcher 3's `mods`, `dlc` and `bin` sit beside the game's own files): the install is no Mods folder to
+// import from or to move out of.
+var errModsFolderIsInstall = errors.New("this game's mods share the game folder with its own files, so there is no mods folder to import from")
+
 // importModsDir is the folder the game reads mods from, which Import from the game's Mods folder copies: the
 // install's Mods, or for a game that names one (a folder game) its own mods folder, which may be outside the install.
 func (s *Service) importModsDir(id string) (string, error) {
 	if _, loose := looseModKinds(id); loose {
-		return game.PathFor(s.home, s.settings.Get(), id, "", "mods")
+		dir, err := game.PathFor(s.home, s.settings.Get(), id, "", "mods")
+		if err != nil {
+			return "", err
+		}
+		if install, err := game.InstallDir(s.home, s.settings.Get(), id); err == nil && install != "" && filepath.Clean(dir) == filepath.Clean(install) {
+			return "", errModsFolderIsInstall
+		}
+		return dir, nil
 	}
 	return s.gameModsDir(id)
 }
@@ -81,6 +93,9 @@ func (s *Service) importModsDir(id string) (string, error) {
 // PreviewGameMods lists mods in the game's Mods folder that ImportGameMods would copy.
 func (s *Service) PreviewGameMods(gameID string) (GameModsPreview, error) {
 	dir, err := s.importModsDir(gameID)
+	if errors.Is(err, errModsFolderIsInstall) {
+		return GameModsPreview{}, nil
+	}
 	if err != nil {
 		return GameModsPreview{}, err
 	}

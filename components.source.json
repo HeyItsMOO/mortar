@@ -9264,6 +9264,202 @@
           "id": "patreon"
         }
       ]
+    },
+    {
+      "id": "witcher3",
+      "name": "The Witcher 3: Wild Hunt",
+      "enabled": true,
+      "marker": "witcher3.exe",
+      "markerDir": "bin/x64_DX12",
+      "metadata": [],
+      "paths": {
+        "mods": {
+          "windows": "{install}"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "mods",
+          "root": "{profile}/Mods",
+          "keepWhole": ["bundle", "ws", "store"]
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "292030"
+        },
+        "epic": {
+          "appNames": ["725a22e15ed74735bb0d6a19f3cc82d0"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "folder"
+        }
+      ],
+      "sources": [
+        {
+          "id": "nexus",
+          "key": "witcher3",
+          "gameId": 952
+        }
+      ]
+    },
+    {
+      "id": "darkest-dungeon",
+      "name": "Darkest Dungeon",
+      "enabled": true,
+      "marker": "Darkest.exe",
+      "markerDir": "_windows/win64",
+      "metadata": [],
+      "paths": {
+        "mods": {
+          "windows": "{install}/mods"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "mods",
+          "root": "{profile}/Mods",
+          "modRoot": "project.xml"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "262060"
+        }
+      },
+      "loaders": [
+        {
+          "id": "folder"
+        }
+      ],
+      "sources": [
+        {
+          "id": "nexus",
+          "key": "darkestdungeon",
+          "gameId": 804
+        }
+      ]
+    },
+    {
+      "id": "starbound",
+      "name": "Starbound",
+      "enabled": true,
+      "marker": "starbound.exe",
+      "markerDir": "win64",
+      "metadata": [],
+      "paths": {
+        "mods": {
+          "windows": "{install}/mods",
+          "linux": "{install}/mods"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "mods",
+          "root": "{profile}/Mods"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "211820"
+        }
+      },
+      "loaders": [
+        {
+          "id": "folder"
+        }
+      ],
+      "sources": [
+        {
+          "id": "nexus",
+          "key": "starbound",
+          "gameId": 242
+        }
+      ]
+    },
+    {
+      "id": "hogwarts-legacy",
+      "name": "Hogwarts Legacy",
+      "enabled": true,
+      "marker": "HogwartsLegacy.exe",
+      "markerDir": "Phoenix/Binaries/Win64",
+      "metadata": [],
+      "paths": {
+        "mods": {
+          "windows": "{install}/Phoenix/Content/Paks/~mods"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "mods",
+          "root": "{profile}/Mods",
+          "keepWhole": ["utoc"]
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "990080"
+        }
+      },
+      "loaders": [
+        {
+          "id": "folder"
+        }
+      ],
+      "sources": [
+        {
+          "id": "nexus",
+          "key": "hogwartslegacy",
+          "gameId": 5113
+        }
+      ]
+    },
+    {
+      "id": "cyberpunk-2077",
+      "name": "Cyberpunk 2077",
+      "enabled": true,
+      "marker": "Cyberpunk2077.exe",
+      "markerDir": "bin/x64",
+      "metadata": [],
+      "paths": {
+        "mods": {
+          "windows": "{install}"
+        }
+      },
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "mods",
+          "root": "{profile}/Mods",
+          "keepWhole": ["archive", "xl", "reds"]
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1091500"
+        },
+        "epic": {
+          "appNames": ["77f2b98e2cef40c8a7437518bf420e47"]
+        }
+      },
+      "loaders": [
+        {
+          "id": "folder"
+        }
+      ],
+      "sources": [
+        {
+          "id": "nexus",
+          "key": "cyberpunk2077",
+          "gameId": 3333
+        }
+      ]
     }
   ]
 }

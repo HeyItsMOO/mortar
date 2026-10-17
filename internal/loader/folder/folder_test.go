@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	goruntime "runtime"
 	"slices"
 	"testing"
 
@@ -15,13 +16,14 @@ import (
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/folder"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
+	"github.com/Rethunk-Tech/mortar/internal/runtime"
 	"github.com/Rethunk-Tech/mortar/internal/store"
 	"github.com/Rethunk-Tech/mortar/internal/testenv/testfs"
 )
 
 const gameID = "folder-game"
 
-func useFolderGame(t *testing.T) {
+func useFolderGame(t *testing.T, modsPath string) {
 	t.Helper()
 	m, err := components.BundledManifest()
 	if err != nil {
@@ -32,7 +34,7 @@ func useFolderGame(t *testing.T) {
 		Targets: []components.TargetDef{{ID: "mods", Root: "{profile}/Mods", MaxDepth: map[string]int{"ts4script": 1}, KeepWhole: []string{"ts4script"}}},
 		Stores:  components.GameStores{Steam: &components.SteamStore{AppID: "1"}},
 		Loaders: []components.GameLoader{{ID: "folder", Name: "Mod folder"}},
-		Paths:   map[string]components.PathTemplate{"mods": {Windows: "{documents}/Mods", Linux: "{documents}/Mods", Darwin: "{documents}/Mods"}},
+		Paths:   map[string]components.PathTemplate{"mods": {Windows: modsPath, Linux: modsPath, Darwin: modsPath}},
 	})
 	if err := m.Validate(); err != nil {
 		t.Fatal(err)
@@ -60,7 +62,7 @@ func tree(t *testing.T, dir string) map[string]string {
 }
 
 func TestEnabledModsAreSwappedIntoTheModsFolderAndTakenBack(t *testing.T) {
-	useFolderGame(t)
+	useFolderGame(t, "{documents}/Mods")
 	dir := t.TempDir()
 	ps := profile.OpenIn(dir, store.OpenAt(filepath.Join(dir, "store")))
 	p, err := ps.Create(gameID, "A")
@@ -153,5 +155,88 @@ func TestAnUnknownGameIsRefused(t *testing.T) {
 	l, _ := loader.Get("folder")
 	if err := l.Contribute(t.Context(), launchplan.New(launchplan.ModeProfile), loader.ProfileView{Game: "no-such-game"}); err == nil {
 		t.Fatal("an unknown game must be refused")
+	}
+}
+
+// A mods folder named `{install}/...` needs nothing beyond the catalog: the install is the one place a launch must
+// leave as it found it, so the whole folder is compared, including a game file a mod replaces.
+func TestAModsFolderInsideTheInstallIsFilledAndPurgedWithTheInstallUnchanged(t *testing.T) {
+	useFolderGame(t, "{install}")
+	dir := t.TempDir()
+	ps := profile.OpenIn(dir, store.OpenAt(filepath.Join(dir, "store")))
+	p, err := ps.Create(gameID, "A")
+	if err != nil {
+		t.Fatal(err)
+	}
+	zip := testfs.WriteZip(t, filepath.Join(t.TempDir(), "mod.zip"), map[string]string{
+		"mods/modA/content/blob0.bundle": "mod",
+		"bin/config/matrix.xml":          "mods version",
+		"dlc/dlcB/readme.txt":            "dlc",
+	})
+	if _, err := ps.InstallArchive(t.Context(), gameID, p.ID, zip); err != nil {
+		t.Fatal(err)
+	}
+	if err := ps.SyncPackages(gameID, p.ID); err != nil {
+		t.Fatal(err)
+	}
+	profDir, err := ps.ProfileDir(gameID, p.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	l, _ := loader.Get("folder")
+	plan := launchplan.New(launchplan.ModeProfile)
+	if err := l.Contribute(t.Context(), plan, loader.ProfileView{Game: gameID, Dir: profDir}); err != nil {
+		t.Fatal(err)
+	}
+
+	install := t.TempDir()
+	for path, body := range map[string]string{
+		"G.exe":                 "game",
+		"bin/config/matrix.xml": "players version",
+		"mods/modX/own.bundle":  "player's mod",
+	} {
+		full := filepath.Join(install, filepath.FromSlash(path))
+		if err := os.MkdirAll(filepath.Dir(full), 0o750); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(full, []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	info, _ := components.Game(gameID)
+	modsDir, err := runtime.Resolve(runtime.Install{Game: gameID, Dir: install, Platform: goruntime.GOOS, Home: t.TempDir()}, info.Paths["mods"])
+	if err != nil {
+		t.Fatal(err)
+	}
+	if modsDir != install {
+		t.Fatalf("mods folder resolves to %s, want the install %s", modsDir, install)
+	}
+	before := tree(t, install)
+
+	d, _ := deploy.Get("copy-into-install")
+	dp, err := d.Plan(deploy.View{JournalDir: filepath.Join(dir, "journal"), Roots: map[string]string{"mods": modsDir}}, install, plan.Files)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m, err := d.Apply(t.Context(), dp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	during := tree(t, install)
+	if during[filepath.Join("mods", "modA", "content", "blob0.bundle")] != "mod" || during[filepath.Join("bin", "config", "matrix.xml")] != "mods version" ||
+		during[filepath.Join("dlc", "dlcB", "readme.txt")] != "dlc" || during[filepath.Join("mods", "modX", "own.bundle")] != "player's mod" {
+		t.Fatalf("the install during the launch: %v", during)
+	}
+	if err := d.Purge(t.Context(), m); err != nil {
+		t.Fatal(err)
+	}
+	after := tree(t, install)
+	if len(after) != len(before) {
+		t.Fatalf("install differs\nbefore %v\n after %v", before, after)
+	}
+	for k, v := range before {
+		if after[k] != v {
+			t.Fatalf("%s: %q, want %q", k, after[k], v)
+		}
 	}
 }

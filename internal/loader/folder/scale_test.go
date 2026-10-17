@@ -25,7 +25,7 @@ func TestPlaceAndPurgeAThreeThousandFileProfile(t *testing.T) {
 	if os.Getenv("MORTAR_SCALE") != "1" {
 		t.Skip("set MORTAR_SCALE=1 to time a 3,000-file profile")
 	}
-	useFolderGame(t)
+	useFolderGame(t, "{documents}/Mods")
 	dir := t.TempDir()
 	ps := profile.OpenIn(dir, store.OpenAt(filepath.Join(dir, "store")))
 	p, err := ps.Create(gameID, "Big")
