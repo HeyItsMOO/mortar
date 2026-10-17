@@ -20,15 +20,15 @@ interface EventRow {
 
 function ChannelSwitch({ prefKey, label }: { prefKey: string; label: string }) {
   const { t } = useLingui()
-  const settings = useSettings()
   const spec = specByKey(usePrefSpecs(), prefKey)
+  const raw = useSettings((s) => (spec ? prefRaw(s, spec) : undefined))
   if (!spec) {
     return <Box sx={{ width: CHANNEL_WIDTH }} />
   }
   return (
     <Box sx={{ width: CHANNEL_WIDTH, display: 'flex', justifyContent: 'center' }}>
       <PrefSwitch
-        checked={prefAsBool(prefRaw(settings, spec), spec)}
+        checked={prefAsBool(raw, spec)}
         label={label}
         onChange={(on) =>
           persist(() => SetByKey(prefKey, String(on), ''), t`Could not save that setting`)

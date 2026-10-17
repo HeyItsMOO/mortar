@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Alert, Box, Button, IconButton, MenuItem, TextField, Typography } from '@mui/material'
 import { CircleHelp, RotateCcw } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Mod } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { openProfileOf, useProfiles } from '../../profiles/store.ts'
 import { ConfirmDialog } from '../../shell/ConfirmDialog.tsx'
@@ -337,7 +337,9 @@ export function ConfigPane({
   file?: string
 }) {
   const { t } = useLingui()
-  const { files, current, loadError } = useTypedConfig()
+  const files = useTypedConfig((s) => s.files)
+  const current = useTypedConfig((s) => s.current)
+  const loadError = useTypedConfig((s) => s.loadError)
   const select = useTypedConfig((s) => s.select)
   const open = useTypedConfig((s) => s.open)
   const { game, profile, key, id } = target
@@ -352,11 +354,17 @@ export function ConfigPane({
   const [confirming, setConfirming] = useState(false)
   // A preset applied from here rewrites the file, so the profile's change time rereads it.
   const updated = useProfiles((st) => openProfileOf(st)?.updated)
+  const seenUpdated = useRef(updated)
   useEffect(() => {
-    if (updated !== undefined && current !== '') {
-      select(current).catch(() => undefined)
+    if (updated === seenUpdated.current) {
+      return
     }
-  }, [updated, current, select])
+    seenUpdated.current = updated
+    const shown = useTypedConfig.getState().current
+    if (shown !== '') {
+      select(shown).catch(() => undefined)
+    }
+  }, [updated, select])
   const file = files.find((f) => f.name === current)
   const single = showsOneFile(files.length, initialFile)
   return (

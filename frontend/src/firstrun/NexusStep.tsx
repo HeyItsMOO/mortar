@@ -8,7 +8,8 @@ import { Panel } from './Panel.tsx'
 // Mod Manager Download buttons on Nexus only reach Mortar for a signed-in account, so ask before the first mod.
 export function NexusStep({ onDone }: { onDone: () => void }) {
   const { t } = useLingui()
-  const { signedIn, name } = useNexus()
+  const signedIn = useNexus((s) => s.signedIn)
+  const name = useNexus((s) => s.name)
   const continueRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     if (signedIn) {

@@ -133,7 +133,13 @@ export function BackupsDialog({
   profile: string
 }) {
   const { t } = useLingui()
-  const { items, status, error, load, restore, setPinned, openFolder } = useSaveBackups()
+  const items = useSaveBackups((s) => s.items)
+  const status = useSaveBackups((s) => s.status)
+  const error = useSaveBackups((s) => s.error)
+  const load = useSaveBackups((s) => s.load)
+  const restore = useSaveBackups((s) => s.restore)
+  const setPinned = useSaveBackups((s) => s.setPinned)
+  const openFolder = useSaveBackups((s) => s.openFolder)
   const profiles = useProfiles((s) => s.profiles)
   const fits = useSaves((s) => s.fits)
   const busyGame = useGameBusy()

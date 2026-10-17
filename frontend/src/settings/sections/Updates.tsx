@@ -22,7 +22,14 @@ const button = { whiteSpace: 'nowrap', flexShrink: 0 }
 
 function MortarUpdate() {
   const { t } = useLingui()
-  const { info, phase, release, error, load, check, install, restart } = useMortarUpdate()
+  const info = useMortarUpdate((s) => s.info)
+  const phase = useMortarUpdate((s) => s.phase)
+  const release = useMortarUpdate((s) => s.release)
+  const error = useMortarUpdate((s) => s.error)
+  const load = useMortarUpdate((s) => s.load)
+  const check = useMortarUpdate((s) => s.check)
+  const install = useMortarUpdate((s) => s.install)
+  const restart = useMortarUpdate((s) => s.restart)
   const [failed, setFailed] = useState('')
   const read = useCallback(() => {
     setFailed('')

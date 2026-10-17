@@ -28,7 +28,10 @@ const isViewMode = (v: unknown): v is ViewMode => v === 'list' || v === 'grid'
 
 export function SavesTab({ profile, game }: { profile: Profile; game: string }) {
   const { t } = useLingui()
-  const { fits, status, error: detail, load } = useSaves()
+  const fits = useSaves((s) => s.fits)
+  const status = useSaves((s) => s.status)
+  const detail = useSaves((s) => s.error)
+  const load = useSaves((s) => s.load)
   const { name } = profile
   // Only SMAPI writes the mods a save was played with into the save, so only its saves can be matched to a profile.
   const recordsMods = useGameInfo(game)?.loaderId === 'smapi'

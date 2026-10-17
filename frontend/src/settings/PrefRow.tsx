@@ -37,12 +37,11 @@ function PrefRow({
 }) {
   const { t, i18n } = useLingui()
   const fail = t`Could not save that setting`
-  const settings = useSettings()
+  const raw = useSettings((s) => prefRaw(s, spec, game))
   const copy = prefCopy(i18n, spec.key)
   if (spec.scope === 'game' && !game) {
     return null
   }
-  const raw = prefRaw(settings, spec, game)
   const gameArg = specGameArg(spec, game)
   const save = (value: string) => persist(() => SetByKey(spec.key, value, gameArg), fail)
   const kind = prefControl(spec.type)

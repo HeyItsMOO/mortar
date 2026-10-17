@@ -8,6 +8,7 @@ import { Mods } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/
 import type { Profile } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { useTab } from '../../game/tab.ts'
 import { useProfiles } from '../../profiles/store.ts'
+import { sameValue } from '../../shell/sameValue.ts'
 import { readStored, writeStored } from '../../shell/useStoredState.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 
@@ -73,8 +74,15 @@ const useConfigList = create<{
     if (!force && get().byProfile[profile]?.stamp === stamp) {
       return
     }
-    const list = await Mods(game, profile)
-    set((s) => ({ byProfile: { ...s.byProfile, [profile]: { list, stamp } } }))
+    const got = await Mods(game, profile)
+    set((s) => {
+      const had = s.byProfile[profile]
+      // An unchanged answer keeps the stored list, so opening the tab does not redraw it once the reread lands.
+      const list = had && sameValue(had.list, got) ? had.list : got
+      return had?.list === list && had.stamp === stamp
+        ? s
+        : { byProfile: { ...s.byProfile, [profile]: { list, stamp } } }
+    })
   },
   select: (profile, selection) => {
     writeStored(selectionKey(profile), selection)

@@ -90,8 +90,8 @@ function AccountLink({ children }: { children: ReactNode }) {
 
 function useAuth(id: SourceId): { ok: boolean | null; text: ReactNode } {
   const { t } = useLingui()
-  const nexus = useNexus()
-  const { name } = nexus
+  const nexusSignedIn = useNexus((s) => s.signedIn)
+  const name = useNexus((s) => s.name)
   const [github, setGithub] = useState<boolean | null>(null)
   const [itch, setItch] = useState<string | null>(null)
   useEffect(() => {
@@ -102,7 +102,7 @@ function useAuth(id: SourceId): { ok: boolean | null; text: ReactNode } {
   }, [])
   switch (id) {
     case 'nexus':
-      return nexus.signedIn
+      return nexusSignedIn
         ? { ok: true, text: t`Signed in as ${name}` }
         : {
             ok: false,

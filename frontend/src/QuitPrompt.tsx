@@ -3,7 +3,8 @@ import { useQuitPrompt } from './quit.ts'
 import { ConfirmDialog } from './shell/ConfirmDialog.tsx'
 
 export function QuitPrompt() {
-  const { message, resolve } = useQuitPrompt()
+  const message = useQuitPrompt((s) => s.message)
+  const resolve = useQuitPrompt((s) => s.resolve)
   const { t } = useLingui()
   if (!(message && resolve)) {
     return null

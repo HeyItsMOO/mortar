@@ -6,7 +6,9 @@ import { reportUnexpected } from '../toasts/report.ts'
 
 export function UpdateReadyBanner() {
   const { t } = useLingui()
-  const { phase, release, restart } = useMortarUpdate()
+  const phase = useMortarUpdate((s) => s.phase)
+  const release = useMortarUpdate((s) => s.release)
+  const restart = useMortarUpdate((s) => s.restart)
   if (phase !== 'ready') {
     return null
   }

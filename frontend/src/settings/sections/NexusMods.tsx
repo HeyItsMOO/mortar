@@ -202,7 +202,7 @@ function NexusModsSignedIn({
 export function NexusSignIn() {
   const { t } = useLingui()
   const keyId = useId()
-  const { signedIn } = useNexus()
+  const signedIn = useNexus((s) => s.signedIn)
   const nxm = useNxmHandler()
   const [key, setKey] = useState('')
   const [busy, setBusy] = useState(false)
@@ -291,7 +291,9 @@ export function NexusSignIn() {
 }
 
 export function NexusMods() {
-  const { signedIn, name, premium } = useNexus()
+  const signedIn = useNexus((s) => s.signedIn)
+  const name = useNexus((s) => s.name)
+  const premium = useNexus((s) => s.premium)
   const [askEndorse, setAskEndorse] = useState(false)
   useEffect(() => {
     GetSettings()

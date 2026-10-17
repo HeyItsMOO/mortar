@@ -231,6 +231,22 @@ test('zustand selectors do not allocate arrays or objects', () => {
   expect(hits, hits.join('\n')).toEqual([])
 })
 
+// A store hook called without a selector re-renders its component on every change anywhere in that store.
+test('zustand store hooks take a selector', () => {
+  const stores = new Set(
+    files.flatMap(({ src }) =>
+      [...src.matchAll(/\b(use[A-Z]\w*)\s*=\s*create\b/g)].map((m) => m[1]),
+    ),
+  )
+  const hits = files.flatMap(({ path, src }) => {
+    const code = strip(src)
+    return [...code.matchAll(/\b(use[A-Z]\w*)\(\s*\)/g)]
+      .filter((m) => stores.has(m[1]))
+      .map((m) => `${rel(path)}:${lineOf(code, m.index ?? 0)}`)
+  })
+  expect(hits, hits.join('\n')).toEqual([])
+})
+
 // Plurals and lists go through plural() and listNames(), so a translation can follow its own grammar.
 function copyHits(path: string, src: string): string[] {
   const hits: string[] = []

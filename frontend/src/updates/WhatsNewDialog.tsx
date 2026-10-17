@@ -177,7 +177,7 @@ function Notes({ text }: { text: string }) {
 
 export function WhatsNewDialog() {
   const { t } = useLingui()
-  const shown = useWhatsNew()
+  const shown = useWhatsNew((s) => s)
   const [release, setRelease] = useState<ReleaseNotesResult | null>(null)
   const version = shown?.version
   useEffect(() => {

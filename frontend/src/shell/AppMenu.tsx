@@ -56,7 +56,9 @@ function Reason({ reason, children }: { reason: string; children: ReactNode }) {
 
 function NexusLines({ close }: { close: () => void }) {
   const { t } = useLingui()
-  const { signedIn, name, premium } = useNexus()
+  const signedIn = useNexus((s) => s.signedIn)
+  const name = useNexus((s) => s.name)
+  const premium = useNexus((s) => s.premium)
   return (
     <>
       <Box sx={{ px: '14px', py: '6px', fontSize: 13 }}>
