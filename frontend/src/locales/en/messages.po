@@ -79,7 +79,7 @@ msgid "Make a group…"
 msgstr "Make a group…"
 
 #: src/mods/updateReview/SourceGroups.tsx:36
-#: src/settings/sections/DataUsage.tsx:211
+#: src/settings/sections/DataUsage.tsx:217
 msgid "Other"
 msgstr "Other"
 
@@ -497,8 +497,8 @@ msgstr "Unlinked the collection"
 msgid "Use a file"
 msgstr "Use a file"
 
-#: src/settings/sections/DataUsage.tsx:216
-#: src/settings/sections/DataUsage.tsx:230
+#: src/settings/sections/DataUsage.tsx:222
+#: src/settings/sections/DataUsage.tsx:236
 msgid "Clean up…"
 msgstr "Clean up…"
 
@@ -870,7 +870,7 @@ msgstr "List"
 msgid "Reorder {0}"
 msgstr "Reorder {0}"
 
-#: src/browse/BrowseBody.tsx:129
+#: src/browse/BrowseBody.tsx:130
 msgid "Find mods to add"
 msgstr "Find mods to add"
 
@@ -1093,7 +1093,7 @@ msgstr "Tabs"
 
 #: src/browse/BrowseShow.tsx:31
 #: src/mods/CompatChip.tsx:25
-#: src/mods/ModDependencyTree.tsx:142
+#: src/mods/ModDependencyTree.tsx:134
 msgid "Broken"
 msgstr "Broken"
 
@@ -1115,8 +1115,8 @@ msgstr "A scheduled save backup failed"
 msgid "{loader} is the loader every {gameName} mod needs. Mortar puts it in each profile; the game folder stays as it is."
 msgstr "{loader} is the loader every {gameName} mod needs. Mortar puts it in each profile; the game folder stays as it is."
 
-#: src/settings/sections/DataUsage.tsx:219
-#: src/settings/sections/DataUsage.tsx:230
+#: src/settings/sections/DataUsage.tsx:225
+#: src/settings/sections/DataUsage.tsx:236
 msgid "Clear cache…"
 msgstr "Clear cache…"
 
@@ -1539,7 +1539,7 @@ msgstr "Updated {0}"
 msgid "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
 msgstr "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
 
-#: src/settings/store.ts:136
+#: src/settings/store.ts:146
 msgid "Your settings could not be read"
 msgstr "Your settings could not be read"
 
@@ -1554,7 +1554,7 @@ msgid "Update channel"
 msgstr "Update channel"
 
 #. placeholder {0}: source.scheme
-#: src/settings/sections/Downloads.tsx:178
+#: src/settings/sections/Downloads.tsx:179
 msgid "Opening a {0}:// link, such as Install with Mod Manager, installs the mod in Mortar."
 msgstr "Opening a {0}:// link, such as Install with Mod Manager, installs the mod in Mortar."
 
@@ -1880,7 +1880,7 @@ msgstr "Some mods could not be checked, so more updates may show up later."
 msgid "{path} depend on each other in a loop, so BepInEx stops before loading any plugin."
 msgstr "{path} depend on each other in a loop, so BepInEx stops before loading any plugin."
 
-#: src/browse/BrowseBody.tsx:141
+#: src/browse/BrowseBody.tsx:142
 #: src/firstrun/LoaderStep.tsx:202
 #: src/firstrun/LoaderStep.tsx:272
 #: src/game/detailStates.tsx:26
@@ -1904,7 +1904,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/shell/ErrorBoundary.tsx:22
 #: src/shell/ErrorRetry.tsx:15
 #: src/shell/LoadingRow.tsx:41
-#: src/shell/OfflineBanner.tsx:73
+#: src/shell/OfflineBanner.tsx:80
 #: src/toasts/report.ts:66
 msgid "Retry"
 msgstr "Retry"
@@ -1918,7 +1918,7 @@ msgstr "Copper"
 msgid "found, without {0}"
 msgstr "found, without {0}"
 
-#: src/settings/sections/DataUsage.tsx:273
+#: src/settings/sections/DataUsage.tsx:279
 msgid "Mortar's data"
 msgstr "Mortar's data"
 
@@ -2124,8 +2124,8 @@ msgstr "Could not resize the window"
 msgid "SMAPI unofficial builds"
 msgstr "SMAPI unofficial builds"
 
-#: src/settings/sections/DataUsage.tsx:228
-#: src/settings/sections/DataUsage.tsx:230
+#: src/settings/sections/DataUsage.tsx:234
+#: src/settings/sections/DataUsage.tsx:236
 msgid "Usage"
 msgstr "Usage"
 
@@ -2629,7 +2629,7 @@ msgstr "Copy load order"
 msgid "Try a different search."
 msgstr "Try a different search."
 
-#: src/mods/Sidebar.tsx:501
+#: src/mods/Sidebar.tsx:513
 msgid "Installed as a dependency"
 msgstr "Installed as a dependency"
 
@@ -2700,7 +2700,7 @@ msgstr "Writes a zip with logs and settings, personal paths removed, to attach t
 msgid "Error while loading"
 msgstr "Error while loading"
 
-#: src/settings/sections/Downloads.tsx:280
+#: src/settings/sections/Downloads.tsx:281
 msgid "Downloading"
 msgstr "Downloading"
 
@@ -3310,7 +3310,7 @@ msgid "Import from {manager}"
 msgstr "Import from {manager}"
 
 #: src/mods/listRows.ts:140
-#: src/mods/Sidebar.tsx:479
+#: src/mods/Sidebar.tsx:491
 msgid "Archive"
 msgstr "Archive"
 
@@ -3498,7 +3498,7 @@ msgstr "Profile sections"
 msgid "Fullscreen resolution height"
 msgstr "Fullscreen resolution height"
 
-#: src/settings/sections/DataUsage.tsx:242
+#: src/settings/sections/DataUsage.tsx:248
 msgid "Shared by every game"
 msgstr "Shared by every game"
 
@@ -3516,7 +3516,7 @@ msgid "Could not read the measurement"
 msgstr "Could not read the measurement"
 
 #. placeholder {0}: formatBytes(bytes)
-#: src/settings/sections/DataUsage.tsx:145
+#: src/settings/sections/DataUsage.tsx:125
 msgid "Measuring… {0}"
 msgstr "Measuring… {0}"
 
@@ -3608,7 +3608,7 @@ msgstr "Could not open the profile folder"
 msgid "Download and stage a found update without asking"
 msgstr "Download and stage a found update without asking"
 
-#: src/browse/BrowsePage.tsx:178
+#: src/browse/BrowsePage.tsx:182
 msgid "Search GitHub releases"
 msgstr "Search GitHub releases"
 
@@ -3631,7 +3631,7 @@ msgstr "Local-only mods kept ({0})"
 
 #: src/commandPalette/CommandPalette.tsx:193
 #: src/settings/sections/DataImport.tsx:23
-#: src/settings/sections/DataUsage.tsx:230
+#: src/settings/sections/DataUsage.tsx:236
 #: src/settings/SettingsPage.tsx:47
 msgid "Storage"
 msgstr "Storage"
@@ -3978,7 +3978,7 @@ msgstr "{both, plural, one {# mod is in both} other {# mods are in both}}"
 msgid "Try a different search or filter."
 msgstr "Try a different search or filter."
 
-#: src/browse/BrowseBody.tsx:138
+#: src/browse/BrowseBody.tsx:139
 msgid "Search did not work"
 msgstr "Search did not work"
 
@@ -4528,7 +4528,7 @@ msgstr "Choose image…"
 msgid "Check these before you play."
 msgstr "Check these before you play."
 
-#: src/settings/sections/DataUsage.tsx:235
+#: src/settings/sections/DataUsage.tsx:241
 msgid "By game"
 msgstr "By game"
 
@@ -4571,7 +4571,7 @@ msgid "Reported by {0}"
 msgstr "Reported by {0}"
 
 #: src/settings/prefCopyAntivirus.ts:21
-#: src/settings/sections/Downloads.tsx:246
+#: src/settings/sections/Downloads.tsx:247
 msgid "Automatic"
 msgstr "Automatic"
 
@@ -4697,8 +4697,8 @@ msgstr "Mortar: {label}"
 msgid "{off} switched off"
 msgstr "{off} switched off"
 
-#: src/mods/ModCards.tsx:493
-#: src/mods/ModList.tsx:388
+#: src/mods/ModCards.tsx:492
+#: src/mods/ModList.tsx:389
 #: src/mods/Toolbar.tsx:233
 #: src/mods/typedConfig/ConfigTab.tsx:169
 msgid "A mod with several tags appears under its first tag."
@@ -4743,7 +4743,7 @@ msgstr "Needs a CurseForge key, or the file from its page"
 
 #: src/mods/AuthorDialog.tsx:135
 #: src/mods/listRows.ts:163
-#: src/mods/ModDependencyTree.tsx:146
+#: src/mods/ModDependencyTree.tsx:138
 #: src/mods/OptionalFileRows.tsx:123
 #: src/mods/PreviewPick.tsx:23
 #: src/mods/Sidebar.tsx:231
@@ -4884,7 +4884,7 @@ msgstr "Last scheduled backup {when} · next one is due"
 msgid "Just this mod"
 msgstr "Just this mod"
 
-#: src/settings/sections/Downloads.tsx:221
+#: src/settings/sections/Downloads.tsx:222
 msgid "Links for games Mortar does not manage open in the app that had them before."
 msgstr "Links for games Mortar does not manage open in the app that had them before."
 
@@ -4922,7 +4922,7 @@ msgid "Get the extension"
 msgstr "Get the extension"
 
 #: src/groups/SavedGroupsSection.tsx:80
-#: src/mods/ModDependencyTree.tsx:223
+#: src/mods/ModDependencyTree.tsx:207
 #: src/mods/Toolbar.tsx:250
 #: src/settings/prefCopyModsView.ts:40
 msgid "None"
@@ -4946,7 +4946,7 @@ msgid "Mark explicit"
 msgstr "Mark explicit"
 
 #: src/settings/sections/AboutDiagnostics.tsx:89
-#: src/settings/sections/Downloads.tsx:276
+#: src/settings/sections/Downloads.tsx:277
 msgid "Browser extension"
 msgstr "Browser extension"
 
@@ -5149,7 +5149,7 @@ msgstr "Installed"
 msgid "Mortar did not install this folder. It moves to Mortar's trash."
 msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 
-#: src/browse/BrowsePage.tsx:106
+#: src/browse/BrowsePage.tsx:108
 #: src/browse/BrowseShow.tsx:46
 #: src/firstrunTour/TourAgainButton.tsx:16
 #: src/firstrunTour/useFirstRunTour.ts:53
@@ -5161,9 +5161,9 @@ msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 #: src/settings/sections/Appearance.tsx:77
 #: src/settings/sections/Appearance.tsx:94
 #: src/settings/sections/Downloads.tsx:52
-#: src/settings/sections/Downloads.tsx:226
-#: src/settings/sections/Downloads.tsx:257
-#: src/settings/sections/Downloads.tsx:269
+#: src/settings/sections/Downloads.tsx:227
+#: src/settings/sections/Downloads.tsx:258
+#: src/settings/sections/Downloads.tsx:270
 #: src/settings/sections/GameSettings.tsx:341
 #: src/settings/sections/GameSettings.tsx:355
 #: src/settings/sections/GameSettings.tsx:357
@@ -5271,7 +5271,7 @@ msgstr "Main mod's folder"
 msgid "Code"
 msgstr "Code"
 
-#: src/settings/sections/DataUsage.tsx:284
+#: src/settings/sections/DataUsage.tsx:290
 msgid "A portable copy keeps its data beside the program."
 msgstr "A portable copy keeps its data beside the program."
 
@@ -5594,7 +5594,7 @@ msgstr "{plugin} failed to load."
 msgid "Character"
 msgstr "Character"
 
-#: src/browse/BrowsePage.tsx:174
+#: src/browse/BrowsePage.tsx:178
 msgid "Search {sourceName}"
 msgstr "Search {sourceName}"
 
@@ -5864,7 +5864,7 @@ msgid "{0, plural, one {# fix} other {# fixes}}"
 msgstr "{0, plural, one {# fix} other {# fixes}}"
 
 #: src/mods/columnLabel.ts:19
-#: src/mods/ModDependencyTree.tsx:265
+#: src/mods/ModDependencyTree.tsx:247
 msgid "Needs"
 msgstr "Needs"
 
@@ -5991,7 +5991,7 @@ msgstr "Full"
 msgid "Choose one"
 msgstr "Choose one"
 
-#: src/settings/sections/DataUsage.tsx:208
+#: src/settings/sections/DataUsage.tsx:214
 msgid "Cache"
 msgstr "Cache"
 
@@ -6248,7 +6248,7 @@ msgstr "Could not dismiss those folders"
 msgid "The title screen's intro animation (Mortar skips it on measured launches)"
 msgstr "The title screen's intro animation (Mortar skips it on measured launches)"
 
-#: src/settings/sections/DataUsage.tsx:269
+#: src/settings/sections/DataUsage.tsx:275
 msgid "Portable copy: data is kept in {portableDir}"
 msgstr "Portable copy: data is kept in {portableDir}"
 
@@ -6337,7 +6337,7 @@ msgid "This source has no categories to filter by"
 msgstr "This source has no categories to filter by"
 
 #: src/settings/prefCopy.ts:261
-#: src/settings/sections/Downloads.tsx:269
+#: src/settings/sections/Downloads.tsx:270
 msgid "Download folder"
 msgstr "Download folder"
 
@@ -6358,7 +6358,7 @@ msgid "Could not start the download"
 msgstr "Could not start the download"
 
 #. placeholder {0}: formatBytes(usage.sharedSaved)
-#: src/settings/sections/DataUsage.tsx:149
+#: src/settings/sections/DataUsage.tsx:155
 msgid "{0} saved by sharing files"
 msgstr "{0} saved by sharing files"
 
@@ -6937,7 +6937,7 @@ msgstr "Slow startup"
 msgid "Pin {name}"
 msgstr "Pin {name}"
 
-#: src/settings/sections/Downloads.tsx:252
+#: src/settings/sections/Downloads.tsx:253
 msgid "Premium downloads come from this Nexus server when it offers the file."
 msgstr "Premium downloads come from this Nexus server when it offers the file."
 
@@ -7055,7 +7055,7 @@ msgstr "There is not enough free space at the destination."
 msgid "A multiplayer host's list…"
 msgstr "A multiplayer host's list…"
 
-#: src/settings/store.ts:138
+#: src/settings/store.ts:148
 msgid "Mortar started with default settings. The damaged file was kept at {path}."
 msgstr "Mortar started with default settings. The damaged file was kept at {path}."
 
@@ -7091,7 +7091,7 @@ msgid "Modified outside Mortar"
 msgstr "Modified outside Mortar"
 
 #: src/browse/BrowseDetails.tsx:260
-#: src/mods/Sidebar.tsx:551
+#: src/mods/Sidebar.tsx:563
 msgid "Selected mod"
 msgstr "Selected mod"
 
@@ -7194,8 +7194,8 @@ msgstr "{length} of {limit} characters · too long for one Discord message"
 msgid "Harmless conflicts"
 msgstr "Harmless conflicts"
 
-#: src/settings/sections/DataUsage.tsx:222
-#: src/settings/sections/DataUsage.tsx:230
+#: src/settings/sections/DataUsage.tsx:228
+#: src/settings/sections/DataUsage.tsx:236
 msgid "Open recently deleted"
 msgstr "Open recently deleted"
 
@@ -7475,7 +7475,7 @@ msgstr "Time in this start minus time in the one before"
 msgid "Search the log"
 msgstr "Search the log"
 
-#: src/settings/sections/Downloads.tsx:209
+#: src/settings/sections/Downloads.tsx:210
 msgid "{owner} opens these links now."
 msgstr "{owner} opens these links now."
 
@@ -7558,7 +7558,7 @@ msgstr "Send"
 #: src/console/ConsoleTab.tsx:61
 #: src/firstrunTour/TourPopover.tsx:46
 #: src/game/Sidebar.tsx:198
-#: src/mods/ModListVirtual.tsx:281
+#: src/mods/ModListVirtual.tsx:314
 #: src/settings/GameSettingsPage.tsx:97
 #: src/settings/GameSettingsPage.tsx:142
 #: src/settings/sections/Updates.tsx:181
@@ -7621,7 +7621,7 @@ msgstr "imported from the game's Mods folder"
 msgid "View"
 msgstr "View"
 
-#: src/browse/BrowseBody.tsx:146
+#: src/browse/BrowseBody.tsx:147
 msgid "The service may be busy. Try again in a minute."
 msgstr "The service may be busy. Try again in a minute."
 
@@ -7670,7 +7670,7 @@ msgstr "Revert this mod: {0}"
 msgid "Off, only computers on your local network can connect. Turn on to allow others, such as over a VPN."
 msgstr "Off, only computers on your local network can connect. Turn on to allow others, such as over a VPN."
 
-#: src/browse/BrowseBody.tsx:157
+#: src/browse/BrowseBody.tsx:158
 msgid "No mods match \"{text}\""
 msgstr "No mods match \"{text}\""
 
@@ -8305,7 +8305,7 @@ msgstr "Remove {0} from other profiles"
 msgid "Found a copy outside your launchers:"
 msgstr "Found a copy outside your launchers:"
 
-#: src/browse/BrowsePage.tsx:139
+#: src/browse/BrowsePage.tsx:141
 msgid "All sources"
 msgstr "All sources"
 
@@ -8489,7 +8489,7 @@ msgid "{count, plural, one {# update ready} other {# updates ready}}"
 msgstr "{count, plural, one {# update ready} other {# updates ready}}"
 
 #: src/mods/CompatChip.tsx:23
-#: src/mods/ModDependencyTree.tsx:139
+#: src/mods/ModDependencyTree.tsx:131
 msgid "Optional"
 msgstr "Optional"
 
@@ -8558,7 +8558,7 @@ msgstr "Could not read that code or file"
 
 #: src/profiles/ProfilesPage.tsx:194
 #: src/profiles/ProfilesPage.tsx:208
-#: src/settings/sections/DataUsage.tsx:210
+#: src/settings/sections/DataUsage.tsx:216
 msgid "Recently deleted"
 msgstr "Recently deleted"
 
@@ -9094,7 +9094,7 @@ msgstr "Problems and updates"
 msgid "Every profile of this game runs the {0} installed for it, so they all switch to {1}."
 msgstr "Every profile of this game runs the {0} installed for it, so they all switch to {1}."
 
-#: src/settings/sections/DataUsage.tsx:207
+#: src/settings/sections/DataUsage.tsx:213
 msgid "Store"
 msgstr "Store"
 
@@ -9528,7 +9528,7 @@ msgstr "The download queue is empty."
 msgid "unverified until downloaded"
 msgstr "unverified until downloaded"
 
-#: src/mods/ModDependencyTree.tsx:140
+#: src/mods/ModDependencyTree.tsx:132
 msgid "already listed"
 msgstr "already listed"
 
@@ -9645,7 +9645,7 @@ msgstr "Untrack every {gameName} mod on Nexus"
 msgid "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 msgstr "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 
-#: src/settings/sections/Downloads.tsx:208
+#: src/settings/sections/Downloads.tsx:209
 msgid "Clicking these links on Nexus starts the download in Mortar."
 msgstr "Clicking these links on Nexus starts the download in Mortar."
 
@@ -10292,7 +10292,7 @@ msgstr "Dark"
 #: src/mods/HiddenInside.tsx:70
 #: src/profiles/ProfilesPage.tsx:158
 #: src/screenshots/ScreenshotsTab.tsx:124
-#: src/settings/sections/DataUsage.tsx:280
+#: src/settings/sections/DataUsage.tsx:286
 msgid "Open folder"
 msgstr "Open folder"
 
@@ -10646,7 +10646,7 @@ msgstr "Could not set the cover"
 msgid "Focus the search"
 msgstr "Focus the search"
 
-#: src/settings/sections/Downloads.tsx:209
+#: src/settings/sections/Downloads.tsx:210
 msgid "No app opens these links now."
 msgstr "No app opens these links now."
 
@@ -10832,7 +10832,7 @@ msgid "{count, plural, one {Marked # mod implicit} other {Marked # mods implicit
 msgstr "{count, plural, one {Marked # mod implicit} other {Marked # mods implicit}}"
 
 #. placeholder {0}: formatBytes(usage.total)
-#: src/settings/sections/DataUsage.tsx:145
+#: src/settings/sections/DataUsage.tsx:151
 msgid "{0} used"
 msgstr "{0} used"
 
@@ -10847,7 +10847,7 @@ msgstr "Adds"
 msgid "Open Console"
 msgstr "Open Console"
 
-#: src/templates/useTemplates.ts:16
+#: src/templates/useTemplates.ts:20
 msgid "Could not read the templates"
 msgstr "Could not read the templates"
 
@@ -10970,7 +10970,7 @@ msgstr "Running"
 msgid "Keep the zip after installing"
 msgstr "Keep the zip after installing"
 
-#: src/settings/sections/Downloads.tsx:272
+#: src/settings/sections/Downloads.tsx:273
 msgid "Links"
 msgstr "Links"
 
@@ -10987,7 +10987,7 @@ msgid "Report it so it can be fixed."
 msgstr "Report it so it can be fixed."
 
 #: src/mods/listRows.ts:142
-#: src/mods/Sidebar.tsx:481
+#: src/mods/Sidebar.tsx:493
 #: src/settings/sections/Accounts.tsx:17
 msgid "GitHub"
 msgstr "GitHub"
@@ -11201,7 +11201,7 @@ msgstr "Auto-enable requirements"
 
 #: src/mods/AuthorDialog.tsx:134
 #: src/mods/listRows.ts:163
-#: src/mods/ModDependencyTree.tsx:144
+#: src/mods/ModDependencyTree.tsx:136
 #: src/mods/Sidebar.tsx:231
 #: src/mods/Sidebar.tsx:244
 #: src/mods/useListHeading.ts:18
@@ -11226,7 +11226,7 @@ msgstr "The crash check could not finish."
 msgid "Could not unpin {0}"
 msgstr "Could not unpin {0}"
 
-#: src/mods/Sidebar.tsx:511
+#: src/mods/Sidebar.tsx:523
 msgid "In the same download"
 msgstr "In the same download"
 
@@ -11282,8 +11282,8 @@ msgstr "Game version"
 msgid "Maximise"
 msgstr "Maximise"
 
-#: src/settings/sections/Downloads.tsx:207
-#: src/settings/sections/Downloads.tsx:215
+#: src/settings/sections/Downloads.tsx:208
+#: src/settings/sections/Downloads.tsx:216
 msgid "Handle \"Mod Manager Download\" links"
 msgstr "Handle \"Mod Manager Download\" links"
 
@@ -11362,7 +11362,7 @@ msgstr "In {0}; turns off its edits here"
 msgid "Could not set the default launch preset"
 msgstr "Could not set the default launch preset"
 
-#: src/settings/sections/Downloads.tsx:291
+#: src/settings/sections/Downloads.tsx:292
 msgid "Files"
 msgstr "Files"
 
@@ -11569,7 +11569,7 @@ msgstr "Deprecated"
 #. placeholder {0}: item.name
 #. placeholder {0}: m.name
 #: src/browse/ResultCard.tsx:142
-#: src/mods/ModCards.tsx:187
+#: src/mods/ModCards.tsx:188
 msgid "Details of {0}"
 msgstr "Details of {0}"
 
@@ -11611,7 +11611,7 @@ msgstr "Bottles"
 msgid "Hourly count resets {0} · daily count resets {1}"
 msgstr "Hourly count resets {0} · daily count resets {1}"
 
-#: src/settings/store.ts:141
+#: src/settings/store.ts:151
 #: src/share/MethodPanes.tsx:235
 #: src/shell/saveDiagnostics.ts:27
 msgid "Show file"
@@ -11619,7 +11619,7 @@ msgstr "Show file"
 
 #: src/saves/BackupsDialog.tsx:159
 #: src/settings/GameSettingsPage.tsx:98
-#: src/settings/sections/DataUsage.tsx:209
+#: src/settings/sections/DataUsage.tsx:215
 #: src/settings/sections/GameSettings.tsx:385
 msgid "Save backups"
 msgstr "Save backups"
@@ -11969,7 +11969,7 @@ msgstr "FromArea {0}"
 msgid "Mods write their settings the first time the game runs."
 msgstr "Mods write their settings the first time the game runs."
 
-#: src/mods/ModDependencyTree.tsx:139
+#: src/mods/ModDependencyTree.tsx:131
 msgid "Required"
 msgstr "Required"
 
@@ -12264,8 +12264,8 @@ msgstr "{checked}. {0, plural, one {# could not be read.} other {# could not be 
 msgid "Dates"
 msgstr "Dates"
 
-#: src/settings/sections/Downloads.tsx:220
-#: src/settings/sections/Downloads.tsx:228
+#: src/settings/sections/Downloads.tsx:221
+#: src/settings/sections/Downloads.tsx:229
 msgid "Send other games' links to {redirectName}"
 msgstr "Send other games' links to {redirectName}"
 
@@ -12673,7 +12673,7 @@ msgstr "This uploads the profile to Thunderstore and gives a public code."
 msgid "Move down (wins files)"
 msgstr "Move down (wins files)"
 
-#: src/browse/BrowseBody.tsx:160
+#: src/browse/BrowseBody.tsx:161
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -12791,7 +12791,7 @@ msgid "Profile"
 msgstr "Profile"
 
 #: src/firstrun/FindStep.tsx:245
-#: src/settings/sections/Downloads.tsx:296
+#: src/settings/sections/Downloads.tsx:297
 #: src/settings/sections/GameSettings.tsx:206
 #: src/settings/sections/GameSettings.tsx:398
 msgid "Change folder…"
@@ -12935,7 +12935,7 @@ msgstr "Player"
 #: src/profiles/ProfileMenu.tsx:166
 #: src/profiles/ProfilesPage.tsx:325
 #: src/settings/sections/AboutDiagnostics.tsx:96
-#: src/settings/sections/DataUsage.tsx:206
+#: src/settings/sections/DataUsage.tsx:212
 #: src/settings/sections/Shortcuts.tsx:176
 msgid "Profiles"
 msgstr "Profiles"
@@ -12965,7 +12965,7 @@ msgstr "Sampled"
 msgid "Rename group"
 msgstr "Rename group"
 
-#: src/mods/ModDependencyTree.tsx:148
+#: src/mods/ModDependencyTree.tsx:140
 #: src/saves/SaveGapLine.tsx:27
 msgid "Missing"
 msgstr "Missing"
@@ -13211,7 +13211,7 @@ msgstr "Press a key…"
 msgid "This is not a Mod Manager Download link from Nexus."
 msgstr "This is not a Mod Manager Download link from Nexus."
 
-#: src/settings/sections/DataUsage.tsx:272
+#: src/settings/sections/DataUsage.tsx:278
 #: src/settings/sections/StreamOverlay.tsx:62
 msgid "Location"
 msgstr "Location"
@@ -13430,7 +13430,7 @@ msgstr "{0} was installed from another site. Updating installs {1} from {2} inst
 
 #: src/firstrun/GameSetup.tsx:78
 #: src/mods/listRows.ts:141
-#: src/mods/Sidebar.tsx:480
+#: src/mods/Sidebar.tsx:492
 #: src/settings/sections/NexusMods.tsx:312
 #: src/share/DestinationGrid.tsx:57
 #: src/share/ShareDialog.tsx:42
@@ -13636,7 +13636,7 @@ msgid "Continue"
 msgstr "Continue"
 
 #: src/browse/BrowseDetails.tsx:97
-#: src/mods/ModDependencyTree.tsx:264
+#: src/mods/ModDependencyTree.tsx:246
 #: src/mods/NexusDetails.tsx:244
 msgid "Dependencies"
 msgstr "Dependencies"
@@ -13732,8 +13732,8 @@ msgid "Missing requirements on install"
 msgstr "Missing requirements on install"
 
 #: src/settings/sections/DataBackups.tsx:109
-#: src/settings/sections/DataUsage.tsx:237
-#: src/settings/sections/DataUsage.tsx:267
+#: src/settings/sections/DataUsage.tsx:243
+#: src/settings/sections/DataUsage.tsx:273
 msgid "Measuring…"
 msgstr "Measuring…"
 
@@ -13833,7 +13833,7 @@ msgstr "Fall"
 msgid "clamd socket"
 msgstr "clamd socket"
 
-#: src/browse/BrowseBody.tsx:164
+#: src/browse/BrowseBody.tsx:165
 msgid "Try fewer words, or the mod's exact name."
 msgstr "Try fewer words, or the mod's exact name."
 
@@ -13841,7 +13841,7 @@ msgstr "Try fewer words, or the mod's exact name."
 msgid "Add this profile to Steam"
 msgstr "Add this profile to Steam"
 
-#: src/mods/ModDependencyTree.tsx:266
+#: src/mods/ModDependencyTree.tsx:248
 msgid "Used by"
 msgstr "Used by"
 
@@ -14066,7 +14066,7 @@ msgstr "imported from a .mortar file"
 msgid "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 msgstr "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 
-#: src/mods/ModsTab.tsx:363
+#: src/mods/ModsTab.tsx:387
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
@@ -14075,8 +14075,8 @@ msgid "{name}, descending"
 msgstr "{name}, descending"
 
 #. placeholder {0}: source.name
-#: src/settings/sections/Downloads.tsx:177
-#: src/settings/sections/Downloads.tsx:190
+#: src/settings/sections/Downloads.tsx:178
+#: src/settings/sections/Downloads.tsx:191
 msgid "Handle {0} links"
 msgstr "Handle {0} links"
 
@@ -14338,7 +14338,7 @@ msgid "{n, plural, one {{0}: # line} other {{1}: # lines}}"
 msgstr "{n, plural, one {{0}: # line} other {{1}: # lines}}"
 
 #. placeholder {0}: source.name
-#: src/settings/sections/Downloads.tsx:186
+#: src/settings/sections/Downloads.tsx:187
 msgid "Could not change how {0} links open"
 msgstr "Could not change how {0} links open"
 
@@ -14500,7 +14500,7 @@ msgid "No saves yet"
 msgstr "No saves yet"
 
 #: src/mods/listRows.ts:143
-#: src/mods/Sidebar.tsx:482
+#: src/mods/Sidebar.tsx:494
 #: src/share/DestinationGrid.tsx:62
 #: src/share/ShareDialog.tsx:43
 msgid "Thunderstore"
@@ -14572,7 +14572,7 @@ msgstr "Reading backups…"
 msgid "Enable them"
 msgstr "Enable them"
 
-#: src/browse/BrowsePage.tsx:176
+#: src/browse/BrowsePage.tsx:180
 msgid "Search all mod sites"
 msgstr "Search all mod sites"
 
@@ -14723,7 +14723,7 @@ msgid "Could not set it in Steam"
 msgstr "Could not set it in Steam"
 
 #: src/settings/sections/AboutDiagnostics.tsx:100
-#: src/settings/sections/DataUsage.tsx:230
+#: src/settings/sections/DataUsage.tsx:236
 msgid "Disk space"
 msgstr "Disk space"
 
@@ -14848,8 +14848,8 @@ msgstr "Checks the data folder, games, Nexus download links and the browser exte
 msgid "Sort: most stars"
 msgstr "Sort: most stars"
 
-#: src/settings/sections/Downloads.tsx:251
-#: src/settings/sections/Downloads.tsx:260
+#: src/settings/sections/Downloads.tsx:252
+#: src/settings/sections/Downloads.tsx:261
 msgid "Preferred download server"
 msgstr "Preferred download server"
 
