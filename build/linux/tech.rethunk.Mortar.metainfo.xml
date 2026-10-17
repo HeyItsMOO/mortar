@@ -52,6 +52,30 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
+    <release version="0.3.5" date="2026-10-17">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>95 more games, 283 in all</li>
+          <li>MelonLoader, with 39 games: BONELAB, BONEWORKS, Schedule I, RUMBLE, Gang Beasts, Bloons TD 6 and more</li>
+          <li>24 Nexus Mods games whose mods go in a folder the game reads itself: The Witcher 3, Cyberpunk 2077, 7 Days to Die, Blade &amp; Sorcery, Monster Hunter: World, both Kingdom Come games, Hogwarts Legacy, Stellar Blade, S.T.A.L.K.E.R. 2 and more</li>
+          <li>New loaders for Titanfall 2 (Northstar), Hades II and Risk of Rain Returns (ReturnOfModding), WEBFISHING (GDWeave), Balatro (Lovely), Broforce (Unity Mod Manager) and Scrap Mechanic (Rivet)</li>
+          <li>25 more BepInEx games, among them Among Us, V Rising, Core Keeper, Lost Skies, H3VR, GTFO, ULTRAKILL, both Subnautica games, Timberborn and Crab Game</li>
+          <li>BepInEx mods that install beyond BepInEx/plugins (H3VR's Sideloader, ULTRAKILL's UMM Mods, Subnautica's QMods) land where the game reads them</li>
+          <li>BepInEx 6 Mono packs, legacy IL2CPP packs, packs laid out at the zip's top and packs that load through version.dll all install</li>
+          <li>Every Browse card shows the mark of the site the mod installs from</li>
+          <li>Show › Obsolete and Broken can Flag a mod with a warning before its name instead of graying it out</li>
+          <li>Grow game rows on hover can be turned off, so Game select's rows stay still</li>
+        </ul>
+        <p>Fixed</p>
+        <ul>
+          <li>LethalModDataLib's .moddata files belong to their Lethal Company save slot instead of showing as extra saves</li>
+          <li>Zips written with Windows \ folder names extract</li>
+          <li>Browse card authors and stats are readable in light mode</li>
+          <li>Searching Settings for "Personal API key" finds the Nexus key</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.4" date="2026-10-17">
       <description>
         <p>New</p>
