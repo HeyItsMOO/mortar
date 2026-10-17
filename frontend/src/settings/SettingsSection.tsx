@@ -2,8 +2,8 @@ import { Box, type SxProps, type Theme } from '@mui/material'
 import type { ReactNode } from 'react'
 import { visuallyHidden } from '../shell/visuallyHidden.ts'
 import { space } from '../theme/density.ts'
-import { prefMatches, SEARCH_HIT } from './prefFilter.ts'
-import { useSettingsSearch } from './useSettingsSearch.ts'
+import { SEARCH_HIT } from './prefFilter.ts'
+import { useSettingsMatch, useSettingsSearching } from './useSettingsSearch.ts'
 
 function nodeText(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') {
@@ -30,7 +30,7 @@ export function SettingsSection({
   // Off for content that brings its own surfaces, such as a form or nested sections.
   tiles?: boolean
 }) {
-  const query = useSettingsSearch()
+  const query = useSettingsSearching()
   return (
     <Box
       className="settings-section"
@@ -84,11 +84,12 @@ export function SettingsSection({
 // Content that is not a SettingRow takes part in search through its terms, and marks a match so its section and
 // page stay in the results.
 export function Searchable({ terms, children }: { terms: string; children: ReactNode }) {
-  const query = useSettingsSearch()
-  if (!prefMatches(query, terms)) {
+  const matched = useSettingsMatch(terms)
+  const searching = useSettingsSearching()
+  if (!matched) {
     return null
   }
-  return query ? (
+  return searching ? (
     <Box className="settings-match" sx={{ display: 'contents' }}>
       {children}
     </Box>
@@ -112,8 +113,7 @@ export function SettingRow({
   // readers and search.
   hideTitle?: boolean
 }) {
-  const query = useSettingsSearch()
-  if (!prefMatches(query, nodeText(label), nodeText(description))) {
+  if (!useSettingsMatch(nodeText(label), nodeText(description))) {
     return null
   }
   return (

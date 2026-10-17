@@ -5,10 +5,9 @@ import { useSelection } from './selection.ts'
 /** Whether mod id is marked: in the selection, or the open mod while nothing is selected. Each row selects only its
  * own answer, so opening or selecting a mod re-renders the rows whose mark changed, not every row on screen. */
 export function useMarked(id: string): boolean {
-  const selected = useSelection((s) => s.ids.includes(id))
-  const none = useSelection((s) => s.ids.length === 0)
   const open = useDetail((s) => s.detailId === id)
-  return selected || (none && open)
+  // One answer per row: selecting the first mod empties nothing else's mark, so it must not re-render every row.
+  return useSelection((s) => s.ids.includes(id) || (s.ids.length === 0 && open))
 }
 
 /** The list's one Tab stop: the open mod's row, or the first row when the open mod is not listed. The list asks once

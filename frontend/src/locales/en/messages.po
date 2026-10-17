@@ -1396,7 +1396,7 @@ msgstr "Mod Manager Download on Nexus Mods only works in Mortar when you are sig
 msgid "Take them back for Mortar?"
 msgstr "Take them back for Mortar?"
 
-#: src/launch/autoUpdate.ts:223
+#: src/launch/autoUpdate.ts:224
 msgid "Could not add the update downloads"
 msgstr "Could not add the update downloads"
 
@@ -1748,11 +1748,11 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:543
+#: src/games/GameSelect.tsx:569
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
-#: src/settings/SettingsShell.tsx:179
+#: src/settings/SettingsShell.tsx:183
 msgid "Search results"
 msgstr "Search results"
 
@@ -4005,7 +4005,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:524
+#: src/games/GameSelect.tsx:550
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4159,7 +4159,7 @@ msgstr "Card details in Browse"
 msgid "Supplies tilesheets for other mods"
 msgstr "Supplies tilesheets for other mods"
 
-#: src/launch/autoUpdate.ts:141
+#: src/launch/autoUpdate.ts:142
 msgid "Timed out waiting for mod updates"
 msgstr "Timed out waiting for mod updates"
 
@@ -4209,7 +4209,7 @@ msgstr "Also enabled {0}"
 msgid "Marked {name} implicit"
 msgstr "Marked {name} implicit"
 
-#: src/games/useGameTiles.ts:83
+#: src/games/useGameTiles.ts:86
 msgid "Coming in a later Mortar version"
 msgstr "Coming in a later Mortar version"
 
@@ -4377,11 +4377,11 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:546
+#: src/games/GameSelect.tsx:572
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
-#: src/games/GameSelect.tsx:274
+#: src/games/GameSelect.tsx:276
 msgid "Set up"
 msgstr "Set up"
 
@@ -5638,7 +5638,7 @@ msgstr "Pause downloads while the game runs"
 msgid "{0} of saves"
 msgstr "{0} of saves"
 
-#: src/settings/SettingsShell.tsx:195
+#: src/settings/SettingsShell.tsx:199
 msgid "Try another word, or clear the search."
 msgstr "Try another word, or clear the search."
 
@@ -6547,7 +6547,7 @@ msgstr "Copy"
 msgid "What happens to files the new version of a mod leaves out"
 msgstr "What happens to files the new version of a mod leaves out"
 
-#: src/settings/SettingsShell.tsx:194
+#: src/settings/SettingsShell.tsx:198
 msgid "No settings match"
 msgstr "No settings match"
 
@@ -6769,7 +6769,7 @@ msgid "No profiles found."
 msgstr "No profiles found."
 
 #. placeholder {0}: game.name
-#: src/games/GameSelect.tsx:210
+#: src/games/GameSelect.tsx:212
 msgid "Open {0}"
 msgstr "Open {0}"
 
@@ -7378,7 +7378,7 @@ msgid "Track"
 msgstr "Track"
 
 #. placeholder {0}: item.name || i18n._(msg`the mod`)
-#: src/launch/autoUpdate.ts:113
+#: src/launch/autoUpdate.ts:114
 msgid "The update for {0} did not finish"
 msgstr "The update for {0} did not finish"
 
@@ -7588,7 +7588,7 @@ msgstr "Could not switch {0}"
 msgid "Asset map"
 msgstr "Asset map"
 
-#: src/games/GameSelect.tsx:435
+#: src/games/GameSelect.tsx:461
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
@@ -8598,7 +8598,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:109
-#: src/games/GameSelect.tsx:518
+#: src/games/GameSelect.tsx:544
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -10112,7 +10112,7 @@ msgstr "A saved group keeps at least one mod; delete the saved group instead"
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:531
+#: src/games/GameSelect.tsx:557
 msgid "Other games"
 msgstr "Other games"
 
@@ -10159,8 +10159,8 @@ msgstr "Default for Share and Export. You can change it per share."
 msgid "The Vortex folder {folder} has no profiles."
 msgstr "The Vortex folder {folder} has no profiles."
 
-#: src/App.tsx:80
-#: src/games/useGameTiles.ts:74
+#: src/App.tsx:72
+#: src/games/useGameTiles.ts:77
 #: src/games/useOpenGame.ts:42
 msgid "Could not read your games"
 msgstr "Could not read your games"
@@ -10308,8 +10308,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/FirstRun.tsx:47
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
-#: src/game/ProfileWorkspace.tsx:42
-#: src/games/GameSelect.tsx:473
+#: src/games/GameSelect.tsx:499
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -10941,7 +10940,7 @@ msgstr "{name} is deprecated on Thunderstore."
 msgid "Show conflicts"
 msgstr "Show conflicts"
 
-#: src/games/useGameTiles.ts:86
+#: src/games/useGameTiles.ts:89
 #: src/settings/sections/Sources.tsx:139
 msgid "Not set up"
 msgstr "Not set up"
@@ -11316,7 +11315,7 @@ msgstr "GOG via Heroic"
 msgid "Play this profile. The SMAPI Bridge records how long each mod adds before the title screen."
 msgstr "Play this profile. The SMAPI Bridge records how long each mod adds before the title screen."
 
-#: src/launch/autoUpdate.ts:113
+#: src/launch/autoUpdate.ts:114
 msgid "the mod"
 msgstr "the mod"
 
@@ -11744,7 +11743,7 @@ msgid "Stop the game to test a launch."
 msgstr "Stop the game to test a launch."
 
 #: src/firstrunTour/TourPopover.tsx:42
-#: src/games/GameSelect.tsx:261
+#: src/games/GameSelect.tsx:263
 #: src/launch/PlayControl.tsx:176
 #: src/mods/typedConfig/ConfigTab.tsx:317
 #: src/settings/GameSettingsPage.tsx:96
@@ -12056,7 +12055,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:531
+#: src/games/GameSelect.tsx:557
 msgid "All games"
 msgstr "All games"
 
@@ -12570,7 +12569,7 @@ msgstr "Updated fixable mods"
 msgid "Order"
 msgstr "Order"
 
-#: src/games/GameSelect.tsx:414
+#: src/games/GameSelect.tsx:440
 msgid "Jump to a letter"
 msgstr "Jump to a letter"
 
@@ -12587,7 +12586,7 @@ msgstr "Sort: newest"
 msgid "Could not roll back {0}"
 msgstr "Could not roll back {0}"
 
-#: src/games/GameSelect.tsx:256
+#: src/games/GameSelect.tsx:258
 msgid "Play {playName}"
 msgstr "Play {playName}"
 
@@ -13852,7 +13851,7 @@ msgstr "See which mods slow the game"
 
 #. placeholder {0}: game.name
 #: src/firstrun/GameSetup.tsx:176
-#: src/games/GameSelect.tsx:269
+#: src/games/GameSelect.tsx:271
 msgid "Set up {0}"
 msgstr "Set up {0}"
 

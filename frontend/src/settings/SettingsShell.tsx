@@ -8,7 +8,7 @@ import { SEARCH_HIT } from './prefFilter.ts'
 import { SettingsNav } from './SettingsNav.tsx'
 import { dialogOpen } from './shortcuts.ts'
 import { shouldLeavePageOnEscape } from './shouldLeavePageOnEscape.ts'
-import { SettingsSearchContext } from './useSettingsSearch.ts'
+import { setSettingsQuery, useShellQuery } from './useSettingsSearch.ts'
 
 // One readable column: wider rows push controls too far from their labels, so the content stops growing here.
 const CONTENT_MAX = 880
@@ -92,7 +92,7 @@ export function SettingsShell<Id extends string>({
   related?: Related
 }) {
   const { t } = useLingui()
-  const [query, setQuery] = useState(initialQuery)
+  const query = useShellQuery(initialQuery)
   const pane = useRef<HTMLDivElement>(null)
   const results = useRef<HTMLDivElement>(null)
   const [hits, setHits] = useState(0)
@@ -100,7 +100,7 @@ export function SettingsShell<Id extends string>({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && query) {
-        setQuery('')
+        setSettingsQuery('')
         e.preventDefault()
         return
       }
@@ -123,107 +123,105 @@ export function SettingsShell<Id extends string>({
     pane.current?.scrollTo(0, 0)
   }
   return (
-    <SettingsSearchContext value={query}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'grid',
+        gridTemplateColumns: `${NAV_WIDTH}px minmax(0, 1fr)`,
+        [`@media (max-width: ${NARROW_WINDOW}px)`]: {
+          gridTemplateColumns: `${NAV_WIDTH_NARROW}px minmax(0, 1fr)`,
+        },
+      }}
+    >
+      <SettingsNav
+        title={title}
+        backLabel={backLabel}
+        onBack={onBack}
+        pages={pages}
+        current={current}
+        onPage={pick}
+        query={query}
+        setQuery={setSettingsQuery}
+      />
       <Box
+        ref={pane}
         sx={{
-          height: '100%',
-          display: 'grid',
-          gridTemplateColumns: `${NAV_WIDTH}px minmax(0, 1fr)`,
-          [`@media (max-width: ${NARROW_WINDOW}px)`]: {
-            gridTemplateColumns: `${NAV_WIDTH_NARROW}px minmax(0, 1fr)`,
-          },
+          minWidth: 0,
+          overflow: 'auto',
+          px: space.gutter,
+          py: space.gutter,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: space.pad,
         }}
       >
-        <SettingsNav
-          title={title}
-          backLabel={backLabel}
-          onBack={onBack}
-          pages={pages}
-          current={current}
-          onPage={pick}
-          query={query}
-          setQuery={setQuery}
-        />
         <Box
-          ref={pane}
           sx={{
-            minWidth: 0,
-            overflow: 'auto',
-            px: space.gutter,
-            py: space.gutter,
+            width: '100%',
+            maxWidth: CONTENT_MAX,
+            display: 'flex',
+            alignItems: 'center',
+            gap: space.pad,
+          }}
+        >
+          <Typography
+            component="h2"
+            sx={{
+              flex: 1,
+              fontSize: 20,
+              fontWeight: 700,
+              minHeight: space.control,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {query ? t`Search results` : pages.find((p) => p.id === current)?.label}
+          </Typography>
+          {query ? null : actions[current]}
+        </Box>
+        <Box
+          ref={results}
+          sx={{
+            width: '100%',
+            maxWidth: CONTENT_MAX,
             display: 'flex',
             flexDirection: 'column',
             gap: space.pad,
           }}
         >
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: CONTENT_MAX,
-              display: 'flex',
-              alignItems: 'center',
-              gap: space.pad,
-            }}
-          >
-            <Typography
-              component="h2"
-              sx={{
-                flex: 1,
-                fontSize: 20,
-                fontWeight: 700,
-                minHeight: space.control,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {query ? t`Search results` : pages.find((p) => p.id === current)?.label}
-            </Typography>
-            {query ? null : actions[current]}
-          </Box>
-          <Box
-            ref={results}
-            sx={{
-              width: '100%',
-              maxWidth: CONTENT_MAX,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: space.pad,
-            }}
-          >
-            {query && hits === 0 && relatedLabels.length === 0 ? (
-              <EmptyState icon={<SearchX />} title={t`No settings match`} compact={true}>
-                {t`Try another word, or clear the search.`}
-              </EmptyState>
-            ) : null}
-            <SearchLeads
-              query={query}
-              hits={hits}
-              relatedLabels={relatedLabels}
-              related={related}
-              elsewhere={elsewhere}
-            />
-            {query
-              ? pages.map((p) => (
-                  <Box
-                    key={p.id}
-                    id={`settings-section-${p.id}`}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: space.pad,
-                      mb: 2,
-                      [`&:not(:has(${SEARCH_HIT}))`]: {
-                        display: 'none',
-                      },
-                    }}
-                  >
-                    {render(p.id)}
-                  </Box>
-                ))
-              : render(current)}
-          </Box>
+          {query && hits === 0 && relatedLabels.length === 0 ? (
+            <EmptyState icon={<SearchX />} title={t`No settings match`} compact={true}>
+              {t`Try another word, or clear the search.`}
+            </EmptyState>
+          ) : null}
+          <SearchLeads
+            query={query}
+            hits={hits}
+            relatedLabels={relatedLabels}
+            related={related}
+            elsewhere={elsewhere}
+          />
+          {query
+            ? pages.map((p) => (
+                <Box
+                  key={p.id}
+                  id={`settings-section-${p.id}`}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: space.pad,
+                    mb: 2,
+                    [`&:not(:has(${SEARCH_HIT}))`]: {
+                      display: 'none',
+                    },
+                  }}
+                >
+                  {render(p.id)}
+                </Box>
+              ))
+            : render(current)}
         </Box>
       </Box>
-    </SettingsSearchContext>
+    </Box>
   )
 }

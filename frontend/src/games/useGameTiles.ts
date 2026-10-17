@@ -10,6 +10,7 @@ import { useRefreshOnFocus } from '../firstrun/useRefreshOnFocus.ts'
 import { useLoader } from '../loader/store.ts'
 import { isGameId } from '../nav/store.ts'
 import { useSettings } from '../settings/store.ts'
+import { sameValue } from '../shell/sameValue.ts'
 import { type InlineError, inlineError, reportError } from '../toasts/report.ts'
 import { type GameStatus, loaderCaption, loadGameStatus } from './status.ts'
 
@@ -67,8 +68,10 @@ function useGameTiles() {
               ]
             }),
         )
-        setStatus(s)
-        setStates(Object.fromEntries(entries))
+        // A refresh on focus usually finds nothing new; keeping the old objects keeps every tile from rendering again.
+        setStatus((cur) => (cur && sameValue(cur, s) ? cur : s))
+        const next = Object.fromEntries(entries)
+        setStates((cur) => (sameValue(cur, next) ? cur : next))
       })
       .catch((err: unknown) => {
         reportError(t`Could not read your games`)(err)

@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, ButtonBase, Link, Typography } from '@mui/material'
+import { Box, Button, Link, Typography } from '@mui/material'
 import { Play, Settings } from 'lucide-react'
-import { type MouseEvent, useEffect, useRef, useState } from 'react'
+import { type MouseEvent, memo, useEffect, useRef, useState } from 'react'
 import type { GameInfo } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import type { Played } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/models.ts'
@@ -24,9 +24,9 @@ import { CoverButton } from '../shell/CoverButton.tsx'
 import { LoadErrorRow, LoadingRow } from '../shell/LoadingRow.tsx'
 import { Tooltip } from '../shell/Tooltip.tsx'
 import { TYPE_RESET_MS, typedKey, typedMatch } from '../shell/typeahead.ts'
-import { useRoomy } from '../theme/roomy.ts'
 import { reportError } from '../toasts/report.ts'
 import { gameArt } from './art.ts'
+import { LetterRail } from './LetterRail.tsx'
 import { gameOrder, initialOf } from './order.ts'
 import { ProfileCards } from './ProfileCards.tsx'
 import { formatPlaytime } from './playtime.ts'
@@ -170,18 +170,7 @@ function usePlayLast(game: Game, lastPlayedId: string) {
   }
 }
 
-function Row({
-  game,
-  openable,
-  setupNeeded,
-  note,
-  loader,
-  lastPlayedName,
-  lastPlayedAt,
-  lastPlayedId,
-  playtimeMs,
-  cards,
-}: {
+interface RowProps {
   game: Game
   openable: boolean
   // Available but never opened: the tile offers Set up where a set-up game offers Play.
@@ -193,7 +182,20 @@ function Row({
   lastPlayedId: string
   playtimeMs: number
   cards: { gameId: GameId; profiles: Profile[]; lastPlayed: Played | undefined } | undefined
-}) {
+}
+
+function RowView({
+  game,
+  openable,
+  setupNeeded,
+  note,
+  loader,
+  lastPlayedName,
+  lastPlayedAt,
+  lastPlayedId,
+  playtimeMs,
+  cards,
+}: RowProps) {
   const { t } = useLingui()
   const loaderLine = useLoaderLine({ game, loader, lastPlayedName, lastPlayedAt, playtimeMs })
   const openGameTile = useOpenGame()
@@ -312,6 +314,30 @@ const hoverFocus = {
 } as const
 
 // The count says how many games the group holds, which the rows below only show by scrolling.
+// tileProps builds a fresh cards object each render; a tile renders again only when what it shows changed.
+const sameCards = (a: RowProps['cards'], b: RowProps['cards']) =>
+  a === b ||
+  (a !== undefined &&
+    b !== undefined &&
+    a.gameId === b.gameId &&
+    a.profiles === b.profiles &&
+    a.lastPlayed === b.lastPlayed)
+
+const Row = memo(
+  RowView,
+  (a, b) =>
+    a.game === b.game &&
+    a.openable === b.openable &&
+    a.setupNeeded === b.setupNeeded &&
+    a.note === b.note &&
+    a.loader === b.loader &&
+    a.lastPlayedName === b.lastPlayedName &&
+    a.lastPlayedAt === b.lastPlayedAt &&
+    a.lastPlayedId === b.lastPlayedId &&
+    a.playtimeMs === b.playtimeMs &&
+    sameCards(a.cards, b.cards),
+)
+
 function GroupHeading({ children, count }: { children: string; count: number }) {
   return (
     <Typography
@@ -341,10 +367,6 @@ function GroupHeading({ children, count }: { children: string; count: number }) 
 
 // A shorter list fits without a rail to jump through it.
 const RAIL_MIN_GAMES = 8
-const RAIL_WIDTH_PX = 28
-const RAIL_ROOMY_WIDTH_PX = 44
-const RAIL_LETTER_MAX_PX = 48
-const RAIL_ROOMY_FONT_PX = 11
 
 // Brings a game's row to the top of the list and focuses it, so Enter opens it.
 function reveal(scroller: HTMLElement | null, id: string) {
@@ -394,63 +416,6 @@ function useTypeToScroll(scroller: { current: HTMLElement | null }, games: Game[
     globalThis.addEventListener('keydown', onKey)
     return () => globalThis.removeEventListener('keydown', onKey)
   }, [scroller])
-}
-
-function LetterRail({
-  letters,
-  current,
-  onJump,
-}: {
-  letters: string[]
-  current: string
-  onJump: (letter: string) => void
-}) {
-  const { t } = useLingui()
-  // Touch targets are 44px in roomy mode, the theme's rule for every button, so the rail widens to hold them.
-  const roomy = useRoomy((s) => s.roomy)
-  return (
-    <Box
-      component="nav"
-      aria-label={t`Jump to a letter`}
-      sx={{
-        width: roomy ? RAIL_ROOMY_WIDTH_PX : RAIL_WIDTH_PX,
-        flexShrink: 0,
-        py: '8px',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: 'background.paper',
-        // The letters share the rail's height and their type follows it, so a tall window does not leave a small
-        // cluster in the middle; centred when capped, scrolling from the first letter when they do not fit.
-        containerType: 'size',
-        overflowY: 'auto',
-        scrollbarWidth: 'none',
-        '&::-webkit-scrollbar': { display: 'none' },
-        '& > :first-of-type': { mt: 'auto' },
-        '& > :last-child': { mb: 'auto' },
-      }}
-    >
-      {letters.map((letter) => (
-        <ButtonBase
-          key={letter}
-          aria-label={t`Games starting with ${letter}`}
-          aria-current={letter === current ? 'true' : undefined}
-          onClick={() => onJump(letter)}
-          sx={{
-            flex: roomy ? '0 0 auto' : '1 1 0',
-            minHeight: 12,
-            maxHeight: RAIL_LETTER_MAX_PX,
-            fontFamily: 'inherit',
-            fontSize: roomy ? RAIL_ROOMY_FONT_PX : 'clamp(11px, 1.6cqh, 15px)',
-            fontWeight: 700,
-            color: letter === current ? 'var(--mortar-accent-ink)' : 'var(--mortar-ink-sec)',
-            '&:hover, &:focus-visible': { color: 'text.primary' },
-          }}
-        >
-          {letter}
-        </ButtonBase>
-      ))}
-    </Box>
-  )
 }
 
 function GameSelect() {
