@@ -3,8 +3,10 @@ import {
   Autocomplete,
   Box,
   Button,
+  ButtonBase,
   IconButton,
   MenuItem,
+  Popover,
   Select,
   Slider,
   Switch,
@@ -12,6 +14,7 @@ import {
 } from '@mui/material'
 import { Plus, X } from 'lucide-react'
 import { useState } from 'react'
+import { HexColorPicker } from 'react-colorful'
 import { space } from '../../theme/density.ts'
 import {
   formatLike,
@@ -94,25 +97,35 @@ function ColorWidget({ entry, label, onChange }: WidgetProps) {
   const value = String(entry.value)
   const hashed = value.startsWith('#') ? value : `#${value}`
   const normalized = isHexColor(value) ? hashed : FALLBACK_COLOR
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null)
+  const rgb = normalized.slice(0, RGB_LENGTH)
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
-      <Box
-        component="input"
-        type="color"
+      <ButtonBase
         aria-label={label}
-        value={normalized.slice(0, RGB_LENGTH)}
-        onChange={(e) =>
-          onChange(formatLike(e.target.value, isHexColor(value) ? value : String(entry.default)))
-        }
+        onClick={(e) => setAnchor(e.currentTarget)}
         sx={{
           width: SWATCH_PX,
           height: SWATCH_PX,
-          p: 0,
           border: '1px solid var(--mortar-hairline)',
           borderRadius: '4px',
-          bgcolor: 'transparent',
+          bgcolor: rgb,
         }}
       />
+      <Popover
+        open={anchor !== null}
+        anchorEl={anchor}
+        onClose={() => setAnchor(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <HexColorPicker
+          color={rgb}
+          onChange={(picked) =>
+            onChange(formatLike(picked, isHexColor(value) ? value : String(entry.default)))
+          }
+        />
+      </Popover>
       <TextField
         size="small"
         value={value}
