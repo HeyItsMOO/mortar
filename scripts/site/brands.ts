@@ -1,19 +1,26 @@
-// Mod site and store marks for the game pages, from the same simple-icons marks and vendor artwork the app draws
+// Mod site, store and platform marks for the game pages and the landing page's downloads, from the same simple-icons marks and vendor artwork the app draws
 // (frontend/src/brand), as one SVG sprite plus copies of the artwork that is not a vector mark.
 import { readFileSync } from 'node:fs'
 import {
+  siAppimage,
+  siArchlinux,
   siCurseforge,
+  siDebian,
   siDiscord,
   siEa,
   siEpicgames,
+  siFedora,
   siFlatpak,
   siGithub,
   siGogdotcom,
+  siHomebrew,
   siItchdotio,
+  siLinux,
   siLutris,
   siModrinth,
   siPatreon,
   siSteam,
+  siSteamdeck,
   siThunderstore,
 } from 'simple-icons'
 import { escapeHTML } from './chrome.ts'
@@ -23,6 +30,9 @@ const VENDOR = 'frontend/src/brand/vendor'
 // A game its own installer put in place has no store, so it gets a generic install mark (Material Design's
 // "download", Apache-2.0).
 const INSTALL_PATH = 'M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z'
+// Windows has no simple-icons mark; this is the four-pane window the site's icon sprite draws.
+const WINDOWS_PATH =
+  'M3 5.1 10.4 4v7.2H3V5.1Zm8.4-1.2L21 2.5v8.7h-9.6V3.9ZM3 12.4h7.4v7.2L3 18.5v-6.1Zm8.4 0H21v8.7l-9.6-1.4v-7.3Z'
 const X_PATH = 'M4 3h4.5L12 8.6 15.5 3H20l-5.7 9L20 21h-4.5L12 15.4 8.5 21H4l5.7-9z'
 
 // Marks whose brand colour is black or near it take the text colour, as the app does for GitHub and Patreon.
@@ -42,6 +52,14 @@ const MARKS: Record<string, { path: string; colour: string }> = {
   standalone: { path: INSTALL_PATH, colour: 'currentColor' },
   lutris: { path: siLutris.path, colour: `#${siLutris.hex}` },
   flatpak: { path: siFlatpak.path, colour: `#${siFlatpak.hex}` },
+  windows: { path: WINDOWS_PATH, colour: '#4CC2FF' },
+  linux: { path: siLinux.path, colour: `#${siLinux.hex}` },
+  steamdeck: { path: siSteamdeck.path, colour: `#${siSteamdeck.hex}` },
+  appimage: { path: siAppimage.path, colour: `#${siAppimage.hex}` },
+  debian: { path: siDebian.path, colour: `#${siDebian.hex}` },
+  fedora: { path: siFedora.path, colour: `#${siFedora.hex}` },
+  archlinux: { path: siArchlinux.path, colour: `#${siArchlinux.hex}` },
+  homebrew: { path: siHomebrew.path, colour: `#${siHomebrew.hex}` },
 }
 
 // Artwork rather than vector marks, copied from the app into site/img/vendor (vendored files the linter skips).

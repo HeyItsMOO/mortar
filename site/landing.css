@@ -320,39 +320,6 @@ h2 {
   }
 }
 
-/* Download */
-.platforms {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  text-align: left;
-}
-.platform h3 {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0 0 0.5rem;
-  font-size: 1.25rem;
-}
-.platform .btn {
-  margin: 1rem 0 0.75rem;
-}
-.platform .more {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1rem;
-  font-size: 0.9rem;
-}
-html.os-linux .platform.linux,
-html.os-windows .platform.windows {
-  border-color: rgba(214, 177, 122, 0.6);
-}
-@media (max-width: 48rem) {
-  .platforms {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* FAQ */
 .faq-links {
   display: grid;

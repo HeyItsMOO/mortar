@@ -7,13 +7,19 @@ const androidRe = /Android/i
   const button = document.getElementById('primary-download')
   const label = button.querySelector('span')
   const note = document.getElementById('cta-note')
+  const downloads = document.getElementById('get')
+  for (const os of downloads.querySelectorAll('[data-show]')) {
+    os.addEventListener('click', (e) => {
+      e.preventDefault()
+      downloads.dataset.os = os.dataset.show
+    })
+  }
   if (windowsRe.test(ua)) {
-    document.documentElement.classList.add('os-windows')
     button.href = `${base}mortar-amd64-installer.exe`
     label.textContent = 'Download for Windows'
     note.textContent = 'Windows 10 and 11, x64. Other builds below.'
   } else if (linuxRe.test(ua) && !androidRe.test(ua)) {
-    document.documentElement.classList.add('os-linux')
+    downloads.dataset.os = 'linux'
     button.href = '/download/#linux'
     label.textContent = 'Download for Linux'
     note.textContent =
@@ -29,12 +35,3 @@ const androidRe = /Android/i
     })
     .catch(() => null)
 })()
-// A link to an FAQ answer opens it, since a closed <details> hides the text it lands on.
-const openTarget = () => {
-  const target = document.getElementById(location.hash.slice(1))
-  if (target instanceof HTMLDetailsElement) {
-    target.open = true
-  }
-}
-addEventListener('hashchange', openTarget)
-openTarget()
