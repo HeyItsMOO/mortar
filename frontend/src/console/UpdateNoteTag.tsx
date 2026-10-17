@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
-import { Chip, Tooltip } from '@mui/material'
+import { Chip } from '@mui/material'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import type { UpdateNote } from './smapiUpdateNotes.ts'
 
 /** Mortar's answer to one line of SMAPI's "You can update" list, shown at the end of that line. */

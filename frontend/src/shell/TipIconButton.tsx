@@ -1,6 +1,7 @@
-import { IconButton, Tooltip } from '@mui/material'
+import { IconButton } from '@mui/material'
 import type { IconButtonProps } from '@mui/material/IconButton'
 import type { MouseEvent, ReactNode } from 'react'
+import { Tooltip } from './Tooltip.tsx'
 
 export function TipIconButton({
   label,

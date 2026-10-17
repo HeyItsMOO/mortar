@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box } from '@mui/material'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { SetByKey } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { persist } from '../settings/persist.ts'
 import { useOfflineEmpty } from '../shell/offlineText.ts'
@@ -96,18 +96,32 @@ function BrowsePage({
   const sourceName = sources.find((s) => s.value === source)?.label ?? ''
   useSelectionKeys(result.items)
   const results = useTopOnPage(page)
-  const sourceNames = new Map(searchable.map((s) => [s.id, s.name]))
-  const card = {
-    premium,
-    openUrl,
-    downloadNexus,
-    addGitHub,
-    addPackage,
-    addDirect,
-    modes,
-    profileID,
-    sourceNames,
-  }
+  const sourceNames = useMemo(() => new Map(searchable.map((s) => [s.id, s.name])), [searchable])
+  // One object for every card, kept while its parts are, so the memoised cards skip a render when results arrive.
+  const card = useMemo(
+    () => ({
+      premium,
+      openUrl,
+      downloadNexus,
+      addGitHub,
+      addPackage,
+      addDirect,
+      modes,
+      profileID,
+      sourceNames,
+    }),
+    [
+      premium,
+      openUrl,
+      downloadNexus,
+      addGitHub,
+      addPackage,
+      addDirect,
+      modes,
+      profileID,
+      sourceNames,
+    ],
+  )
   let placeholder = t`Search ${sourceName}`
   if (source === ALL) {
     placeholder = t`Search all mod sites`

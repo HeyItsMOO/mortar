@@ -13,7 +13,6 @@ import {
   IconButton,
   Menu,
   Switch,
-  Tooltip,
 } from '@mui/material'
 import { ArrowUp, Ban, CircleCheck, CircleX, Pin, TriangleAlert } from 'lucide-react'
 import { useState } from 'react'
@@ -24,6 +23,7 @@ import { useLive } from '../launch/live.ts'
 import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { destructiveSx } from '../shell/destructive.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { dependentsOf, idKey, localId } from './dependents.ts'

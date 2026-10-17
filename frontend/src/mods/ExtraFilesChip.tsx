@@ -1,10 +1,11 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
-import { Chip, Tooltip } from '@mui/material'
+import { Chip } from '@mui/material'
 import type {
   Mod,
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { entryOf, nexusIdOf } from './lookup.ts'
 import { extraFileLabel, useContextMenu } from './menu.ts'
 import { useNexusDetails } from './nexusDetails.ts'

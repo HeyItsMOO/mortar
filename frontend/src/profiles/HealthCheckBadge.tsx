@@ -1,7 +1,8 @@
 import { plural } from '@lingui/core/macro'
-import { Chip, Tooltip } from '@mui/material'
+import { Chip } from '@mui/material'
 import { ShieldAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { HealthDialog } from './HealthDialog.tsx'
 import { useHealthBadges } from './healthBadges.ts'
 

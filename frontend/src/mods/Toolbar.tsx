@@ -11,7 +11,6 @@ import {
   ListSubheader,
   Menu,
   MenuItem,
-  Tooltip,
   useMediaQuery,
 } from '@mui/material'
 import {
@@ -46,6 +45,7 @@ import { EmptyState } from '../shell/EmptyState.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { SearchField } from '../shell/SearchField.tsx'
 import { MenuRule } from '../shell/TitleMenu.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { ViewToggle } from '../shell/ViewToggle.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'

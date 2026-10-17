@@ -11,7 +11,6 @@ import {
   Menu,
   Radio,
   RadioGroup,
-  Tooltip,
 } from '@mui/material'
 import { ChevronDown, Gamepad2, Play, Star } from 'lucide-react'
 import { type MouseEvent, useState } from 'react'
@@ -20,6 +19,7 @@ import type { PlayPreset } from '../profiles/profilePresets.ts'
 import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { MenuHeading, MenuRule } from '../shell/TitleMenu.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { PLAY_HEIGHT_PX } from './playHeight.ts'
 import { playMenuEntries } from './playMenu.ts'
 import { playVanillaOpen, rememberLinuxVanillaDirect, useVanillaPrompt } from './playOpen.ts'

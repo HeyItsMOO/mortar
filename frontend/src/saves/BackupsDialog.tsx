@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogTitle,
   Menu,
-  Tooltip,
   Typography,
 } from '@mui/material'
 import { FolderOpen, Pin, PinOff, RotateCcw } from 'lucide-react'
@@ -29,6 +28,7 @@ import { EmptyState } from '../shell/EmptyState.tsx'
 import { LoadingRow } from '../shell/LoadingRow.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { TipIconButton } from '../shell/TipIconButton.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { usePending } from '../toasts/usePending.ts'

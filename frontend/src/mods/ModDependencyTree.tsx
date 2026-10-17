@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, Link, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Link, Typography } from '@mui/material'
 import {
   Asterisk,
   CircleAlert,
@@ -18,6 +18,7 @@ import { refWant } from '../queue/refWant.ts'
 import { useQueue } from '../queue/store.ts'
 import { pendingFor } from '../queue/totals.ts'
 import { StableLabel } from '../shell/StableLabel.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import {
   annotateTree,

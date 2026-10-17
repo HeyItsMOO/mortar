@@ -8,7 +8,6 @@ import {
   DialogTitle,
   IconButton,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material'
 import { Plus, Tags, Trash2 } from 'lucide-react'
@@ -19,6 +18,7 @@ import { useProfiles } from '../profiles/store.ts'
 import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { EmptyState } from '../shell/EmptyState.tsx'
 import { IconAction } from '../shell/IconAction.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { useDiscardGuard } from '../shell/useDiscardGuard.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'

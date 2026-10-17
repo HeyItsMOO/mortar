@@ -1,6 +1,7 @@
-import { Box, ButtonBase, Tooltip } from '@mui/material'
+import { Box, ButtonBase } from '@mui/material'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
 import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
+import { Tooltip } from '../shell/Tooltip.tsx'
 
 // One badge per source the mod is on; the filled one is where Add installs from.
 export function SourceBadges({

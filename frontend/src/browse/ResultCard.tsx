@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase, Card, Typography } from '@mui/material'
-import { type MouseEvent, useState } from 'react'
+import { type MouseEvent, memo, useState } from 'react'
 import { formatAuthors } from '../mods/authorNormalize.ts'
 import { useSettings } from '../settings/store.ts'
 import { BUTTON_RADIUS_PX, BUTTON_SMALL_HEIGHT } from '../theme/theme.ts'
@@ -67,7 +67,7 @@ const underPictureSx = {
 const onControl = (e: MouseEvent<HTMLElement>) =>
   e.target instanceof Element && e.target.closest('button, a, [role="button"]') !== null
 
-function ResultCard(props: ResultCardProps) {
+const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
   const { row, item, modes, sourceNames } = props
   const { t } = useLingui()
   const { name, summary, author } = item
@@ -189,6 +189,6 @@ function ResultCard(props: ResultCardProps) {
       {row ? action : null}
     </Card>
   )
-}
+})
 
 export { CardPicture, ResultCard }

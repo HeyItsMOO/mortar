@@ -33,6 +33,7 @@ import { useProfiles } from '../profiles/store.ts'
 import { useSettings } from '../settings/store.ts'
 import { isSummarizedBatch, observeImportState } from '../share/importCompletion.ts'
 import { follow } from '../shell/follow.ts'
+import { sameValue } from '../shell/sameValue.ts'
 import { errorDetails, errorKind } from '../toasts/errorKind.ts'
 import { changeStillLatest, type HistoryActionState } from '../toasts/history.ts'
 import { useToasts } from '../toasts/store.ts'
@@ -406,6 +407,9 @@ export const initQueue = () => {
   return follow('queue:changed', fetchState, (state, first) => {
     const prev = useQueue.getState().state
     const next = snapshot(state)
+    if (sameValue(prev, next)) {
+      return
+    }
     useQueue.setState({ state: next })
     observeImportState(next.items)
     if (!first) {

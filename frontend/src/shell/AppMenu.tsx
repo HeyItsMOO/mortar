@@ -34,10 +34,10 @@ import { space } from '../theme/density.ts'
 import { reportUnexpected, toastError } from '../toasts/report.ts'
 import { showWhatsNew } from '../updates/whatsNew.ts'
 import { checkForUpdates } from './checkForUpdates.ts'
-import { OneTip } from './OneTip.tsx'
 import { useUpdatesOfflineReason } from './offlineText.ts'
 import { reportBug } from './reportBug.ts'
 import { MenuHeading, MenuRule, TitleMenu, TitleMenuItem } from './TitleMenu.tsx'
+import { Tooltip } from './Tooltip.tsx'
 import { useTitleMenu } from './titleMenus.ts'
 
 const ICON_PX = 18
@@ -48,9 +48,9 @@ function Reason({ reason, children }: { reason: string; children: ReactNode }) {
   return reason === '' ? (
     children
   ) : (
-    <OneTip title={reason} placement="left" describeChild={true}>
+    <Tooltip title={reason} placement="left" describeChild={true}>
       <span>{children}</span>
-    </OneTip>
+    </Tooltip>
   )
 }
 

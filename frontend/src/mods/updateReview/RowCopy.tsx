@@ -1,7 +1,8 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Chip, Tooltip, Typography } from '@mui/material'
+import { Box, Chip, Typography } from '@mui/material'
 import { TriangleAlert } from 'lucide-react'
 import type { Update } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/models.ts'
+import { Tooltip } from '../../shell/Tooltip.tsx'
 import { ModNameLink } from '../ModNameLink.tsx'
 import { Changes } from './Changes.tsx'
 

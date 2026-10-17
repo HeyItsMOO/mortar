@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
-  Tooltip,
 } from '@mui/material'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import type {
@@ -20,6 +19,7 @@ import type {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/launchsvc/models.ts'
 import { cmpText } from '../mods/cmpText.ts'
 import { openModHandlers } from '../mods/openMod.ts'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { useStoredState } from '../shell/useStoredState.ts'
 import { space } from '../theme/density.ts'
 import { useDuration, useSmapiStartup, useWhy } from './startupHooks.ts'

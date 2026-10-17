@@ -24,7 +24,7 @@ import { useMods } from '../mods/store.ts'
 import { useLoadProblemsOnFocus } from '../mods/useLoadProblemsOnFocus.ts'
 import { openProfileOf, useProfileLoader, useProfiles } from '../profiles/store.ts'
 import { arrowFocus } from '../shell/arrowFocus.ts'
-import { OneTip } from '../shell/OneTip.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { useRail, useSidebarCollapsed } from './sidebarCollapsed.ts'
 import {
   type SidebarEntry,
@@ -163,9 +163,9 @@ function Item({
     </ButtonBase>
   )
   return rail ? (
-    <OneTip title={label} placement="right">
+    <Tooltip title={label} placement="right">
       {button}
-    </OneTip>
+    </Tooltip>
   ) : (
     button
   )
@@ -311,9 +311,9 @@ function CollapseButton({ rail }: { rail: boolean }) {
     </ButtonBase>
   )
   return rail ? (
-    <OneTip title={label} placement="right">
+    <Tooltip title={label} placement="right">
       {button}
-    </OneTip>
+    </Tooltip>
   ) : (
     button
   )

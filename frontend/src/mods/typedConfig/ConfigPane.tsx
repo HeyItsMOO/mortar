@@ -1,20 +1,12 @@
 import { useLingui } from '@lingui/react/macro'
-import {
-  Alert,
-  Box,
-  Button,
-  IconButton,
-  MenuItem,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material'
+import { Alert, Box, Button, IconButton, MenuItem, TextField, Typography } from '@mui/material'
 import { CircleHelp, RotateCcw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { Mod } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { openProfileOf, useProfiles } from '../../profiles/store.ts'
 import { ConfirmDialog } from '../../shell/ConfirmDialog.tsx'
 import { SearchField } from '../../shell/SearchField.tsx'
+import { Tooltip } from '../../shell/Tooltip.tsx'
 import { space } from '../../theme/density.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 import { PresetsButton } from '../ConfigPresets.tsx'

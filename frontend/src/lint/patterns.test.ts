@@ -217,6 +217,15 @@ test('Lingui t is not taken as a helper parameter or argument', () => {
   expect(hits, hits.join('\n')).toEqual([])
 })
 
+// MUI's Tooltip renders itself and its child twice on mount; shell/Tooltip.tsx mounts it only while it shows.
+test('tooltips come from shell/Tooltip.tsx', () => {
+  const hits = files
+    .filter(({ path }) => rel(path) !== 'shell/Tooltip.tsx')
+    .filter(({ src }) => /import \{[^}]*\bTooltip\b[^}]*\} from '@mui\/material'/.test(src))
+    .map(({ path }) => rel(path))
+  expect(hits, hits.join('\n')).toEqual([])
+})
+
 test('zustand selectors do not allocate arrays or objects', () => {
   const hits = files.flatMap(({ path, src }) => selectorHits(path, strip(src)))
   expect(hits, hits.join('\n')).toEqual([])

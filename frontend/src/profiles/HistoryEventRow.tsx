@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, Checkbox, Chip, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Checkbox, Chip, Typography } from '@mui/material'
 import {
   ArrowUpCircle,
   ChevronDown,
@@ -19,6 +19,7 @@ import type {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { sentence } from '../i18n/sentence.ts'
 import { When } from '../i18n/When.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { space } from '../theme/density.ts'
 import { itemModKey } from './historyDiff.ts'
 import { type HistoryKind, historyKind, historySummary } from './historyTimeline.ts'

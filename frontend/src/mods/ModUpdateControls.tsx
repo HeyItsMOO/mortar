@@ -1,11 +1,12 @@
 import type { I18n } from '@lingui/core'
 import { msg } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, MenuItem, Select, Tooltip, Typography } from '@mui/material'
+import { Box, Button, MenuItem, Select, Typography } from '@mui/material'
 import type {
   Entry,
   Mod,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import { useMods } from './store.ts'
 

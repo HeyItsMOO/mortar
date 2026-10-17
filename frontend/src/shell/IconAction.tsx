@@ -1,6 +1,7 @@
-import { IconButton, Tooltip } from '@mui/material'
+import { IconButton } from '@mui/material'
 import type { MouseEvent, ReactNode } from 'react'
 import { DisabledReason } from './DisabledReason.tsx'
+import { Tooltip } from './Tooltip.tsx'
 
 const BORDER = 'var(--mortar-hairline-22)'
 

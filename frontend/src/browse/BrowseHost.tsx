@@ -37,6 +37,20 @@ const search: BrowseSearch = async ({
   }
 }
 
+// Module-level, so the result cards that take them keep the same props across renders.
+const downloadNexus = (modID: string) => {
+  download([{ kind: KIND_INSTALL, modId: Number(modID), latest: true }]).catch(reportUnexpected)
+}
+const addGitHub = (repo: string) => {
+  download([{ kind: KIND_INSTALL, repo }]).catch(reportUnexpected)
+}
+const addPackage = (pkg: string) => {
+  download([{ kind: KIND_INSTALL, package: pkg }]).catch(reportUnexpected)
+}
+const addDirect = (source: string, id: string, picture: string) => {
+  download([{ kind: KIND_INSTALL, source, package: id, picture }]).catch(reportUnexpected)
+}
+
 function BrowseHost({ game, profileID }: { game: string; profileID: string }) {
   const premium = useNexus((state) => state.premium)
   const [sources, setSources] = useState<BrowseSource[]>([])
@@ -58,23 +72,11 @@ function BrowseHost({ game, profileID }: { game: string; profileID: string }) {
       sources={sources}
       search={search}
       categories={categoryNames}
-      openUrl={(url) => {
-        openPage(url)
-      }}
-      downloadNexus={(modID) => {
-        download([{ kind: KIND_INSTALL, modId: Number(modID), latest: true }]).catch(
-          reportUnexpected,
-        )
-      }}
-      addGitHub={(repo) => {
-        download([{ kind: KIND_INSTALL, repo }]).catch(reportUnexpected)
-      }}
-      addPackage={(pkg) => {
-        download([{ kind: KIND_INSTALL, package: pkg }]).catch(reportUnexpected)
-      }}
-      addDirect={(source, id, picture) => {
-        download([{ kind: KIND_INSTALL, source, package: id, picture }]).catch(reportUnexpected)
-      }}
+      openUrl={openPage}
+      downloadNexus={downloadNexus}
+      addGitHub={addGitHub}
+      addPackage={addPackage}
+      addDirect={addDirect}
     />
   )
 }

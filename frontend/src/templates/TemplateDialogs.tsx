@@ -10,7 +10,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Tooltip,
 } from '@mui/material'
 import { LayoutTemplate, Pencil, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
@@ -26,6 +25,7 @@ import { i18n } from '../i18n/index.ts'
 import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { EmptyState } from '../shell/EmptyState.tsx'
 import { PromptDialog } from '../shell/PromptDialog.tsx'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { usePending } from '../toasts/usePending.ts'

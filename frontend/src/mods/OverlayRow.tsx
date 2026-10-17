@@ -1,11 +1,12 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
-import { Box, Chip, IconButton, Switch, Tooltip } from '@mui/material'
+import { Box, Chip, IconButton, Switch } from '@mui/material'
 import { CornerDownRight, Trash2 } from 'lucide-react'
 import type {
   Mod,
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { LockedReason } from './LockedReason.tsx'

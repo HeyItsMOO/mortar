@@ -1,7 +1,8 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import { Check } from 'lucide-react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { Tooltip } from '../shell/Tooltip.tsx'
 import { colorHex, PROFILE_COLORS, PROFILE_ICONS } from './appearance.ts'
 import { ProfileMark } from './ProfileMark.tsx'
 
