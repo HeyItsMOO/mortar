@@ -6611,7 +6611,7 @@ msgstr "Two mods change the same file. Only one change wins, so the other mod ma
 #: src/mods/OverlayRow.tsx:83
 #: src/mods/OverlayRow.tsx:88
 #: src/mods/problemFix/DuplicateFix.tsx:38
-#: src/mods/typedConfig/Widgets.tsx:137
+#: src/mods/typedConfig/Widgets.tsx:147
 #: src/tools/ToolsManageDialog.tsx:64
 msgid "Remove {name}"
 msgstr "Remove {name}"
@@ -8695,7 +8695,7 @@ msgstr "Bosses defeated"
 #: src/mods/SelectionBarDialogs.tsx:82
 #: src/mods/Sidebar.tsx:516
 #: src/mods/TrackedNotInProfile.tsx:83
-#: src/mods/typedConfig/Widgets.tsx:159
+#: src/mods/typedConfig/Widgets.tsx:169
 #: src/profiles/LaunchPresetTemplatesDialog.tsx:67
 msgid "Add"
 msgstr "Add"
@@ -11119,7 +11119,7 @@ msgstr "Not used by any profile"
 msgid "No saved groups yet."
 msgstr "No saved groups yet."
 
-#: src/mods/typedConfig/Widgets.tsx:148
+#: src/mods/typedConfig/Widgets.tsx:158
 msgid "Add an item"
 msgstr "Add an item"
 
@@ -11191,7 +11191,7 @@ msgstr "{source}, version {0}"
 msgid "Latest (recommended)"
 msgstr "Latest (recommended)"
 
-#: src/mods/typedConfig/Widgets.tsx:155
+#: src/mods/typedConfig/Widgets.tsx:165
 msgid "New {label} item"
 msgstr "New {label} item"
 

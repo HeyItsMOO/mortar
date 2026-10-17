@@ -70,4 +70,35 @@ function humanizeKey(key: string): string {
   return text.trim()
 }
 
-export { filterFile, humanizeKey, isHexColor, isModified, modifiedCount, parseNumber, wantsSlider }
+// "Languages Available: en, es, ru", "Options: Low/Medium/High", "Valid values: a | b": the values a description lists
+// for a free-text entry. Two or more short values, or none.
+const LISTED =
+  /(?:available|options|valid values|possible values|supported values|choices|one of)[^:\n]{0,24}:\s*([^\n]+)/i
+const MAX_OPTION_LENGTH = 32
+const TRAILING_PUNCTUATION = /[.;)]+\s*$/
+const OPTION_SEPARATOR = /\s*[,/|]\s*/
+const RUN_OF_SPACES = /\s{2,}/
+
+function suggestedOptions(description: string): string[] {
+  const listed = LISTED.exec(description)?.[1]
+  if (!listed) {
+    return []
+  }
+  const options = listed
+    .replace(TRAILING_PUNCTUATION, '')
+    .split(OPTION_SEPARATOR)
+    .map((o) => o.trim())
+    .filter((o) => o !== '' && o.length <= MAX_OPTION_LENGTH && !RUN_OF_SPACES.test(o))
+  return options.length >= 2 ? [...new Set(options)] : []
+}
+
+export {
+  filterFile,
+  humanizeKey,
+  isHexColor,
+  isModified,
+  modifiedCount,
+  parseNumber,
+  suggestedOptions,
+  wantsSlider,
+}

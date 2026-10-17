@@ -1,9 +1,19 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, IconButton, MenuItem, Select, Slider, Switch, TextField } from '@mui/material'
+import {
+  Autocomplete,
+  Box,
+  Button,
+  IconButton,
+  MenuItem,
+  Select,
+  Slider,
+  Switch,
+  TextField,
+} from '@mui/material'
 import { Plus, X } from 'lucide-react'
 import { useState } from 'react'
 import { space } from '../../theme/density.ts'
-import { isHexColor, parseNumber, wantsSlider } from './entries.ts'
+import { isHexColor, parseNumber, suggestedOptions, wantsSlider } from './entries.ts'
 import type { ConfigEntry, ConfigValue } from './types.ts'
 
 const NUMBER_WIDTH_PX = 120
@@ -192,6 +202,45 @@ function MultiWidget({ entry, label, onChange }: WidgetProps) {
   )
 }
 
+// Free text, offering the values the description lists while still taking any other.
+function TextWidget({ entry, label, onChange }: WidgetProps) {
+  const options = suggestedOptions(entry.description)
+  if (options.length === 0) {
+    return (
+      <TextField
+        size="small"
+        value={String(entry.value)}
+        onChange={(e) => onChange(e.target.value)}
+        slotProps={{ htmlInput: { 'aria-label': label } }}
+        sx={{ width: TEXT_WIDTH_PX }}
+      />
+    )
+  }
+  return (
+    <Autocomplete
+      freeSolo={true}
+      size="small"
+      options={options}
+      inputValue={String(entry.value)}
+      onInputChange={(_, value, reason) => {
+        if (reason !== 'reset' || value !== String(entry.value)) {
+          onChange(value)
+        }
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: { ...params.slotProps.htmlInput, 'aria-label': label },
+          }}
+        />
+      )}
+      sx={{ width: TEXT_WIDTH_PX }}
+    />
+  )
+}
+
 function EntryWidget(props: WidgetProps) {
   const { entry, label, onChange } = props
   switch (entry.type) {
@@ -229,15 +278,7 @@ function EntryWidget(props: WidgetProps) {
     case 'multi':
       return <MultiWidget {...props} />
     default:
-      return (
-        <TextField
-          size="small"
-          value={String(entry.value)}
-          onChange={(e) => onChange(e.target.value)}
-          slotProps={{ htmlInput: { 'aria-label': label } }}
-          sx={{ width: TEXT_WIDTH_PX }}
-        />
-      )
+      return <TextWidget {...props} />
   }
 }
 

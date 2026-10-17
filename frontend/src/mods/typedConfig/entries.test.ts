@@ -1,5 +1,12 @@
 import { expect, test } from 'bun:test'
-import { filterFile, humanizeKey, isModified, parseNumber, wantsSlider } from './entries.ts'
+import {
+  filterFile,
+  humanizeKey,
+  isModified,
+  parseNumber,
+  suggestedOptions,
+  wantsSlider,
+} from './entries.ts'
 import type { ConfigEntry, ConfigFile } from './types.ts'
 
 const entry = (over: Partial<ConfigEntry>): ConfigEntry => ({
@@ -53,4 +60,14 @@ test('a key is split into words at camelCase and number boundaries', () => {
   expect(humanizeKey('max_item-count.x')).toBe('max item count x')
   expect(humanizeKey('Speed')).toBe('Speed')
   expect(humanizeKey('')).toBe('')
+})
+
+test('a description that lists values suggests them; one without a list suggests none', () => {
+  expect(
+    suggestedOptions(
+      'What language should it use? Some Languages may also need FontPatcher Languages Available: en, es, ru, kr, zh',
+    ),
+  ).toEqual(['en', 'es', 'ru', 'kr', 'zh'])
+  expect(suggestedOptions('Options: Low/Medium/High.')).toEqual(['Low', 'Medium', 'High'])
+  expect(suggestedOptions('The name shown above the player.')).toEqual([])
 })
