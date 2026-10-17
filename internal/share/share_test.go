@@ -467,8 +467,8 @@ func TestGroupsFileRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(off.Groups) != 0 {
-		t.Fatalf("notes off still carried groups: %+v", off.Groups)
+	if len(off.Groups) != 1 {
+		t.Fatalf("a file without notes dropped its groups, which every share carries: %+v", off.Groups)
 	}
 }
 

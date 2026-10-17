@@ -133,10 +133,7 @@ func Write(w io.Writer, gameID string, p profile.Profile, modsDir string, includ
 	}
 	doc := fileDoc{
 		Version: FormatVersion, Name: s.Name, Game: s.Game, SourceKeys: s.SourceKeys, Notes: notes, Description: p.Description,
-		Entries: entries, IDs: []mod.ID{},
-	}
-	if inc.Notes {
-		doc.Groups = collectFileGroups(p)
+		Entries: entries, IDs: []mod.ID{}, Groups: collectFileGroups(p),
 	}
 	if inc.ProblemChoices {
 		doc.Problems = collectProblemChoices(p, inc.Dismissed, func(e profile.Entry) bool { return Enabled(e) || inc.DisabledMods })
