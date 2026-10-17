@@ -179,3 +179,14 @@ func (s *Store) SetGroupEnabled(game, id, name string, on bool) (Profile, error)
 		return nil
 	})
 }
+
+// renameGroupKey keeps an entry in its groups when its key changes, as an update or a roll back does.
+func renameGroupKey(groups []Group, old, renamed string) {
+	for i := range groups {
+		for j, k := range groups[i].Keys {
+			if k == old {
+				groups[i].Keys[j] = renamed
+			}
+		}
+	}
+}

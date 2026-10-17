@@ -111,6 +111,9 @@ func TestUpdateKeepsDisabledFolderAndRollsBack(t *testing.T) {
 		t.Fatal(err)
 	}
 	writeFile(t, e.mods(p.ID), "a-1/Pack/.A/data.json", "save")
+	if _, err := e.AddToGroup("stardew", p.ID, "G", "a-1"); err != nil {
+		t.Fatal(err)
+	}
 
 	got, err := e.UpdateEntry("stardew", p.ID, "a-1", "a-2")
 	if err != nil {
@@ -118,6 +121,9 @@ func TestUpdateKeepsDisabledFolderAndRollsBack(t *testing.T) {
 	}
 	if !slices.Equal(got.Entries[0].Disabled, []mod.ID{"smapi:me.a"}) || got.Entries[0].Mods[0].Folder != "Pack/Moved/A" {
 		t.Fatalf("entry = %+v", got.Entries[0])
+	}
+	if len(got.Groups) != 1 || !slices.Equal(got.Groups[0].Keys, []string{"a-2"}) {
+		t.Fatalf("the updated entry left its group: %+v", got.Groups)
 	}
 	if b := read(t, filepath.Join(e.mods(p.ID), "a-2", "Pack", "Moved", ".A", "cfg.json")); b != "v2" {
 		t.Fatalf("cfg = %q", b)
@@ -129,6 +135,9 @@ func TestUpdateKeepsDisabledFolderAndRollsBack(t *testing.T) {
 	}
 	if en := back.Entries[0]; en.Key != "a-1" || en.PreviousKey != "a-2" || !slices.Equal(en.Disabled, []mod.ID{"smapi:me.a"}) {
 		t.Fatalf("rolled back = %+v", en)
+	}
+	if len(back.Groups) != 1 || !slices.Equal(back.Groups[0].Keys, []string{"a-1"}) {
+		t.Fatalf("the rolled back entry left its group: %+v", back.Groups)
 	}
 	if b := read(t, filepath.Join(e.mods(p.ID), "a-1", "Pack", ".A", "cfg.json")); b != "v1" {
 		t.Fatalf("cfg = %q", b)

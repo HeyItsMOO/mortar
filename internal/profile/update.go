@@ -82,6 +82,7 @@ func (s *Store) UpdateEntries(game, id string, moves []EntryMove) (Profile, erro
 			if err != nil {
 				return err
 			}
+			renameGroupKey(p.Groups, p.Entries[ei].Key, ne.Key)
 			p.Entries[ei] = ne
 		}
 		return nil
@@ -169,6 +170,7 @@ func (s *Store) moveToLocked(game, id, oldKey, newKey string, source *Source) (P
 		case rollBack && p.Entries[ei].PreviousSource != nil:
 			ne.Source = *p.Entries[ei].PreviousSource
 		}
+		renameGroupKey(p.Groups, p.Entries[ei].Key, ne.Key)
 		p.Entries[ei] = ne
 		return nil
 	})
