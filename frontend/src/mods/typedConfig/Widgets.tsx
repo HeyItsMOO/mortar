@@ -13,7 +13,14 @@ import {
 import { Plus, X } from 'lucide-react'
 import { useState } from 'react'
 import { space } from '../../theme/density.ts'
-import { isHexColor, parseNumber, suggestedOptions, wantsSlider } from './entries.ts'
+import {
+  formatLike,
+  isHexColor,
+  looksLikeColour,
+  parseNumber,
+  suggestedOptions,
+  wantsSlider,
+} from './entries.ts'
 import type { ConfigEntry, ConfigValue } from './types.ts'
 
 const NUMBER_WIDTH_PX = 120
@@ -94,7 +101,9 @@ function ColorWidget({ entry, label, onChange }: WidgetProps) {
         type="color"
         aria-label={label}
         value={normalized.slice(0, RGB_LENGTH)}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) =>
+          onChange(formatLike(e.target.value, isHexColor(value) ? value : String(entry.default)))
+        }
         sx={{
           width: SWATCH_PX,
           height: SWATCH_PX,
@@ -203,7 +212,11 @@ function MultiWidget({ entry, label, onChange }: WidgetProps) {
 }
 
 // Free text, offering the values the description lists while still taking any other.
-function TextWidget({ entry, label, onChange }: WidgetProps) {
+function TextWidget(props: WidgetProps) {
+  const { entry, label, onChange } = props
+  if (looksLikeColour(entry)) {
+    return <ColorWidget {...props} />
+  }
   const options = suggestedOptions(entry.description)
   if (options.length === 0) {
     return (

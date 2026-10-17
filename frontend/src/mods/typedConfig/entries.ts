@@ -54,6 +54,26 @@ function parseNumber(raw: string, e: ConfigEntry): number | null {
 const HEX_COLOR = /^#?[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/
 const isHexColor = (s: string): boolean => HEX_COLOR.test(s)
 
+// A picked "#rrggbb" written the way the mod wrote its value: with or without "#", in its letter case, and with its
+// alpha digits kept, since a mod parses only the form it wrote.
+function formatLike(picked: string, current: string): string {
+  const rgb = picked.replace('#', '')
+  const digits = current.replace('#', '')
+  const alpha = digits.length === 8 ? digits.slice(6) : ''
+  const lower = digits === digits.toLowerCase() && digits !== digits.toUpperCase()
+  const body = `${rgb}${alpha}`
+  return `${current.startsWith('#') ? '#' : ''}${lower ? body.toLowerCase() : body.toUpperCase()}`
+}
+
+// A string entry holding a colour: hex digits under a colour-named key, or a value written with "#".
+const COLOUR_KEY = /colou?r/i
+const looksLikeColour = (e: ConfigEntry): boolean => {
+  const value = String(e.value)
+  return (
+    isHexColor(value) && (value.startsWith('#') || COLOUR_KEY.test(`${e.key} ${e.label ?? ''}`))
+  )
+}
+
 const modifiedCount = (file: ConfigFile): number =>
   file.sections.reduce((n, s) => n + s.entries.filter(isModified).length, 0)
 
@@ -94,9 +114,11 @@ function suggestedOptions(description: string): string[] {
 
 export {
   filterFile,
+  formatLike,
   humanizeKey,
   isHexColor,
   isModified,
+  looksLikeColour,
   modifiedCount,
   parseNumber,
   suggestedOptions,

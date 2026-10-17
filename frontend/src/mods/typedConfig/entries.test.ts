@@ -1,8 +1,10 @@
 import { expect, test } from 'bun:test'
 import {
   filterFile,
+  formatLike,
   humanizeKey,
   isModified,
+  looksLikeColour,
   parseNumber,
   suggestedOptions,
   wantsSlider,
@@ -70,4 +72,17 @@ test('a description that lists values suggests them; one without a list suggests
   ).toEqual(['en', 'es', 'ru', 'kr', 'zh'])
   expect(suggestedOptions('Options: Low/Medium/High.')).toEqual(['Low', 'Medium', 'High'])
   expect(suggestedOptions('The name shown above the player.')).toEqual([])
+})
+
+test('a picked colour is written in the form the mod wrote', () => {
+  expect(formatLike('#00ff00', '#FF2222')).toBe('#00FF00')
+  expect(formatLike('#00ff00', '00000040')).toBe('00FF0040')
+  expect(formatLike('#00ff00', '#aa00eeff')).toBe('#00ff00ff')
+})
+
+test('a hex string is a colour under a colour key or with a hash', () => {
+  const e = (key: string, value: string) => entry({ key, type: 'string', value, default: value })
+  expect(looksLikeColour(e('Emote Name Color Rare', '#2828FF'))).toBe(true)
+  expect(looksLikeColour(e('OverlayBackgroundColor', '00000040'))).toBe(true)
+  expect(looksLikeColour(e('Seed', '123456'))).toBe(false)
 })
