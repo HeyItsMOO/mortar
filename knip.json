@@ -10,7 +10,8 @@
         "site/download.js",
         "site/games.js",
         "site/search.js",
-        "site/nav.js"
+        "site/nav.js",
+        "site/guide.js"
       ],
       "project": ["site/**/*.js", "scripts/**/*.ts"]
     },

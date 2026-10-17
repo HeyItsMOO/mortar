@@ -230,13 +230,6 @@ code {
   padding-top: 0.5rem;
   border-top: 1px solid var(--line);
 }
-.toc ol {
-  columns: 2 16rem;
-  margin: 0 0 2rem;
-  padding: 1rem 1.25rem 1rem 2.5rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
 .crumbs {
   margin-bottom: 0.75rem;
   color: var(--muted);

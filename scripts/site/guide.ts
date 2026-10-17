@@ -15,7 +15,7 @@ function repoLink(href: string): string {
 
 export function guidePage(): string {
   const md = readFileSync(GUIDE, 'utf8').replace(/^# .*\n/, '')
-  let html = Bun.markdown
+  const html = Bun.markdown
     .html(md, { headings: { ids: true } })
     .replace(/href="([^"]+)"/g, (_, href: string) => `href="${repoLink(href)}"`)
     .replaceAll('<table>', '<div class="table-wrap"><table>')
@@ -23,25 +23,25 @@ export function guidePage(): string {
   const contents = [...html.matchAll(/<h2 id="([^"]+)">(.*?)<\/h2>/g)]
     .map(([, id, text]) => `<li><a href="#${id}">${text}</a></li>`)
     .join('\n          ')
-  html = html.replace(
-    /<h2 /,
-    `<nav class="toc" aria-label="Contents">
-        <ol>
-          ${contents}
-        </ol>
-      </nav>
-<h2 `,
-  )
   return page({
     path: 'site/guide/index.html',
     current: 'guide',
     title: 'Mortar user guide',
     description:
       'How to install Mortar, add and update mods, keep profiles, share them, play and read Problems, for every game Mortar supports.',
+    css: '/guide.css',
+    module: '/guide.js',
     body: `      <h1 class="ext-title">User guide</h1>
       <p class="lede">${escapeHTML('Everything Mortar does, section by section.')}</p>
-      <div class="guide">
+      <div class="guide-layout">
+        <nav class="toc" aria-label="Contents">
+          <ol>
+          ${contents}
+          </ol>
+        </nav>
+        <div class="guide">
 ${html}
+        </div>
       </div>`,
   })
 }

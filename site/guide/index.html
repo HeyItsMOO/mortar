@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="/landing.css" />
     <link rel="stylesheet" href="/download.css" />
     <link rel="stylesheet" href="/cards.css" />
+    <link rel="stylesheet" href="/guide.css" />
   </head>
   <body>
     <nav class="nav" aria-label="Main">
@@ -73,10 +74,9 @@
     <main class="wrap dl prose" data-pagefind-body>
       <h1 class="ext-title">User guide</h1>
       <p class="lede">Everything Mortar does, section by section.</p>
-      <div class="guide">
-<p>Mortar manages mods for the PC games its catalog enables, starting with Stardew Valley. It finds the game, installs its mod loader (SMAPI for Stardew Valley), keeps each set of mods in its own profile and starts the game with the profile you pick. How Mortar works inside: <a href="https://github.com/Rethunk-Tech/mortar/blob/main/docs/architecture.md">architecture.md</a>.</p>
-<nav class="toc" aria-label="Contents">
-        <ol>
+      <div class="guide-layout">
+        <nav class="toc" aria-label="Contents">
+          <ol>
           <li><a href="#install">Install</a></li>
           <li><a href="#first-run">First run</a></li>
           <li><a href="#sign-in-to-nexus-mods">Sign in to Nexus Mods</a></li>
@@ -102,8 +102,10 @@
           <li><a href="#stream-overlay">Stream overlay</a></li>
           <li><a href="#antivirus-scan">Antivirus scan</a></li>
           <li><a href="#troubleshooting">Troubleshooting</a></li>
-        </ol>
-      </nav>
+          </ol>
+        </nav>
+        <div class="guide">
+<p>Mortar manages mods for the PC games its catalog enables, starting with Stardew Valley. It finds the game, installs its mod loader (SMAPI for Stardew Valley), keeps each set of mods in its own profile and starts the game with the profile you pick. How Mortar works inside: <a href="https://github.com/Rethunk-Tech/mortar/blob/main/docs/architecture.md">architecture.md</a>.</p>
 <h2 id="install">Install</h2>
 <p>Download from <a href="https://github.com/Rethunk-Tech/mortar/releases/latest">Releases</a>.</p>
 <h3 id="windows">Windows</h3>
@@ -356,6 +358,7 @@ sudo pacman -Sy mortar
 <li><strong>Share a SMAPI log:</strong> <strong>Share log…</strong> on the profile's log view uploads it to smapi.io/log and gives you a link.</li>
 </ul>
 
+        </div>
       </div>
     </main>
 
@@ -365,5 +368,6 @@ sudo pacman -Sy mortar
         <span><a href="/guide/">Guide</a> · <a href="/changelog/">Changelog</a> · <a href="/privacy/">Privacy</a> · <a href="/code-signing/">Code signing</a> · <a href="https://github.com/Rethunk-Tech/mortar">Source</a> · <a href="https://discord.gg/TfecaTm8J2">Discord</a> · <a href="/download/">Downloads</a></span>
       </div>
     </footer>
+    <script type="module" src="/guide.js"></script>
   </body>
 </html>
