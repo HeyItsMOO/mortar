@@ -24,22 +24,6 @@ main.wrap {
 a {
   color: var(--text);
 }
-
-/* Navigation */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(25, 25, 30, 0.92);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(8px);
-}
-.nav .wrap {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  height: 3.75rem;
-}
 .brand {
   display: flex;
   align-items: center;
@@ -51,30 +35,6 @@ a {
 }
 .brand svg {
   color: var(--sand);
-}
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-left: auto;
-  font-size: 0.95rem;
-}
-.nav-links a {
-  color: var(--muted);
-  text-decoration: none;
-}
-.nav-links a:hover,
-.nav-links a:focus-visible {
-  color: var(--text);
-}
-.nav-links .nav-cta {
-  color: var(--sand);
-  font-weight: 600;
-}
-@media (max-width: 40rem) {
-  .nav-links .optional {
-    display: none;
-  }
 }
 
 /* Buttons */

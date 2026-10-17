@@ -36,8 +36,20 @@ export function urlOf(path: string): string {
 
 export function nav(p: Page): string {
   const home = p.root ? '/' : ''
-  const link = (href: string, label: string, optional: boolean, current?: string) =>
-    `<a${optional ? ' class="optional"' : ''} href="${href}"${current && p.current === current ? ' aria-current="page"' : ''}>${label}</a>`
+  const links: [href: string, label: string, current?: string][] = [
+    ['/games/', 'Games', 'games'],
+    [`${home}#features`, 'Features'],
+    ['/extension/', 'Extension', 'extension'],
+    ['/guide/', 'Guide', 'guide'],
+    [`${home}#faq`, 'FAQ'],
+  ]
+  const outbound: [href: string, label: string, mark: string][] = [
+    [REPO, 'GitHub', 'github'],
+    [DISCORD, 'Discord', 'discord'],
+  ]
+  const link = (href: string, label: string, cls: string, current?: string) =>
+    `<a${cls ? ` class="${cls}"` : ''} href="${href}"${current && p.current === current ? ' aria-current="page"' : ''}>${label}</a>`
+  const all = [...links, ...outbound.map(([h, l]) => [h, l] as [string, string])]
   return `<nav class="nav" aria-label="Main">
       <div class="wrap">
         <a class="brand" href="/">
@@ -45,21 +57,27 @@ export function nav(p: Page): string {
           Mortar
         </a>
         <div class="nav-links">
-          ${link('/games/', 'Games', true, 'games')}
-          ${link(`${home}#features`, 'Features', true)}
-          ${link('/extension/', 'Extension', true, 'extension')}
-          ${link('/guide/', 'Guide', true, 'guide')}
-          ${link(`${home}#faq`, 'FAQ', true)}
+          ${links.map(([h, l, c]) => link(h, l, 'optional', c)).join('\n          ')}
+          <span class="nav-sep optional" aria-hidden="true"></span>
+          <span class="nav-tools">
           <button type="button" class="nav-search" aria-label="Search" aria-keyshortcuts="/ Control+K Meta+K">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
           </button>
-          <a class="optional" href="${REPO}">GitHub</a>
-          <a class="optional" href="${DISCORD}">Discord</a>
+          ${outbound.map(([h, l, id]) => `<a class="nav-icon optional" href="${h}" title="${l}"><svg width="18" height="18" aria-hidden="true"><use href="/img/brands.svg#${id}" /></svg><span class="visually-hidden">${l}</span></a>`).join('\n          ')}
+          </span>
           <a class="nav-cta" href="/download/"${p.current === 'download' ? ' aria-current="page"' : ''}>Download</a>
+          <button type="button" class="nav-menu" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
         </div>
       </div>
+      <div class="nav-drawer" id="nav-drawer" hidden>
+        ${all.map(([h, l, c]) => link(h, l, '', c)).join('\n        ')}
+      </div>
+      <link rel="stylesheet" href="/nav.css" />
       <link rel="stylesheet" href="/search.css" />
       <script src="/search.js" defer></script>
+      <script type="module" src="/nav.js"></script>
     </nav>`
 }
 

@@ -3,6 +3,7 @@
 import { readFileSync } from 'node:fs'
 import {
   siCurseforge,
+  siDiscord,
   siEa,
   siEpicgames,
   siFlatpak,
@@ -30,6 +31,7 @@ const MARKS: Record<string, { path: string; colour: string }> = {
   curseforge: { path: siCurseforge.path, colour: `#${siCurseforge.hex}` },
   modrinth: { path: siModrinth.path, colour: `#${siModrinth.hex}` },
   github: { path: siGithub.path, colour: 'currentColor' },
+  discord: { path: siDiscord.path, colour: 'currentColor' },
   itch: { path: siItchdotio.path, colour: `#${siItchdotio.hex}` },
   patreon: { path: siPatreon.path, colour: 'currentColor' },
   steam: { path: siSteam.path, colour: '#1A9FFF' },
