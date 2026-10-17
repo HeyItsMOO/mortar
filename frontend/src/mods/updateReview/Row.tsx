@@ -15,11 +15,11 @@ import { openPage } from '../menu.ts'
 import { useNexusDetails } from '../nexusDetails.ts'
 import { LetterTile } from '../parts.tsx'
 import { useMods } from '../store.ts'
+import { CautionAck } from './CautionAck.tsx'
 import { ROW_TILE } from './constants.ts'
 import { dependencyChanges, rowDetails } from './details.ts'
 import { OptionalUpdates } from './OptionalUpdates.tsx'
 import { RowCopy } from './RowCopy.tsx'
-import { RowInclude } from './RowInclude.tsx'
 import { UpdateActions } from './UpdateActions.tsx'
 import { Version } from './Version.tsx'
 import { pendingUpdate } from './wants.ts'
@@ -133,18 +133,14 @@ function Row({
   profileId,
   caution,
   acked,
-  included,
   onAck,
-  onInclude,
   picture,
 }: {
   update: Update
   profileId: string
   caution: string
   acked: boolean
-  included: boolean
   onAck: (on: boolean) => void
-  onInclude: (on: boolean) => void
   picture?: string
 }) {
   const { mod, entry, notes } = useRowNotes(update, profileId)
@@ -164,9 +160,7 @@ function Row({
       disablePadding={true}
       sx={{
         display: 'grid',
-        gridTemplateColumns: caution
-          ? `${ROW_TILE}px minmax(0, 1fr) auto auto auto`
-          : `${ROW_TILE}px minmax(0, 1fr) auto auto`,
+        gridTemplateColumns: `${ROW_TILE}px minmax(0, 1fr) auto`,
         gap: '14px',
         alignItems: 'center',
         px: space.pad,
@@ -186,6 +180,7 @@ function Row({
           reportedElsewhere={reportedElsewhere}
           riskyChangelog={riskyChangelog}
         />
+        {caution ? <CautionAck acked={acked} onAck={onAck} /> : null}
         <VersionLine update={update} />
         <ChangeSummary update={update} sizeKb={sizeKb} changelog={changelog} />
         <OptionalUpdates update={update} profileId={profileId} />
@@ -200,14 +195,6 @@ function Row({
           acked={acked}
         />
       </Box>
-      <RowInclude
-        name={update.name}
-        caution={caution}
-        acked={acked}
-        included={included}
-        onAck={onAck}
-        onInclude={onInclude}
-      />
     </ListItem>
   )
 }

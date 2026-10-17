@@ -1301,11 +1301,6 @@ msgstr "Open page on {0}"
 msgid "Flatpak Steam"
 msgstr "Flatpak Steam"
 
-#. placeholder {0}: update.name
-#: src/mods/updateReview/PropagateUpdate.tsx:52
-msgid "Update {0} in other profiles"
-msgstr "Update {0} in other profiles"
-
 #. placeholder {0}: listNames(h.missingNames)
 #: src/profiles/HistoryPanel.tsx:51
 msgid "Could not restore {0}"
@@ -1376,7 +1371,7 @@ msgstr "Select all mods"
 msgid "An r2modman code or modpack"
 msgstr "An r2modman code or modpack"
 
-#: src/mods/updateReview/ReviewTitle.tsx:26
+#: src/mods/updateReview/ReviewTitle.tsx:25
 msgid "{count, plural, one {# update for {profileName}} other {# updates for {profileName}}}"
 msgstr "{count, plural, one {# update for {profileName}} other {# updates for {profileName}}}"
 
@@ -1763,10 +1758,6 @@ msgstr "Play this profile and the game's log shows here as it runs. Every run is
 #: src/settings/sections/DataStoreCheck.tsx:41
 msgid "{checked}. All files are intact."
 msgstr "{checked}. All files are intact."
-
-#: src/mods/updateReview/RowInclude.tsx:34
-msgid "Confirm update for {name}"
-msgstr "Confirm update for {name}"
 
 #: src/mods/problemText.ts:24
 msgid "Missing requirements"
@@ -3193,6 +3184,10 @@ msgstr "Reading the Nexus page…"
 #: src/mods/SelectionBar.tsx:81
 msgid "Make a group"
 msgstr "Make a group"
+
+#: src/mods/updateReview/ReviewFooter.tsx:48
+msgid "Update in every profile…"
+msgstr "Update in every profile…"
 
 #: src/saves/SaveRow.tsx:74
 msgid "All mods present"
@@ -5340,7 +5335,7 @@ msgstr "{list} do the same job: both change {detail}"
 msgid "This mod is not in the profile."
 msgstr "This mod is not in the profile."
 
-#: src/mods/updateReview/ReviewFooter.tsx:65
+#: src/mods/updateReview/ReviewTitle.tsx:34
 msgid "Loading changes…"
 msgstr "Loading changes…"
 
@@ -6577,10 +6572,6 @@ msgstr "Trace"
 msgid "Ask a ClamAV daemon at the socket path below."
 msgstr "Ask a ClamAV daemon at the socket path below."
 
-#: src/mods/updateReview/ReviewFooter.tsx:47
-msgid "Mortar keeps each mod's settings and backs up your saves before updating. Roll back from the mod's details."
-msgstr "Mortar keeps each mod's settings and backs up your saves before updating. Roll back from the mod's details."
-
 #: src/settings/prefCopy.ts:145
 msgid "Absolute"
 msgstr "Absolute"
@@ -6724,7 +6715,6 @@ msgstr "a deleted profile"
 msgid "Could not save the profile order"
 msgstr "Could not save the profile order"
 
-#: src/mods/updateReview/RowInclude.tsx:26
 #: src/share/ImportPreview.tsx:116
 msgid "Include {name}"
 msgstr "Include {name}"
@@ -7255,7 +7245,7 @@ msgstr "New"
 msgid "pins"
 msgstr "pins"
 
-#: src/mods/updateReview/ReviewFooter.tsx:65
+#: src/mods/updateReview/ReviewTitle.tsx:34
 msgid "Load all changes"
 msgstr "Load all changes"
 
@@ -8729,7 +8719,7 @@ msgstr "{gameName} save backups: {0}"
 msgid "Save mod list"
 msgstr "Save mod list"
 
-#: src/mods/updateReview/ReviewFooter.tsx:75
+#: src/mods/updateReview/ReviewFooter.tsx:53
 msgid "Update all ({wantedCount})"
 msgstr "Update all ({wantedCount})"
 
@@ -8952,10 +8942,6 @@ msgstr "Reading the mod's page…"
 #: src/mods/redundantReason.ts:71
 msgid "{count, plural, one {{by} already includes everything it changes} other {{by} together include everything it changes}}"
 msgstr "{count, plural, one {{by} already includes everything it changes} other {{by} together include everything it changes}}"
-
-#: src/mods/updateReview/ReviewFooter.tsx:70
-msgid "Update all everywhere…"
-msgstr "Update all everywhere…"
 
 #: src/shell/checkForUpdates.ts:70
 msgid "Update check failed"
@@ -9745,6 +9731,10 @@ msgstr "its address could not be looked up"
 msgid "Play the game without mods"
 msgstr "Play the game without mods"
 
+#: src/mods/updateReview/CautionAck.tsx:10
+msgid "Update despite this"
+msgstr "Update despite this"
+
 #: src/profiles/LaunchOptionsBlock.tsx:141
 msgid "Prefix for direct launches only (for example, gamemoderun mangohud)."
 msgstr "Prefix for direct launches only (for example, gamemoderun mangohud)."
@@ -9948,10 +9938,8 @@ msgstr "Every edit it makes is overwritten by {by}"
 msgid "{count, plural, one {Imported # mod} other {Imported # mods}}"
 msgstr "{count, plural, one {Imported # mod} other {Imported # mods}}"
 
-#. placeholder {0}: other.name
 #. placeholder {0}: profile.name
 #: src/mods/OtherProfilesDialog.tsx:67
-#: src/mods/updateReview/PropagateUpdate.tsx:64
 msgid "pinned in {0}"
 msgstr "pinned in {0}"
 
@@ -12355,9 +12343,7 @@ msgid "The game loads its own content"
 msgstr "The game loads its own content"
 
 #. placeholder {0}: merged.updated?.length ?? 0
-#. placeholder {0}: profiles.length
 #: src/mods/updateReview/EverywhereDialog.tsx:133
-#: src/mods/updateReview/PropagateUpdate.tsx:62
 msgid "{0, plural, one {Updated in # profile} other {Updated in # profiles}}"
 msgstr "{0, plural, one {Updated in # profile} other {Updated in # profiles}}"
 
@@ -12614,10 +12600,6 @@ msgstr "Fresh and clear"
 #: src/game/TabHeader.tsx:71
 msgid "{0} of {1} saves fit"
 msgstr "{0} of {1} saves fit"
-
-#: src/mods/updateReview/RowInclude.tsx:38
-msgid "Acknowledge caution to include"
-msgstr "Acknowledge caution to include"
 
 #: src/groups/SavedGroupsSection.tsx:104
 msgid "Rename saved group"
@@ -13530,10 +13512,6 @@ msgstr "Nexus Mods · Signed in as {name}"
 msgid "Add {label} item"
 msgstr "Add {label} item"
 
-#: src/mods/updateReview/ReviewFooter.tsx:54
-msgid "Also update other profiles that hold the same files"
-msgstr "Also update other profiles that hold the same files"
-
 #: src/settings/sections/Appearance.tsx:104
 msgid "Quiet grey-blue"
 msgstr "Quiet grey-blue"
@@ -14070,6 +14048,10 @@ msgstr "Play this profile and save a game. Each save shows here with how well it
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
+#: src/mods/updateReview/ReviewFooter.tsx:43
+msgid "Settings are kept and saves backed up."
+msgstr "Settings are kept and saves backed up."
+
 #: src/settings/sections/Appearance.tsx:68
 msgid "{name}, descending"
 msgstr "{name}, descending"
@@ -14377,8 +14359,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/mods/ChangelogDialog.tsx:104
 #: src/mods/GameModsReviewDialog.tsx:236
 #: src/mods/OldFilesCallouts.tsx:275
-#: src/mods/updateReview/ReviewFooter.tsx:61
-#: src/mods/updateReview/ReviewTitle.tsx:33
+#: src/mods/updateReview/ReviewFooter.tsx:29
 #: src/profiles/CompareTop.tsx:148
 #: src/profiles/HealthDialog.tsx:272
 #: src/profiles/HistoryPanel.tsx:135
@@ -14860,10 +14841,6 @@ msgstr "Put the profile back as it was before this entry. Newer entries are undo
 #: src/mods/typedConfig/ConfigTab.tsx:437
 msgid "Reading mod settings…"
 msgstr "Reading mod settings…"
-
-#: src/mods/updateReview/PropagateUpdate.tsx:53
-msgid "Update profiles"
-msgstr "Update profiles"
 
 #. placeholder {0}: here.length
 #: src/firstrun/FirstRun.tsx:100

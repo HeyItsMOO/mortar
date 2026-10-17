@@ -17,7 +17,6 @@ import { KeptGroup } from './updateReview/KeptGroup.tsx'
 import { keptUpdates } from './updateReview/kept.ts'
 import { loadAllDetails } from './updateReview/loadAll.ts'
 import { NeedsChoice } from './updateReview/NeedsChoice.tsx'
-import { PropagateUpdate } from './updateReview/PropagateUpdate.tsx'
 import { ReviewFooter } from './updateReview/ReviewFooter.tsx'
 import { ReviewTitle } from './updateReview/ReviewTitle.tsx'
 import { SourceGroups } from './updateReview/SourceGroups.tsx'
@@ -75,10 +74,6 @@ function UpdateReview({ profile }: { profile: Profile }) {
   const items = useQueue((s) => s.state.items)
   const mods = useMods((s) => s.mods)
   const [acked, setAcked] = useState<Record<string, boolean>>({})
-  const [propagating, setPropagating] = useState<Update[]>([])
-  const [firstPropagating] = propagating
-  const [include, setInclude] = useState<Record<string, boolean>>({})
-  const [propagateAll, setPropagateAll] = useState(false)
   const [everywhereAll, setEverywhereAll] = useState(false)
   const [loadingAll, setLoadingAll] = useState(false)
   const skipped = useOptionalSkips((s) => s.skipped)
@@ -87,7 +82,6 @@ function UpdateReview({ profile }: { profile: Profile }) {
   const needChoice = needChoiceUpdates(list)
   const chosen = sameSourceUpdates(list).filter(
     (u) =>
-      include[modId(u)] !== false &&
       !pendingUpdate(items, profile.id, u) &&
       (installedCaution(u) === '' || acked[modId(u)] === true),
   )
@@ -95,7 +89,6 @@ function UpdateReview({ profile }: { profile: Profile }) {
     withOptional(u, profile, byId[u.nexusId]?.details?.files ?? [], skipped[u.key] === true),
   )
   const onAck = (id: string, on: boolean) => setAcked((prev) => ({ ...prev, [id]: on }))
-  const onInclude = (id: string, on: boolean) => setInclude((prev) => ({ ...prev, [id]: on }))
   const uncachedIds = uncachedNexusIds(list, byId)
   return (
     <Dialog
@@ -110,61 +103,30 @@ function UpdateReview({ profile }: { profile: Profile }) {
         count={list.length}
         profileName={profile.name}
         checkedLabel={checked}
-        onClose={close}
-      />
-      <DialogContent sx={{ p: 0, borderTop: '1px solid var(--mortar-hairline-muted)' }}>
-        <SourceGroups
-          list={listedBySource(list)}
-          profile={profile}
-          acked={acked}
-          include={include}
-          onAck={onAck}
-          onInclude={onInclude}
-        />
-        <NeedsChoice
-          list={needChoice}
-          profile={profile}
-          acked={acked}
-          include={include}
-          onAck={onAck}
-          onInclude={onInclude}
-        />
-        <WithheldGroup withheld={withheld} mods={mods} />
-        <KeptGroup kept={keptUpdates(updates, profile)} mods={mods} />
-      </DialogContent>
-      <ReviewFooter
-        wantedCount={chosen.length}
-        signedIn={signedIn}
-        uncachedIds={uncachedIds}
+        canLoadAll={signedIn && uncachedIds.length > 0}
         loadingAll={loadingAll}
-        propagateAll={propagateAll}
-        onClose={close}
         onLoadAll={() => {
           loadAllDetails(uncachedIds, setLoadingAll).then(
             () => undefined,
             () => undefined,
           )
         }}
-        onPropagate={setPropagateAll}
+      />
+      <DialogContent sx={{ p: 0, borderTop: '1px solid var(--mortar-hairline-muted)' }}>
+        <SourceGroups list={listedBySource(list)} profile={profile} acked={acked} onAck={onAck} />
+        <NeedsChoice list={needChoice} profile={profile} acked={acked} onAck={onAck} />
+        <WithheldGroup withheld={withheld} mods={mods} />
+        <KeptGroup kept={keptUpdates(updates, profile)} mods={mods} />
+      </DialogContent>
+      <ReviewFooter
+        wantedCount={chosen.length}
+        onClose={close}
         onUpdate={() => {
           close()
-          updateAll(gameId, profile.id, wanted, needChoice.length)
-            .then((added) => {
-              if (added && propagateAll) {
-                setPropagating(list.filter((u) => wanted.some((w) => w.currentKey === u.key)))
-              }
-            })
-            .catch(reportUnexpected)
+          updateAll(gameId, profile.id, wanted, needChoice.length).catch(reportUnexpected)
         }}
         onEverywhere={() => setEverywhereAll(true)}
       />
-      {firstPropagating ? (
-        <PropagateUpdate
-          profile={profile}
-          update={firstPropagating}
-          onDone={() => setPropagating((pending) => pending.slice(1))}
-        />
-      ) : null}
       <UndoAllConfirm />
       <EverywhereDialog
         open={everywhereAll}

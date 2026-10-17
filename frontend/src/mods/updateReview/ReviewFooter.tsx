@@ -1,28 +1,16 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, Checkbox, DialogActions, FormControlLabel, Typography } from '@mui/material'
+import { Box, Button, DialogActions, Typography } from '@mui/material'
 import { ShieldCheck } from 'lucide-react'
 import { space } from '../../theme/density.ts'
 
 export function ReviewFooter({
   wantedCount,
-  signedIn,
-  uncachedIds,
-  loadingAll,
-  propagateAll,
   onClose,
-  onLoadAll,
-  onPropagate,
   onUpdate,
   onEverywhere,
 }: {
   wantedCount: number
-  signedIn: boolean
-  uncachedIds: number[]
-  loadingAll: boolean
-  propagateAll: boolean
   onClose: () => void
-  onLoadAll: () => void
-  onPropagate: (on: boolean) => void
   onUpdate: () => void
   onEverywhere: () => void
 }) {
@@ -33,49 +21,38 @@ export function ReviewFooter({
         px: space.pad,
         py: space.pad,
         gap: space.gap,
-        flexDirection: 'column',
-        alignItems: 'stretch',
         bgcolor: 'var(--mortar-overlay-20)',
         '& > :not(style) ~ :not(style)': { ml: 0 },
       }}
     >
-      <Box sx={{ display: 'flex', gap: space.gap, alignItems: 'flex-start' }}>
-        <Box sx={{ color: 'text.secondary', display: 'flex', pt: '2px' }}>
-          <ShieldCheck size={18} aria-hidden={true} />
-        </Box>
-        <Typography sx={{ fontSize: 13, lineHeight: 1.45, color: 'text.secondary' }}>
-          {t`Mortar keeps each mod's settings and backs up your saves before updating. Roll back from the mod's details.`}
+      <Button variant="text" color="inherit" onClick={onClose}>
+        {t`Close`}
+      </Button>
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.75,
+          color: 'text.secondary',
+        }}
+      >
+        <ShieldCheck size={16} aria-hidden={true} style={{ flexShrink: 0 }} />
+        <Typography noWrap={true} sx={{ fontSize: 12, color: 'inherit' }}>
+          {t`Settings are kept and saves backed up.`}
         </Typography>
       </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap, flexWrap: 'wrap' }}>
-        {wantedCount > 0 ? (
-          <FormControlLabel
-            control={<Checkbox checked={propagateAll} onChange={(_, on) => onPropagate(on)} />}
-            label={t`Also update other profiles that hold the same files`}
-            sx={{ mr: 'auto', '& .MuiFormControlLabel-label': { fontSize: 13 } }}
-          />
-        ) : (
-          <Box sx={{ mr: 'auto' }} />
-        )}
-        <Button variant="text" color="inherit" onClick={onClose}>
-          {t`Close`}
+      {wantedCount > 0 ? (
+        <Button variant="text" color="inherit" onClick={onEverywhere}>
+          {t`Update in every profile…`}
         </Button>
-        {signedIn && uncachedIds.length > 0 ? (
-          <Button variant="text" disabled={loadingAll} onClick={onLoadAll}>
-            {loadingAll ? t`Loading changes…` : t`Load all changes`}
-          </Button>
-        ) : null}
-        {wantedCount > 0 ? (
-          <Button variant="text" color="inherit" onClick={onEverywhere}>
-            {t`Update all everywhere…`}
-          </Button>
-        ) : null}
-        {wantedCount > 0 ? (
-          <Button variant="contained" onClick={onUpdate}>
-            {t`Update all (${wantedCount})`}
-          </Button>
-        ) : null}
-      </Box>
+      ) : null}
+      {wantedCount > 0 ? (
+        <Button variant="contained" onClick={onUpdate}>
+          {t`Update all (${wantedCount})`}
+        </Button>
+      ) : null}
     </DialogActions>
   )
 }

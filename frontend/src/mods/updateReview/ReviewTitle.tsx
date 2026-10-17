@@ -1,38 +1,40 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
-import { Box, DialogTitle, IconButton, Typography } from '@mui/material'
-import { X } from 'lucide-react'
+import { Box, Button, DialogTitle, Typography } from '@mui/material'
 import { space } from '../../theme/density.ts'
 
 export function ReviewTitle({
   count,
   profileName,
   checkedLabel,
-  onClose,
+  canLoadAll,
+  loadingAll,
+  onLoadAll,
 }: {
   count: number
   profileName: string
   checkedLabel: string
-  onClose: () => void
+  canLoadAll: boolean
+  loadingAll: boolean
+  onLoadAll: () => void
 }) {
   const { t } = useLingui()
   return (
-    <DialogTitle
-      component="div"
-      sx={{ display: 'flex', alignItems: 'center', gap: space.pad, p: space.pad }}
-    >
-      <Box sx={{ flexGrow: 1 }}>
-        <Typography component="h2" sx={{ fontSize: 22, fontWeight: 700 }}>
-          {plural(count, {
-            one: `# update for ${profileName}`,
-            other: `# updates for ${profileName}`,
-          })}
-        </Typography>
+    <DialogTitle component="div" sx={{ p: space.pad }}>
+      <Typography component="h2" sx={{ fontSize: 22, fontWeight: 700 }}>
+        {plural(count, {
+          one: `# update for ${profileName}`,
+          other: `# updates for ${profileName}`,
+        })}
+      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap, minHeight: 30 }}>
         <Typography sx={{ fontSize: 13 }}>{checkedLabel}</Typography>
+        {canLoadAll ? (
+          <Button size="small" disabled={loadingAll} onClick={onLoadAll}>
+            {loadingAll ? t`Loading changes…` : t`Load all changes`}
+          </Button>
+        ) : null}
       </Box>
-      <IconButton aria-label={t`Close`} onClick={onClose}>
-        <X size={16} />
-      </IconButton>
     </DialogTitle>
   )
 }

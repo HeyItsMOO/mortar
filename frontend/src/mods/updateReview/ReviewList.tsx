@@ -10,16 +10,12 @@ export function ReviewList({
   list,
   profile,
   acked,
-  include,
   onAck,
-  onInclude,
 }: {
   list: Update[]
   profile: Profile
   acked: Record<string, boolean>
-  include: Record<string, boolean>
   onAck: (id: string, on: boolean) => void
-  onInclude: (id: string, on: boolean) => void
 }) {
   return (
     <List disablePadding={true}>
@@ -34,12 +30,10 @@ export function ReviewList({
             profileId={profile.id}
             caution={caution}
             acked={acked[id] === true}
-            included={include[id] !== false}
             onAck={(on) => {
               onAck(id, on)
               acknowledgeUpdateCaution(profile.id, u, on)
             }}
-            onInclude={(on) => onInclude(id, on)}
             {...(picture === undefined ? {} : { picture })}
           />
         )
