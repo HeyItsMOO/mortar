@@ -15,7 +15,7 @@ import { useBadges } from '../mods/badges.ts'
 import { openShare } from '../share/store.ts'
 import { MenuRule } from '../shell/TitleMenu.tsx'
 import { space } from '../theme/density.ts'
-import { userModCount } from './count.ts'
+import { chosenModCount, userModCount } from './count.ts'
 import { EditProfileDialog } from './EditProfileDialog.tsx'
 import { HealthCheckBadge } from './HealthCheckBadge.tsx'
 import { HistoryDialog } from './HistoryDialog.tsx'
@@ -103,7 +103,8 @@ function RowMenu({
 function useRowSummary(profile: Profile): string {
   const { t } = useLingui()
   const mods = userModCount(profile)
-  const modsText = modsLabel(mods)
+  const chosen = chosenModCount(profile)
+  const modsText = chosen < mods ? `${modsLabel(mods)} · ${t`${chosen} chosen`}` : modsLabel(mods)
   const badge = useBadges((s) => s.byProfile[profile.id])
   const updatesText = updatesLabel(badge?.updates ?? 0)
   const problemsText = problemsLabel(badge?.problems ?? 0)

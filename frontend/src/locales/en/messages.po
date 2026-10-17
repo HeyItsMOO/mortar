@@ -527,6 +527,10 @@ msgstr "Untrack mods"
 msgid "Reinstall loader"
 msgstr "Reinstall loader"
 
+#: src/profiles/ProfileRow.tsx:107
+msgid "{chosen} chosen"
+msgstr "{chosen} chosen"
+
 #: src/mods/LoadOrderTab.tsx:109
 msgid "Required: {label}"
 msgstr "Required: {label}"
@@ -860,8 +864,8 @@ msgid "List"
 msgstr "List"
 
 #. placeholder {0}: profile.name
-#: src/profiles/ProfileRow.tsx:198
-#: src/profiles/ProfileRow.tsx:201
+#: src/profiles/ProfileRow.tsx:199
+#: src/profiles/ProfileRow.tsx:202
 msgid "Reorder {0}"
 msgstr "Reorder {0}"
 
@@ -5592,7 +5596,7 @@ msgid "Pause downloads while the game runs"
 msgstr "Pause downloads while the game runs"
 
 #. placeholder {0}: formatBytes(budget.saves)
-#: src/profiles/ProfileRow.tsx:138
+#: src/profiles/ProfileRow.tsx:139
 msgid "{0} of saves"
 msgstr "{0} of saves"
 
@@ -6107,7 +6111,7 @@ msgstr "Move into profile"
 
 #: src/game/Hero.tsx:117
 #: src/game/NewProfileDialog.tsx:213
-#: src/profiles/ProfileRow.tsx:221
+#: src/profiles/ProfileRow.tsx:222
 msgid "Profile name"
 msgstr "Profile name"
 
@@ -6970,7 +6974,7 @@ msgstr "Stamina"
 msgid "Removed {0}"
 msgstr "Removed {0}"
 
-#: src/profiles/ProfileRow.tsx:115
+#: src/profiles/ProfileRow.tsx:116
 msgid "imported from a link"
 msgstr "imported from a link"
 
@@ -7215,7 +7219,7 @@ msgstr "Open data folder"
 msgid "{requeued, plural, one {Retried # download} other {Retried # downloads}}"
 msgstr "{requeued, plural, one {Retried # download} other {Retried # downloads}}"
 
-#: src/profiles/ProfileRow.tsx:136
+#: src/profiles/ProfileRow.tsx:137
 msgid "{store} in the store"
 msgstr "{store} in the store"
 
@@ -7548,7 +7552,7 @@ msgstr "Source code"
 msgid "color"
 msgstr "color"
 
-#: src/profiles/ProfileRow.tsx:117
+#: src/profiles/ProfileRow.tsx:118
 msgid "imported from the game's Mods folder"
 msgstr "imported from the game's Mods folder"
 
@@ -8231,7 +8235,7 @@ msgstr "Edit tool"
 msgid "Group"
 msgstr "Group"
 
-#: src/profiles/ProfileRow.tsx:135
+#: src/profiles/ProfileRow.tsx:136
 msgid "{store} in the store ({shared} shared with other profiles)"
 msgstr "{store} in the store ({shared} shared with other profiles)"
 
@@ -9251,7 +9255,7 @@ msgstr "Could not read the mods: {loadError}"
 msgid "No other profiles with overrides"
 msgstr "No other profiles with overrides"
 
-#: src/profiles/ProfileRow.tsx:118
+#: src/profiles/ProfileRow.tsx:119
 msgid "a copy of {name}"
 msgstr "a copy of {name}"
 
@@ -10954,8 +10958,8 @@ msgid "{label} is replaced by the game's own copy from {when}. The current {labe
 msgstr "{label} is replaced by the game's own copy from {when}. The current {label} is backed up first."
 
 #. placeholder {0}: profile.name
-#: src/profiles/ProfileRow.tsx:256
-#: src/profiles/ProfileRow.tsx:260
+#: src/profiles/ProfileRow.tsx:257
+#: src/profiles/ProfileRow.tsx:261
 msgid "Actions for {0}"
 msgstr "Actions for {0}"
 
@@ -13816,7 +13820,7 @@ msgstr "Save log…"
 
 #. placeholder {0}: info.name
 #. placeholder {0}: profile.name
-#: src/profiles/ProfileRow.tsx:250
+#: src/profiles/ProfileRow.tsx:251
 #: src/share/ShareDialog.tsx:61
 #: src/share/ShareDialog.tsx:84
 msgid "Share {0}"
@@ -13966,7 +13970,7 @@ msgstr "Most likely cause: {0} ({1})"
 msgid "Your notes for this profile, for example: Friday co-op profile. Keep everyone on the same version of the big mods before playing together. Notes travel in a shared .mortar file, not in a share link."
 msgstr "Your notes for this profile, for example: Friday co-op profile. Keep everyone on the same version of the big mods before playing together. Notes travel in a shared .mortar file, not in a share link."
 
-#: src/profiles/ProfileRow.tsx:116
+#: src/profiles/ProfileRow.tsx:117
 msgid "imported from a .mortar file"
 msgstr "imported from a .mortar file"
 
@@ -14226,7 +14230,7 @@ msgstr "Year {0} {1}"
 msgid "New archives (.zip, .7z, .rar, .tar.gz, .tar.xz, .tar.zst and the like) that land in them are offered for install. Subfolders are not watched."
 msgstr "New archives (.zip, .7z, .rar, .tar.gz, .tar.xz, .tar.zst and the like) that land in them are offered for install. Subfolders are not watched."
 
-#: src/profiles/ProfileRow.tsx:137
+#: src/profiles/ProfileRow.tsx:138
 msgid "{deployed} deployed"
 msgstr "{deployed} deployed"
 
@@ -14376,7 +14380,7 @@ msgid "Open in the tray instead of showing the window"
 msgstr "Open in the tray instead of showing the window"
 
 #: src/commandPalette/paletteLabels.ts:15
-#: src/profiles/ProfileRow.tsx:254
+#: src/profiles/ProfileRow.tsx:255
 msgid "Share"
 msgstr "Share"
 
