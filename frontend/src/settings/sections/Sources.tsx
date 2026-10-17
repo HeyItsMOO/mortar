@@ -94,12 +94,17 @@ function useAuth(id: SourceId): { ok: boolean | null; text: ReactNode } {
   const name = useNexus((s) => s.name)
   const [github, setGithub] = useState<boolean | null>(null)
   const [itch, setItch] = useState<string | null>(null)
+  // Each source's row asks only about its own account.
   useEffect(() => {
-    GitHubLoggedIn().then(setGithub).catch(reportUnexpected)
-    ItchAccountInfo()
-      .then((a) => setItch(a.signedIn ? a.name : ''))
-      .catch(reportUnexpected)
-  }, [])
+    if (id === 'github') {
+      GitHubLoggedIn().then(setGithub).catch(reportUnexpected)
+    }
+    if (id === 'itch') {
+      ItchAccountInfo()
+        .then((a) => setItch(a.signedIn ? a.name : ''))
+        .catch(reportUnexpected)
+    }
+  }, [id])
   switch (id) {
     case 'nexus':
       return nexusSignedIn

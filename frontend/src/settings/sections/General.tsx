@@ -62,7 +62,8 @@ function StartupAndWindow() {
   )
 }
 
-function Antivirus() {
+// Its own component, so the answer arriving re-renders this line and not the section.
+function ScannerName() {
   const { t } = useLingui()
   const mode = useSettings((s) => s.antivirus)
   const socket = useSettings((s) => s.antivirusSocket)
@@ -74,11 +75,17 @@ function Antivirus() {
     '',
     reportUnexpected,
   )
+  return <Typography sx={{ fontSize: 14 }}>{product || t`Checking…`}</Typography>
+}
+
+function Antivirus() {
+  const { t } = useLingui()
+  const mode = useSettings((s) => s.antivirus)
   return (
     <SettingsSection title={t`Antivirus`}>
       <PrefByKey prefKey="antivirus" hideTitle={true} />
       <SettingRow label={t`Scanner in use`}>
-        <Typography sx={{ fontSize: 14 }}>{product || t`Checking…`}</Typography>
+        <ScannerName />
       </SettingRow>
       {mode === 'clamd' ? <PrefByKey prefKey="antivirusSocket" /> : null}
       {mode === 'command' ? <PrefByKey prefKey="antivirusCommand" /> : null}
