@@ -19,6 +19,9 @@ import { escapeHTML } from './chrome.ts'
 
 const VENDOR = 'frontend/src/brand/vendor'
 // The app draws Xbox as a plain X rather than Microsoft's mark (frontend/src/brand/launchers/LauncherLogo.tsx).
+// A game its own installer put in place has no store, so it gets a generic install mark (Material Design's
+// "download", Apache-2.0).
+const INSTALL_PATH = 'M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z'
 const X_PATH = 'M4 3h4.5L12 8.6 15.5 3H20l-5.7 9L20 21h-4.5L12 15.4 8.5 21H4l5.7-9z'
 
 // Marks whose brand colour is black or near it take the text colour, as the app does for GitHub and Patreon.
@@ -34,6 +37,7 @@ const MARKS: Record<string, { path: string; colour: string }> = {
   epic: { path: siEpicgames.path, colour: 'currentColor' },
   ea: { path: siEa.path, colour: 'currentColor' },
   xbox: { path: X_PATH, colour: '#107C10' },
+  standalone: { path: INSTALL_PATH, colour: 'currentColor' },
   lutris: { path: siLutris.path, colour: `#${siLutris.hex}` },
   flatpak: { path: siFlatpak.path, colour: `#${siFlatpak.hex}` },
 }
@@ -84,8 +88,9 @@ export function brandIcon(id: string, name: string, href?: string): string {
   } else if (art) {
     body = `<img src="/img/vendor/${art}" alt="" />`
   }
-  const label = `title="${escapeHTML(name)}" aria-label="${escapeHTML(name)}"`
+  const label = escapeHTML(name)
+  const hidden = mark || art ? `<span class="visually-hidden">${label}</span>` : ''
   return href
-    ? `<a class="fact-icon" href="${href}" ${label}>${body}</a>`
-    : `<span class="fact-icon" role="img" ${label}>${body}</span>`
+    ? `<a class="fact-icon" href="${href}" title="${label}">${body}${hidden}</a>`
+    : `<span class="fact-icon" title="${label}">${body}${hidden}</span>`
 }
