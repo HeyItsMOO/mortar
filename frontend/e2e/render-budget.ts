@@ -24,7 +24,7 @@ const BASE = '/var/tmp'
 const SETTLE_MS = Number(process.env.MORTAR_RENDER_SETTLE_MS ?? '3000')
 const IDLE_MS = Number(process.env.MORTAR_RENDER_IDLE_MS ?? '10000')
 const IDLE_SCALE_MS = 10_000
-const TOP = 6
+const TOP = 8
 // Library building blocks every MUI component renders through; the report names the app's own components instead.
 const LIBRARY =
   /^(Insertion|Styled\(|Mui|Box$|Typography$|ButtonBase$|anonymous$|TouchRipple|Ripple$|Popper|Portal$|Grow$|Fade$|Collapse$|Transition|SvgIcon$|Tooltip$|Modal$|Dialog$|Paper$|Button$|IconButton$|InputBase$|FormControl$|Chip$|Menu$|List|TableCell$|TableRow$)/
@@ -58,7 +58,7 @@ interface Sample {
   top: [string, number][]
   /** The components cascades of re-renders started at, with how many re-renders each started, most first. */
   startedBy: [string, number][]
-  /** What changed at each root: changed props, or the position and a preview of each changed state hook. */
+  /** What changed at each root (changed props, or the position and a preview of each changed state hook), by the re-renders it caused. */
   why: [string, number][]
   mutations: number
   longTasks: number
@@ -98,11 +98,11 @@ const HOOK = `(() => {
     for (let x = f.memoizedState, y = a.memoizedState, i = 0; x && y && out.length < 3; x = x.next, y = y.next, i++) {
       if (x.queue && x.memoizedState !== y.memoizedState) out.push('hook ' + i + ' ' + peek(x.memoizedState))
     }
-    const k = n + ': ' + (out.join('; ') || 'context or parent')
-    st.why[k] = (st.why[k] || 0) + 1
+    return n + ': ' + (out.join('; ') || 'context or parent')
   }
-  // root: the component a cascade of updates started at (one whose nearest component above did not render), which
-  // every update in the cascade is counted against; null while walking components React did not touch.
+  // root: why the cascade of updates started, at the component it started at (one whose nearest component above did
+  // not render), which every update in the cascade is counted against; null while walking components React did not
+  // touch.
   const walk = (f, root) => {
     for (; f; f = f.sibling) {
       const a = f.alternate
@@ -113,11 +113,12 @@ const HOOK = `(() => {
         here = null
         if (worked && a) {
           const n = nameOf(f)
-          here = root ?? n
-          if (root === null) noteWhy(f, a, n)
+          here = root ?? noteWhy(f, a, n)
+          const started = here.slice(0, here.indexOf(': '))
           st.updates++
           st.names[n] = (st.names[n] || 0) + 1
-          st.roots[here] = (st.roots[here] || 0) + 1
+          st.roots[started] = (st.roots[started] || 0) + 1
+          st.why[here] = (st.why[here] || 0) + 1
         } else if (worked) {
           st.mounts++
           here = root
