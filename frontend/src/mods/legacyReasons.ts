@@ -18,6 +18,9 @@ const isPack = (m: LegacyMod) =>
 
 const ID_SEPARATOR = /[.-]/
 
+// A shorter id or name ("PIF", "Core") turns up inside unrelated mods' names.
+const MIN_NAMED = 4
+
 // A mod id's own name, without its format and author: smapi:Bouhm.NPCMapLocations is npcmaplocations.
 const idName = (id: string) => {
   const local = idKey(id).slice(idKey(id).indexOf(':') + 1)
@@ -30,8 +33,8 @@ const names = (a: LegacyMod, b: LegacyMod) => {
   const id = idName(b.id)
   const name = b.name.trim().toLowerCase()
   return (
-    (id.length >= 4 && idKey(a.id).includes(id)) ||
-    (name.length >= 4 && a.name.toLowerCase().includes(name))
+    (id.length >= MIN_NAMED && idKey(a.id).includes(id)) ||
+    (name.length >= MIN_NAMED && a.name.toLowerCase().includes(name))
   )
 }
 

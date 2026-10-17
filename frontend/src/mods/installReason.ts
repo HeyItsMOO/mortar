@@ -7,6 +7,12 @@ export const partKey = (m: Pick<Mod, 'key' | 'id'>) => `${m.key}\n${idKey(m.id)}
 
 const framework = (m: PartMod) => idKey(m.contentPackFor ?? '')
 
+// The main mod's score: each part requiring it outweighs both tie-breaks (a pack for the primary framework, then a
+// mod that is no pack), which cannot both hold.
+const BY_DEPENDENTS = 4
+const BY_PRIMARY = 2
+const BY_CODE = 1
+
 // The words a download's parts are tagged with, so "[CP] Luck Skill" and "Luck Skill" name the same mod.
 const PART_TAG =
   /\[[^\]]*\]|\([^)]*\)|(^|[\s\-_:])(cp|c#|smapi|code|content patcher|component|core|dll)(?=$|[\s\-_:])/gi
@@ -49,11 +55,10 @@ export function supportParts(
     }
     const bases = parts.filter((b) => !parts.some((a) => a !== b && needs(b, a) && !needs(a, b)))
     const dependents = (b: PartMod) => parts.filter((a) => a !== b && needs(a, b)).length
-    // Being required by more parts outweighs both tie-breaks, which cannot both hold.
     const score = (m: PartMod) =>
-      dependents(m) * 4 +
-      (primary !== '' && framework(m) === primary ? 2 : 0) +
-      (framework(m) === '' ? 1 : 0)
+      dependents(m) * BY_DEPENDENTS +
+      (primary !== '' && framework(m) === primary ? BY_PRIMARY : 0) +
+      (framework(m) === '' ? BY_CODE : 0)
     const base = (bases.length > 0 ? bases : parts).reduce((best, m) =>
       score(m) > score(best) ? m : best,
     )

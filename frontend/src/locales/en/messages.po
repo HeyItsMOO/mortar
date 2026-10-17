@@ -126,7 +126,7 @@ msgstr "Auto-track installed mods"
 msgid "Sidebar badge counts"
 msgstr "Sidebar badge counts"
 
-#: src/mods/storeEntries.ts:223
+#: src/mods/storeEntries.ts:224
 msgid "Could not switch the selected mods"
 msgstr "Could not switch the selected mods"
 
@@ -214,7 +214,7 @@ msgstr "Revert {name} to the installed copy?"
 msgid "Skip this profile"
 msgstr "Skip this profile"
 
-#: src/mods/storeEntries.ts:432
+#: src/mods/storeEntries.ts:437
 msgid "Updated categories"
 msgstr "Updated categories"
 
@@ -296,8 +296,8 @@ msgstr "Could not queue the downloads"
 msgid "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 msgstr "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 
-#: src/mods/storeEntries.ts:72
-#: src/mods/storeEntries.ts:110
+#: src/mods/storeEntries.ts:73
+#: src/mods/storeEntries.ts:111
 #: src/profiles/historyRevert.ts:119
 #: src/toasts/history.ts:38
 msgid "That profile is gone."
@@ -351,6 +351,11 @@ msgstr "Enable {name} in this profile"
 #: src/settings/sections/DataMove.tsx:35
 msgid "Move data folder…"
 msgstr "Move data folder…"
+
+#. placeholder {0}: unneeded.length
+#: src/mods/disableUnneeded.ts:60
+msgid "{0, plural, one {# library only the switched-off mods needed is still on} other {# libraries only the switched-off mods needed are still on}}"
+msgstr "{0, plural, one {# library only the switched-off mods needed is still on} other {# libraries only the switched-off mods needed are still on}}"
 
 #: src/templates/TemplateDialogs.tsx:85
 msgid "A template with this name already exists."
@@ -1232,7 +1237,7 @@ msgstr "Keep this profile's saves separate?"
 msgid "{0}'s {1} is {2}, made for {3}, which this profile lacks."
 msgstr "{0}'s {1} is {2}, made for {3}, which this profile lacks."
 
-#: src/mods/storeEntries.ts:431
+#: src/mods/storeEntries.ts:436
 msgid "Could not set the category for the selected mods"
 msgstr "Could not set the category for the selected mods"
 
@@ -1969,7 +1974,7 @@ msgstr "{errors} with errors"
 msgid "Mortar does not have permission to do that."
 msgstr "Mortar does not have permission to do that."
 
-#: src/mods/storeEntries.ts:392
+#: src/mods/storeEntries.ts:397
 msgid "Could not ignore updates from {source}"
 msgstr "Could not ignore updates from {source}"
 
@@ -2802,8 +2807,8 @@ msgstr "A mod you enabled needs another mod that is not in this profile, or is d
 #: src/mods/problemFix/WinFix.tsx:66
 #: src/mods/problemFixButtons.tsx:116
 #: src/mods/SplitCombineItems.tsx:41
-#: src/mods/storeEntries.ts:59
-#: src/mods/storeEntries.ts:97
+#: src/mods/storeEntries.ts:60
+#: src/mods/storeEntries.ts:98
 #: src/profiles/collectionUnlink.ts:36
 #: src/profiles/CompareDialog.tsx:45
 #: src/profiles/historyRevert.ts:111
@@ -3479,7 +3484,7 @@ msgstr "Host {0}, yours {1}"
 msgid "Keep my changes"
 msgstr "Keep my changes"
 
-#: src/mods/storeEntries.ts:324
+#: src/mods/storeEntries.ts:329
 msgid "Unpinned selected mods"
 msgstr "Unpinned selected mods"
 
@@ -3637,7 +3642,7 @@ msgstr "Licence"
 msgid "Unreachable"
 msgstr "Unreachable"
 
-#: src/mods/storeEntries.ts:441
+#: src/mods/storeEntries.ts:446
 msgid "Updated tags"
 msgstr "Updated tags"
 
@@ -3688,7 +3693,7 @@ msgstr "Only in {name}"
 msgid "Open files page"
 msgstr "Open files page"
 
-#: src/mods/storeEntries.ts:419
+#: src/mods/storeEntries.ts:424
 msgid "{left, plural, one {# mod has no page, or more than one} other {# mods have no page, or more than one}}"
 msgstr "{left, plural, one {# mod has no page, or more than one} other {# mods have no page, or more than one}}"
 
@@ -3715,7 +3720,7 @@ msgstr "From the first scene to the main menu. Plugins' work in Start, coroutine
 msgid "History events kept"
 msgstr "History events kept"
 
-#: src/mods/storeEntries.ts:393
+#: src/mods/storeEntries.ts:398
 msgid "Could not stop ignoring {source} updates"
 msgstr "Could not stop ignoring {source} updates"
 
@@ -3852,7 +3857,7 @@ msgstr "Found in {path}"
 msgid "Enable and disable mods, and update them for the open profile."
 msgstr "Enable and disable mods, and update them for the open profile."
 
-#: src/mods/storeEntries.ts:409
+#: src/mods/storeEntries.ts:414
 msgid "None of these mods is listed on Nexus"
 msgstr "None of these mods is listed on Nexus"
 
@@ -4464,7 +4469,7 @@ msgstr "{0, plural, one {The new version of {1} no longer includes # file. Keep 
 msgid "Custom command"
 msgstr "Custom command"
 
-#: src/mods/storeEntries.ts:323
+#: src/mods/storeEntries.ts:328
 msgid "Could not unpin the selected mods"
 msgstr "Could not unpin the selected mods"
 
@@ -6180,7 +6185,7 @@ msgstr "Remove {0} from {1}"
 #. placeholder {0}: row.label
 #. placeholder {0}: tool.name
 #: src/mods/overlayActions.ts:90
-#: src/mods/storeEntries.ts:255
+#: src/mods/storeEntries.ts:258
 #: src/tools/ToolsManageDialog.tsx:100
 msgid "Could not remove {0}"
 msgstr "Could not remove {0}"
@@ -6810,7 +6815,7 @@ msgid "Home"
 msgstr "Home"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:465
+#: src/mods/storeEntries.ts:470
 msgid "Could not open config.json of {0}"
 msgstr "Could not open config.json of {0}"
 
@@ -6918,7 +6923,7 @@ msgstr "Moved {folder} to Mortar's trash"
 msgid "{queued, plural, one {# already queued} other {# already queued}}"
 msgstr "{queued, plural, one {# already queued} other {# already queued}}"
 
-#: src/mods/storeEntries.ts:235
+#: src/mods/storeEntries.ts:238
 msgid "Could not remove the selected mods"
 msgstr "Could not remove the selected mods"
 
@@ -6969,7 +6974,7 @@ msgstr "Stamina"
 #. placeholder {0}: first.mods[0].name
 #. placeholder {0}: row.label
 #: src/mods/overlayActions.ts:98
-#: src/mods/storeEntries.ts:94
+#: src/mods/storeEntries.ts:95
 #: src/profiles/historyLabel.ts:20
 msgid "Removed {0}"
 msgstr "Removed {0}"
@@ -7519,7 +7524,7 @@ msgid "Auto-retry failed downloads"
 msgstr "Auto-retry failed downloads"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:297
+#: src/mods/storeEntries.ts:302
 msgid "Could not switch {0}"
 msgstr "Could not switch {0}"
 
@@ -8252,7 +8257,7 @@ msgstr "Found a copy outside your launchers:"
 msgid "All sources"
 msgstr "All sources"
 
-#: src/mods/storeEntries.ts:411
+#: src/mods/storeEntries.ts:416
 msgid "{found, plural, one {Found # mod on Nexus} other {Found # mods on Nexus}}"
 msgstr "{found, plural, one {Found # mod on Nexus} other {Found # mods on Nexus}}"
 
@@ -8565,7 +8570,7 @@ msgid "{total, plural, one {# mod · about {size} to download} other {# mods · 
 msgstr "{total, plural, one {# mod · about {size} to download} other {# mods · about {size} to download}}"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:340
+#: src/mods/storeEntries.ts:345
 msgid "Could not skip the update for {0}"
 msgstr "Could not skip the update for {0}"
 
@@ -9090,7 +9095,7 @@ msgid "{0, plural, one { · # error} other { · # errors}}"
 msgstr "{0, plural, one { · # error} other { · # errors}}"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:453
+#: src/mods/storeEntries.ts:458
 msgid "Could not open the folder of {0}"
 msgstr "Could not open the folder of {0}"
 
@@ -9141,7 +9146,7 @@ msgid "This archive has no {loader} mod where Mortar expects one. Pick the folde
 msgstr "This archive has no {loader} mod where Mortar expects one. Pick the folder that holds the mod."
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:339
+#: src/mods/storeEntries.ts:344
 msgid "Could not show the skipped update for {0}"
 msgstr "Could not show the skipped update for {0}"
 
@@ -9192,7 +9197,7 @@ msgstr "Retention"
 msgid "Patreon post {0}"
 msgstr "Patreon post {0}"
 
-#: src/mods/storeEntries.ts:178
+#: src/mods/storeEntries.ts:179
 msgid "Could not remove from the group"
 msgstr "Could not remove from the group"
 
@@ -9365,7 +9370,7 @@ msgstr "{stars, plural, one {# star} other {# stars}}"
 msgid "Before playing"
 msgstr "Before playing"
 
-#: src/mods/storeEntries.ts:371
+#: src/mods/storeEntries.ts:376
 msgid "Could not skip updates for the selected mods"
 msgstr "Could not skip updates for the selected mods"
 
@@ -9406,7 +9411,7 @@ msgid "No backups yet"
 msgstr "No backups yet"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:311
+#: src/mods/storeEntries.ts:316
 msgid "Could not pin {0}"
 msgstr "Could not pin {0}"
 
@@ -9524,7 +9529,7 @@ msgstr "What Mortar shows when it opens."
 msgid "Change"
 msgstr "Change"
 
-#: src/mods/storeEntries.ts:489
+#: src/mods/storeEntries.ts:494
 msgid "Could not switch the group"
 msgstr "Could not switch the group"
 
@@ -10060,7 +10065,7 @@ msgstr "Could not reset the settings of {0}"
 msgid "Other games"
 msgstr "Other games"
 
-#: src/mods/storeEntries.ts:183
+#: src/mods/storeEntries.ts:184
 msgid "Could not rename the group"
 msgstr "Could not rename the group"
 
@@ -10117,7 +10122,7 @@ msgstr "Open a profile to install mods"
 msgid "What the person opening the link sees"
 msgstr "What the person opening the link sees"
 
-#: src/mods/storeEntries.ts:372
+#: src/mods/storeEntries.ts:377
 msgid "Skipped updates for selected mods"
 msgstr "Skipped updates for selected mods"
 
@@ -10648,7 +10653,7 @@ msgstr "Pin"
 msgid "Could not send to {0}"
 msgstr "Could not send to {0}"
 
-#: src/mods/storeEntries.ts:324
+#: src/mods/storeEntries.ts:329
 msgid "Pinned selected mods"
 msgstr "Pinned selected mods"
 
@@ -10903,7 +10908,7 @@ msgid "{0} has a {1} setting for {installed}; it is {2}, so those patches are of
 msgstr "{0} has a {1} setting for {installed}; it is {2}, so those patches are off."
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:356
+#: src/mods/storeEntries.ts:361
 msgid "Could not set the update channel for {0}"
 msgstr "Could not set the update channel for {0}"
 
@@ -10971,7 +10976,7 @@ msgstr "Add from game presets…"
 msgid "Include notes"
 msgstr "Include notes"
 
-#: src/mods/storeEntries.ts:323
+#: src/mods/storeEntries.ts:328
 msgid "Could not pin the selected mods"
 msgstr "Could not pin the selected mods"
 
@@ -11158,7 +11163,7 @@ msgid "The crash check could not finish."
 msgstr "The crash check could not finish."
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:311
+#: src/mods/storeEntries.ts:316
 msgid "Could not unpin {0}"
 msgstr "Could not unpin {0}"
 
@@ -11391,6 +11396,10 @@ msgstr "Install {name}?"
 #: src/mods/describe.ts:304
 msgid "{name} is deprecated on Thunderstore; its page points to {replacement}."
 msgstr "{name} is deprecated on Thunderstore; its page points to {replacement}."
+
+#: src/mods/disableUnneeded.ts:65
+msgid "Switch off"
+msgstr "Switch off"
 
 #. placeholder {0}: info.name
 #. placeholder {1}: info.web
@@ -13304,11 +13313,11 @@ msgid "Run crashed"
 msgstr "Run crashed"
 
 #. placeholder {0}: mod.name
-#: src/mods/storeEntries.ts:267
+#: src/mods/storeEntries.ts:270
 msgid "Could not save the note and tags for {0}"
 msgstr "Could not save the note and tags for {0}"
 
-#: src/mods/storeEntries.ts:477
+#: src/mods/storeEntries.ts:482
 msgid "Could not add to the group"
 msgstr "Could not add to the group"
 
@@ -13534,8 +13543,8 @@ msgstr "Soft and warm"
 
 #: src/mods/overlayActions.ts:50
 #: src/mods/overlayActions.ts:112
-#: src/mods/storeEntries.ts:76
-#: src/mods/storeEntries.ts:115
+#: src/mods/storeEntries.ts:77
+#: src/mods/storeEntries.ts:116
 #: src/profiles/historyRevert.ts:124
 msgid "This is no longer the latest change."
 msgstr "This is no longer the latest change."
@@ -13548,7 +13557,7 @@ msgstr "Collapse or expand the sidebar"
 msgid "Compare with…"
 msgstr "Compare with…"
 
-#: src/mods/storeEntries.ts:440
+#: src/mods/storeEntries.ts:445
 msgid "Could not update tags for the selected mods"
 msgstr "Could not update tags for the selected mods"
 
@@ -13712,7 +13721,7 @@ msgstr "Leaf"
 msgid "After each check"
 msgstr "After each check"
 
-#: src/mods/storeEntries.ts:95
+#: src/mods/storeEntries.ts:96
 #: src/profiles/historyTimeline.ts:64
 msgid "{removed, plural, one {Removed # mod} other {Removed # mods}}"
 msgstr "{removed, plural, one {Removed # mod} other {Removed # mods}}"
@@ -14499,7 +14508,7 @@ msgstr "Search all mod sites"
 msgid "Not downloaded yet: {0}"
 msgstr "Not downloaded yet: {0}"
 
-#: src/mods/storeEntries.ts:186
+#: src/mods/storeEntries.ts:187
 msgid "Could not delete the group"
 msgstr "Could not delete the group"
 
