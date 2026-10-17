@@ -303,7 +303,7 @@ msgstr "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 msgid "That profile is gone."
 msgstr "That profile is gone."
 
-#: src/mods/OldFilesCallouts.tsx:227
+#: src/mods/OldFilesCallouts.tsx:234
 msgid "Keep all"
 msgstr "Keep all"
 
@@ -744,7 +744,7 @@ msgstr "Showing the first 2,000 files"
 
 #: src/mods/LegacyReasonsCallout.tsx:77
 #: src/mods/NewFoldersCallout.tsx:76
-#: src/mods/OldFilesCallouts.tsx:244
+#: src/mods/OldFilesCallouts.tsx:257
 msgid "Review…"
 msgstr "Review…"
 
@@ -1418,7 +1418,7 @@ msgid "Create a bundle to reuse a set of mods."
 msgstr "Create a bundle to reuse a set of mods."
 
 #: src/mods/ModMenu.tsx:151
-#: src/mods/OldFilesCallouts.tsx:92
+#: src/mods/OldFilesCallouts.tsx:97
 #: src/mods/parts.tsx:447
 msgid "Show files"
 msgstr "Show files"
@@ -1587,7 +1587,7 @@ msgid "{checked}; {bad}. Repair them from each profile's Problems tab."
 msgstr "{checked}; {bad}. Repair them from each profile's Problems tab."
 
 #. placeholder {0}: set.label
-#: src/mods/OldFilesCallouts.tsx:97
+#: src/mods/OldFilesCallouts.tsx:103
 msgid "Keep {0}'s old files"
 msgstr "Keep {0}'s old files"
 
@@ -1615,7 +1615,7 @@ msgstr "Off, a share names only the mods you chose, and the receiver gets what t
 msgid "Skip this version"
 msgstr "Skip this version"
 
-#: src/mods/LegacyReasonsCallout.tsx:84
+#: src/mods/LegacyReasonsCallout.tsx:85
 #: src/mods/ModMenu.tsx:171
 #: src/mods/SelectionBarActions.tsx:90
 msgid "Mark implicit"
@@ -2814,7 +2814,7 @@ msgstr "A mod you enabled needs another mod that is not in this profile, or is d
 #: src/install/store.ts:234
 #: src/mods/NewFoldersCallout.tsx:48
 #: src/mods/OldFilesCallouts.tsx:73
-#: src/mods/OldFilesCallouts.tsx:211
+#: src/mods/OldFilesCallouts.tsx:218
 #: src/mods/overlayActions.ts:36
 #: src/mods/overlayActions.ts:100
 #: src/mods/problemFix/WinFix.tsx:66
@@ -4097,7 +4097,7 @@ msgstr "Custom categories"
 #: src/bundles/BundlesSection.tsx:118
 #: src/game/ProfileMenuItems.tsx:76
 #: src/mods/CategoryEditor.tsx:171
-#: src/mods/OldFilesCallouts.tsx:112
+#: src/mods/OldFilesCallouts.tsx:119
 #: src/mods/problemFixButtons.tsx:201
 #: src/mods/problemFixButtons.tsx:206
 #: src/profiles/HealthDialog.tsx:287
@@ -5864,7 +5864,7 @@ msgstr "{0, plural, one {# fix} other {# fixes}}"
 msgid "Needs"
 msgstr "Needs"
 
-#: src/mods/OldFilesCallouts.tsx:122
+#: src/mods/OldFilesCallouts.tsx:129
 msgid "Files set aside"
 msgstr "Files set aside"
 
@@ -6777,7 +6777,7 @@ msgid "Mortar finds games through their launchers. A game installed anywhere els
 msgstr "Mortar finds games through their launchers. A game installed anywhere else works too: choose its folder when you set it up."
 
 #: src/mods/OldFilesCallouts.tsx:80
-#: src/mods/OldFilesCallouts.tsx:220
+#: src/mods/OldFilesCallouts.tsx:227
 msgid "Could not move the old files to trash"
 msgstr "Could not move the old files to trash"
 
@@ -7743,7 +7743,7 @@ msgstr "Saving…"
 msgid "Delete group"
 msgstr "Delete group"
 
-#: src/mods/OldFilesCallouts.tsx:257
+#: src/mods/OldFilesCallouts.tsx:270
 msgid "Files left by updates"
 msgstr "Files left by updates"
 
@@ -9113,7 +9113,7 @@ msgstr "Download"
 msgid "These come from outside Nexus, so Mortar does not download them."
 msgstr "These come from outside Nexus, so Mortar does not download them."
 
-#: src/mods/OldFilesCallouts.tsx:232
+#: src/mods/OldFilesCallouts.tsx:245
 msgid "Delete all"
 msgstr "Delete all"
 
@@ -9423,7 +9423,7 @@ msgid "Could not skip updates for the selected mods"
 msgstr "Could not skip updates for the selected mods"
 
 #. placeholder {0}: set.label
-#: src/mods/OldFilesCallouts.tsx:108
+#: src/mods/OldFilesCallouts.tsx:115
 msgid "Delete {0}'s old files"
 msgstr "Delete {0}'s old files"
 
@@ -10133,7 +10133,7 @@ msgid "Install {0}…"
 msgstr "Install {0}…"
 
 #: src/mods/OldFilesCallouts.tsx:62
-#: src/mods/OldFilesCallouts.tsx:196
+#: src/mods/OldFilesCallouts.tsx:203
 msgid "Could not keep the old files"
 msgstr "Could not keep the old files"
 
@@ -10345,7 +10345,7 @@ msgstr "Allow Mortar through the firewall so nearby users can send profiles."
 msgid "Waiting for {0}'s profile file to finish syncing"
 msgstr "Waiting for {0}'s profile file to finish syncing"
 
-#: src/mods/OldFilesCallouts.tsx:101
+#: src/mods/OldFilesCallouts.tsx:107
 #: src/settings/prefCopyGame.ts:63
 msgid "Keep"
 msgstr "Keep"
@@ -10804,7 +10804,7 @@ msgid "Content Patcher packs"
 msgstr "Content Patcher packs"
 
 #. placeholder {0}: sets.length
-#: src/mods/OldFilesCallouts.tsx:222
+#: src/mods/OldFilesCallouts.tsx:229
 msgid "{0, plural, one {# updated mod} other {# updated mods}} no longer include {files, plural, one {# file} other {# files}} from their old versions. Keep them or delete them?"
 msgstr "{0, plural, one {# updated mod} other {# updated mods}} no longer include {files, plural, one {# file} other {# files}} from their old versions. Keep them or delete them?"
 
@@ -14356,7 +14356,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/mods/AuthorDialog.tsx:166
 #: src/mods/ChangelogDialog.tsx:104
 #: src/mods/GameModsReviewDialog.tsx:236
-#: src/mods/OldFilesCallouts.tsx:262
+#: src/mods/OldFilesCallouts.tsx:275
 #: src/mods/updateReview/ReviewFooter.tsx:62
 #: src/mods/updateReview/ReviewTitle.tsx:47
 #: src/profiles/CompareTop.tsx:148

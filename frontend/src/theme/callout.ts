@@ -1,6 +1,6 @@
 import { alpha, type Theme } from '@mui/material'
 
-type Tone = 'warning' | 'info' | 'success'
+type Tone = 'warning' | 'info' | 'success' | 'error'
 
 const FILL = 0.14
 const LINE = 0.5

@@ -88,11 +88,17 @@ function OldFilesCallout({
       text={text}
       actions={
         <>
-          <Button variant="text" aria-expanded={shown} onClick={() => setShown(!shown)}>
+          <Button
+            size="small"
+            variant="text"
+            aria-expanded={shown}
+            onClick={() => setShown(!shown)}
+          >
             {t`Show files`}
           </Button>
           <LockedReason locked={locked}>
             <Button
+              size="small"
               variant="text"
               aria-label={t`Keep ${set.label}'s old files`}
               disabled={pending || locked}
@@ -103,6 +109,7 @@ function OldFilesCallout({
           </LockedReason>
           <LockedReason locked={locked}>
             <Button
+              size="small"
               variant="contained"
               color="error"
               aria-label={t`Delete ${set.label}'s old files`}
@@ -223,12 +230,18 @@ export function OldFilesCallouts({ profile }: { profile: Profile }) {
   const bulk = (
     <>
       <LockedReason locked={locked}>
-        <Button variant="text" disabled={pending || locked} onClick={keepAll}>
+        <Button size="small" variant="text" disabled={pending || locked} onClick={keepAll}>
           {t`Keep all`}
         </Button>
       </LockedReason>
       <LockedReason locked={locked}>
-        <Button variant="contained" color="error" disabled={pending || locked} onClick={trashAll}>
+        <Button
+          size="small"
+          variant="contained"
+          color="error"
+          disabled={pending || locked}
+          onClick={trashAll}
+        >
           {t`Delete all`}
         </Button>
       </LockedReason>
@@ -240,7 +253,7 @@ export function OldFilesCallouts({ profile }: { profile: Profile }) {
         text={text}
         actions={
           <>
-            <Button variant="text" onClick={() => setReviewing(true)}>
+            <Button size="small" variant="text" onClick={() => setReviewing(true)}>
               {t`Review…`}
             </Button>
             {bulk}

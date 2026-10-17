@@ -69,10 +69,10 @@ export function NewFoldersCallout({ profile }: { profile: Profile }) {
           }
           actions={
             <>
-              <Button variant="text" disabled={pending} onClick={dismissAll}>
+              <Button size="small" variant="text" disabled={pending} onClick={dismissAll}>
                 {t`Don't ask about these`}
               </Button>
-              <Button variant="contained" onClick={() => setReview(diff)}>
+              <Button size="small" variant="contained" onClick={() => setReview(diff)}>
                 {t`Review…`}
               </Button>
             </>

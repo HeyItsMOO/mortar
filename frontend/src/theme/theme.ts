@@ -7,6 +7,7 @@ import {
 } from '@mui/material/styles'
 import { compact } from '../game/compact.ts'
 import { type AccentName, accents } from './accents.ts'
+import { calloutFill, calloutLine } from './callout.ts'
 import { densityVars, space } from './density.ts'
 import {
   contrastText,
@@ -45,6 +46,11 @@ const BUTTON_PAD_COMPACT = '0 10px'
 const BUTTON_PAD = '0 12px'
 const BUTTON_SMALL_HEIGHT = 28
 const BUTTON_SMALL_PAD = '0 10px'
+// The compact Alert is a one-line bar above a list, as tall as the update bar, with small action buttons.
+const ALERT_COMPACT_HEIGHT = 38
+const ALERT_COMPACT_PAD_END = '6px'
+const ALERT_COMPACT_RADIUS = '6px'
+const ALERT_TONES = ['info', 'warning', 'success', 'error'] as const
 const BUTTON_LARGE_HEIGHT = 46
 const BUTTON_LARGE_PAD = '0 20px'
 const BUTTON_LARGE_FONT_PX = 16
@@ -133,6 +139,39 @@ function baselineCss(
 }
 
 // A checked mark is a glyph, so it reads as ink; the switch track is a fill, so it shows the full accent.
+// The compact Alert: a one-line bar above a list, as tall as the update bar, with small action buttons.
+function compactAlert(): Components<Theme>['MuiAlert'] {
+  return {
+    variants: [
+      {
+        props: { variant: 'compact' },
+        style: ({ theme: th }) => ({
+          minHeight: ALERT_COMPACT_HEIGHT,
+          padding: `0 ${ALERT_COMPACT_PAD_END} 0 ${space.pad}`,
+          alignItems: 'center',
+          borderRadius: ALERT_COMPACT_RADIUS,
+          color: th.palette.text.primary,
+          '& .MuiAlert-icon': { padding: 0, marginRight: ICON_GAP_PX, alignSelf: 'center' },
+          '& .MuiAlert-message': { padding: '6px 0' },
+          '& .MuiAlert-action': { padding: 0, marginRight: 0, alignItems: 'center' },
+          '& .MuiAlert-action .MuiButton-root': {
+            height: BUTTON_SMALL_HEIGHT,
+            padding: BUTTON_SMALL_PAD,
+          },
+        }),
+      },
+      ...ALERT_TONES.map((tone) => ({
+        props: { variant: 'compact' as const, severity: tone },
+        style: ({ theme: th }: { theme: Theme }) => ({
+          backgroundColor: calloutFill(tone)(th),
+          border: `1px solid ${calloutLine(tone)(th)}`,
+          '& .MuiAlert-icon': { color: th.palette[tone].main },
+        }),
+      })),
+    ],
+  }
+}
+
 function lightControls(ink: string): Components<Theme> {
   return {
     MuiIconButton: { styleOverrides: { colorPrimary: { color: ink } } },
@@ -250,6 +289,7 @@ function createMortarTheme(
         }),
       },
       MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },
+      MuiAlert: compactAlert(),
       MuiDialog: {
         defaultProps: { transitionDuration: 0 },
         styleOverrides: { paper: { backgroundColor: s.panelSolid } },
@@ -364,4 +404,10 @@ export {
   createMortarTheme,
   MONO,
   PAD_FOCUS,
+}
+
+declare module '@mui/material/Alert' {
+  interface AlertPropsVariantOverrides {
+    compact: true
+  }
 }

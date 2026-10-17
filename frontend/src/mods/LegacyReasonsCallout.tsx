@@ -70,13 +70,14 @@ export function LegacyReasonsCallout({ profile, mods }: { profile: Profile; mods
       })}
       actions={
         <>
-          <Button variant="text" disabled={pending} onClick={() => answer([])}>
+          <Button size="small" variant="text" disabled={pending} onClick={() => answer([])}>
             {t`Keep explicit`}
           </Button>
-          <Button variant="text" disabled={pending} onClick={() => setReviewing(true)}>
+          <Button size="small" variant="text" disabled={pending} onClick={() => setReviewing(true)}>
             {t`Review…`}
           </Button>
           <Button
+            size="small"
             variant="contained"
             disabled={pending}
             onClick={() => answer(picks.map((p) => p.key))}

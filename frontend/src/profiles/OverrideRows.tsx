@@ -74,6 +74,19 @@ export function OverridesSection({
   const graphics = info?.graphics ?? undefined
   const proton = useProtonBuilds(info?.id ?? '')
   const nexus = (info?.sources ?? []).includes('nexus')
+  // The game's catalog and this computer's Proton builds supply two keys' choices; the rest are fixed.
+  const choicesFor = (key: OverrideKey) => {
+    if (key === 'graphicsApi') {
+      return (graphics?.choices ?? []).map((c) => ({ value: c.id, label: c.label }))
+    }
+    if (key === 'protonVersion') {
+      return proton.map((b) => ({ value: b, label: b }))
+    }
+    return OVERRIDE_VALUES[key].map((value) => ({
+      value,
+      label: overrideChoiceLabel(key, value, i18n),
+    }))
+  }
   return (
     <Box sx={{ mt: 2, mb: 2 }}>
       <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>{t`Overrides`}</Typography>
@@ -116,15 +129,7 @@ export function OverridesSection({
               }}
             >
               <MenuItem value="">{t`Use default`}</MenuItem>
-              {(key === 'graphicsApi'
-                ? (graphics?.choices ?? []).map((c) => ({ value: c.id, label: c.label }))
-                : key === 'protonVersion'
-                  ? proton.map((b) => ({ value: b, label: b }))
-                  : OVERRIDE_VALUES[key].map((value) => ({
-                      value,
-                      label: overrideChoiceLabel(key, value, i18n),
-                    }))
-              ).map((o) => (
+              {choicesFor(key).map((o) => (
                 <MenuItem key={o.value} value={o.value}>
                   {o.label}
                 </MenuItem>
