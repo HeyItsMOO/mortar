@@ -3,13 +3,17 @@ name: Package repository
 # Builds the signed apt, dnf and pacman repository from a published release's packages and publishes it, with the
 # tag's site, as the single commit of the orphan `packages` branch that mortar.rethunk.tech deploys on push
 # (.do/app.yaml), so the site changes only with a release. release.yml calls it after each release; a manual run
-# rebuilds both for an existing tag.
+# rebuilds both for an existing tag, and with `site` set publishes that ref's site beside the tag's packages instead.
 on:
   workflow_dispatch:
     inputs:
       tag:
         description: Published release tag, for example v0.2.0
         required: true
+      site:
+        description: Ref whose site to publish instead of the tag's, for a site refresh between releases
+        required: false
+        default: ''
   workflow_call:
     inputs:
       tag:
@@ -37,6 +41,15 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.tag }}
+          persist-credentials: false
+
+      - name: Checkout the site
+        if: inputs.site != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.site }}
+          path: site-src
+          sparse-checkout: site
           persist-credentials: false
 
       - name: Download packages
@@ -67,11 +80,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
+          SITE_FROM: ${{ inputs.site != '' && 'site-src/site' || 'site' }}
         run: |
           set -euo pipefail
           tree="$RUNNER_TEMP/branch"
           mkdir "$tree"
-          cp -r site "$tree/site"
+          cp -r "$SITE_FROM" "$tree/site"
           cp -r "$RUNNER_TEMP/packages" "$tree/packages"
           cd "$tree"
           git init -q -b packages
