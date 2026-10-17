@@ -353,7 +353,7 @@ msgid "Move data folder…"
 msgstr "Move data folder…"
 
 #. placeholder {0}: unneeded.length
-#: src/mods/disableUnneeded.ts:60
+#: src/mods/disableUnneeded.ts:63
 msgid "{0, plural, one {# library only the switched-off mods needed is still on} other {# libraries only the switched-off mods needed are still on}}"
 msgstr "{0, plural, one {# library only the switched-off mods needed is still on} other {# libraries only the switched-off mods needed are still on}}"
 
@@ -742,6 +742,7 @@ msgstr "Add tool…"
 msgid "Showing the first 2,000 files"
 msgstr "Showing the first 2,000 files"
 
+#: src/mods/LegacyReasonsCallout.tsx:77
 #: src/mods/NewFoldersCallout.tsx:76
 #: src/mods/OldFilesCallouts.tsx:244
 msgid "Review…"
@@ -1359,7 +1360,7 @@ msgstr "slow load {ms}"
 msgid "Update an existing profile…"
 msgstr "Update an existing profile…"
 
-#: src/mods/LegacyReasonsCallout.tsx:59
+#: src/mods/LegacyReasonsCallout.tsx:63
 msgid "Could not save that answer"
 msgstr "Could not save that answer"
 
@@ -1610,7 +1611,7 @@ msgstr "Update check skipped"
 msgid "Skip this version"
 msgstr "Skip this version"
 
-#: src/mods/LegacyReasonsCallout.tsx:73
+#: src/mods/LegacyReasonsCallout.tsx:84
 #: src/mods/ModMenu.tsx:171
 #: src/mods/SelectionBarActions.tsx:90
 msgid "Mark implicit"
@@ -3686,6 +3687,10 @@ msgstr "{0} characters"
 msgid "Only in {name}"
 msgstr "Only in {name}"
 
+#: src/mods/LegacyReview.tsx:26
+msgid "Other mods require it"
+msgstr "Other mods require it"
+
 #: src/browse/BrowseMenu.tsx:56
 #: src/browse/CardAction.tsx:57
 #: src/mods/OptionalFileRows.tsx:177
@@ -4037,6 +4042,10 @@ msgstr "{dependentName}'s Nexus page lists {dep} as a requirement: {note}"
 msgid "Stop the game?"
 msgstr "Stop the game?"
 
+#: src/mods/LegacyReview.tsx:34
+msgid "Libraries and supporting mods"
+msgstr "Libraries and supporting mods"
+
 #: src/settings/sections/GameSettings.tsx:268
 msgid "Delete the game folder, then reinstall {gameName} from your launcher."
 msgstr "Delete the game folder, then reinstall {gameName} from your launcher."
@@ -4135,6 +4144,10 @@ msgstr "Added {mods} to {profile}"
 #: src/settings/prefCopy.ts:104
 msgid "Card details in Browse"
 msgstr "Card details in Browse"
+
+#: src/mods/LegacyReview.tsx:28
+msgid "Supplies tilesheets for other mods"
+msgstr "Supplies tilesheets for other mods"
 
 #: src/launch/autoUpdate.ts:141
 msgid "Timed out waiting for mod updates"
@@ -5901,8 +5914,8 @@ msgstr "Clear finished"
 msgid "Enable {0}"
 msgstr "Enable {0}"
 
-#. placeholder {0}: keys.length
-#: src/mods/LegacyReasonsCallout.tsx:63
+#. placeholder {0}: picks.length
+#: src/mods/LegacyReasonsCallout.tsx:67
 msgid "{0, plural, one {Mortar identified # mod as a library or supporting mod} other {Mortar identified # mods as libraries or supporting mods}}"
 msgstr "{0, plural, one {Mortar identified # mod as a library or supporting mod} other {Mortar identified # mods as libraries or supporting mods}}"
 
@@ -6635,6 +6648,11 @@ msgstr "This save needs other mods"
 #: src/settings/prefCopy.ts:203
 msgid "Honour OS"
 msgstr "Honour OS"
+
+#. placeholder {0}: chosen.length
+#: src/mods/LegacyReview.tsx:35
+msgid "{0, plural, one {Mark # implicit} other {Mark # implicit}}"
+msgstr "{0, plural, one {Mark # implicit} other {Mark # implicit}}"
 
 #. placeholder {0}: item.name
 #: src/queue/QueueBody.tsx:327
@@ -11397,7 +11415,7 @@ msgstr "Install {name}?"
 msgid "{name} is deprecated on Thunderstore; its page points to {replacement}."
 msgstr "{name} is deprecated on Thunderstore; its page points to {replacement}."
 
-#: src/mods/disableUnneeded.ts:65
+#: src/mods/disableUnneeded.ts:68
 msgid "Switch off"
 msgstr "Switch off"
 
@@ -13004,7 +13022,7 @@ msgstr "{0, plural, one {# warning} other {# warnings}}"
 msgid "Jump to first error"
 msgstr "Jump to first error"
 
-#: src/mods/LegacyReasonsCallout.tsx:70
+#: src/mods/LegacyReasonsCallout.tsx:74
 msgid "Keep explicit"
 msgstr "Keep explicit"
 
@@ -13744,6 +13762,10 @@ msgstr "Check this download"
 #: src/share/MethodPanes.tsx:190
 msgid "Save…"
 msgstr "Save…"
+
+#: src/mods/LegacyReview.tsx:27
+msgid "Listed as a library on its site"
+msgstr "Listed as a library on its site"
 
 #: src/settings/sections/General.tsx:277
 msgid "Walk through profiles, Play, mods, and the command palette"

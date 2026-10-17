@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
 import type { Entry } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
-import { legacyImplicitKeys } from './legacyReasons.ts'
+import { legacyImplicit } from './legacyReasons.ts'
 
 const entry = (key: string, over: Partial<Entry> = {}): Entry =>
   ({
@@ -61,6 +61,11 @@ test('the legacy offer names what other mods require, libraries and tilesheet pa
   const category = (e: Entry) =>
     e.key === 'lib' || e.key === 'new-lib' ? 'Modding Tools' : 'Gameplay'
   expect(
-    legacyImplicitKeys({ entries, intentSince: '2026-10-16T00:00:00Z' }, mods, category, ['tiles']),
-  ).toEqual(['cp', 'lib', 'core', 'tiles'])
+    legacyImplicit({ entries, intentSince: '2026-10-16T00:00:00Z' }, mods, category, ['tiles']),
+  ).toEqual([
+    { key: 'cp', why: 'required' },
+    { key: 'lib', why: 'category' },
+    { key: 'core', why: 'required' },
+    { key: 'tiles', why: 'supporting' },
+  ])
 })

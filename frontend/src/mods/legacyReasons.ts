@@ -94,30 +94,32 @@ function requiredKeys(mods: readonly LegacyMod[]): Set<string> {
  * only supply tilesheets. Content packs and mods required only by their own add-ons stay explicit, as do entries
  * added since Mortar kept reasons.
  */
-export function legacyImplicitKeys(
+export type LegacyWhy = 'required' | 'category' | 'supporting'
+
+export function legacyImplicit(
   { entries, intentSince }: Pick<Profile, 'entries' | 'intentSince'>,
   mods: readonly LegacyMod[],
   categoryOf: (entry: Entry) => string,
   supporting: readonly string[],
-): string[] {
+): { key: string; why: LegacyWhy }[] {
   const since = Date.parse(intentSince ?? '')
   const required = requiredKeys(mods)
-  return (entries ?? [])
-    .filter((e) => {
-      const added = Date.parse(e.added ?? '')
-      const legacy = Number.isNaN(since) || Number.isNaN(added) || added < since
-      if (!legacy || e.implicit || e.source.kind === 'smapi' || e.source.kind === 'mortar') {
-        return false
-      }
-      if (supporting.includes(e.key)) {
-        return true
-      }
-      // A content pack is content even when another mod requires it (an expansion its add-ons need).
-      const own = mods.filter((m) => m.key === e.key)
-      return (
-        !own.some(isPack) &&
-        (required.has(e.key) || LIBRARY_CATEGORIES.has(categoryOf(e).trim().toLowerCase()))
-      )
-    })
-    .map((e) => e.key)
+  const out: { key: string; why: LegacyWhy }[] = []
+  for (const e of entries ?? []) {
+    const added = Date.parse(e.added ?? '')
+    const legacy = Number.isNaN(since) || Number.isNaN(added) || added < since
+    if (!legacy || e.implicit || e.source.kind === 'smapi' || e.source.kind === 'mortar') {
+      continue
+    }
+    // A content pack is content even when another mod requires it (an expansion its add-ons need).
+    const pack = mods.some((m) => m.key === e.key && isPack(m))
+    if (supporting.includes(e.key)) {
+      out.push({ key: e.key, why: 'supporting' })
+    } else if (!pack && required.has(e.key)) {
+      out.push({ key: e.key, why: 'required' })
+    } else if (!pack && LIBRARY_CATEGORIES.has(categoryOf(e).trim().toLowerCase())) {
+      out.push({ key: e.key, why: 'category' })
+    }
+  }
+  return out
 }
