@@ -73,16 +73,19 @@ export function brandArt(): [string, Buffer][] {
   ])
 }
 
-/** A chip with the brand's mark and name, a link when the brand has a page for the game. */
-export function brandChip(id: string, name: string, href?: string): string {
+/** A brand's mark as a square button, its name in the tooltip and accessible label; a link when the brand has a page
+ * for the game. A brand with no mark shows its name instead. */
+export function brandIcon(id: string, name: string, href?: string): string {
   const mark = MARKS[id]
   const art = ART[id]
-  let icon = ''
+  let body = `${escapeHTML(name)}`
   if (mark) {
-    icon = `<svg class="chip-icon" style="color: ${rgb(mark.colour)}" aria-hidden="true"><use href="/img/brands.svg#${id}" /></svg>`
+    body = `<svg style="color: ${rgb(mark.colour)}" aria-hidden="true"><use href="/img/brands.svg#${id}" /></svg>`
   } else if (art) {
-    icon = `<img class="chip-icon" src="/img/vendor/${art}" alt="" />`
+    body = `<img src="/img/vendor/${art}" alt="" />`
   }
-  const label = `${icon}<span>${escapeHTML(name)}</span>`
-  return href ? `<a class="chip" href="${href}">${label}</a>` : `<span class="chip">${label}</span>`
+  const label = `title="${escapeHTML(name)}" aria-label="${escapeHTML(name)}"`
+  return href
+    ? `<a class="fact-icon" href="${href}" ${label}>${body}</a>`
+    : `<span class="fact-icon" role="img" ${label}>${body}</span>`
 }

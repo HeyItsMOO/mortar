@@ -1,7 +1,7 @@
 // A page and a share page per playable game in the bundled catalog, and the linked game list on the landing page.
 import { readFileSync } from 'node:fs'
 import type { SteamArt } from './art.ts'
-import { brandChip } from './brands.ts'
+import { brandIcon } from './brands.ts'
 import { escapeHTML, listed, page, SITE } from './chrome.ts'
 
 const CATALOG = 'internal/components/components.json'
@@ -122,10 +122,10 @@ export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]):
   const name = escapeHTML(g.name)
   const appId = steamAppId(g)
   const sources = (g.sources ?? []).map((s) =>
-    brandChip(s.id, named([s.id], SOURCE_NAMES)[0] ?? s.id, sourceURL(s)),
+    brandIcon(s.id, named([s.id], SOURCE_NAMES)[0] ?? s.id, sourceURL(s)),
   )
   const stores = Object.keys(g.stores ?? {}).map((id) =>
-    brandChip(
+    brandIcon(
       id,
       named([id], STORE_NAMES)[0] ?? id,
       id === 'steam' && appId ? `https://store.steampowered.com/app/${appId}/` : undefined,
@@ -148,22 +148,15 @@ export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]):
       </div>
     </header>
 `
-  const body = `      <div class="game-facts">
-        <section>
-          <h2>Mod loader</h2>
-          <div class="chips">${f.loader ? `<span class="chip"><span>${escapeHTML(f.loader)}</span></span>` : '<span class="chip"><span>None needed</span></span>'}</div>
-          <p>${f.loader ? 'Installed and kept up to date in each profile.' : "Mortar puts each profile's mods where the game reads them."}</p>
-        </section>
-        <section>
-          <h2>Mods from</h2>
-          <div class="chips">${sources.join('')}</div>
-          <p>Searched together in Browse.</p>
-        </section>
-        <section>
-          <h2>Finds the game in</h2>
-          <div class="chips">${stores.join('')}</div>
-          <p>Or a folder you choose.</p>
-        </section>
+  const loader = f.loader
+    ? `<span class="fact-icon">${escapeHTML(f.loader)}</span>`
+    : '<span class="fact-icon">None needed</span>'
+  const body = `      <div class="facts-strip">
+        <div class="facts-group"><span class="facts-label">Mod loader</span>${loader}</div>
+        <span class="facts-sep" aria-hidden="true"></span>
+        <div class="facts-group"><span class="facts-label">Mods from</span>${sources.join('')}</div>
+        <span class="facts-sep" aria-hidden="true"></span>
+        <div class="facts-group"><span class="facts-label">Finds the game in</span>${stores.join('')}</div>
       </div>
       <h2>Start modding ${name}</h2>
       <ol class="steps">
