@@ -75,6 +75,15 @@ jobs:
           path: ${{ runner.temp }}/packages
           if-no-files-found: error
 
+      # The search index is built over the finished pages and is never committed, so the published tree gets it here.
+      - name: Setup Bun
+        uses: Rethunk-Tech/gh-actions/setup-bun@bc5fa5b1004205c9c9399fc941d79d5ada53c59b # v1.16
+
+      - name: Index the site for search
+        env:
+          SITE_FROM: ${{ inputs.site != '' && 'site-src/site' || 'site' }}
+        run: bunx pagefind@1.5.2 --site "$SITE_FROM" --output-subdir pagefind
+
       # The branch holds only the latest repository: one orphan commit, force-replaced, so its history never grows.
       - name: Publish the packages branch
         env:

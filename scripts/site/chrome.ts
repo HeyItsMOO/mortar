@@ -50,11 +50,16 @@ export function nav(p: Page): string {
           ${link('/games/', 'Games', true, 'games')}
           ${link('/guide/', 'Guide', true, 'guide')}
           ${link('/extension/', 'Extension', true, 'extension')}
-          ${p.faq ? `${link(`${home}#faq`, 'FAQ', true)}\n          ` : ''}${link('/download/', 'Download', false, 'download')}
+          ${p.faq ? `${link(`${home}#faq`, 'FAQ', true)}\n          ` : ''}<button type="button" class="nav-search" aria-label="Search" aria-keyshortcuts="/ Control+K Meta+K">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+          </button>
+          ${link('/download/', 'Download', false, 'download')}
           <a href="${REPO}">GitHub</a>
           <a class="optional" href="${DISCORD}">Discord</a>
         </div>
       </div>
+      <link rel="stylesheet" href="/search.css" />
+      <script src="/search.js" defer></script>
     </nav>`
 }
 
@@ -157,7 +162,7 @@ export function page(p: {
   <body>
     ${nav(frame)}
 
-    <main class="wrap dl prose">
+    <main class="wrap dl prose"${p.index === false ? '' : ' data-pagefind-body'}>
 ${p.body}
     </main>
 

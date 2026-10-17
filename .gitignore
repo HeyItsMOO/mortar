@@ -10,3 +10,4 @@ build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
 /components.json
 /components.json.sig
 build/linux/mortar.desktop
+site/pagefind/
