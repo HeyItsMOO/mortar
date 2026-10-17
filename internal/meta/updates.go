@@ -22,10 +22,7 @@ const (
 	updatesFile       = "smapi-updates.json"
 	updatesBatch      = 100
 	updatesBackoff    = 5 * time.Minute
-	// smapi.io asks each mod's own site about update keys it has not cached lately, so a batch's first answer after
-	// a quiet spell can take well past a page fetch's deadline.
-	updatesTimeout = time.Minute
-	maxUpdates     = 16 << 20
+	maxUpdates        = 16 << 20
 )
 
 // errUpdatesPaused stands in for a failed ask while smapi.io is being given a rest.
@@ -245,7 +242,7 @@ func (c *Client) askUpdates(ctx context.Context, req UpdateRequest, mods []Insta
 		return nil, err
 	}
 	hr.Header.Set("Content-Type", "application/json")
-	b, err := c.doWithin(hr, maxUpdates, updatesTimeout)
+	b, err := c.do(hr, maxUpdates)
 	if err != nil {
 		return nil, err
 	}
