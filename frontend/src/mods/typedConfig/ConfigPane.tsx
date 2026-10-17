@@ -4,9 +4,7 @@ import {
   Box,
   Button,
   IconButton,
-  List,
-  ListItemButton,
-  ListItemText,
+  MenuItem,
   TextField,
   Tooltip,
   Typography,
@@ -27,7 +25,7 @@ import { type Target, useTypedConfig } from './store.ts'
 import type { ConfigEntry } from './types.ts'
 import { EntryWidget } from './Widgets.tsx'
 
-const FILES_WIDTH_PX = 220
+const FILE_PICKER_WIDTH_PX = 260
 
 function EntryRow({ section, entry }: { section: string; entry: ConfigEntry }) {
   const { t } = useLingui()
@@ -115,36 +113,56 @@ type PaneFile = ReturnType<typeof useTypedConfig.getState>['files'][number]
 
 function Toolbar({
   file,
+  files,
   mod,
   single,
   query,
   onQuery,
+  onSelect,
   onReset,
 }: {
   file: PaneFile | undefined
+  files: PaneFile[]
   mod: Mod | null
   single: boolean
   query: string
   onQuery: (query: string) => void
+  onSelect: (name: string) => void
   onReset: () => void
 }) {
   const { t } = useLingui()
-  // One file needs no picker: the editor takes the width and the toolbar names the file.
-  let fileCaption = ''
-  if (single && file) {
-    fileCaption = file.format === 'gmcm' ? t`In-game menu` : file.name
-  }
+  const fileLabel = (f: PaneFile) => (f.format === 'gmcm' ? t`In-game menu` : f.label || f.name)
+  // One file is named; several are picked from a dropdown in the same place, so the editor keeps the width.
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center', gap: space.gap, px: space.pad, py: space.gap }}
     >
-      <Typography
-        noWrap={true}
-        title={file?.name ?? ''}
-        sx={{ flex: 1, minWidth: 0, fontSize: 12, color: 'text.secondary' }}
-      >
-        {fileCaption}
-      </Typography>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        {single ? (
+          <Typography
+            noWrap={true}
+            title={file?.name ?? ''}
+            sx={{ fontSize: 12, color: 'text.secondary' }}
+          >
+            {file ? fileLabel(file) : ''}
+          </Typography>
+        ) : (
+          <TextField
+            select={true}
+            size="small"
+            value={file?.name ?? ''}
+            onChange={(e) => onSelect(e.target.value)}
+            slotProps={{ htmlInput: { 'aria-label': t`Config file` } }}
+            sx={{ width: FILE_PICKER_WIDTH_PX, maxWidth: '100%' }}
+          >
+            {files.map((f) => (
+              <MenuItem key={f.name} value={f.name} title={f.name}>
+                {fileLabel(f)}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+      </Box>
       {file?.format === 'text' ? null : (
         <>
           <SearchField
@@ -167,43 +185,6 @@ function Toolbar({
         </>
       )}
     </Box>
-  )
-}
-
-function FileList({
-  files,
-  current,
-  onSelect,
-}: {
-  files: PaneFile[]
-  current: string
-  onSelect: (name: string) => void
-}) {
-  const { t } = useLingui()
-  return (
-    <List
-      aria-label={t`Config files`}
-      sx={{
-        width: FILES_WIDTH_PX,
-        flexShrink: 0,
-        overflowY: 'auto',
-        borderRight: '1px solid var(--mortar-hairline)',
-      }}
-    >
-      {files.map((f) => (
-        <ListItemButton
-          key={f.name}
-          title={f.name}
-          selected={f.name === current}
-          onClick={() => onSelect(f.name)}
-        >
-          <ListItemText
-            primary={f.format === 'gmcm' ? t`In-game menu` : f.label || f.name}
-            slotProps={{ primary: { noWrap: true } }}
-          />
-        </ListItemButton>
-      ))}
-    </List>
   )
 }
 
@@ -382,10 +363,14 @@ export function ConfigPane({
     >
       <Toolbar
         file={file}
+        files={files}
         mod={mod}
         single={single}
         query={query}
         onQuery={setQuery}
+        onSelect={(n) => {
+          select(n).catch(() => undefined)
+        }}
         onReset={() => setConfirming(true)}
       />
       {loadError ? (
@@ -403,7 +388,6 @@ export function ConfigPane({
         </Alert>
       ) : null}
       <Box sx={{ flex: 1, minHeight: 0, display: 'flex' }}>
-        {single ? null : <FileList files={files} current={current} onSelect={(n) => select(n)} />}
         {file?.format === 'text' ? (
           <TextFile key={file.name} target={target} name={file.name} />
         ) : (
