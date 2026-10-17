@@ -24,7 +24,7 @@ msgid "Windows only. On this computer its games come in through Heroic, Lutris o
 msgstr "Windows only. On this computer its games come in through Heroic, Lutris or Bottles."
 
 #: src/console/PerformancePanelParts.tsx:194
-#: src/game/Sidebar.tsx:205
+#: src/game/Sidebar.tsx:215
 msgid "Performance"
 msgstr "Performance"
 
@@ -615,7 +615,7 @@ msgstr "Show token"
 msgid "On Windows, Steam starts the game without {loader} unless told to. With Steam closed, Mortar can set that up; or in Steam, right-click {gameName}, choose Properties and paste this line into Launch Options:"
 msgstr "On Windows, Steam starts the game without {loader} unless told to. With Steam closed, Mortar can set that up; or in Steam, right-click {gameName}, choose Properties and paste this line into Launch Options:"
 
-#: src/game/Sidebar.tsx:200
+#: src/game/Sidebar.tsx:210
 msgid "Config"
 msgstr "Config"
 
@@ -643,7 +643,7 @@ msgstr "Allow through firewall"
 msgid "Never for this mod"
 msgstr "Never for this mod"
 
-#: src/settings/SettingsNav.tsx:19
+#: src/settings/SettingsNav.tsx:18
 msgid "Search settings"
 msgstr "Search settings"
 
@@ -1752,7 +1752,7 @@ msgstr "See load errors, missing dependencies, and other issues before you play.
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
-#: src/settings/SettingsShell.tsx:218
+#: src/settings/SettingsShell.tsx:229
 msgid "Search results"
 msgstr "Search results"
 
@@ -2817,7 +2817,7 @@ msgstr "A mod you enabled needs another mod that is not in this profile, or is d
 #: src/profiles/store.ts:190
 #: src/profiles/store.ts:233
 #: src/queue/store.ts:299
-#: src/saves/store.ts:66
+#: src/saves/store.ts:68
 #: src/templates/ApplyTemplateDialog.tsx:96
 #: src/templates/TemplateDialogs.tsx:226
 #: src/toasts/EarlierChanges.tsx:56
@@ -3490,7 +3490,7 @@ msgstr "Keep my changes"
 msgid "Unpinned selected mods"
 msgstr "Unpinned selected mods"
 
-#: src/game/Sidebar.tsx:242
+#: src/game/Sidebar.tsx:252
 msgid "Profile sections"
 msgstr "Profile sections"
 
@@ -3964,7 +3964,7 @@ msgstr "Skip the pre-Play check"
 msgid "Stopped at the API limit; {0} left"
 msgstr "Stopped at the API limit; {0} left"
 
-#: src/game/Sidebar.tsx:206
+#: src/game/Sidebar.tsx:216
 #: src/settings/GameSettingsPage.tsx:100
 #: src/settings/GameSettingsPage.tsx:157
 msgid "Console"
@@ -5315,7 +5315,7 @@ msgstr "Changed outside Mortar"
 msgid " · {name} {0}"
 msgstr " · {name} {0}"
 
-#: src/game/Sidebar.tsx:207
+#: src/game/Sidebar.tsx:217
 msgid "Library"
 msgstr "Library"
 
@@ -5638,7 +5638,7 @@ msgstr "Pause downloads while the game runs"
 msgid "{0} of saves"
 msgstr "{0} of saves"
 
-#: src/settings/SettingsShell.tsx:83
+#: src/settings/SettingsShell.tsx:91
 msgid "Try another word, or clear the search."
 msgstr "Try another word, or clear the search."
 
@@ -6465,7 +6465,7 @@ msgstr "Day"
 msgid "Allow"
 msgstr "Allow"
 
-#: src/game/Sidebar.tsx:310
+#: src/game/Sidebar.tsx:320
 msgid "Collapse"
 msgstr "Collapse"
 
@@ -6547,7 +6547,7 @@ msgstr "Copy"
 msgid "What happens to files the new version of a mod leaves out"
 msgstr "What happens to files the new version of a mod leaves out"
 
-#: src/settings/SettingsShell.tsx:82
+#: src/settings/SettingsShell.tsx:90
 msgid "No settings match"
 msgstr "No settings match"
 
@@ -6865,7 +6865,7 @@ msgstr "Each plugin's load (constructor and Awake) the BepInEx Bridge timed; a p
 msgid "Add from the extra mods folder"
 msgstr "Add from the extra mods folder"
 
-#: src/game/Sidebar.tsx:197
+#: src/game/Sidebar.tsx:207
 msgid "Home"
 msgstr "Home"
 
@@ -6925,7 +6925,7 @@ msgstr "Windows removed the file as malware without saying which. If you trust i
 msgid "Share as r2modman code…"
 msgstr "Share as r2modman code…"
 
-#: src/game/Sidebar.tsx:204
+#: src/game/Sidebar.tsx:214
 msgid "Load order"
 msgstr "Load order"
 
@@ -7557,7 +7557,7 @@ msgstr "Send"
 #: src/commandPalette/CommandPalette.tsx:101
 #: src/console/ConsoleTab.tsx:61
 #: src/firstrunTour/TourPopover.tsx:46
-#: src/game/Sidebar.tsx:198
+#: src/game/Sidebar.tsx:208
 #: src/mods/ModListVirtual.tsx:314
 #: src/settings/GameSettingsPage.tsx:97
 #: src/settings/GameSettingsPage.tsx:142
@@ -8562,7 +8562,7 @@ msgstr "Could not read that code or file"
 msgid "Recently deleted"
 msgstr "Recently deleted"
 
-#: src/game/Sidebar.tsx:201
+#: src/game/Sidebar.tsx:211
 msgid "Screenshots"
 msgstr "Screenshots"
 
@@ -8872,7 +8872,7 @@ msgstr "{0, plural, one {Undo this and # later change?} other {Undo this and # l
 msgid "No profile"
 msgstr "No profile"
 
-#: src/game/Sidebar.tsx:287
+#: src/game/Sidebar.tsx:297
 msgid "Collapse sidebar"
 msgstr "Collapse sidebar"
 
@@ -9608,7 +9608,7 @@ msgid "SMAPI loads mods"
 msgstr "SMAPI loads mods"
 
 #: src/firstrunTour/TourPopover.tsx:34
-#: src/game/Sidebar.tsx:202
+#: src/game/Sidebar.tsx:212
 msgid "Browse"
 msgstr "Browse"
 
@@ -9898,7 +9898,7 @@ msgid "{0} failed"
 msgstr "{0} failed"
 
 #: src/firstrunTour/TourPopover.tsx:58
-#: src/game/Sidebar.tsx:203
+#: src/game/Sidebar.tsx:213
 msgid "Problems"
 msgstr "Problems"
 
@@ -11701,7 +11701,7 @@ msgstr "Flagged by {0}: {1}{2}"
 msgid "{total, plural, one {Filter # mod} other {Filter # mods}}"
 msgstr "{total, plural, one {Filter # mod} other {Filter # mods}}"
 
-#: src/game/Sidebar.tsx:208
+#: src/game/Sidebar.tsx:218
 msgid "Get mods"
 msgstr "Get mods"
 
@@ -12068,7 +12068,7 @@ msgstr "No startup measured yet"
 msgid "Collapse {0}"
 msgstr "Collapse {0}"
 
-#: src/game/Sidebar.tsx:287
+#: src/game/Sidebar.tsx:297
 msgid "Expand sidebar"
 msgstr "Expand sidebar"
 
@@ -12228,7 +12228,7 @@ msgstr "Clear filters"
 msgid "Could not minimise the window"
 msgstr "Could not minimise the window"
 
-#: src/saves/store.ts:64
+#: src/saves/store.ts:66
 msgid "Dismissed for this save"
 msgstr "Dismissed for this save"
 
@@ -12408,7 +12408,7 @@ msgstr "Mortar installs the loader for you."
 msgid "Automatic port"
 msgstr "Automatic port"
 
-#: src/game/Sidebar.tsx:209
+#: src/game/Sidebar.tsx:219
 #: src/settings/sections/StreamOverlay.tsx:80
 msgid "Health"
 msgstr "Health"
@@ -12595,7 +12595,7 @@ msgid "Templates are shared by every profile of this game. Adding one copies it 
 msgstr "Templates are shared by every profile of this game. Adding one copies it into this profile's launch presets."
 
 #: src/game/Home.tsx:137
-#: src/game/Sidebar.tsx:199
+#: src/game/Sidebar.tsx:209
 #: src/saves/SaveListRow.tsx:51
 msgid "Saves"
 msgstr "Saves"
@@ -13025,7 +13025,7 @@ msgstr "Could not create the profile"
 msgid "Into a deleted profile"
 msgstr "Into a deleted profile"
 
-#: src/game/Sidebar.tsx:210
+#: src/game/Sidebar.tsx:220
 #: src/settings/sections/About.tsx:97
 msgid "Logs"
 msgstr "Logs"
@@ -13969,7 +13969,7 @@ msgstr "Copy link"
 msgid "Mortar downloads and installs a mod when you click Mod Manager Download on Nexus."
 msgstr "Mortar downloads and installs a mod when you click Mod Manager Download on Nexus."
 
-#: src/settings/SettingsNav.tsx:53
+#: src/settings/SettingsNav.tsx:52
 msgid "Settings sections"
 msgstr "Settings sections"
 
@@ -14066,7 +14066,7 @@ msgstr "imported from a .mortar file"
 msgid "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 msgstr "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 
-#: src/mods/ModsTab.tsx:391
+#: src/mods/ModsTab.tsx:409
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
