@@ -122,6 +122,23 @@ func TestListedRequirementSatisfiedByDatasetUniqueID(t *testing.T) {
 	}
 }
 
+func TestListedRequirementKeepsImplicitModOutOfCleanup(t *testing.T) {
+	fake := listedFakeMeta{
+		requirements: map[int][]nexus.Requirement{520: {{ModID: 3853, Name: "Content Patcher Animations"}}},
+		pages:        map[int]meta.Page{3853: listedPage(3853, "spacechase0.ContentPatcherAnimations")},
+	}
+	mods := []framework.Mod{
+		listedDependent(),
+		{Key: "nexus-3853-62104", Enabled: true, Implicit: true, UniqueID: "spacechase0.ContentPatcherAnimations", Name: "Content Patcher Animations"},
+	}
+
+	result := listedCheck(fake, mods)
+
+	if len(result.Cleanup) != 0 {
+		t.Fatalf("Cleanup = %#v, want none: a switched-on mod's Nexus page requires it", result.Cleanup)
+	}
+}
+
 func TestListedRequirementMissing(t *testing.T) {
 	fake := listedFakeMeta{
 		requirements: map[int][]nexus.Requirement{520: {{ModID: 1915, Name: "Content Patcher"}}},

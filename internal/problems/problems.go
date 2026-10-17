@@ -246,7 +246,7 @@ func Check(ctx context.Context, m Meta, env Environment, mods []framework.Mod, r
 	}
 	reqStart := time.Now()
 	missing := missingDeps(env.VersionScheme, enabled, indexByID(mods))
-	listed, listedUnknown := listedRequirements(ctx, m, reqs, env.Nexus.Domain, enabled, mods)
+	listed, listedNeeded, listedUnknown := listedRequirements(ctx, m, reqs, env.Nexus.Domain, enabled, mods)
 	missing = append(missing, listed...)
 	r.Timings = append(r.Timings, CheckTiming{Name: "requirements", Ms: time.Since(reqStart).Milliseconds(), Count: len(missing)})
 	r.Unknown = fillWhere(ctx, m, env.Nexus.Domain, enabled, missing)
@@ -255,7 +255,7 @@ func Check(ctx context.Context, m Meta, env Environment, mods []framework.Mod, r
 	otherStart := time.Now()
 	r.Duplicates = duplicatesWithNexus(ctx, m, env.VersionScheme, enabled)
 	r.Settings = found.Settings
-	r.Cleanup = cleanupHints(mods, found.Cleanup, found.Mentioned)
+	r.Cleanup = cleanupHints(mods, found.Cleanup, append(found.Mentioned, listedNeeded...))
 	r.Supporting = found.Supporting
 	broken, unknown := brokenMods(ctx, m, env, enabled)
 	broken = append(broken, dependencyCycles(enabled)...)
@@ -416,10 +416,13 @@ func fetchAll[T any](ctx context.Context, ids []int, fetch func(context.Context,
 	return got, failed
 }
 
-func listedRequirements(ctx context.Context, m Meta, reqs RequirementsOf, domain string, enabled, all []framework.Mod) ([]Missing, bool) {
+// listedRequirements reports the requirements switched-on mods' Nexus pages list that are not met, and the folded ids
+// of the installed mods that meet the others, which are in use even when no manifest names them.
+func listedRequirements(ctx context.Context, m Meta, reqs RequirementsOf, domain string, enabled, all []framework.Mod) ([]Missing, []string, bool) {
 	out := []Missing{}
+	var needed []string
 	if reqs == nil {
-		return out, false
+		return out, needed, false
 	}
 	var pageIDs []int
 	for _, d := range enabled {
@@ -428,7 +431,7 @@ func listedRequirements(ctx context.Context, m Meta, reqs RequirementsOf, domain
 		}
 	}
 	if len(pageIDs) == 0 {
-		return out, false
+		return out, needed, false
 	}
 	requirementsByPage, err := reqs(ctx, pageIDs)
 	unknown := err != nil
@@ -476,6 +479,11 @@ func listedRequirements(ctx context.Context, m Meta, reqs RequirementsOf, domain
 			}
 			seenRequirements[req.ModID] = true
 			page, hasPage := pages[req.ModID]
+			for _, x := range all {
+				if listedMatch(x, req.ModID, page, hasPage) {
+					needed = append(needed, x.ModID().Fold())
+				}
+			}
 			if hasPage && manifestHasRequirement(all, d.Key, page) {
 				continue
 			}
@@ -518,7 +526,7 @@ func listedRequirements(ctx context.Context, m Meta, reqs RequirementsOf, domain
 			out = append(out, miss)
 		}
 	}
-	return out, unknown
+	return out, needed, unknown
 }
 
 // installedByName reports an enabled mod that answers an outside requirement's name. Pages name these loosely
@@ -558,22 +566,7 @@ func isLoader(loaders []components.GameLoader, r nexus.Requirement) bool {
 func listedDepState(all []framework.Mod, pageID int, page meta.Page, pageKnown bool) (string, bool) {
 	disabled := false
 	for _, x := range all {
-		entryPage, _, listed := nexusFile(x.Key)
-		matches := listed && entryPage == pageID
-		if !matches && pageKnown {
-			for _, file := range page.Downloads {
-				for _, im := range file.Mods {
-					if mod.Equal(x.ModID(), im.ModID()) {
-						matches = true
-						break
-					}
-				}
-				if matches {
-					break
-				}
-			}
-		}
-		if !matches {
+		if !listedMatch(x, pageID, page, pageKnown) {
 			continue
 		}
 		if x.Enabled {
@@ -585,6 +578,25 @@ func listedDepState(all []framework.Mod, pageID int, page meta.Page, pageKnown b
 		return "disabled", false
 	}
 	return "absent", false
+}
+
+// listedMatch reports whether an installed mod is the one a Nexus page requirement names: it came from that page, or
+// it is one of the mods the page's downloads hold.
+func listedMatch(x framework.Mod, pageID int, page meta.Page, pageKnown bool) bool {
+	if entryPage, _, listed := nexusFile(x.Key); listed && entryPage == pageID {
+		return true
+	}
+	if !pageKnown {
+		return false
+	}
+	for _, file := range page.Downloads {
+		for _, im := range file.Mods {
+			if mod.Equal(x.ModID(), im.ModID()) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func manifestHasRequirement(all []framework.Mod, entryKey string, page meta.Page) bool {
