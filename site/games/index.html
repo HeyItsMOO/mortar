@@ -52,13 +52,13 @@
       <div class="game-filters">
         <label>Search <input type="search" id="game-q" autocomplete="off" placeholder="Game name" /></label>
         <label>Mod loader
-          <select id="game-loader"><option value="">Any</option><option>BepInEx 5</option><option>BepInEx 6 (IL2CPP)</option><option>None needed</option><option>SMAPI</option></select>
+          <select id="game-loader"><option value="">Any</option><option>BepInEx 5</option><option>BepInEx 6 (IL2CPP)</option><option>No loader needed</option><option>SMAPI</option></select>
         </label>
         <label>Mod site
-          <select id="game-source"><option value="">Any</option><option>CurseForge</option><option>GitHub</option><option>itch.io</option><option>Nexus Mods</option><option>Patreon posts</option><option>the Vintage Story Mod DB</option><option>Thunderstore</option></select>
+          <select id="game-source"><option value="">Any</option><option>CurseForge</option><option>GitHub</option><option>itch.io</option><option>Nexus Mods</option><option>Patreon</option><option>Thunderstore</option><option>Vintage Story Mod DB</option></select>
         </label>
         <label>Store
-          <select id="game-store"><option value="">Any</option><option>Bottles</option><option>Epic Games</option><option>GOG</option><option>its Flatpak</option><option>Lutris</option><option>Steam</option><option>the EA app</option><option>the Xbox app</option><option>where its own installer puts it</option></select>
+          <select id="game-store"><option value="">Any</option><option>Bottles</option><option>EA app</option><option>Epic Games</option><option>Flatpak</option><option>GOG</option><option>Its own installer</option><option>Lutris</option><option>Steam</option><option>Xbox app</option></select>
         </label>
       </div>
       <p class="game-count" id="game-count" aria-live="polite"></p>
@@ -66,7 +66,7 @@
         <li data-name="9 kings" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam">
           <a href="/9-kings/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/2784470/696583b4634bfd2777a516cfc59b752f06150c62/header.jpg?t=1791487349" width="230" height="108" alt="9 Kings on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">9 Kings</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
-        <li data-name="a little to the left" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="a little to the left" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/a-little-to-the-left/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1629520/header.jpg?t=1791454263" width="230" height="108" alt="A Little to the Left on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">A Little to the Left</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
         <li data-name="across the obelisk" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -123,10 +123,10 @@
         <li data-name="big walk" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam">
           <a href="/big-walk/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1478500/62eeee1507dbac905e128a62f2ce690550238db0/header.jpg?t=1785911674" width="230" height="108" alt="Big Walk on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Big Walk</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
-        <li data-name="blue prince" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="blue prince" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/blue-prince/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1569580/879ac248a3b548a6bbc32771b950756378e7e922/header.jpg?t=1783605097" width="230" height="108" alt="Blue Prince on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Blue Prince</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
-        <li data-name="bomb rush cyberfunk" data-loader="BepInEx 5" data-sources="Thunderstore|Nexus Mods" data-stores="Steam|the Xbox app">
+        <li data-name="bomb rush cyberfunk" data-loader="BepInEx 5" data-sources="Thunderstore|Nexus Mods" data-stores="Steam|Xbox app">
           <a href="/bomb-rush-cyberfunk/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1353230/header.jpg?t=1785851738" width="230" height="108" alt="Bomb Rush Cyberfunk on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Bomb Rush Cyberfunk</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="book of travels" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -150,10 +150,10 @@
         <li data-name="chrono ark" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/chrono-ark/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1188930/header.jpg?t=1751505204" width="230" height="108" alt="Chrono Ark on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Chrono Ark</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="cities: skylines ii" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="cities: skylines ii" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/cities-skylines-ii/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/949230/8fb6d4b60f7120ff56bea2efc92aee3a5bb7fe70/header_alt_assets_8.jpg?t=1791468410" width="230" height="108" alt="Cities: Skylines II on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Cities: Skylines II</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="cloverpit" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="cloverpit" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/clover-pit/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/3314790/8ba81356b84aa937573fa29fdd708dbd96b01537/header.jpg?t=1787580462" width="230" height="108" alt="CloverPit on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">CloverPit</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="content warning" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -174,7 +174,7 @@
         <li data-name="cult of the lamb" data-loader="BepInEx 5" data-sources="Thunderstore|Nexus Mods" data-stores="Steam">
           <a href="/cult-of-the-lamb/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1313140/19f32bb477a6e9d058e05193b4e282149bd70644/header.jpg?t=1786554901" width="230" height="108" alt="Cult of the Lamb on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Cult of the Lamb</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="cuphead" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="cuphead" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/cuphead/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/268910/header.jpg?t=1709068852" width="230" height="108" alt="Cuphead on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Cuphead</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="darkwater" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -192,7 +192,7 @@
         <li data-name="dredge" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/dredge/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1562430/header.jpg?t=1780479732" width="230" height="108" alt="Dredge on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Dredge</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="dyson sphere program" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="dyson sphere program" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/dyson-sphere-program/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1366540/2521472f3f71b6f179515fdcfa33d27c212ba3ce/header.jpg?t=1776523171" width="230" height="108" alt="Dyson Sphere Program on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Dyson Sphere Program</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="easy delivery co" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -267,10 +267,10 @@
         <li data-name="hard time iii" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/hard-time-3/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/3009850/header.jpg?t=1730561025" width="230" height="108" alt="Hard Time III on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Hard Time III</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="holdfast: nations at war" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="holdfast: nations at war" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/holdfast-nations-at-war/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/589290/674121abacbfcc7405a5da86c398b7923912590c/header.jpg?t=1789730298" width="230" height="108" alt="Holdfast: Nations At War on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Holdfast: Nations At War</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="hollow knight: silksong" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="hollow knight: silksong" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/hollow-knight-silksong/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1030300/7983574d464e6559ac7e24275727f73a8bcca1f3/header.jpg?t=1776125736" width="230" height="108" alt="Hollow Knight: Silksong on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Hollow Knight: Silksong</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="hot lava" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -297,7 +297,7 @@
         <li data-name="inferno protocol" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam">
           <a href="/inferno-protocol/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/3908940/45fdacf873c8ca3ba7cca576fcf03ac24a413462/header.jpg?t=1790096118" width="230" height="108" alt="Inferno Protocol on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Inferno Protocol</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
-        <li data-name="inscryption" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="inscryption" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/inscryption/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1092790/header.jpg?t=1777572925" width="230" height="108" alt="Inscryption on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Inscryption</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="island market simulator" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam">
@@ -444,7 +444,7 @@
         <li data-name="return of the obra dinn" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/return-of-the-obra-dinn/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/653530/header.jpg?t=1686697594" width="230" height="108" alt="Return of the Obra Dinn on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Return of the Obra Dinn</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="rhythm doctor" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="rhythm doctor" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/rhythm-doctor/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/774181/header.jpg?t=1786548815" width="230" height="108" alt="Rhythm Doctor on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Rhythm Doctor</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="risk of rain 2" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Epic Games">
@@ -468,7 +468,7 @@
         <li data-name="shapez 2" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/shapez-2/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/2162800/680ac087db67c922e0340548103235a7529ec5df/header.jpg?t=1788787557" width="230" height="108" alt="Shapez 2 on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Shapez 2</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="shift at midnight" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="shift at midnight" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/shift-at-midnight/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/3722330/759ecea2ffe1ad3819aefdda79e265b8b332bf8f/header.jpg?t=1789401053" width="230" height="108" alt="Shift At Midnight on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Shift At Midnight</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
         <li data-name="skul: the hero slayer" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
@@ -552,8 +552,8 @@
         <li data-name="the planet crafter" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/the-planet-crafter/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1284190/header.jpg?t=1788266415" width="230" height="108" alt="The Planet Crafter on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">The Planet Crafter</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="the sims 4" data-loader="None needed" data-sources="CurseForge|Nexus Mods|GitHub|itch.io|Patreon posts" data-stores="Steam|the EA app">
-          <a href="/sims4/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1222670/header.jpg?t=1790028362" width="230" height="108" alt="The Sims 4 on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">The Sims 4</span><span class="game-meta">None needed</span></a>
+        <li data-name="the sims 4" data-loader="No loader needed" data-sources="CurseForge|Nexus Mods|GitHub|itch.io|Patreon" data-stores="Steam|EA app">
+          <a href="/sims4/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1222670/header.jpg?t=1790028362" width="230" height="108" alt="The Sims 4 on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">The Sims 4</span><span class="game-meta">No loader needed</span></a>
         </li>
         <li data-name="the spell brigade" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam">
           <a href="/the-spell-brigade/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/2904000/ef8f6a434fbdfaa2937ff83adf90b8ffde102ccf/header.jpg?t=1791794925" width="230" height="108" alt="The Spell Brigade on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">The Spell Brigade</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
@@ -576,17 +576,17 @@
         <li data-name="unfair flips" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/unfair-flips/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/3925760/7b56098b0204dd2957d2437f932baf5dae91e353/header.jpg?t=1761941592" width="230" height="108" alt="Unfair Flips on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Unfair Flips</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="valheim" data-loader="BepInEx 5" data-sources="Thunderstore|Nexus Mods|GitHub" data-stores="Steam|the Xbox app">
+        <li data-name="valheim" data-loader="BepInEx 5" data-sources="Thunderstore|Nexus Mods|GitHub" data-stores="Steam|Xbox app">
           <a href="/valheim/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/892970/1888731b59362fca6c026cdbafa3dfffd45c3146/header_alt_assets_6.jpg?t=1791544831" width="230" height="108" alt="Valheim on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Valheim</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="vampire crawlers" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|Epic Games|the Xbox app">
+        <li data-name="vampire crawlers" data-loader="BepInEx 6 (IL2CPP)" data-sources="Thunderstore" data-stores="Steam|Epic Games|Xbox app">
           <a href="/vampire-crawlers/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/3265700/5590e42cab09dacabee973dd2c3e27ef12ed4950/header.jpg?t=1776925935" width="230" height="108" alt="Vampire Crawlers on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Vampire Crawlers</span><span class="game-meta">BepInEx 6 (IL2CPP)</span></a>
         </li>
         <li data-name="vertigo 2" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/vertigo-2/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/843390/header.jpg?t=1732293919" width="230" height="108" alt="Vertigo 2 on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Vertigo 2</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="vintage story" data-loader="None needed" data-sources="the Vintage Story Mod DB|Nexus Mods|GitHub" data-stores="where its own installer puts it|its Flatpak">
-          <a href="/vintage-story/"><span class="game-name">Vintage Story</span><span class="game-meta">None needed</span></a>
+        <li data-name="vintage story" data-loader="No loader needed" data-sources="Vintage Story Mod DB|Nexus Mods|GitHub" data-stores="Its own installer|Flatpak">
+          <a href="/vintage-story/"><span class="game-name">Vintage Story</span><span class="game-meta">No loader needed</span></a>
         </li>
         <li data-name="void crew" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/void-crew/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1063420/header.jpg?t=1780298639" width="230" height="108" alt="Void Crew on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Void Crew</span><span class="game-meta">BepInEx 5</span></a>
@@ -612,7 +612,7 @@
         <li data-name="wizard with a gun" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">
           <a href="/wizard-with-a-gun/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1150530/header.jpg?t=1788299649" width="230" height="108" alt="Wizard with a Gun on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Wizard with a Gun</span><span class="game-meta">BepInEx 5</span></a>
         </li>
-        <li data-name="wobbly life" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|the Xbox app">
+        <li data-name="wobbly life" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam|Xbox app">
           <a href="/wobbly-life/"><img class="game-art" src="https://shared.steamstatic.com/store_item_assets/steam/apps/1211020/86c3e16dfbfec027053c733d929a61ecfd15278a/header.jpg?t=1761037189" width="230" height="108" alt="Wobbly Life on Steam" loading="lazy" referrerpolicy="no-referrer" /><span class="game-name">Wobbly Life</span><span class="game-meta">BepInEx 5</span></a>
         </li>
         <li data-name="word play" data-loader="BepInEx 5" data-sources="Thunderstore" data-stores="Steam">

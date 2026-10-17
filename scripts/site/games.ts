@@ -1,5 +1,6 @@
 // A page and a share page per playable game in the bundled catalog, and the linked game list on the landing page.
 import { readFileSync } from 'node:fs'
+import { brandChip } from './brands.ts'
 import { escapeHTML, listed, page, SITE } from './chrome.ts'
 
 const CATALOG = 'internal/components/components.json'
@@ -11,19 +12,19 @@ export interface Game {
   enabled: boolean
   stores?: Record<string, unknown>
   loaders?: { id: string; name: string }[]
-  sources?: { id: string }[]
+  sources?: { id: string; key?: string }[]
 }
 
 const STORE_NAMES: Record<string, string> = {
   steam: 'Steam',
   gog: 'GOG',
   epic: 'Epic Games',
-  ea: 'the EA app',
-  xbox: 'the Xbox app',
+  ea: 'EA app',
+  xbox: 'Xbox app',
   lutris: 'Lutris',
   bottles: 'Bottles',
-  flatpak: 'its Flatpak',
-  standalone: 'where its own installer puts it',
+  flatpak: 'Flatpak',
+  standalone: 'Its own installer',
 }
 
 const SOURCE_NAMES: Record<string, string> = {
@@ -32,9 +33,9 @@ const SOURCE_NAMES: Record<string, string> = {
   curseforge: 'CurseForge',
   modrinth: 'Modrinth',
   github: 'GitHub',
-  vsmoddb: 'the Vintage Story Mod DB',
+  vsmoddb: 'Vintage Story Mod DB',
   itch: 'itch.io',
-  patreon: 'Patreon posts',
+  patreon: 'Patreon',
 }
 
 export function playableGames(): Game[] {
@@ -69,50 +70,117 @@ function facts(g: Game) {
 // Steam's header art is this size; the games grid shows it at half.
 const HEADER = { width: 460, height: 215 }
 
+const steamAppId = (g: Game) => (g.stores?.steam as { appId?: string } | undefined)?.appId
+
 function artImage(g: Game, art: Record<string, string>, width: number, height: number): string {
-  const appId = (g.stores?.steam as { appId?: string } | undefined)?.appId
+  const appId = steamAppId(g)
   const src = appId ? art[appId] : undefined
   return src
     ? `<img class="game-art" src="${src}" width="${width}" height="${height}" alt="${escapeHTML(g.name)} on Steam" loading="lazy" referrerpolicy="no-referrer" />`
     : ''
 }
 
+/** The game's own page on a mod site, where the catalog key names one. */
+function sourceURL(s: { id: string; key?: string }): string | undefined {
+  switch (s.id) {
+    case 'thunderstore':
+      return s.key ? `https://thunderstore.io/c/${s.key}/` : undefined
+    case 'nexus':
+      return s.key ? `https://www.nexusmods.com/games/${s.key}/mods` : undefined
+    case 'vsmoddb':
+      return 'https://mods.vintagestory.at/'
+    default:
+      return undefined
+  }
+}
+
+function gameCard(g: Game, art: Record<string, string>, data = ''): string {
+  return `        <li${data}>
+          <a href="/${g.id}/">${artImage(g, art, HEADER.width / 2, Math.round(HEADER.height / 2))}<span class="game-name">${escapeHTML(g.name)}</span><span class="game-meta">${escapeHTML(facts(g).loader || 'No loader needed')}</span></a>
+        </li>`
+}
+
+const MORE_GAMES = 4
+
+/** Up to four other games on the same loader, the ones after this game alphabetically, wrapping around. */
+function neighbours(g: Game, games: Game[]): Game[] {
+  const { loader } = facts(g)
+  const same = games
+    .filter((o) => facts(o).loader === loader)
+    .sort((a, b) => a.name.localeCompare(b.name))
+  const at = same.findIndex((o) => o.id === g.id)
+  const count = Math.min(MORE_GAMES, same.length - 1)
+  return Array.from({ length: count }, (_, i) => same[(at + 1 + i) % same.length]).filter(
+    (o): o is Game => o !== undefined,
+  )
+}
+
 /** The game's own page: what Mortar does for it and how to start, from its catalog entry. */
-export function gamePage(g: Game, art: Record<string, string>): string {
+export function gamePage(g: Game, art: Record<string, string>, games: Game[]): string {
   const f = facts(g)
   const name = escapeHTML(g.name)
-  const loaderRow = f.loader
-    ? `<tr><td>Mod loader</td><td>${escapeHTML(f.loader)}, installed and kept up to date per profile</td></tr>`
-    : "<tr><td>Mod loader</td><td>None needed: Mortar puts each profile's mods where the game reads them</td></tr>"
+  const appId = steamAppId(g)
+  const sources = (g.sources ?? []).map((s) =>
+    brandChip(s.id, named([s.id], SOURCE_NAMES)[0] ?? s.id, sourceURL(s)),
+  )
+  const stores = Object.keys(g.stores ?? {}).map((id) =>
+    brandChip(
+      id,
+      named([id], STORE_NAMES)[0] ?? id,
+      id === 'steam' && appId ? `https://store.steampowered.com/app/${appId}/` : undefined,
+    ),
+  )
   const install = f.loader
     ? `Pick ${name}. Mortar installs ${escapeHTML(f.loader)} and makes your first profile.`
     : `Pick ${name}. Mortar makes your first profile and keeps its mods apart from every other profile's.`
+  const more = neighbours(g, games)
+  const hero = artImage(g, art, HEADER.width, HEADER.height)
   const body = `      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Mortar</a> › <a href="/games/">Games</a></nav>
-      <h1 class="ext-title">${name}</h1>
-      <p class="lede">Mod ${name} with Mortar, a free and open source mod manager for Linux, Windows and Steam Deck.</p>
-      ${artImage(g, art, HEADER.width, HEADER.height)}
-      <div class="table-wrap">
-        <table>
-          <tbody>
-            ${loaderRow}
-            <tr><td>Mods from</td><td>${escapeHTML(f.sources)}, searched together in Browse</td></tr>
-            <tr><td>Finds the game in</td><td>${escapeHTML(f.stores)}, or a folder you choose</td></tr>
-            <tr><td>Profiles</td><td>As many as you like, each with its own mods and settings, shared as a link</td></tr>
-          </tbody>
-        </table>
+      <div class="game-hero${hero ? '' : ' no-art'}">
+        ${hero}
+        <div>
+          <h1 class="ext-title">${name}</h1>
+          <p class="lede">Mod ${name} with Mortar, the free and open source mod manager for Linux, Windows and Steam Deck.</p>
+          <div class="cta ext-cta">
+            <a class="btn" href="/download/">Download Mortar</a>
+            <a class="btn-ghost" href="/guide/">User guide</a>
+          </div>
+        </div>
+      </div>
+      <div class="game-facts">
+        <section>
+          <h2>Mod loader</h2>
+          <div class="chips">${f.loader ? `<span class="chip"><span>${escapeHTML(f.loader)}</span></span>` : '<span class="chip"><span>None needed</span></span>'}</div>
+          <p>${f.loader ? 'Installed and kept up to date in each profile.' : "Mortar puts each profile's mods where the game reads them."}</p>
+        </section>
+        <section>
+          <h2>Mods from</h2>
+          <div class="chips">${sources.join('')}</div>
+          <p>Searched together in Browse.</p>
+        </section>
+        <section>
+          <h2>Finds the game in</h2>
+          <div class="chips">${stores.join('')}</div>
+          <p>Or a folder you choose.</p>
+        </section>
       </div>
       <h2>Start modding ${name}</h2>
       <ol class="steps">
         <li><a href="/download/">Download Mortar</a> for Linux or Windows and open it.</li>
         <li>${install}</li>
-        <li>Open Browse, add the mods you want, and press Play.</li>
+        <li>Open Browse, add the mods you want, and press Play. Each profile keeps its own mods and settings.</li>
       </ol>
       <h2>Share a profile</h2>
-      <p>A ${name} profile shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click; the profile never leaves their browser.</p>
-      <div class="cta ext-cta">
-        <a class="btn" href="/download/">Download Mortar</a>
-        <a class="btn-ghost" href="/games/">All supported games</a>
-      </div>`
+      <p>A ${name} profile shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click; the profile never leaves their browser.</p>${
+        more.length > 0
+          ? `
+      <h2>${f.loader ? `More games on ${escapeHTML(f.loader)}` : 'More games without a mod loader'}</h2>
+      <ul class="game-grid">
+${more.map((o) => gameCard(o, art)).join('\n')}
+      </ul>
+      <p><a href="/games/">All ${games.length} supported games</a></p>`
+          : ''
+      }`
   const loaderText = f.loader ? `installs ${f.loader}, ` : ''
   return page({
     path: `site/${g.id}/index.html`,
@@ -153,7 +221,7 @@ function options(label: string, id: string, values: string[]): string {
 
 /** /games/: every playable game as a card, filtered in the browser by name, loader, mod site and store. */
 export function gamesIndexPage(games: Game[], art: Record<string, string>): string {
-  const loaderOf = (g: Game) => facts(g).loader || 'None needed'
+  const loaderOf = (g: Game) => facts(g).loader || 'No loader needed'
   const sourcesOf = (g: Game) =>
     named(
       (g.sources ?? []).map((s) => s.id),
@@ -162,12 +230,12 @@ export function gamesIndexPage(games: Game[], art: Record<string, string>): stri
   const storesOf = (g: Game) => named(Object.keys(g.stores ?? {}), STORE_NAMES)
   const sorted = [...games].sort((a, b) => a.name.localeCompare(b.name))
   const cards = sorted
-    .map(
-      (
+    .map((g) =>
+      gameCard(
         g,
-      ) => `        <li data-name="${escapeHTML(g.name.toLowerCase())}" data-loader="${escapeHTML(loaderOf(g))}" data-sources="${escapeHTML(sourcesOf(g).join('|'))}" data-stores="${escapeHTML(storesOf(g).join('|'))}">
-          <a href="/${g.id}/">${artImage(g, art, HEADER.width / 2, Math.round(HEADER.height / 2))}<span class="game-name">${escapeHTML(g.name)}</span><span class="game-meta">${escapeHTML(loaderOf(g))}</span></a>
-        </li>`,
+        art,
+        ` data-name="${escapeHTML(g.name.toLowerCase())}" data-loader="${escapeHTML(loaderOf(g))}" data-sources="${escapeHTML(sourcesOf(g).join('|'))}" data-stores="${escapeHTML(storesOf(g).join('|'))}"`,
+      ),
     )
     .join('\n')
   return page({

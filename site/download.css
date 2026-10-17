@@ -225,7 +225,7 @@ code {
   font-size: 0.9rem;
   font-weight: 400;
 }
-.prose section + section {
+.release + .release {
   margin-top: 3.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--line);
@@ -278,9 +278,9 @@ code {
   color: var(--muted);
   font-size: 0.9rem;
 }
-.game-grid {
+.prose .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
   gap: 1rem;
   margin: 0;
   padding: 0;
@@ -312,4 +312,75 @@ code {
 .game-meta {
   color: var(--muted);
   font-size: 0.85rem;
+}
+.game-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+.game-hero .game-art {
+  margin: 0;
+}
+.game-hero .cta {
+  margin: 1.25rem 0 0;
+}
+@media (max-width: 48rem) {
+  .game-hero {
+    grid-template-columns: 1fr;
+  }
+}
+.game-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.game-facts section {
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.game-facts h2 {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.game-facts p {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raised);
+  color: var(--text);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+a.chip:hover {
+  border-color: var(--sand);
+}
+.chip-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+.game-grid + p {
+  margin-top: 1rem;
+}
+.game-hero.no-art {
+  grid-template-columns: 1fr;
 }

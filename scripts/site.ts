@@ -6,6 +6,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname } from 'node:path'
 import { refreshSteamArt, steamArt } from './site/art.ts'
+import { brandArt, brandSprite } from './site/brands.ts'
 import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
 import { gameList, gamePage, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
@@ -143,10 +144,10 @@ if (missingArt.length > 0) {
   )
   process.exit(1)
 }
-const files = new Map<string, string>()
+const files = new Map<string, string | Buffer>()
 files.set('site/games/index.html', gamesIndexPage(games, art))
 for (const g of games) {
-  files.set(`site/${g.id}/index.html`, gamePage(g, art))
+  files.set(`site/${g.id}/index.html`, gamePage(g, art, games))
   files.set(`site/${g.id}/p/index.html`, sharePage(g))
 }
 for (const p of PAGES) {
@@ -154,6 +155,10 @@ for (const p of PAGES) {
 }
 files.set('site/changelog/index.html', changelogPage())
 files.set('site/changelog/feed.xml', changelogFeed())
+files.set('site/img/brands.svg', brandSprite())
+for (const [path, bytes] of brandArt()) {
+  files.set(path, bytes)
+}
 files.set('site/guide/index.html', guidePage())
 files.set('site/404.html', notFoundPage())
 const listedPages = [
@@ -175,7 +180,11 @@ files.set('site/robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitema
 
 const check = process.argv.includes('--check')
 const stale = [...files].filter(
-  ([path, want]) => !existsSync(path) || readFileSync(path, 'utf8') !== want,
+  ([path, want]) =>
+    !existsSync(path) ||
+    (typeof want === 'string'
+      ? readFileSync(path, 'utf8') !== want
+      : !readFileSync(path).equals(want)),
 )
 if (check && stale.length > 0) {
   console.error(

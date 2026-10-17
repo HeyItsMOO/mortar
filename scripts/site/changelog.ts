@@ -72,7 +72,7 @@ function releases(): Release[] {
 
 export function changelogPage(): string {
   const sections = releases().map(
-    (r) => `      <section id="v${r.version}">
+    (r) => `      <section class="release" id="v${r.version}">
         <h2><a href="${REPO}/releases/tag/v${r.version}">${r.version}</a> <time datetime="${r.date}">${r.date}</time></h2>
 ${r.html}
       </section>`,
