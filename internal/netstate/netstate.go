@@ -22,6 +22,7 @@ var probeURL = map[string]string{
 	"curseforge":   "https://api.curseforge.com",
 	"itch":         "https://itch.io",
 	"vsmoddb":      "https://mods.vintagestory.at",
+	"smapi":        "https://smapi.io",
 }
 
 const probeTimeout = 10 * time.Second

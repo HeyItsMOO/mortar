@@ -6,6 +6,7 @@ const LABELS: Record<string, string> = {
   curseforge: 'CurseForge',
   itch: 'itch.io',
   vsmoddb: 'VS Mod DB',
+  smapi: 'smapi.io',
 }
 
 export const sourceLabel = (id: string): string => LABELS[id] ?? id

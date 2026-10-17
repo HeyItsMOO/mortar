@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/appversion"
+	"github.com/Rethunk-Tech/mortar/internal/netstate"
 )
 
 const (
@@ -216,6 +217,8 @@ func (c *Client) askBatches(ctx context.Context, req UpdateRequest, batches [][]
 			defer func() { <-slots }()
 			got, err := c.askUpdates(ctx, req, asked)
 			answers[b] = updatesAnswer{got, err}
+			// The window's offline banner then names smapi.io, as it does any source that stops answering.
+			netstate.Record("smapi", err)
 			if err != nil {
 				log.Printf("updates: smapi.io did not answer for %d mods, pausing update checks for %s: %v", len(asked), updatesBackoff, err)
 				mu.Lock()
