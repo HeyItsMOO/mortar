@@ -33,6 +33,9 @@ func TestExportRestoreRoundTrip(t *testing.T) {
 	if _, err := e.SetNotes("stardew", src.ID, "keep these notes"); err != nil {
 		t.Fatal(err)
 	}
+	if _, err := e.AddToGroup("stardew", src.ID, "Farm set", "local-a"); err != nil {
+		t.Fatal(err)
+	}
 	cfg := filepath.Join(e.mods(src.ID), "local-a", "Pack", "A", "config.json")
 	if err := os.MkdirAll(filepath.Dir(cfg), 0o750); err != nil {
 		t.Fatal(err)
@@ -66,6 +69,9 @@ func TestExportRestoreRoundTrip(t *testing.T) {
 	}
 	if got.Notes != "keep these notes" {
 		t.Fatalf("notes = %q", got.Notes)
+	}
+	if len(got.Groups) != 1 || got.Groups[0].Name != "Farm set" || len(got.Groups[0].Keys) != 1 || got.Groups[0].Keys[0] != got.Entries[0].Key {
+		t.Fatalf("groups = %+v, entries = %+v", got.Groups, got.Entries)
 	}
 	src, err = e.read("stardew", src.ID)
 	if err != nil {

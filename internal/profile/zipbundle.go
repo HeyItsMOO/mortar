@@ -130,6 +130,7 @@ func (s *Store) RestoreZip(ctx context.Context, game, zipPath string) (Profile, 
 	s.setHistoryQuiet(created.ID, true)
 	defer s.setHistoryQuiet(created.ID, false)
 	restored := 0
+	keyOf := map[string]string{}
 	for _, e := range src.Entries {
 		if e.Source.Bundled() || e.IsOverlay() {
 			continue
@@ -149,6 +150,7 @@ func (s *Store) RestoreZip(ctx context.Context, game, zipPath string) (Profile, 
 		if err != nil {
 			return Profile{}, err
 		}
+		keyOf[e.Key] = key
 		out, err = s.AddEntry(game, created.ID, key, e.Source)
 		if err != nil {
 			return Profile{}, err
@@ -188,6 +190,16 @@ func (s *Store) RestoreZip(ctx context.Context, game, zipPath string) (Profile, 
 	if slices.ContainsFunc(src.Entries, Entry.IsOverlay) {
 		if out, err = s.restoreOverlays(ctx, game, created.ID, tmp, src); err != nil {
 			return Profile{}, err
+		}
+	}
+	// Restored entries take new store keys, so each group is rebuilt from the keys they replace.
+	for _, g := range src.Groups {
+		for _, k := range g.Keys {
+			if nk, found := keyOf[k]; found {
+				if out, err = s.AddToGroup(game, created.ID, g.Name, nk); err != nil {
+					return Profile{}, err
+				}
+			}
 		}
 	}
 	ok = true
