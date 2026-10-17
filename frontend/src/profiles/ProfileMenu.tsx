@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase } from '@mui/material'
 import { ChevronDown, LayoutTemplate, ListOrdered, Plus, Search } from 'lucide-react'
-import { memo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { compact } from '../game/compact.ts'
 import { NewProfileDialog } from '../game/NewProfileDialog.tsx'
@@ -11,7 +11,7 @@ import { useGameName } from '../games/info.ts'
 import { modsLabel } from '../i18n/counts.ts'
 import { useNav } from '../nav/store.ts'
 import { MenuHeading, MenuRule, TitleMenu, TitleMenuItem } from '../shell/TitleMenu.tsx'
-import { useTitleMenu } from '../shell/titleMenus.ts'
+import { closeTitleMenu, useTitleMenu } from '../shell/titleMenus.ts'
 import { visuallyHidden } from '../shell/visuallyHidden.ts'
 import { ManageTemplatesDialog } from '../templates/TemplateDialogs.tsx'
 import { useTemplates } from '../templates/useTemplates.ts'
@@ -20,7 +20,7 @@ import { userModCount } from './count.ts'
 import { requestFindAllFocus } from './findMod.ts'
 import { ProfileMark } from './ProfileMark.tsx'
 import { openProfileOf, useProfiles } from './store.ts'
-import { useProfileImport } from './useProfileImport.tsx'
+import { type ImportEntry, useProfileImport } from './useProfileImport.tsx'
 
 const ICON_PX = 18
 
@@ -132,6 +132,127 @@ function ProfileButton({
   )
 }
 
+interface MenuListProps {
+  game: string
+  gameName: string
+  profiles: Profile[]
+  openId: string
+  entries: ImportEntry[]
+  hasTemplates: boolean
+  onCreate: () => void
+  onManage: () => void
+  onContext: (id: string, position: Position) => void
+}
+
+function ProfileMenuListView({
+  game,
+  gameName,
+  profiles,
+  openId,
+  entries,
+  hasTemplates,
+  onCreate,
+  onManage,
+  onContext,
+}: MenuListProps) {
+  const { t } = useLingui()
+  const profileRowLabel = (p: Profile) => {
+    const { name } = p
+    const mods = modsLabel(userModCount(p))
+    return t`${name} · ${mods}`
+  }
+  return (
+    <>
+      <MenuHeading>{t`${gameName} profiles`}</MenuHeading>
+      {profiles.map((p) => (
+        <TitleMenuItem
+          key={p.id}
+          icon={<Dot mark={p} />}
+          label={profileRowLabel(p)}
+          checked={p.id === openId}
+          onClick={() => {
+            closeTitleMenu()
+            useProfiles.getState().open(p.id)
+            if (useNav.getState().route.name !== 'game') {
+              useNav.getState().openGame(game)
+            }
+          }}
+          onContextMenu={(e) => {
+            e.preventDefault()
+            closeTitleMenu()
+            onContext(p.id, { top: e.clientY, left: e.clientX })
+          }}
+        />
+      ))}
+      <MenuRule />
+      <TitleMenuItem
+        icon={<Plus size={ICON_PX} />}
+        label={t`New profile…`}
+        onClick={() => {
+          closeTitleMenu()
+          onCreate()
+        }}
+      />
+      <MenuHeading>{t`Import`}</MenuHeading>
+      {entries.map((entry) => (
+        <TitleMenuItem
+          key={entry.key}
+          icon={<entry.icon size={ICON_PX} />}
+          label={entry.label}
+          onClick={() => {
+            closeTitleMenu()
+            entry.run()
+          }}
+        />
+      ))}
+      <MenuRule />
+      <TitleMenuItem
+        icon={<Search size={ICON_PX} />}
+        label={t`Find a mod in all profiles…`}
+        onClick={() => {
+          closeTitleMenu()
+          useNav.getState().openProfiles()
+          requestFindAllFocus()
+        }}
+      />
+      <TitleMenuItem
+        icon={<ListOrdered size={ICON_PX} />}
+        label={t`Manage profiles…`}
+        onClick={() => {
+          closeTitleMenu()
+          useNav.getState().openProfiles()
+        }}
+      />
+      {hasTemplates ? (
+        <TitleMenuItem
+          icon={<LayoutTemplate size={ICON_PX} />}
+          label={t`Manage templates…`}
+          onClick={() => {
+            closeTitleMenu()
+            onManage()
+          }}
+        />
+      ) : null}
+    </>
+  )
+}
+
+// The menu's items, memoised: opening or closing the menu (and navigating, which closes it) re-renders the menu around
+// them but not every item. The import entries are rebuilt each render with the same actions, so only their keys count.
+const ProfileMenuList = memo(
+  ProfileMenuListView,
+  (a, b) =>
+    a.game === b.game &&
+    a.gameName === b.gameName &&
+    a.profiles === b.profiles &&
+    a.openId === b.openId &&
+    a.hasTemplates === b.hasTemplates &&
+    a.onCreate === b.onCreate &&
+    a.onManage === b.onManage &&
+    a.onContext === b.onContext &&
+    a.entries.map((e) => e.key).join() === b.entries.map((e) => e.key).join(),
+)
+
 // The title bar's profile switcher for the open game: the open profile and its mod count over a menu that switches,
 // creates, imports and manages profiles. A profile's right-click menu opens from its row and from the button.
 // Memoised: the title bar re-renders on every navigation, and this one does not need to.
@@ -140,7 +261,6 @@ export const ProfileMenu = memo(function ProfileMenuView({ game }: { game: strin
   const gameName = useGameName(game)
   const { profiles } = useOrderedProfiles(game)
   const openId = useProfiles((s) => s.openId)
-  const open = useProfiles((s) => s.open)
   const current = useProfiles(openProfileOf)
   const { anchor, close, trigger } = useTitleMenu('profile')
   const [creating, setCreating] = useState(false)
@@ -149,12 +269,12 @@ export const ProfileMenu = memo(function ProfileMenuView({ game }: { game: strin
   const { entries, dialogs } = useProfileImport(game)
   const { templates, reload } = useTemplates(game, anchor !== null || managing)
   const contextProfile = context ? profiles.find((p) => p.id === context.id) : undefined
-  const profileRowLabel = (p: Profile) => {
-    const { name } = p
-    const mods = modsLabel(userModCount(p))
-    return t`${name} · ${mods}`
-  }
-  const showContext = (id: string, position: Position) => setContext({ id, position })
+  const showContext = useCallback(
+    (id: string, position: Position) => setContext({ id, position }),
+    [],
+  )
+  const onCreate = useCallback(() => setCreating(true), [])
+  const onManage = useCallback(() => setManaging(true), [])
   return (
     <>
       <ProfileButton
@@ -164,76 +284,17 @@ export const ProfileMenu = memo(function ProfileMenuView({ game }: { game: strin
         onContext={showContext}
       />
       <TitleMenu anchorEl={anchor} onClose={close} label={t`Profiles`} width={300}>
-        <MenuHeading>{t`${gameName} profiles`}</MenuHeading>
-        {profiles.map((p) => (
-          <TitleMenuItem
-            key={p.id}
-            icon={<Dot mark={p} />}
-            label={profileRowLabel(p)}
-            checked={p.id === openId}
-            onClick={() => {
-              close()
-              open(p.id)
-              if (useNav.getState().route.name !== 'game') {
-                useNav.getState().openGame(game)
-              }
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault()
-              close()
-              showContext(p.id, { top: e.clientY, left: e.clientX })
-            }}
-          />
-        ))}
-        <MenuRule />
-        <TitleMenuItem
-          icon={<Plus size={ICON_PX} />}
-          label={t`New profile…`}
-          onClick={() => {
-            close()
-            setCreating(true)
-          }}
+        <ProfileMenuList
+          game={game}
+          gameName={gameName}
+          profiles={profiles}
+          openId={openId}
+          entries={entries}
+          hasTemplates={templates.length > 0}
+          onCreate={onCreate}
+          onManage={onManage}
+          onContext={showContext}
         />
-        <MenuHeading>{t`Import`}</MenuHeading>
-        {entries.map((entry) => (
-          <TitleMenuItem
-            key={entry.key}
-            icon={<entry.icon size={ICON_PX} />}
-            label={entry.label}
-            onClick={() => {
-              close()
-              entry.run()
-            }}
-          />
-        ))}
-        <MenuRule />
-        <TitleMenuItem
-          icon={<Search size={ICON_PX} />}
-          label={t`Find a mod in all profiles…`}
-          onClick={() => {
-            close()
-            useNav.getState().openProfiles()
-            requestFindAllFocus()
-          }}
-        />
-        <TitleMenuItem
-          icon={<ListOrdered size={ICON_PX} />}
-          label={t`Manage profiles…`}
-          onClick={() => {
-            close()
-            useNav.getState().openProfiles()
-          }}
-        />
-        {templates.length > 0 ? (
-          <TitleMenuItem
-            icon={<LayoutTemplate size={ICON_PX} />}
-            label={t`Manage templates…`}
-            onClick={() => {
-              close()
-              setManaging(true)
-            }}
-          />
-        ) : null}
       </TitleMenu>
       {contextProfile ? (
         <ProfileContextMenu

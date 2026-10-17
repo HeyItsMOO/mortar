@@ -29,6 +29,7 @@ import { SetLastProfile } from '../../bindings/github.com/Rethunk-Tech/mortar/in
 import { loadGameStatus } from '../games/status.ts'
 import { i18n } from '../i18n/index.ts'
 import { useSettings } from '../settings/store.ts'
+import { keepFields, sameValue } from '../shell/sameValue.ts'
 import { reportError } from '../toasts/report.ts'
 import { setLatestChange, useToasts } from '../toasts/store.ts'
 import { settledLastProfile } from './lastProfile.ts'
@@ -79,8 +80,21 @@ async function duplicateProfile(
   }
 }
 
+const withoutChange = (p: Profile) => ({ ...p, lastChange: '' })
+
+function keepSaved(prev: Profile[], next: Profile[]): Profile[] {
+  const kept = next.map((p) => {
+    const was = prev.find((x) => x.id === p.id)
+    if (!was) {
+      return p
+    }
+    return sameValue(withoutChange(was), withoutChange(p)) ? was : keepFields(was, p)
+  })
+  return kept.length === prev.length && kept.every((p, i) => p === prev[i]) ? prev : kept
+}
+
 async function refreshList(
-  get: () => { game: GameInfo | null },
+  get: () => { game: GameInfo | null; profiles: Profile[]; damaged: Profile[] },
   set: (p: { profiles: Profile[]; damaged: Profile[] }) => void,
 ) {
   const { game } = get()
@@ -88,7 +102,12 @@ async function refreshList(
     const listed = splitListed((await List(game.id)) ?? [])
     // A reply for the game left meanwhile must not land in the next game's list.
     if (get().game?.id === game.id) {
-      set(listed)
+      // Every save is followed by this reread; profiles it did not change keep their objects, so the screens showing
+      // them do not redraw a second time. The reread leaves out lastChange, which only a save returns.
+      set({
+        profiles: keepSaved(get().profiles, listed.profiles),
+        damaged: keepSaved(get().damaged, listed.damaged),
+      })
     }
   }
 }
@@ -368,7 +387,13 @@ export const useProfiles = create<{
   },
   setLaunchOptions: (id, options) => applyLaunchOptions(get, id, options),
   setLaunchSettings: (id, prefix, env) => applyLaunchSettings(get, id, prefix, env),
-  replace: (p) => set((s) => ({ profiles: s.profiles.map((x) => (x.id === p.id ? p : x)) })),
+  replace: (p) =>
+    set((s) => {
+      const at = s.profiles.findIndex((x) => x.id === p.id)
+      return at < 0 || sameValue(s.profiles[at], p)
+        ? s
+        : { profiles: s.profiles.map((x, i) => (i === at ? keepFields(x, p) : x)) }
+    }),
   refresh: () => refreshList(get, set),
   loadTrash: async () => {
     const { game } = get()

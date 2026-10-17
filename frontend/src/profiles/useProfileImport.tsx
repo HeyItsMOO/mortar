@@ -11,7 +11,7 @@ import { hasThunderstore } from './packImport.ts'
 import { restoreBackup } from './restoreBackup.ts'
 import { useProfiles } from './store.ts'
 
-interface ImportEntry {
+export interface ImportEntry {
   key: string
   label: string
   icon: LucideIcon
