@@ -1,6 +1,7 @@
 import { i18n } from '@lingui/core'
 import { msg } from '@lingui/core/macro'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { create } from 'zustand'
 import type { EntrySize } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/datasvc/models.ts'
 import { EntrySizes } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/datasvc/service.ts'
 import { StartupReports } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/launchsvc/service.ts'
@@ -11,6 +12,7 @@ import type {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { PackageOverrides } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import { modTotal } from '../console/startupView.ts'
+import { sameValue } from '../shell/sameValue.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { idKey } from './dependents.ts'
 import { type customCategoryById, resolvedCategoryLabel } from './group.ts'
@@ -19,8 +21,22 @@ import type { ListRow } from './listColumns.ts'
 import { kindLabel } from './lookup.ts'
 import { siteCategory } from './modSearch.ts'
 
+// Fetched again each time the mods list mounts, but kept between mounts and replaced only when an answer differs, so
+// switching views or tabs does not first draw every row without them and then again with them.
+const useListData = create<{
+  sizes: Readonly<Record<string, number>>
+  costs: Readonly<Record<string, Readonly<Record<string, number>>>>
+  wins: Readonly<Record<string, Readonly<Record<string, number | undefined>>>>
+}>(() => ({ sizes: {}, costs: {}, wins: {} }))
+const NONE: Readonly<Record<string, never>> = {}
+
+function keyed<T>(field: 'costs' | 'wins', key: string, next: T) {
+  useListData.setState((s) =>
+    sameValue(s[field][key], next) ? s : { [field]: { ...s[field], [key]: next } },
+  )
+}
+
 function useEntrySizes(): Readonly<Record<string, number>> {
-  const [sizes, setSizes] = useState<Record<string, number>>({})
   useEffect(() => {
     EntrySizes()
       .then((rows: EntrySize[] | null) => {
@@ -28,16 +44,16 @@ function useEntrySizes(): Readonly<Record<string, number>> {
         for (const r of rows ?? []) {
           next[r.key] = r.size
         }
-        setSizes(next)
+        useListData.setState((s) => (sameValue(s.sizes, next) ? s : { sizes: next }))
       })
       .catch(reportUnexpected)
   }, [])
-  return sizes
+  return useListData((s) => s.sizes)
 }
 
 /** Each mod's and content pack's share of the latest measured startup, by lower-cased UniqueID. */
 function useStartupCosts(game: string, profileId: string): Readonly<Record<string, number>> {
-  const [costs, setCosts] = useState<Record<string, number>>({})
+  const key = `${game}/${profileId}`
   useEffect(() => {
     if (game === '' || profileId === '') {
       return
@@ -51,11 +67,11 @@ function useStartupCosts(game: string, profileId: string): Readonly<Record<strin
             next[idKey(pack.id)] = pack.ms
           }
         }
-        setCosts(next)
+        keyed('costs', `${game}/${profileId}`, next)
       })
       .catch(reportUnexpected)
   }, [game, profileId])
-  return costs
+  return useListData((s) => s.costs[key]) ?? NONE
 }
 
 /** Files each package wins over earlier ones, by entry key, for a game whose profile is deployed by linking. */
@@ -64,16 +80,16 @@ function usePackageOverrides(
   profile: Profile,
   deploy: string,
 ): Readonly<Record<string, number | undefined>> {
-  const [wins, setWins] = useState<Readonly<Record<string, number | undefined>>>({})
+  const key = `${game}/${profile.id}`
   useEffect(() => {
     if (deploy !== 'profile' || game === '') {
       return
     }
     PackageOverrides(game, profile.id)
-      .then((r) => setWins(r ?? {}))
+      .then((r) => keyed('wins', `${game}/${profile.id}`, r ?? {}))
       .catch(reportUnexpected)
   }, [game, profile, deploy])
-  return wins
+  return useListData((s) => s.wins[key]) ?? NONE
 }
 
 // One pass over the profile serves every row: lookups by key, not a scan of the entries per mod.

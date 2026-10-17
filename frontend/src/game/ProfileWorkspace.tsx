@@ -18,9 +18,6 @@ import { Home } from './Home.tsx'
 import { TabHeader } from './TabHeader.tsx'
 import { PANEL_ID, tabDomId, useTab } from './tab.ts'
 
-// Tabs other than Mods, Problems and Browse load on first open, which keeps them out of the startup bundle.
-
-// Shown while a tab's code chunk loads, before the tab can draw its own skeleton.
 export function ProfileWorkspace({
   profile,
   game,

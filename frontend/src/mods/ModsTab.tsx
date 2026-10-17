@@ -202,11 +202,11 @@ function passesShow(
   }
 }
 
-export function ModsTab({ profile }: { profile: Profile }) {
-  const { t } = useLingui()
+// The search, Show filter and tags, and the mods they leave. Its own component, so a key typed into the search
+// re-renders the toolbar and the list and not the tab's callouts and dialogs.
+function FilteredMods({ profile }: { profile: Profile }) {
   const mods = useMods((s) => s.mods)
   const view = useMods((s) => s.view)
-  const load = useMods((s) => s.load)
   const query = useMods((s) => s.queries[profile.id] ?? '')
   const setQuery = useMods((s) => s.setQuery)
   const problems = useMods((s) => s.problems)
@@ -218,6 +218,74 @@ export function ModsTab({ profile }: { profile: Profile }) {
   const setTagFilter = useMods((s) => s.setTagFilter)
   const nexusById = useNexusDetails((s) => s.byId)
   const customCategories = useCustomCategories((s) => s.categories)
+  const q = query.trim().toLowerCase()
+  const shown = useMemo(() => {
+    const customById = customCategoryById(customCategories)
+    const parts = supportParts(mods)
+    // Hidden implicit mods still show when the search or the Show filter asks for them.
+    const hideImplicit = implicitView === 'hidden' && q === '' && filter !== 'implicit'
+    return mods.filter((m) => {
+      const entry = entryOf(profile, m.key)
+      if (hideImplicit && (Boolean(entry?.implicit) || parts.has(partKey(m)))) {
+        return false
+      }
+      const searchable = searchFields(m, entry, nexusById, customById)
+      if (!(matchesQuery(q, searchable) && hasAllTags(entry?.tags, selectedTags))) {
+        return false
+      }
+      return passesShow(filter, m, entry, {
+        update: () => Boolean(updateFor(updates, m, profile)),
+        problem: () => modStatusProblem(problems, m),
+        implicit: () => Boolean(entry?.implicit) || parts.has(partKey(m)),
+      })
+    })
+  }, [
+    mods,
+    profile,
+    q,
+    filter,
+    implicitView,
+    selectedTags,
+    nexusById,
+    customCategories,
+    updates,
+    problems,
+  ])
+  return (
+    <>
+      <Toolbar
+        query={query}
+        onQuery={(value) => setQuery(profile.id, value)}
+        total={mods.length}
+        filter={filter}
+        onFilter={(value) => setFilter(profile.id, value)}
+        tags={profileTags(profile.entries)}
+        selectedTags={selectedTags}
+        onTags={(tags) => setTagFilter(profile.id, tags)}
+      />
+      <TrackedNotInProfile profile={profile} />
+      <LockedNote />
+      <SelectionKeys shown={shown} />
+      <SelectionBar profileId={profile.id} mods={shown} />
+      <ModsBody
+        profile={profile}
+        shown={shown}
+        view={view}
+        filtering={q !== '' || filter !== 'all' || selectedTags.length > 0}
+        onClear={() => {
+          setQuery(profile.id, '')
+          setFilter(profile.id, 'all')
+          setTagFilter(profile.id, [])
+        }}
+      />
+    </>
+  )
+}
+
+export function ModsTab({ profile }: { profile: Profile }) {
+  const { t } = useLingui()
+  const mods = useMods((s) => s.mods)
+  const load = useMods((s) => s.load)
   const loadKey = `${profile.id}:${profile.updated}`
   const gameId = useProfiles((s) => s.game?.id)
   const gameBusy = useGameBusy(gameId)
@@ -287,26 +355,6 @@ export function ModsTab({ profile }: { profile: Profile }) {
     )
   }
 
-  const q = query.trim().toLowerCase()
-  const customById = customCategoryById(customCategories)
-  const parts = supportParts(mods)
-  // Hidden implicit mods still show when the search or the Show filter asks for them.
-  const hideImplicit = implicitView === 'hidden' && q === '' && filter !== 'implicit'
-  const shown = mods.filter((m) => {
-    const entry = entryOf(profile, m.key)
-    if (hideImplicit && (Boolean(entry?.implicit) || parts.has(partKey(m)))) {
-      return false
-    }
-    const searchable = searchFields(m, entry, nexusById, customById)
-    if (!(matchesQuery(q, searchable) && hasAllTags(entry?.tags, selectedTags))) {
-      return false
-    }
-    return passesShow(filter, m, entry, {
-      update: () => Boolean(updateFor(updates, m, profile)),
-      problem: () => modStatusProblem(problems, m),
-      implicit: () => Boolean(entry?.implicit) || parts.has(partKey(m)),
-    })
-  })
   return (
     <Box
       sx={{ position: 'relative', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}
@@ -319,31 +367,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
       <OldFilesCallouts profile={profile} />
       <NewFoldersCallout profile={profile} />
       <LegacyReasonsCallout profile={profile} mods={mods} />
-      <Toolbar
-        query={query}
-        onQuery={(value) => setQuery(profile.id, value)}
-        total={mods.length}
-        filter={filter}
-        onFilter={(value) => setFilter(profile.id, value)}
-        tags={profileTags(profile.entries)}
-        selectedTags={selectedTags}
-        onTags={(tags) => setTagFilter(profile.id, tags)}
-      />
-      <TrackedNotInProfile profile={profile} />
-      <LockedNote />
-      <SelectionKeys shown={shown} />
-      <SelectionBar profileId={profile.id} mods={shown} />
-      <ModsBody
-        profile={profile}
-        shown={shown}
-        view={view}
-        filtering={q !== '' || filter !== 'all' || selectedTags.length > 0}
-        onClear={() => {
-          setQuery(profile.id, '')
-          setFilter(profile.id, 'all')
-          setTagFilter(profile.id, [])
-        }}
-      />
+      <FilteredMods profile={profile} />
       <UpdateReview profile={profile} />
       <ModContextMenu />
       <SetNexusPageDialog />

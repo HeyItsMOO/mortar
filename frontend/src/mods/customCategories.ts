@@ -20,16 +20,14 @@ export const useCustomCategories = create<{
   load: (game: string) => Promise<void>
   save: (game: string, categories: CustomCategory[]) => Promise<CustomCategory[]>
   setEntryCategory: (key: string, override: string) => Promise<void>
-}>((set) => ({
+}>((set, get) => ({
   categories: [],
   loadedGame: '',
   load: async (game) => {
-    if (game === '') {
-      set({ categories: [], loadedGame: '' })
-      return
-    }
-    const got = await ListCustomCategories(game)
-    set({ categories: got ?? [], loadedGame: game })
+    const got = game === '' ? [] : ((await ListCustomCategories(game)) ?? [])
+    // An unchanged answer keeps the stored list, so the mods list does not redraw each time the tab opens.
+    const prev = get().categories
+    set({ categories: categoriesDiffer(prev, got) ? got : prev, loadedGame: game })
   },
   save: async (game, categories) => {
     const saved = await SaveCustomCategories(game, categories)

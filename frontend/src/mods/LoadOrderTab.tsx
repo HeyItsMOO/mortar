@@ -3,7 +3,7 @@ import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Chip, Link, Skeleton, Typography } from '@mui/material'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { Copy, ListOrdered, TriangleAlert } from 'lucide-react'
-import { type RefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Row } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/loadorder/models.ts'
 import { DependencyNames } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/service.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
@@ -153,6 +153,65 @@ function DepChips({
   )
 }
 
+// A row's contents, apart from its position: the list re-renders whenever it measures a row, and this skips that.
+const OrderRowBody = memo(function OrderRowContent({
+  row,
+  names,
+  onScroll,
+}: {
+  row: Row
+  names: Map<string, string>
+  onScroll: (id: string) => boolean
+}) {
+  const { t } = useLingui()
+  return (
+    <>
+      <Typography
+        sx={{
+          width: 36,
+          flexShrink: 0,
+          color: 'text.secondary',
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        {row.position}
+      </Typography>
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap, minWidth: 0 }}>
+          <RowName row={row} />
+          {row.cycle ? (
+            <Tooltip title={t`These mods require each other.`} describeChild={true}>
+              <Chip
+                size="small"
+                tabIndex={0}
+                label={t`Dependency cycle`}
+                color="error"
+                variant="outlined"
+                sx={{ height: 22 }}
+              />
+            </Tooltip>
+          ) : null}
+          {row.lastRun ? (
+            <Tooltip
+              describeChild={true}
+              title={t`The last launch loaded this here, not where its dependencies put it.`}
+            >
+              <Chip
+                size="small"
+                tabIndex={0}
+                label={t`Last launch`}
+                variant="outlined"
+                sx={{ height: 22 }}
+              />
+            </Tooltip>
+          ) : null}
+        </Box>
+        <DepChips row={row} names={names} onScroll={onScroll} />
+      </Box>
+    </>
+  )
+})
+
 function OrderList({
   rows,
   names,
@@ -190,6 +249,7 @@ function OrderList({
     return true
   }
   scrollRef.current = onScroll
+  const scrollTo = useCallback((id: string) => scrollRef.current?.(id) ?? false, [scrollRef])
   return (
     <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
       <PageActions>
@@ -238,48 +298,7 @@ function OrderList({
                     : {}),
                 }}
               >
-                <Typography
-                  sx={{
-                    width: 36,
-                    flexShrink: 0,
-                    color: 'text.secondary',
-                    fontVariantNumeric: 'tabular-nums',
-                  }}
-                >
-                  {row.position}
-                </Typography>
-                <Box sx={{ minWidth: 0, flex: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap, minWidth: 0 }}>
-                    <RowName row={row} />
-                    {row.cycle ? (
-                      <Tooltip title={t`These mods require each other.`} describeChild={true}>
-                        <Chip
-                          size="small"
-                          tabIndex={0}
-                          label={t`Dependency cycle`}
-                          color="error"
-                          variant="outlined"
-                          sx={{ height: 22 }}
-                        />
-                      </Tooltip>
-                    ) : null}
-                    {row.lastRun ? (
-                      <Tooltip
-                        describeChild={true}
-                        title={t`The last launch loaded this here, not where its dependencies put it.`}
-                      >
-                        <Chip
-                          size="small"
-                          tabIndex={0}
-                          label={t`Last launch`}
-                          variant="outlined"
-                          sx={{ height: 22 }}
-                        />
-                      </Tooltip>
-                    ) : null}
-                  </Box>
-                  <DepChips row={row} names={names} onScroll={onScroll} />
-                </Box>
+                <OrderRowBody row={row} names={names} onScroll={scrollTo} />
               </Box>
             ) : null
           })}
