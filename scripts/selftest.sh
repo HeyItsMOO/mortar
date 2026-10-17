@@ -404,7 +404,8 @@ make_mod() {
 # seed_lc fills a Lethal Company profile with two Thunderstore-shaped packages (manifest.json, a placeholder plugin
 # dll and a BepInEx config file) when the sandbox holds the game; it is skipped when the profile exists.
 seed_lc() {
-  cli games --json | grep -q '"id": "lethal-company"' || return 0
+  # jq reads the whole listing: grep -q exits at the first match, SIGPIPEs the long output and fails the pipeline under pipefail.
+  cli games --json | jq -e 'any(.[]; .id == "lethal-company")' >/dev/null || return 0
   if cli profiles lethal-company --json | grep -q '"Seed Lobby"'; then
     return
   fi
