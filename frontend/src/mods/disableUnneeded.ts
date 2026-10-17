@@ -12,12 +12,14 @@ const requires = (a: Mod, b: Mod) => requiredIdsOf(a).some((id) => idKey(id) ===
 
 /**
  * The implicit mods still on that only the mods just switched off needed: what those mods require, followed through
- * what that requires in turn, each implicit and needed by no mod that stays on.
+ * what that requires in turn, each implicit and needed by no mod that stays on. When the mods are being removed, a
+ * switched-off library goes too, and a switched-off mod that stays still needs what it requires.
  */
 export function unneededImplicit(
   all: readonly Mod[],
   off: readonly Mod[],
   implicit: (m: Mod) => boolean,
+  removing = false,
 ): Mod[] {
   const byId = new Map(all.map((m) => [idKey(m.id), m]))
   const offIds = new Set(off.map((m) => idKey(m.id)))
@@ -25,7 +27,13 @@ export function unneededImplicit(
   const queue = off.flatMap((m) => requiredIdsOf(m))
   for (let id = queue.shift(); id !== undefined; id = queue.shift()) {
     const dep = byId.get(idKey(id))
-    if (dep?.enabled && implicit(dep) && !offIds.has(idKey(dep.id)) && !candidates.includes(dep)) {
+    if (
+      dep &&
+      (removing || dep.enabled) &&
+      implicit(dep) &&
+      !offIds.has(idKey(dep.id)) &&
+      !candidates.includes(dep)
+    ) {
       candidates.push(dep)
       queue.push(...requiredIdsOf(dep))
     }
@@ -34,7 +42,9 @@ export function unneededImplicit(
   for (let changed = true; changed; ) {
     changed = false
     for (const c of candidates) {
-      const stillNeeded = all.some((m) => m.enabled && !offIds.has(idKey(m.id)) && requires(m, c))
+      const stillNeeded = all.some(
+        (m) => (removing || m.enabled) && !offIds.has(idKey(m.id)) && requires(m, c),
+      )
       if (!(offIds.has(idKey(c.id)) || stillNeeded)) {
         offIds.add(idKey(c.id))
         out.push(c)

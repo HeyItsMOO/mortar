@@ -18,3 +18,17 @@ test('switching a mod off names the implicit mods only it needed, through what t
   const implicit = (m: Mod) => m.id.startsWith('Lib.')
   expect(unneededImplicit(all, [pack], implicit).map((m) => m.id)).toEqual(['Lib.Core', 'Lib.Deep'])
 })
+
+test('removing also takes switched-off libraries, and keeps what a switched-off mod that stays needs', () => {
+  const pack = mod('Me.Pack', ['Lib.Off', 'Lib.Kept'])
+  const all = [
+    pack,
+    mod('Lib.Off', [], { enabled: false }),
+    mod('Lib.Kept'),
+    mod('Me.Resting', ['Lib.Kept'], { enabled: false }),
+  ]
+  const implicit = (m: Mod) => m.id.startsWith('Lib.')
+  expect(unneededImplicit(all, [pack], implicit, true).map((m) => m.id)).toEqual(['Lib.Off'])
+  // Switching off instead leaves a library only switched-off mods need free to go off too.
+  expect(unneededImplicit(all, [pack], implicit).map((m) => m.id)).toEqual(['Lib.Kept'])
+})

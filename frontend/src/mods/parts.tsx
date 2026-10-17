@@ -3,11 +3,13 @@ import { useLingui } from '@lingui/react/macro'
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   IconButton,
   Menu,
   Switch,
@@ -26,6 +28,8 @@ import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { dependentsOf, idKey, localId } from './dependents.ts'
 import { useDescribe } from './describe.ts'
+import { unneededImplicit } from './disableUnneeded.ts'
+import { readsImplicit } from './installReason.ts'
 import { LockedReason } from './LockedReason.tsx'
 import { lastRunSummary, useLastRun } from './lastRun.ts'
 import { concerns, entryOf, modId, nexusIdOf, problemsOf, siblingsOf, updateFor } from './lookup.ts'
@@ -75,6 +79,14 @@ function RemoveDialogBody({ removing }: { removing: Mod[] }) {
   const optional = (profile?.entries ?? []).filter((e) =>
     removingKeys.has(e.overlayOf ?? ''),
   ).length
+  // Libraries only the removed mods needed, offered for removal with them (apt's autoremove).
+  const unneeded = unneededImplicit(
+    mods,
+    mods.filter((m) => removingKeys.has(m.key)),
+    (m) => readsImplicit(entryOf(profile, m.key)?.implicit, m, mods),
+    true,
+  )
+  const [withUnneeded, setWithUnneeded] = useState(true)
   const close = () => askRemove(null)
   let body = t`Their folders are removed from this profile. You can undo this.`
   if (extra.length > 0) {
@@ -82,8 +94,9 @@ function RemoveDialogBody({ removing }: { removing: Mod[] }) {
   } else if (one) {
     body = t`Its folder is removed from this profile. You can undo this.`
   }
-  const drop = (list: typeof removing) => {
+  const drop = (chosen: typeof removing) => {
     close()
+    const list = withUnneeded ? [...chosen, ...unneeded] : chosen
     if (list.length > 0) {
       removeMany(list).catch(reportUnexpected)
     }
@@ -108,6 +121,18 @@ function RemoveDialogBody({ removing }: { removing: Mod[] }) {
           </DialogContentText>
         ) : null}
         {needLine ? <DialogContentText sx={{ mt: 1 }}>{needLine}</DialogContentText> : null}
+        {unneeded.length > 0 ? (
+          <FormControlLabel
+            sx={{ mt: 1 }}
+            control={
+              <Checkbox
+                checked={withUnneeded}
+                onChange={(e) => setWithUnneeded(e.target.checked)}
+              />
+            }
+            label={t`${plural(unneeded.length, { one: 'Also remove # library only this needed', other: 'Also remove # libraries only these needed' })}: ${listNames(unneeded.map((m) => m.name))}`}
+          />
+        ) : null}
       </DialogContent>
       <DialogActions>
         <Button onClick={close}>{t`Cancel`}</Button>
