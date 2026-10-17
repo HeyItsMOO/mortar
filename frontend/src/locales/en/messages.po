@@ -643,7 +643,7 @@ msgstr "Allow through firewall"
 msgid "Never for this mod"
 msgstr "Never for this mod"
 
-#: src/settings/SettingsNav.tsx:72
+#: src/settings/SettingsNav.tsx:18
 msgid "Search settings"
 msgstr "Search settings"
 
@@ -1752,7 +1752,7 @@ msgstr "See load errors, missing dependencies, and other issues before you play.
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
-#: src/settings/SettingsShell.tsx:178
+#: src/settings/SettingsShell.tsx:214
 msgid "Search results"
 msgstr "Search results"
 
@@ -5638,7 +5638,7 @@ msgstr "Pause downloads while the game runs"
 msgid "{0} of saves"
 msgstr "{0} of saves"
 
-#: src/settings/SettingsShell.tsx:194
+#: src/settings/SettingsShell.tsx:83
 msgid "Try another word, or clear the search."
 msgstr "Try another word, or clear the search."
 
@@ -6547,7 +6547,7 @@ msgstr "Copy"
 msgid "What happens to files the new version of a mod leaves out"
 msgstr "What happens to files the new version of a mod leaves out"
 
-#: src/settings/SettingsShell.tsx:193
+#: src/settings/SettingsShell.tsx:82
 msgid "No settings match"
 msgstr "No settings match"
 
@@ -13969,7 +13969,7 @@ msgstr "Copy link"
 msgid "Mortar downloads and installs a mod when you click Mod Manager Download on Nexus."
 msgstr "Mortar downloads and installs a mod when you click Mod Manager Download on Nexus."
 
-#: src/settings/SettingsNav.tsx:34
+#: src/settings/SettingsNav.tsx:52
 msgid "Settings sections"
 msgstr "Settings sections"
 
