@@ -131,6 +131,8 @@ type Component struct {
 	// modinfo.json), so a download can fetch what it needs.
 	ModID    string   `json:"modId,omitempty"`
 	Requires []string `json:"requires,omitempty"`
+	// MinGame is the game version the mod requires where its files name one (modinfo.json's "game" dependency).
+	MinGame string `json:"minGame,omitempty"`
 }
 
 // Entry is one package in a profile: a download unit with its source, holding one or more components. Disabled

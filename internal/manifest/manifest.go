@@ -129,6 +129,8 @@ type ModInfo struct {
 	Authors              []string
 	// Dependencies are the mod ids the file requires, lower-cased and sorted; the values (versions) are not read.
 	Dependencies []string
+	// GameVersion is the game version the mod requires, its "game" dependency, when it names one.
+	GameVersion string
 }
 
 // ParseModInfo reads a mod-root file as leniently as a SMAPI manifest, its keys in any case.
@@ -143,8 +145,12 @@ func ParseModInfo(b []byte) (ModInfo, error) {
 	}
 	var deps map[string]json.RawMessage
 	if json.Unmarshal(field(raw, "dependencies"), &deps) == nil {
-		for id := range deps {
+		for id, v := range deps {
 			info.Dependencies = append(info.Dependencies, strings.ToLower(id))
+			var ver string
+			if strings.EqualFold(id, "game") && json.Unmarshal(v, &ver) == nil && ver != "*" {
+				info.GameVersion = strings.TrimPrefix(strings.TrimSpace(ver), "v")
+			}
 		}
 		slices.Sort(info.Dependencies)
 	}

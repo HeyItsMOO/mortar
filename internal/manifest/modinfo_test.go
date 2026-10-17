@@ -13,7 +13,7 @@ func TestParseModInfoReadsAnyKeyCaseAndLenientJSON(t *testing.T) {
 		"Dependencies": { "game": "1.22.0", "VSImGui": "" },
 	}`))
 	if err != nil || info.Name != "Carry On" || info.ModID != "carryon" || info.Version != "1.14.3" ||
-		!slices.Equal(info.Authors, []string{"copygirl", "Nikea"}) || !slices.Equal(info.Dependencies, []string{"game", "vsimgui"}) {
+		!slices.Equal(info.Authors, []string{"copygirl", "Nikea"}) || !slices.Equal(info.Dependencies, []string{"game", "vsimgui"}) || info.GameVersion != "1.22.0" {
 		t.Fatalf("info = %+v, %v", info, err)
 	}
 }

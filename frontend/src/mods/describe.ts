@@ -97,6 +97,10 @@ function describeBroken(p: Extract<Problem, { kind: 'broken' }>): string {
   if (p.broken.source && summary) {
     return i18n._(msg`${name}: ${summary}`)
   }
+  if (status === 'needs-game') {
+    const needs = p.broken.needsGame ?? ''
+    return i18n._(msg`${name} needs game version ${needs} or newer.`)
+  }
   if (status === 'abandoned') {
     return summary
       ? i18n._(msg`${name} is abandoned: ${summary}`)

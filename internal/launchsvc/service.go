@@ -264,16 +264,14 @@ func launchGameVersion(s *Service, key string) string {
 		return ""
 	}
 	gameID, _, _ := strings.Cut(key, "/")
-	l, ok := game.PrimaryLoader(gameID)
-	if !ok {
-		return ""
-	}
-	versions, ok := l.(loader.GameVersion)
-	if !ok {
-		return ""
+	read := launch.LogGameVersion
+	if l, ok := game.PrimaryLoader(gameID); ok {
+		if versions, ok := l.(loader.GameVersion); ok {
+			read = versions.GameVersion
+		}
 	}
 	for _, e := range sess.buf.Lines() {
-		if v := versions.GameVersion(e.Message); v != "" {
+		if v := read(e.Message); v != "" {
 			return v
 		}
 	}

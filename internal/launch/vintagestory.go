@@ -15,6 +15,17 @@ var vintageStoryLevels = map[string]Level{
 	"VerboseDebug": Trace,
 }
 
+// vintageStoryVersion is the line Vintage Story logs at start: "Game Version: v1.21.5 (Stable)".
+var vintageStoryVersion = regexp.MustCompile(`^Game Version: v(\d+(?:\.\d+)+)`)
+
+// LogGameVersion is the game version a log message names, for a game whose loader does not read its own log.
+func LogGameVersion(message string) string {
+	if m := vintageStoryVersion.FindStringSubmatch(message); m != nil {
+		return m[1]
+	}
+	return ""
+}
+
 func parseVintageStory(line string) (Entry, bool) {
 	m := vintageStoryHeader.FindStringSubmatch(line)
 	if m == nil {

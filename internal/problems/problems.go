@@ -129,6 +129,8 @@ type Broken struct {
 	// Source names the site whose own flag makes this row (Nexus Mods, Modrinth, CurseForge, GitHub, Thunderstore);
 	// empty for SMAPI's list, the author's wording and dependency loops.
 	Source string `json:"source,omitempty"`
+	// NeedsGame is the game version a "needs-game" row's mod requires; the install is older.
+	NeedsGame string `json:"needsGame,omitempty"`
 	// Cycle is the loop's mods in dependency order; the last waits for the first.
 	Cycle []Dependent `json:"cycle,omitempty"`
 	// CycleBlocksAll is set when every link of the loop is required, so SMAPI loads none of its mods.
@@ -257,6 +259,7 @@ func Check(ctx context.Context, m Meta, env Environment, mods []framework.Mod, r
 	r.Supporting = found.Supporting
 	broken, unknown := brokenMods(ctx, m, env, enabled)
 	broken = append(broken, dependencyCycles(enabled)...)
+	broken = append(broken, needsNewerGame(env.GameVersion, enabled)...)
 	r.Broken = broken
 	r.Unknown = r.Unknown || unknown
 	r.Timings = append(r.Timings, CheckTiming{Name: "others", Ms: time.Since(otherStart).Milliseconds(), Count: len(r.Duplicates) + len(r.Broken) + len(r.Cleanup)})
@@ -744,6 +747,20 @@ func brokenMods(ctx context.Context, m Meta, env Environment, enabled []framewor
 		broken = append(broken, b)
 	}
 	return broken, unknown
+}
+
+// needsNewerGame is a row for each switched-on mod that declares a minimum game version newer than the install's.
+func needsNewerGame(have string, enabled []framework.Mod) []Broken {
+	var out []Broken
+	if have == "" {
+		return out
+	}
+	for _, x := range enabled {
+		if c, ok := meta.CompareVersions(x.MinimumGameVersion, have); ok && c > 0 {
+			out = append(out, Broken{Key: x.Key, ID: x.ModID(), Name: x.Name, Status: "needs-game", NeedsGame: x.MinimumGameVersion})
+		}
+	}
+	return out
 }
 
 // fillWhere finds where each absent or outdated dependency can be had. It reports whether any lookup failed.

@@ -1,6 +1,7 @@
 package problems
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"log"
@@ -148,6 +149,8 @@ func (s *Service) Environment(id string) Environment {
 	}
 	st, _ := game.LoaderStatus(id, "", dir, set.Loaders)
 	env.GameVersion, env.APIVersion = st.GameVersion, st.Version
+	// A loader that does not know the game's version leaves the one the game's last run logged.
+	env.GameVersion = cmp.Or(env.GameVersion, set.LastPlayed[id].GameVersion)
 	return env
 }
 

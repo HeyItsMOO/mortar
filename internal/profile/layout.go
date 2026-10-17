@@ -176,7 +176,7 @@ func (s *Store) packageMods(game, key string) (mods []Component, ok bool, err er
 			if b, rerr := fsx.ReadFile(filepath.Join(arch.Dir, filepath.FromSlash(file))); rerr == nil {
 				if info, perr := manifest.ParseModInfo(b); perr == nil {
 					c.Name, c.Version, c.Author = cmp.Or(info.Name, info.ModID, key), info.Version, strings.Join(info.Authors, ", ")
-					c.ModID, c.Requires = strings.ToLower(info.ModID), info.Dependencies
+					c.ModID, c.Requires, c.MinGame = strings.ToLower(info.ModID), info.Dependencies, info.GameVersion
 				}
 			}
 		}

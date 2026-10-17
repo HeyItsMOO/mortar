@@ -88,3 +88,20 @@ func TestCleanupHintsFindsOrphanedImplicitMods(t *testing.T) {
 		t.Fatalf("cleanup = %+v", got)
 	}
 }
+
+// A switched-on mod that needs a newer game than the install is a row; one the install is new enough for, or with no
+// known install version, is not.
+func TestNeedsNewerGame(t *testing.T) {
+	mod := func(id, needs string) framework.Mod {
+		m := framework.Mod{Key: id, Enabled: true}
+		m.Name, m.UniqueID, m.MinimumGameVersion = id, id, needs
+		return m
+	}
+	mods := []framework.Mod{mod("too.new", "1.21.0"), mod("fine", "1.20.0"), mod("none", "")}
+	if got := needsNewerGame("1.20.12", mods); len(got) != 1 || got[0].Key != "too.new" || got[0].NeedsGame != "1.21.0" {
+		t.Fatalf("rows = %+v", got)
+	}
+	if got := needsNewerGame("", mods); len(got) != 0 {
+		t.Fatalf("an unknown install version made rows: %+v", got)
+	}
+}
