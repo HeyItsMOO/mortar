@@ -343,6 +343,7 @@ const RAIL_MIN_GAMES = 8
 const RAIL_WIDTH_PX = 28
 const RAIL_ROOMY_WIDTH_PX = 44
 const RAIL_LETTER_MAX_PX = 48
+const RAIL_ROOMY_FONT_PX = 11
 
 // Brings a game's row to the top of the list and focuses it, so Enter opens it.
 function reveal(scroller: HTMLElement | null, id: string) {
@@ -438,7 +439,7 @@ function LetterRail({
             minHeight: 12,
             maxHeight: RAIL_LETTER_MAX_PX,
             fontFamily: 'inherit',
-            fontSize: roomy ? 11 : 'clamp(11px, 1.6cqh, 15px)',
+            fontSize: roomy ? RAIL_ROOMY_FONT_PX : 'clamp(11px, 1.6cqh, 15px)',
             fontWeight: 700,
             color: letter === current ? 'var(--mortar-accent-ink)' : 'var(--mortar-ink-sec)',
             '&:hover, &:focus-visible': { color: 'text.primary' },
