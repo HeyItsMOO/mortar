@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import { space } from '../../theme/density.ts'
 import {
+  commaListKind,
   formatLike,
   isHexColor,
   looksLikeColour,
@@ -24,21 +25,16 @@ import {
   suggestedOptions,
   wantsSlider,
 } from './entries.ts'
-import type { ConfigEntry, ConfigValue } from './types.ts'
+import { looksLikeKeybind } from './keybind.ts'
+import { ChipsWidget, KeybindWidget, NumberListWidget } from './StringWidgets.tsx'
+import type { ConfigValue } from './types.ts'
+import { NUMBER_WIDTH_PX, TEXT_WIDTH_PX, type WidgetProps } from './widgetLayout.ts'
 
-const NUMBER_WIDTH_PX = 120
-const TEXT_WIDTH_PX = 280
 const SLIDER_WIDTH_PX = 160
 const SWATCH_PX = 28
 const SLIDER_STEPS = 100
 const RGB_LENGTH = 7
 const FALLBACK_COLOR = '#000000'
-
-interface WidgetProps {
-  entry: ConfigEntry
-  label: string
-  onChange: (value: ConfigValue) => void
-}
 
 function NumberWidget({ entry, label, onChange }: WidgetProps) {
   const value = Number(entry.value)
@@ -229,6 +225,16 @@ function TextWidget(props: WidgetProps) {
   const { entry, label, onChange } = props
   if (looksLikeColour(entry)) {
     return <ColorWidget {...props} />
+  }
+  if (looksLikeKeybind(entry)) {
+    return <KeybindWidget {...props} />
+  }
+  const listKind = commaListKind(entry)
+  if (listKind === 'numbers') {
+    return <NumberListWidget {...props} />
+  }
+  if (listKind === 'chips') {
+    return <ChipsWidget {...props} />
   }
   const options = suggestedOptions(entry.description)
   if (options.length === 0) {

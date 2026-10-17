@@ -6611,7 +6611,8 @@ msgstr "Two mods change the same file. Only one change wins, so the other mod ma
 #: src/mods/OverlayRow.tsx:83
 #: src/mods/OverlayRow.tsx:88
 #: src/mods/problemFix/DuplicateFix.tsx:38
-#: src/mods/typedConfig/Widgets.tsx:169
+#: src/mods/typedConfig/StringWidgets.tsx:160
+#: src/mods/typedConfig/Widgets.tsx:165
 #: src/tools/ToolsManageDialog.tsx:64
 msgid "Remove {name}"
 msgstr "Remove {name}"
@@ -8695,7 +8696,7 @@ msgstr "Bosses defeated"
 #: src/mods/SelectionBarDialogs.tsx:82
 #: src/mods/Sidebar.tsx:516
 #: src/mods/TrackedNotInProfile.tsx:83
-#: src/mods/typedConfig/Widgets.tsx:191
+#: src/mods/typedConfig/Widgets.tsx:187
 #: src/profiles/LaunchPresetTemplatesDialog.tsx:67
 msgid "Add"
 msgstr "Add"
@@ -11119,7 +11120,7 @@ msgstr "Not used by any profile"
 msgid "No saved groups yet."
 msgstr "No saved groups yet."
 
-#: src/mods/typedConfig/Widgets.tsx:180
+#: src/mods/typedConfig/Widgets.tsx:176
 msgid "Add an item"
 msgstr "Add an item"
 
@@ -11191,7 +11192,7 @@ msgstr "{source}, version {0}"
 msgid "Latest (recommended)"
 msgstr "Latest (recommended)"
 
-#: src/mods/typedConfig/Widgets.tsx:187
+#: src/mods/typedConfig/Widgets.tsx:183
 msgid "New {label} item"
 msgstr "New {label} item"
 
@@ -13089,6 +13090,10 @@ msgstr "{count, plural, one {Changed by # mod} other {Changed by # mods}}"
 msgid "Could not repair the profile"
 msgstr "Could not repair the profile"
 
+#: src/mods/typedConfig/StringWidgets.tsx:84
+msgid "Record"
+msgstr "Record"
+
 #: src/game/NewProfileDialog.tsx:72
 msgid "Empty profile"
 msgstr "Empty profile"
@@ -13198,6 +13203,10 @@ msgstr "Closing the window hides Mortar instead of quitting."
 #: src/settings/sections/Sources.tsx:179
 msgid "Free accounts click Download on Nexus for each file; Mortar opens each page in turn."
 msgstr "Free accounts click Download on Nexus for each file; Mortar opens each page in turn."
+
+#: src/mods/typedConfig/StringWidgets.tsx:84
+msgid "Press a key…"
+msgstr "Press a key…"
 
 #: src/nxm/store.ts:43
 msgid "This is not a Mod Manager Download link from Nexus."
@@ -13517,6 +13526,10 @@ msgstr "{0, plural, one {# more pack} other {# more packs}}"
 #: src/shell/AppMenu.tsx:63
 msgid "Nexus Mods · Signed in as {name}"
 msgstr "Nexus Mods · Signed in as {name}"
+
+#: src/mods/typedConfig/StringWidgets.tsx:187
+msgid "Add {label} item"
+msgstr "Add {label} item"
 
 #: src/mods/updateReview/ReviewFooter.tsx:54
 msgid "Also update other profiles that hold the same files"
@@ -14246,6 +14259,10 @@ msgstr "Archives land here instead of Mortar's downloads folder. Empty uses the 
 #: src/launch/store.ts:72
 msgid "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 msgstr "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
+
+#: src/mods/typedConfig/StringWidgets.tsx:66
+msgid "Clear {label}"
+msgstr "Clear {label}"
 
 #: src/settings/prefCopy.ts:11
 msgid "What Mortar does when the game starts, then restore when it exits."

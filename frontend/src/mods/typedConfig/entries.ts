@@ -1,3 +1,4 @@
+import { looksLikeKeybind } from './keybind.ts'
 import type { ConfigEntry, ConfigFile, ConfigValue } from './types.ts'
 
 // A range this small reads better as a slider than as a field to type into.
@@ -112,15 +113,58 @@ function suggestedOptions(description: string): string[] {
   return options.length >= 2 ? [...new Set(options)] : []
 }
 
+// A string entry holding a comma list: numbers or vectors ("200, 250, 350", "0, 0.8") get a field each, other short
+// items chips. A keybind, colour or entry whose description lists its values has its own editor.
+const MAX_CHIP_LENGTH = 64
+const NUMERIC_ITEM = /^[-+]?(\d+\.?\d*|\.\d+)$/
+const COMMA_SPACE = /,\s/
+type CommaListKind = 'numbers' | 'chips'
+
+const isNumericItem = (s: string): boolean => NUMERIC_ITEM.test(s)
+
+const splitItems = (value: ConfigValue): string[] =>
+  String(value)
+    .split(',')
+    .map((s) => s.trim())
+    .filter((s) => s !== '')
+
+function commaListKind(e: ConfigEntry): CommaListKind | null {
+  if (looksLikeKeybind(e) || looksLikeColour(e)) {
+    return null
+  }
+  const items = [e.value, e.default].map(splitItems).find((i) => i.length >= 2)
+  if (!items) {
+    return null
+  }
+  if (items.every(isNumericItem)) {
+    return 'numbers'
+  }
+  return suggestedOptions(e.description).length === 0 &&
+    items.every((i) => i.length <= MAX_CHIP_LENGTH)
+    ? 'chips'
+    : null
+}
+
+// The separator the value uses, or the default's once the value has no comma left; ", " when a comma is followed by
+// a space.
+function listSeparator(value: ConfigValue, fallback: ConfigValue): string {
+  const source = String(value).includes(',') ? String(value) : String(fallback)
+  return COMMA_SPACE.test(source) ? ', ' : ','
+}
+
 export {
+  commaListKind,
   filterFile,
   formatLike,
   humanizeKey,
   isHexColor,
   isModified,
+  isNumericItem,
+  listSeparator,
   looksLikeColour,
   modifiedCount,
   parseNumber,
+  splitItems,
   suggestedOptions,
   wantsSlider,
 }

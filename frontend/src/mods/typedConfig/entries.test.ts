@@ -1,9 +1,11 @@
 import { expect, test } from 'bun:test'
 import {
+  commaListKind,
   filterFile,
   formatLike,
   humanizeKey,
   isModified,
+  listSeparator,
   looksLikeColour,
   parseNumber,
   suggestedOptions,
@@ -85,4 +87,23 @@ test('a hex string is a colour under a colour key or with a hash', () => {
   expect(looksLikeColour(e('Emote Name Color Rare', '#2828FF'))).toBe(true)
   expect(looksLikeColour(e('OverlayBackgroundColor', '00000040'))).toBe(true)
   expect(looksLikeColour(e('Seed', '123456'))).toBe(false)
+})
+
+test('a comma list is numbers, chips or neither, and keeps the separator it was written with', () => {
+  const e = (value: string, over: Partial<ConfigEntry> = {}) =>
+    entry({ key: 'List', type: 'string', value, default: value, ...over })
+  expect(commaListKind(e('200, 250, 350'))).toBe('numbers')
+  expect(commaListKind(e('0, 0.8'))).toBe('numbers')
+  expect(commaListKind(e('750,600, 800, 1000'))).toBe('numbers')
+  expect(commaListKind(e('', { default: '1,2' }))).toBe('numbers')
+  expect(commaListKind(e('zombie, bat, 7'))).toBe('chips')
+  expect(commaListKind(e('only one'))).toBeNull()
+  expect(commaListKind(e('a, b', { description: 'Options: a, b' }))).toBeNull()
+  expect(commaListKind(e(`${'x'.repeat(65)}, b`))).toBeNull()
+  expect(commaListKind(e('LeftShift, RightTrigger', { key: 'MenuKey' }))).toBeNull()
+  expect(commaListKind(e('#FF0000, #00FF00'))).toBe('chips')
+  expect(listSeparator('a,b, c', '')).toBe(', ')
+  expect(listSeparator('a,b', 'x, y')).toBe(',')
+  expect(listSeparator('a', 'x, y')).toBe(', ')
+  expect(listSeparator('', 'x,y')).toBe(',')
 })
