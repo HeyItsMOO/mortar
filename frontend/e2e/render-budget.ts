@@ -58,6 +58,8 @@ interface Sample {
   top: [string, number][]
   /** The components cascades of re-renders started at, with how many re-renders each started, most first. */
   startedBy: [string, number][]
+  /** What changed at each root: changed props, or the position and a preview of each changed state hook. */
+  why: [string, number][]
   mutations: number
   longTasks: number
   longMs: number
@@ -74,13 +76,30 @@ interface Sample {
 // component counts when React did work on it in that commit (PerformedWork), as a mount without a previous fiber or as
 // an update with one; subtrees React reused untouched are not walked.
 const HOOK = `(() => {
-  const st = { commits: 0, mounts: 0, updates: 0, names: {}, roots: {}, mutations: 0, longTasks: 0, longMs: 0 }
+  const st = { commits: 0, mounts: 0, updates: 0, names: {}, roots: {}, why: {}, mutations: 0, longTasks: 0, longMs: 0 }
   const COMPONENT = new Set([0, 1, 11, 14, 15])
   const nameOf = (f) => {
     const t = f.type
     if (typeof t === 'function') return t.displayName || t.name || 'anonymous'
     const inner = t && (t.type || t.render)
     return (inner && (inner.displayName || inner.name)) || (t && t.displayName) || 'anonymous'
+  }
+  // Why a cascade started: its root's props that changed, or the state hooks whose value changed, by position.
+  const peek = (v) => {
+    if (v === null || typeof v !== 'object') return typeof v === 'function' ? 'fn' : String(v).slice(0, 24)
+    if (Array.isArray(v)) return 'array(' + v.length + ')'
+    return '{' + Object.keys(v).slice(0, 3).join(',') + '}'
+  }
+  const noteWhy = (f, a, n) => {
+    const out = []
+    if (f.memoizedProps !== a.memoizedProps && f.memoizedProps && a.memoizedProps) {
+      for (const k of Object.keys(f.memoizedProps)) if (f.memoizedProps[k] !== a.memoizedProps[k]) out.push('prop ' + k)
+    }
+    for (let x = f.memoizedState, y = a.memoizedState, i = 0; x && y && out.length < 3; x = x.next, y = y.next, i++) {
+      if (x.queue && x.memoizedState !== y.memoizedState) out.push('hook ' + i + ' ' + peek(x.memoizedState))
+    }
+    const k = n + ': ' + (out.join('; ') || 'context or parent')
+    st.why[k] = (st.why[k] || 0) + 1
   }
   // root: the component a cascade of updates started at (one whose nearest component above did not render), which
   // every update in the cascade is counted against; null while walking components React did not touch.
@@ -95,6 +114,7 @@ const HOOK = `(() => {
         if (worked && a) {
           const n = nameOf(f)
           here = root ?? n
+          if (root === null) noteWhy(f, a, n)
           st.updates++
           st.names[n] = (st.names[n] || 0) + 1
           st.roots[here] = (st.roots[here] || 0) + 1
@@ -125,8 +145,8 @@ const HOOK = `(() => {
     })
   })
   window.mortarRenders = {
-    reset() { Object.assign(st, { commits: 0, mounts: 0, updates: 0, names: {}, roots: {}, mutations: 0, longTasks: 0, longMs: 0 }) },
-    read() { return { ...st, names: { ...st.names }, roots: { ...st.roots } } },
+    reset() { Object.assign(st, { commits: 0, mounts: 0, updates: 0, names: {}, roots: {}, why: {}, mutations: 0, longTasks: 0, longMs: 0 }) },
+    read() { return { ...st, names: { ...st.names }, roots: { ...st.roots }, why: { ...st.why } } },
   }
 })()`
 
@@ -136,6 +156,7 @@ interface PageCounts {
   updates: number
   names: Record<string, number>
   roots: Record<string, number>
+  why: Record<string, number>
   mutations: number
   longTasks: number
   longMs: number
@@ -185,6 +206,9 @@ class Meter {
         .sort((a, b) => b[1] - a[1])
         .slice(0, TOP),
       startedBy: Object.entries(c.roots)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, TOP),
+      why: Object.entries(c.why)
         .sort((a, b) => b[1] - a[1])
         .slice(0, TOP),
       mutations: c.mutations,
@@ -402,6 +426,7 @@ function perIdle(s: Sample): Sample {
     scriptMs: scale(s.scriptMs),
     top: s.top.map(([n, v]) => [n, scale(v)]),
     startedBy: s.startedBy.map(([n, v]) => [n, scale(v)]),
+    why: s.why.map(([n, v]) => [n, scale(v)]),
   }
 }
 
@@ -452,6 +477,9 @@ function report(results: Result[]): string {
     ]
     if (r.over.length > 0 && started.length > 0) {
       lines.push(`${' '.repeat(18)}started by: ${started.map(([n, v]) => `${n} ${v}`).join(', ')}`)
+    }
+    if (r.over.length > 0 && a.why.length > 0) {
+      lines.push(`${' '.repeat(18)}because: ${a.why.map(([n, v]) => `${n} ×${v}`).join(' | ')}`)
     }
   }
   return lines.join('\n')
