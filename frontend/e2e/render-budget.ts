@@ -17,6 +17,7 @@ import { sandboxPort, selftest } from './sandbox.ts'
 //   MORTAR_RENDER_PROFILE=<name>       open this profile (default: whichever profile Mortar reopens; seeded: Seed Farm)
 //   MORTAR_RENDER_ONLY=mods,config     run only the cases whose names start with these
 //   MORTAR_RENDER_SETTLE_MS / _IDLE_MS how long an action may settle (3000) and how long idle is watched (10000)
+//   MORTAR_RENDER_TOP=<n>              how many components, roots and causes each case lists (8)
 // Writes render-budget.json under MORTAR_RENDER_OUT (default /var/tmp/render-budget-<ts>) and exits 1 when a case is
 // over its budget or fails.
 
@@ -24,7 +25,7 @@ const BASE = '/var/tmp'
 const SETTLE_MS = Number(process.env.MORTAR_RENDER_SETTLE_MS ?? '3000')
 const IDLE_MS = Number(process.env.MORTAR_RENDER_IDLE_MS ?? '10000')
 const IDLE_SCALE_MS = 10_000
-const TOP = 8
+const TOP = Number(process.env.MORTAR_RENDER_TOP ?? '8')
 // Library building blocks every MUI component renders through; the report names the app's own components instead.
 const LIBRARY =
   /^(Insertion|Styled\(|Mui|Box$|Typography$|ButtonBase$|anonymous$|TouchRipple|Ripple$|Popper|Portal$|Grow$|Fade$|Collapse$|Transition|SvgIcon$|Tooltip$|Modal$|Dialog$|Paper$|Button$|IconButton$|InputBase$|FormControl$|Chip$|Menu$|List|TableCell$|TableRow$)/
