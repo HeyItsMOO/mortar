@@ -336,16 +336,7 @@ function createMortarTheme(
       MuiMenuItem: {
         styleOverrides: { root: { paddingTop: space.menuY, paddingBottom: space.menuY } },
       },
-      MuiMenu: {
-        defaultProps: { transitionDuration: 0 },
-        styleOverrides: {
-          paper: {
-            backgroundColor: s.menu,
-            border: `1px solid ${s.hairline14}`,
-            borderRadius: MENU_RADIUS_PX,
-          },
-        },
-      },
+      MuiMenu: { defaultProps: { transitionDuration: 0 } },
       // An Autocomplete's list is its own Paper, not a Menu, so without this it takes the translucent paper colour.
       MuiAutocomplete: {
         styleOverrides: {
@@ -366,7 +357,17 @@ function createMortarTheme(
           },
         },
       },
-      MuiPopover: { defaultProps: { transitionDuration: 0 } },
+      // Every popover, a Menu's included, is a solid surface: the paper colour is translucent over the wallpaper.
+      MuiPopover: {
+        defaultProps: { transitionDuration: 0 },
+        styleOverrides: {
+          paper: {
+            backgroundColor: s.menu,
+            border: `1px solid ${s.hairline14}`,
+            borderRadius: MENU_RADIUS_PX,
+          },
+        },
+      },
       MuiCollapse: { defaultProps: { timeout: 0 } },
       // A sliding exit leaves the modal's backdrop mounted for its duration, so the click right after a drawer closes
       // lands on the backdrop and does nothing.
