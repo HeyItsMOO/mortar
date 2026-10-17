@@ -423,6 +423,7 @@ function GameSelect() {
   const { status, loadError, refresh, tileProps } = useGameTiles()
   const lastGame = useSettings((s) => s.lastGame)
   const played = useSettings((s) => s.lastPlayed)
+  const growRows = useSettings((s) => s.growGameRows) !== false
   const scroller = useRef<HTMLElement | null>(null)
   const [current, setCurrent] = useState('')
   const ordered = gameOrder(status?.games ?? [], lastGame, played)
@@ -474,7 +475,7 @@ function GameSelect() {
             ...(rail
               ? { scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }
               : {}),
-            ...hoverFocus,
+            ...(growRows ? hoverFocus : {}),
           }}
           onScroll={rail ? markLetter : undefined}
           onKeyDown={(e) => arrowFocus(e, '[data-tile]')}

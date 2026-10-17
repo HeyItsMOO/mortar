@@ -192,8 +192,10 @@ type Settings struct {
 	ShowAuthorOnCards *bool  `json:"showAuthorOnCards"`
 	// BrowseCardStats is the stats Browse cards show under the summary: comma-separated ids from browseCardStatValues,
 	// or "none".
-	BrowseCardStats          string `json:"browseCardStats"`
-	ReduceMotion             string `json:"reduceMotion"`
+	BrowseCardStats string `json:"browseCardStats"`
+	ReduceMotion    string `json:"reduceMotion"`
+	// GrowGameRows lets the game list row under the pointer or keyboard focus grow taller. Nil means on.
+	GrowGameRows             *bool  `json:"growGameRows"`
 	ProfileHero              string `json:"profileHero"`
 	ReuseFomodChoices        *bool  `json:"reuseFomodChoices"`
 	DriftChecks              *bool  `json:"driftChecks"`

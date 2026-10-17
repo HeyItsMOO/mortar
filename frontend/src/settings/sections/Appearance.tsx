@@ -218,7 +218,7 @@ export function Appearance() {
         ) : null}
       </SettingsSection>
       <SettingsSection title={t`Display`}>
-        <PrefKeys keys={['dates', 'density', 'reduceMotion', 'profileHero']} />
+        <PrefKeys keys={['dates', 'density', 'reduceMotion', 'growGameRows', 'profileHero']} />
       </SettingsSection>
       <SettingsSection title={t`Mods view`}>
         <PrefKeys

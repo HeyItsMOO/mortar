@@ -99,6 +99,7 @@ const defaults: Settings = {
   showAuthorOnCards: true,
   browseCardStats: 'popularity,downloads',
   reduceMotion: 'system',
+  growGameRows: true,
   profileHero: 'full',
   reuseFomodChoices: true,
   driftChecks: true,
