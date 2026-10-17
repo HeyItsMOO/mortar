@@ -208,6 +208,8 @@ The workflow writes the secret to a temporary file, runs the generator with `GOT
 
 A game is catalog data first and code only where its behaviour differs. Each step below names the registry that answers to a catalog reference; `TestEveryCatalogReferenceResolves` (`internal/source/all/catalog_test.go`) fails when an entry names a source, loader, metadata id, store field, path role or path token nothing answers to.
 
+`wails3 task components:audit` lists the listed Thunderstore communities with 20 or more packages that the catalog lacks, and fails when a catalog game's community or loader pack has gone from Thunderstore; run it before a release. The communities measured and left out, and why, are in [docs/design.md](docs/design.md) (Later).
+
 ### The catalog entry
 
 Add the game to `games` in `components.source.json`, then publish as described under [Publishing components](#publishing-components), which also covers how `games` reaches the signed manifest and the embedded fallback. `GameInfo.Validate` (`internal/components/components.go`) rejects an entry without an id, name, marker or loader, an enabled game with no store, a marker or GOG folder holding a path separator, a path template that does not start with a token, and a repeated source.

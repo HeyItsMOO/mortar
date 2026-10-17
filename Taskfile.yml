@@ -53,6 +53,11 @@ tasks:
     cmds:
       - scripts/clean-gate.sh {{if .PACKAGE}}--package {{end}}{{.REV | default "HEAD"}}
 
+  components:audit:
+    summary: Lists Thunderstore communities the catalog lacks and fails when a catalog community or loader pack is gone
+    cmds:
+      - bun scripts/catalog-audit.ts
+
   components:refresh:
     summary: Resolves, hashes and refreshes the bundled component manifest
     cmds:
