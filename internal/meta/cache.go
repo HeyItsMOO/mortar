@@ -152,7 +152,12 @@ func Peek[T any](c *Client, name string) (T, bool) {
 
 // do sends req and returns at most limit bytes of a 200 response body.
 func (c *Client) do(req *http.Request, limit int64) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(req.Context(), requestTimeout)
+	return c.doWithin(req, limit, requestTimeout)
+}
+
+// doWithin is do with its own deadline, for an API that may take longer than a page fetch to answer.
+func (c *Client) doWithin(req *http.Request, limit int64, timeout time.Duration) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(req.Context(), timeout)
 	defer cancel()
 	resp, err := c.client().Do(req.WithContext(ctx))
 	if err != nil {
