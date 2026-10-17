@@ -7,7 +7,7 @@ import { useTemplates } from '../templates/useTemplates.ts'
 import { openProfileDialog } from './profileDialog.ts'
 
 interface Props {
-  profile: Profile
+  profile: Pick<Profile, 'id'>
   close: () => void
 }
 

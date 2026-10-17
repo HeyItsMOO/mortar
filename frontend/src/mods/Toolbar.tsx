@@ -356,7 +356,8 @@ export function AddArchive({
   )
 }
 
-export function Toolbar({
+// Memoised: a mod switched or an answer arriving re-renders the list below, not the toolbar.
+export const Toolbar = memo(function ToolbarView({
   query,
   onQuery,
   total,
@@ -453,7 +454,7 @@ export function Toolbar({
       ) : null}
     </ControlsRow>
   )
-}
+})
 
 export function EmptyMods({ profileId }: { profileId: string }) {
   const { t } = useLingui()

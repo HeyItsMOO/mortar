@@ -255,9 +255,11 @@ export async function setEnabledAction(
     set((s) => ({
       mods: s.mods.map((m) => (modId(m) === modId(mod) ? { ...m, enabled: on } : m)),
     }))
-  flip(enabled)
   try {
     const got = await SetModEnabled(target.game, target.id, mod.key, mod.id, enabled)
+    // The list and the profile change in the same tick, so React draws them in one render; the switch itself has
+    // already moved (ModSwitch).
+    flip(enabled)
     useProfiles.getState().replace(got.profile)
     announceAlso(got.alsoEnabled)
     if (enabled) {
@@ -267,7 +269,6 @@ export async function setEnabledAction(
     }
     await get().loadProblems()
   } catch (e) {
-    flip(!enabled)
     reportError(i18n._(msg`Could not switch ${mod.name}`))(e)
   }
 }

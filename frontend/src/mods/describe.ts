@@ -283,8 +283,10 @@ function describeLoadFailure({ plugin, name, kind, dependency, message }: LoadFa
 // The one-line sentence for a problem, shared by the summary rows and the card badges.
 export function useDescribe(): Describe {
   const { t } = useLingui()
-  const mods = useMods((s) => s.mods)
-  const nameOf = (id: string) => mods.find((m) => sameId(m.id, id))?.name ?? localId(id)
+  // Read when a problem is described, not subscribed: a missing mod is seldom in the list, and every problem badge on
+  // screen would otherwise redraw whenever any mod changes.
+  const nameOf = (id: string) =>
+    useMods.getState().mods.find((m) => sameId(m.id, id))?.name ?? localId(id)
 
   return (p: Problem): string => {
     switch (p.kind) {

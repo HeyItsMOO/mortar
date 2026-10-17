@@ -224,7 +224,12 @@ function FilteredMods({ profile }: { profile: Profile }) {
   const nexusById = useNexusDetails((s) => (q === '' ? NO_DETAILS : s.byId))
   const customCategories = useCustomCategories((s) => (q === '' ? NO_CATEGORIES : s.categories))
   // Stable for the memoised Show menu, which a key typed into the search then skips.
-  const tags = useMemo(() => profileTags(profile.entries), [profile.entries])
+  const tagKey = profileTags(profile.entries).join('\n')
+  const tags = useMemo(() => (tagKey === '' ? [] : tagKey.split('\n')), [tagKey])
+  const onQuery = useCallback(
+    (value: string) => setQuery(profile.id, value),
+    [setQuery, profile.id],
+  )
   const onFilter = useCallback(
     (value: ModFilter) => setFilter(profile.id, value),
     [setFilter, profile.id],
@@ -280,7 +285,7 @@ function FilteredMods({ profile }: { profile: Profile }) {
     <>
       <Toolbar
         query={query}
-        onQuery={(value) => setQuery(profile.id, value)}
+        onQuery={onQuery}
         total={mods.length}
         filter={filter}
         onFilter={onFilter}

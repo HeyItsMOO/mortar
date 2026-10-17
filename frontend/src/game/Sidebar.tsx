@@ -15,7 +15,7 @@ import {
   Table2,
   TriangleAlert,
 } from 'lucide-react'
-import { type ReactNode, useEffect } from 'react'
+import { memo, type ReactNode, useEffect } from 'react'
 import { useGameInfo } from '../games/info.ts'
 import { PlayControl } from '../launch/PlayControl.tsx'
 import { useBadges } from '../mods/badges.ts'
@@ -95,81 +95,91 @@ function railLabel(label: string, badge: SidebarEntry['badge']): string {
   return badge ? `${label}, ${badge.n}` : label
 }
 
-function Item({
-  tab,
-  label,
-  badge,
-  active,
-  rail,
-}: {
-  tab: TabId
-  label: string
-  badge: SidebarEntry['badge']
-  active: boolean
-  rail: boolean
-}) {
-  const setTab = useTab((s) => s.setTab)
-  const Icon = icons[tab]
-  const button = (
-    <ButtonBase
-      role="tab"
-      id={tabDomId(tab)}
-      aria-controls={PANEL_ID}
-      aria-selected={active}
-      // One tab stop for the whole list: Tab reaches the open section, and the arrow keys move between sections.
-      tabIndex={active ? 0 : -1}
-      aria-label={rail ? railLabel(label, badge) : undefined}
-      data-tour={tours[tab]}
-      onClick={() => setTab(tab)}
-      sx={{
-        position: 'relative',
-        justifyContent: rail ? 'center' : 'flex-start',
-        gap: '12px',
-        height: rail ? RAIL_ITEM_HEIGHT_PX : ITEM_HEIGHT_PX,
-        width: rail ? RAIL_ITEM_WIDTH_PX : 'auto',
-        mx: rail ? 0 : '8px',
-        px: rail ? 0 : '12px',
-        flexShrink: 0,
-        borderRadius: '8px',
-        fontFamily: 'inherit',
-        fontSize: 14,
-        fontWeight: active ? SELECTED_WEIGHT : NORMAL_WEIGHT,
-        whiteSpace: 'nowrap',
-        color: active ? 'var(--mortar-ink)' : 'var(--mortar-ink-sec)',
-        bgcolor: active ? 'var(--mortar-hairline-muted)' : 'transparent',
-        '&:hover': {
-          bgcolor: active ? 'var(--mortar-hairline-muted)' : 'var(--mortar-hairline-faint)',
-        },
-      }}
-    >
-      {active ? (
-        <Box
-          component="span"
-          aria-hidden={true}
-          sx={{
-            position: 'absolute',
-            left: 0,
-            top: 8,
-            bottom: 8,
-            width: 3,
-            borderRadius: '2px',
-            bgcolor: 'primary.main',
-          }}
-        />
-      ) : null}
-      <Icon size={18} aria-hidden={true} />
-      {rail ? null : <span>{label}</span>}
-      {badge ? <Badge badge={badge} rail={rail} /> : null}
-    </ButtonBase>
-  )
-  return rail ? (
-    <Tooltip title={label} placement="right">
-      {button}
-    </Tooltip>
-  ) : (
-    button
-  )
-}
+// Memoised: a badge count changing re-renders that one item, not the whole list of sections.
+const Item = memo(
+  function ItemView({
+    tab,
+    label,
+    badge,
+    active,
+    rail,
+  }: {
+    tab: TabId
+    label: string
+    badge: SidebarEntry['badge']
+    active: boolean
+    rail: boolean
+  }) {
+    const setTab = useTab((s) => s.setTab)
+    const Icon = icons[tab]
+    const button = (
+      <ButtonBase
+        role="tab"
+        id={tabDomId(tab)}
+        aria-controls={PANEL_ID}
+        aria-selected={active}
+        // One tab stop for the whole list: Tab reaches the open section, and the arrow keys move between sections.
+        tabIndex={active ? 0 : -1}
+        aria-label={rail ? railLabel(label, badge) : undefined}
+        data-tour={tours[tab]}
+        onClick={() => setTab(tab)}
+        sx={{
+          position: 'relative',
+          justifyContent: rail ? 'center' : 'flex-start',
+          gap: '12px',
+          height: rail ? RAIL_ITEM_HEIGHT_PX : ITEM_HEIGHT_PX,
+          width: rail ? RAIL_ITEM_WIDTH_PX : 'auto',
+          mx: rail ? 0 : '8px',
+          px: rail ? 0 : '12px',
+          flexShrink: 0,
+          borderRadius: '8px',
+          fontFamily: 'inherit',
+          fontSize: 14,
+          fontWeight: active ? SELECTED_WEIGHT : NORMAL_WEIGHT,
+          whiteSpace: 'nowrap',
+          color: active ? 'var(--mortar-ink)' : 'var(--mortar-ink-sec)',
+          bgcolor: active ? 'var(--mortar-hairline-muted)' : 'transparent',
+          '&:hover': {
+            bgcolor: active ? 'var(--mortar-hairline-muted)' : 'var(--mortar-hairline-faint)',
+          },
+        }}
+      >
+        {active ? (
+          <Box
+            component="span"
+            aria-hidden={true}
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 8,
+              bottom: 8,
+              width: 3,
+              borderRadius: '2px',
+              bgcolor: 'primary.main',
+            }}
+          />
+        ) : null}
+        <Icon size={18} aria-hidden={true} />
+        {rail ? null : <span>{label}</span>}
+        {badge ? <Badge badge={badge} rail={rail} /> : null}
+      </ButtonBase>
+    )
+    return rail ? (
+      <Tooltip title={label} placement="right">
+        {button}
+      </Tooltip>
+    ) : (
+      button
+    )
+  },
+  (a, b) =>
+    a.tab === b.tab &&
+    a.label === b.label &&
+    a.active === b.active &&
+    a.rail === b.rail &&
+    a.badge?.n === b.badge?.n &&
+    a.badge?.tone === b.badge?.tone,
+)
 
 function GroupHeading({ children }: { children: ReactNode }) {
   return (
@@ -321,7 +331,7 @@ function CollapseButton({ rail }: { rail: boolean }) {
 
 export function Sidebar({ game }: { game: string }) {
   const { rail, narrow } = useRail()
-  const profile = useProfiles(openProfileOf)
+  const hasProfile = useProfiles((s) => openProfileOf(s) !== undefined)
   useLoadProblemsOnFocus()
   return (
     <Box
@@ -338,7 +348,7 @@ export function Sidebar({ game }: { game: string }) {
         borderRight: '1px solid var(--mortar-hairline-muted)',
       }}
     >
-      {profile ? <Sections rail={rail} /> : null}
+      {hasProfile ? <Sections rail={rail} /> : null}
       <Box sx={{ flex: 1 }} />
       {narrow ? null : <CollapseButton rail={rail} />}
       <Box sx={{ width: '100%' }}>

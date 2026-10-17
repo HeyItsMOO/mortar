@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Switch, Typography } from '@mui/material'
 import { ChevronDown, ChevronRight, Search } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { memo, type ReactNode } from 'react'
 import { CoverButton } from '../shell/CoverButton.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
@@ -106,17 +106,7 @@ function FindSourcesButton() {
   )
 }
 
-function GroupHeaderRow({
-  groupKey,
-  count,
-  label,
-  collapsed,
-  gameId,
-  setCollapsed,
-  groupBy,
-  tagHint,
-  groups,
-}: {
+interface HeaderRowProps {
   groupKey: string
   count: number
   label: string
@@ -126,7 +116,19 @@ function GroupHeaderRow({
   groupBy: string
   tagHint: string
   groups: readonly { key: string; items: readonly ListRow[] }[]
-}) {
+}
+
+function GroupHeaderRowView({
+  groupKey,
+  count,
+  label,
+  collapsed,
+  gameId,
+  setCollapsed,
+  groupBy,
+  tagHint,
+  groups,
+}: HeaderRowProps) {
   const open = collapsed[groupKey] !== true
   return (
     <ModsGroupHeader
@@ -154,6 +156,30 @@ function GroupHeaderRow({
     />
   )
 }
+
+// Of the collapsed map and the groups, a header shows only whether its group is collapsed, all switched on, or holds an
+// unsourced mod; the list rebuilds both for any change to any row, and a header redraws only when these change.
+const headerFlags = (p: HeaderRowProps) => {
+  const group = p.groups.find((g) => g.key === p.groupKey)
+  return [
+    p.collapsed[p.groupKey] === true,
+    group?.items.every((r) => r.mod.enabled) === true,
+    group?.items.some((r) => r.unsourced === true) === true,
+  ].join()
+}
+
+const GroupHeaderRow = memo(
+  GroupHeaderRowView,
+  (a, b) =>
+    a.groupKey === b.groupKey &&
+    a.count === b.count &&
+    a.label === b.label &&
+    a.gameId === b.gameId &&
+    a.setCollapsed === b.setCollapsed &&
+    a.groupBy === b.groupBy &&
+    a.tagHint === b.tagHint &&
+    headerFlags(a) === headerFlags(b),
+)
 
 // The open group's header pinned over the top of a scrolled list, on a solid surface so rows do not show through it.
 function StickyGroupSlot({ shift, children }: { shift: number; children: ReactNode }) {

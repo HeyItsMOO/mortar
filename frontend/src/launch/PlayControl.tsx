@@ -11,7 +11,7 @@ import { SetDefaultLaunchPreset } from '../../bindings/github.com/Rethunk-Tech/m
 import { useGameLoader } from '../games/info.ts'
 import { useLoader } from '../loader/store.ts'
 import { BASE_PRESET, playPresets } from '../profiles/profilePresets.ts'
-import { useProfiles } from '../profiles/store.ts'
+import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { Tooltip } from '../shell/Tooltip.tsx'
 import { space } from '../theme/density.ts'
 import { reportError } from '../toasts/report.ts'
@@ -61,6 +61,13 @@ function useElapsed(since: number, active: boolean): string {
   return elapsed(now - since)
 }
 
+// The open profile's play presets from its two preset fields, so a save that changes neither leaves Play alone.
+function useOpenPresets() {
+  const launchPresets = useProfiles((s) => openProfileOf(s)?.launchPresets ?? null)
+  const defaultLaunchPreset = useProfiles((s) => openProfileOf(s)?.defaultLaunchPreset ?? '')
+  return playPresets({ launchPresets, defaultLaunchPreset })
+}
+
 // `rail` is the narrow sidebar: Play and Stop shrink to icons.
 export function PlayControl({ game, rail }: { game: string; rail: boolean }) {
   const { t } = useLingui()
@@ -72,24 +79,24 @@ export function PlayControl({ game, rail }: { game: string; rail: boolean }) {
   const installingLoader = useLoader((s) => s.installing)
   const start = useLaunch((s) => s.start)
   const openId = useProfiles((s) => s.openId)
-  const profiles = useProfiles((s) => s.profiles)
   const [confirming, setConfirming] = useState(false)
   const state = stateOf(status, game)
   const running = state === State.Running
   const time = useElapsed(status?.since ?? 0, running)
   const scene = useLive((s) => (s.game === game ? s.scene : ''))
-  const runningProfile = profiles.find((p) => p.id === status?.profile)
+  // Fields, not the profiles: a save of the open profile re-renders this only when what it shows changed.
+  const runningName = useProfiles((s) => s.profiles.find((p) => p.id === status?.profile)?.name)
   const replaceProfile = useProfiles((s) => s.replace)
-  const presets = playPresets(profiles.find((p) => p.id === openId))
+  const presets = useOpenPresets()
 
   if (running) {
-    const who = runningProfile && runningProfile.id !== openId ? runningProfile.name : ''
+    const who = runningName !== undefined && status?.profile !== openId ? runningName : ''
     return (
       <>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           {rail ? null : (
             <Box
-              title={runningProfile?.name}
+              title={runningName}
               sx={{
                 display: 'flex',
                 alignItems: 'center',

@@ -30,7 +30,9 @@ export function ExtraFolderMenu({
   const { t } = useLingui()
   const game = useProfiles((s) => s.game?.id ?? '')
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)
-  const profile = useProfiles(openProfileOf)
+  // The id and name, not the profile, so a save of the open profile does not re-render the Add button.
+  const profileId = useProfiles((s) => openProfileOf(s)?.id ?? '')
+  const profileName = useProfiles((s) => openProfileOf(s)?.name ?? '')
   const [open, setOpen] = useState(false)
   const [savedGroupOpen, setSavedGroupOpen] = useState(false)
   const close = () => setAnchor(null)
@@ -71,10 +73,10 @@ export function ExtraFolderMenu({
             }}
           />
         )}
-        {profile ? <MenuRule /> : null}
-        {profile ? <MenuHeading>{t`Add a set`}</MenuHeading> : null}
-        {profile ? <ApplyTemplateMenuItem profile={profile} close={close} /> : null}
-        {profile ? (
+        {profileId ? <MenuRule /> : null}
+        {profileId ? <MenuHeading>{t`Add a set`}</MenuHeading> : null}
+        {profileId ? <ApplyTemplateMenuItem profile={{ id: profileId }} close={close} /> : null}
+        {profileId ? (
           <MenuAction
             icon={<PackagePlus size={16} aria-hidden={true} />}
             label={t`Add a saved group…`}
@@ -85,14 +87,14 @@ export function ExtraFolderMenu({
           />
         ) : null}
       </Menu>
-      {profile ? (
+      {profileId ? (
         <ApplySavedGroupDialog
           open={savedGroupOpen}
           game={game}
-          profileName={profile.name}
-          profileId={profile.id}
+          profileName={profileName}
+          profileId={profileId}
           onClose={() => setSavedGroupOpen(false)}
-          onApplied={(result) => savedGroupApplied(result, profile.id)}
+          onApplied={(result) => savedGroupApplied(result, profileId)}
         />
       ) : null}
       <ExtraFolderDialog open={open} game={game} folder={folder} onClose={() => setOpen(false)} />

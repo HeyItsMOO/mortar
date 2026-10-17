@@ -15,7 +15,9 @@ interface PlayPreset {
 }
 
 // Empty while the profile has no named presets, so the Play menu stays as it was.
-function playPresets(profile: Profile | undefined): PlayPreset[] {
+function playPresets(
+  profile: Pick<Profile, 'launchPresets' | 'defaultLaunchPreset'> | undefined,
+): PlayPreset[] {
   const named = profile?.launchPresets ?? []
   if (!profile || named.length === 0) {
     return []

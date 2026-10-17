@@ -425,19 +425,25 @@ export function ModSwitch({ mod }: { mod: Mod }) {
   const { t } = useLingui()
   const setEnabled = useMods((s) => s.setEnabled)
   const locked = useLocked()
+  // The switch moves at once; the list and the profile change together when the save returns, in one render.
+  const [moving, setMoving] = useState<boolean | null>(null)
+  const on = moving ?? mod.enabled
   return (
     <LockedReason locked={locked}>
       <Switch
         size="small"
-        checked={mod.enabled}
+        checked={on}
         disabled={locked}
         onChange={(e) => {
-          setEnabled(mod, e.target.checked).catch(reportUnexpected)
+          setMoving(e.target.checked)
+          setEnabled(mod, e.target.checked)
+            .catch(reportUnexpected)
+            .finally(() => setMoving(null))
         }}
         onClick={(e) => e.stopPropagation()}
         slotProps={{
           input: {
-            'aria-label': mod.enabled ? t`Disable ${mod.name}` : t`Enable ${mod.name}`,
+            'aria-label': on ? t`Disable ${mod.name}` : t`Enable ${mod.name}`,
           },
         }}
       />

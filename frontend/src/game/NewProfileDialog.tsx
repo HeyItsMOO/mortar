@@ -21,7 +21,7 @@ import type { Template } from '../../bindings/github.com/Rethunk-Tech/mortar/int
 import { NewProfileFromTemplate } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/templates/service.ts'
 import { savedGroupWants } from '../groups/missingWants.ts'
 import { listNames } from '../i18n/list.ts'
-import { useProfiles } from '../profiles/store.ts'
+import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { download } from '../queue/actions.ts'
 import { starterWants } from '../templates/starterWants.ts'
 import { ManageTemplatesDialog } from '../templates/TemplateDialogs.tsx'
@@ -190,15 +190,16 @@ export function NewProfileDialog({ open, onClose }: { open: boolean; onClose: ()
       setFrom(EMPTY)
     }
   }, [open])
-  const openProfile = useProfiles((s) => s.profiles.find((p) => p.id === s.openId))
+  const openId = useProfiles((s) => openProfileOf(s)?.id ?? '')
+  const openName = useProfiles((s) => openProfileOf(s)?.name ?? '')
   const template = templates.find((candidate) => candidate.name === from)
   const starter = starters.find((candidate) => STARTER + candidate.id === from)
-  const copying = from === COPY && openProfile !== undefined
+  const copying = from === COPY && openId !== ''
   const trimmed = name.trim()
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
     if (!(busy || trimmed === '')) {
-      submit(trimmed, template, copying ? (openProfile?.id ?? '') : '', starter)
+      submit(trimmed, template, copying ? openId : '', starter)
     }
   }
   return (
@@ -216,9 +217,9 @@ export function NewProfileDialog({ open, onClose }: { open: boolean; onClose: ()
               slotProps={{ htmlInput: { maxLength: MAX_NAME } }}
               disabled={busy}
             />
-            {templates.length > 0 || starters.length > 0 || openProfile !== undefined ? (
+            {templates.length > 0 || starters.length > 0 || openId !== '' ? (
               <StartFromSelect
-                copyOf={openProfile?.name ?? ''}
+                copyOf={openName}
                 names={templates.map((candidate) => candidate.name)}
                 starters={starters}
                 value={template || starter || copying ? from : EMPTY}
