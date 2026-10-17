@@ -211,14 +211,15 @@ func TestLacking(t *testing.T) {
 }
 
 // lethalCompany lays out a Lethal Company save folder the way the game leaves it: three slots and the challenge file
-// beside its settings, its log and a mod's config folder, which are not saves.
+// beside its settings, its log and a mod's config folder, which are not saves, and LethalModDataLib's data for slot 1,
+// which belongs to that slot.
 func lethalCompany(t *testing.T) Layout {
 	t.Helper()
 	dir := filepath.Join(t.TempDir(), "Lethal Company")
-	for _, name := range []string{"LCSaveFile1", "LCSaveFile3", "LCChallengeFile", "LCGeneralSaveData", "Player.log", "InputUtils/binds.json"} {
+	for _, name := range []string{"LCSaveFile1", "LCSaveFile1.moddata", "LCSaveFile3", "LCChallengeFile", "LCGeneralSaveData", "Player.log", "InputUtils/binds.json"} {
 		write(t, filepath.Join(dir, name), "ES3 "+name)
 	}
-	return Layout{Dir: dir, Files: []string{"LCSaveFile*", "LCChallengeFile"}}
+	return Layout{Dir: dir, Files: []string{"LCSaveFile*", "LCChallengeFile", "!*.moddata"}, Companions: []string{".moddata"}}
 }
 
 func TestFileSavesAreFoundWithAnUnknownFit(t *testing.T) {
@@ -226,6 +227,9 @@ func TestFileSavesAreFoundWithAnUnknownFit(t *testing.T) {
 	names, err := l.Names()
 	if want := []string{"LCChallengeFile", "LCSaveFile1", "LCSaveFile3"}; err != nil || !reflect.DeepEqual(names, want) {
 		t.Fatalf("Names = %v, %v; want %v", names, err, want)
+	}
+	if got := l.Paths("LCSaveFile1"); !reflect.DeepEqual(got, []string{"LCSaveFile1", "LCSaveFile1.moddata"}) {
+		t.Fatalf("Paths = %v, want the slot with its mod data", got)
 	}
 	s := &Scanner{Dir: l.Dir, Files: l.Files, CacheDir: t.TempDir()}
 	infos, err := s.Scan(t.Context(), index)

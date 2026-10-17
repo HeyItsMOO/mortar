@@ -180,8 +180,8 @@
           "linux": "{xdgConfig}/unity3d/ZeekerssRBLX/Lethal Company/Player.log"
         }
       },
-      "saveFiles": ["LCSaveFile*", "LCChallengeFile", "!*.bac", "!*.tmp", "!*.bak"],
-      "saveCompanions": [".bac", ".tmp", ".tmp.bak"],
+      "saveFiles": ["LCSaveFile*", "LCChallengeFile", "!*.bac", "!*.tmp", "!*.bak", "!*.moddata"],
+      "saveCompanions": [".bac", ".tmp", ".tmp.bak", ".moddata"],
       "titleScene": "MainMenu",
       "deploy": "profile",
       "targets": [
