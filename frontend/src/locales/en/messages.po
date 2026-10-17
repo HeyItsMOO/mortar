@@ -779,7 +779,7 @@ msgstr "Updated on Nexus"
 #: src/mods/problemFix/BrokenFix.tsx:79
 #: src/mods/problemFix/ListedFix.tsx:26
 #: src/mods/problemFix/SettingFix.tsx:100
-#: src/profiles/CrashHintCard.tsx:147
+#: src/profiles/CrashHintCard.tsx:148
 #: src/tips/TipBanner.tsx:38
 #: src/toasts/ToastHost.tsx:216
 msgid "Dismiss"
@@ -1928,7 +1928,7 @@ msgid "Trim…"
 msgstr "Trim…"
 
 #. placeholder {0}: hint.evidence
-#: src/profiles/CrashHintCard.tsx:117
+#: src/profiles/CrashHintCard.tsx:118
 msgid "Stack frame: {0}"
 msgstr "Stack frame: {0}"
 
@@ -4305,7 +4305,7 @@ msgstr "Part of the OBS address; regenerate it if it leaks"
 msgid "{mods} is hidden"
 msgstr "{mods} is hidden"
 
-#: src/profiles/CrashHintCard.tsx:137
+#: src/profiles/CrashHintCard.tsx:138
 msgid "Find the cause…"
 msgstr "Find the cause…"
 
@@ -6625,7 +6625,7 @@ msgstr "Hidden inside this mod"
 msgid "{count, plural, one {Merged # mod from {name}} other {Merged # mods from {name}}}"
 msgstr "{count, plural, one {Merged # mod from {name}} other {Merged # mods from {name}}}"
 
-#: src/profiles/CrashHintCard.tsx:128
+#: src/profiles/CrashHintCard.tsx:129
 msgid "Disable it and play"
 msgstr "Disable it and play"
 
@@ -6841,7 +6841,7 @@ msgstr "All values"
 msgid "Port"
 msgstr "Port"
 
-#: src/profiles/CrashHintCard.tsx:104
+#: src/profiles/CrashHintCard.tsx:67
 msgid "named in the crash log"
 msgstr "named in the crash log"
 
@@ -7259,7 +7259,7 @@ msgstr "pins"
 msgid "Load all changes"
 msgstr "Load all changes"
 
-#: src/profiles/CrashHintCard.tsx:105
+#: src/profiles/CrashHintCard.tsx:106
 msgid "The log does not name a mod."
 msgstr "The log does not name a mod."
 
@@ -11787,7 +11787,7 @@ msgstr "Explicit"
 msgid "Luck skill"
 msgstr "Luck skill"
 
-#: src/profiles/CrashHintCard.tsx:100
+#: src/profiles/CrashHintCard.tsx:101
 msgid "The game crashed"
 msgstr "The game crashed"
 
@@ -12036,7 +12036,7 @@ msgid "Riverland farm"
 msgstr "Riverland farm"
 
 #. placeholder {0}: formatWhen(crashedAt)
-#: src/profiles/CrashHintCard.tsx:100
+#: src/profiles/CrashHintCard.tsx:101
 msgid "The game crashed {0}"
 msgstr "The game crashed {0}"
 
@@ -14049,8 +14049,8 @@ msgid "Moving data"
 msgstr "Moving data"
 
 #. placeholder {0}: hint.modName
-#. placeholder {1}: hint.reason || t`named in the crash log`
-#: src/profiles/CrashHintCard.tsx:104
+#. placeholder {1}: hint.reason || named
+#: src/profiles/CrashHintCard.tsx:105
 msgid "Most likely cause: {0} ({1})"
 msgstr "Most likely cause: {0} ({1})"
 

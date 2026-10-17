@@ -64,6 +64,7 @@ export function CrashHintCard({
     }
   }, [key])
   const culprit = hint?.modKey ? mod.find((m) => m.key === hint.modKey) : undefined
+  const named = t`named in the crash log`
   const bisect = () => StartBisect(game, profileId).then(setBisectJob).catch(reportUnexpected)
   const retry = (target: NonNullable<typeof culprit>) => {
     setBusy(true)
@@ -101,7 +102,7 @@ export function CrashHintCard({
             </Typography>
             <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
               {culprit
-                ? t`Most likely cause: ${hint.modName} (${hint.reason || t`named in the crash log`})`
+                ? t`Most likely cause: ${hint.modName} (${hint.reason || named})`
                 : hint.reason || t`The log does not name a mod.`}
             </Typography>
             {culprit && hint.evidence ? (

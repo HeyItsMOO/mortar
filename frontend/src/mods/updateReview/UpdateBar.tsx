@@ -56,7 +56,7 @@ export const UpdateBar = memo(function UpdateBarView() {
         noWrap={true}
         sx={{ flexShrink: 0, fontSize: 14, fontWeight: 600 }}
       >
-        {t`${plural(count, { one: '# update ready', other: '# updates ready' })}`}
+        {plural(count, { one: '# update ready', other: '# updates ready' })}
       </Typography>
       <Typography
         component="span"
