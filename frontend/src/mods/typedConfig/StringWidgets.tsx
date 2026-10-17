@@ -51,6 +51,15 @@ function KeybindWidget({ entry, label, onChange }: WidgetProps) {
   }, [recording, inputSystem, onChange])
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
+      <Button
+        size="small"
+        variant={recording ? 'contained' : 'outlined'}
+        startIcon={<Circle size={12} />}
+        onClick={() => setRecording((r) => !r)}
+        onBlur={() => setRecording(false)}
+      >
+        {recording ? t`Press a key…` : t`Record`}
+      </Button>
       <TextField
         size="small"
         value={value}
@@ -74,15 +83,6 @@ function KeybindWidget({ entry, label, onChange }: WidgetProps) {
         }}
         sx={{ width: TEXT_WIDTH_PX }}
       />
-      <Button
-        size="small"
-        variant={recording ? 'contained' : 'outlined'}
-        startIcon={<Circle size={12} />}
-        onClick={() => setRecording((r) => !r)}
-        onBlur={() => setRecording(false)}
-      >
-        {recording ? t`Press a key…` : t`Record`}
-      </Button>
     </Box>
   )
 }
@@ -119,7 +119,13 @@ function ChipsWidget({ entry, label, onChange }: WidgetProps) {
           }}
         />
       )}
-      sx={{ width: TEXT_WIDTH_PX }}
+      // The theme pins small inputs to one control height; chips wrap onto more lines, so this field grows.
+      sx={{
+        width: TEXT_WIDTH_PX,
+        '&&& .MuiInputBase-root': { height: 'auto', minHeight: space.control, flexWrap: 'wrap' },
+        // The typing area shares the chips' line and only wraps when they fill it.
+        '&&& .MuiAutocomplete-input': { width: 0, minWidth: 30, flexGrow: 1 },
+      }}
     />
   )
 }
@@ -141,27 +147,38 @@ function NumberItem({
   const [draft, setDraft] = useState<string | null>(null)
   const shown = draft ?? value
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <TextField
-        size="small"
-        value={shown}
-        error={!isNumericItem(shown)}
-        onChange={(e) => {
-          setDraft(e.target.value)
-          if (isNumericItem(e.target.value)) {
-            onValid(e.target.value)
-          }
-        }}
-        onBlur={() => setDraft(null)}
-        slotProps={{ htmlInput: { 'aria-label': label } }}
-        sx={{ width: ITEM_WIDTH_PX }}
-      />
-      {onRemove ? (
-        <IconButton size="small" aria-label={t`Remove ${{ name: label }}`} onClick={onRemove}>
-          <X size={14} />
-        </IconButton>
-      ) : null}
-    </Box>
+    <TextField
+      size="small"
+      value={shown}
+      error={!isNumericItem(shown)}
+      onChange={(e) => {
+        setDraft(e.target.value)
+        if (isNumericItem(e.target.value)) {
+          onValid(e.target.value)
+        }
+      }}
+      onBlur={() => setDraft(null)}
+      slotProps={{
+        htmlInput: { 'aria-label': label },
+        input: onRemove
+          ? {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    edge="end"
+                    aria-label={t`Remove ${{ name: label }}`}
+                    onClick={onRemove}
+                  >
+                    <X size={14} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
+          : {},
+      }}
+      sx={{ width: ITEM_WIDTH_PX }}
+    />
   )
 }
 
@@ -173,6 +190,13 @@ function NumberListWidget({ entry, label, onChange }: WidgetProps) {
   const write = (next: string[]) => onChange(next.join(separator))
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: space.gap }}>
+      <IconButton
+        size="small"
+        aria-label={t`Add ${label} item`}
+        onClick={() => write([...items, items.at(-1) ?? '0'])}
+      >
+        <Plus size={14} />
+      </IconButton>
       {items.map((item, i) => (
         <NumberItem
           key={positionKey(i)}
@@ -182,13 +206,6 @@ function NumberListWidget({ entry, label, onChange }: WidgetProps) {
           onRemove={items.length > 1 ? () => write(items.filter((_v, j) => j !== i)) : null}
         />
       ))}
-      <IconButton
-        size="small"
-        aria-label={t`Add ${label} item`}
-        onClick={() => write([...items, items.at(-1) ?? '0'])}
-      >
-        <Plus size={14} />
-      </IconButton>
     </Box>
   )
 }

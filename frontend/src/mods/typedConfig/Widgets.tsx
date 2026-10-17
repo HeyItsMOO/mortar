@@ -114,6 +114,8 @@ function ColorWidget({ entry, label, onChange }: WidgetProps) {
         onClose={() => setAnchor(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        // The picker's round handles reach past its edges; padding keeps them inside rather than scrolling.
+        slotProps={{ paper: { sx: { p: 1.5, overflow: 'visible' } } }}
       >
         <HexColorPicker
           color={rgb}
