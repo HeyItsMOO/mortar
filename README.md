@@ -8,7 +8,7 @@
 
 ---
 
-Mortar is a desktop mod manager, built for more than one game. It finds your game, installs its mod loader, keeps each set of mods in its own profile, and launches the game with the profile you pick. A profile is shared as a link: whoever opens it gets the same mods, with anything missing installed or queued and every dependency checked.
+Mortar is a desktop mod manager for more than one game. It finds your game, installs its mod loader, keeps each set of mods in its own profile and launches the game with the profile you pick. A profile is shared as a link: whoever opens it gets the same mods, with anything missing installed or queued.
 
 The games Mortar supports come from its catalog: Stardew Valley, Lethal Company, Valheim, Vintage Story, The Sims 4 and many Thunderstore games, with mods from Nexus Mods, GitHub, Thunderstore, CurseForge, Modrinth and the Vintage Story Mod DB. Mortar succeeds [Concrete](https://github.com/LethalModding/Concrete).
 
@@ -18,12 +18,9 @@ The games Mortar supports come from its catalog: Stardew Valley, Lethal Company,
 
 - Download from [mortar.rethunk.tech/download](https://mortar.rethunk.tech/download/), which has the steps for each channel: signed apt, dnf, pacman and Flatpak repositories, a [Scoop bucket](https://github.com/Rethunk-Tech/scoop-bucket) and a [Homebrew tap](https://github.com/Rethunk-Tech/homebrew-tap).
 - Or take a file from [Releases](https://github.com/Rethunk-Tech/mortar/releases/latest): a Windows installer (x64 or ARM64), or for Linux an AppImage, portable program, Flatpak, `.deb`, `.rpm` or Arch package.
-- The AppImage and portable program need Ubuntu 24.04, Debian 13, Fedora 39 or newer (glibc 2.38); on older systems use the Flatpak.
-- Mortar finds Stardew Valley from Steam, GOG, Heroic or Lutris and installs SMAPI itself; it finds Lethal Company from Steam and installs BepInEx itself.
-- The [user guide](docs/user-guide.md) walks through installing, first run, Nexus sign-in, profiles, backups and troubleshooting.
-- The Windows builds are not code-signed, so SmartScreen warns the first time one runs: choose **More info**, then **Run anyway**.
+- The [user guide](docs/user-guide.md) covers requirements, SmartScreen on the unsigned Windows builds, first run, Nexus sign-in, profiles, backups and troubleshooting.
 
-The optional browser extension marks Nexus Mods pages with what a profile already has and hands Mod Manager Download clicks to Mortar. It lives in its own repo, [Rethunk-Tech/mortar-browser-extension](https://github.com/Rethunk-Tech/mortar-browser-extension). Its [latest release](https://github.com/Rethunk-Tech/mortar-browser-extension/releases/latest) carries a signed `mortar-browser-extension.xpi` for Firefox and `mortar-browser-extension.zip` for Chrome, Edge and other Chromium browsers (unzip it, open `chrome://extensions`, turn on Developer mode and choose **Load unpacked**); Settings › Downloads links both.
+The optional browser extension marks Nexus Mods pages with what a profile already has and hands Mod Manager Download clicks to Mortar. It lives in [Rethunk-Tech/mortar-browser-extension](https://github.com/Rethunk-Tech/mortar-browser-extension); the user guide has its install steps.
 
 To build it yourself:
 
