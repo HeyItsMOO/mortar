@@ -1,5 +1,3 @@
 export const ROW_TILE = 48
 export const MEDIUM = 500
 export const DIALOG_WIDTH = 760
-export const ICON_TILE = 44
-export const ICON_FILL = 0.18

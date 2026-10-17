@@ -9,7 +9,10 @@ import { useMods } from '../store.ts'
 import { groupBySource } from './groups.ts'
 import { ReviewList } from './ReviewList.tsx'
 
-/** The same-source updates, one headed list per reporting source, then the updates of implicit mods as Libraries. */
+/**
+ * The same-source updates, one list per reporting source, then the updates of implicit mods as Libraries, each headed
+ * when there is more than one.
+ */
 export function SourceGroups(props: ComponentProps<typeof ReviewList>) {
   const { t } = useLingui()
   const all = useMods((s) => s.mods)
@@ -20,12 +23,16 @@ export function SourceGroups(props: ComponentProps<typeof ReviewList>) {
       all,
     )
   const libraries = props.list.filter(library)
-  const heading = (text: string) => (
-    <Typography sx={{ px: space.pad, pt: space.pad, fontWeight: 600 }}>{text}</Typography>
-  )
+  const groups = groupBySource(props.list.filter((u) => !library(u)))
+  // One section needs no heading: the dialog's title already counts its updates.
+  const headed = groups.length + (libraries.length > 0 ? 1 : 0) > 1
+  const heading = (text: string) =>
+    headed ? (
+      <Typography sx={{ px: space.pad, pt: space.pad, fontWeight: 600 }}>{text}</Typography>
+    ) : null
   return (
     <>
-      {groupBySource(props.list.filter((u) => !library(u))).map((g) => {
+      {groups.map((g) => {
         const name = g.name || t`Other`
         return (
           <div key={g.name}>

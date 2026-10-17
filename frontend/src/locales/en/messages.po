@@ -74,7 +74,7 @@ msgstr "Keep the game's current value"
 msgid "Interface tour"
 msgstr "Interface tour"
 
-#: src/mods/updateReview/SourceGroups.tsx:29
+#: src/mods/updateReview/SourceGroups.tsx:36
 #: src/settings/sections/DataUsage.tsx:212
 msgid "Other"
 msgstr "Other"
@@ -1380,7 +1380,7 @@ msgstr "Select all mods"
 msgid "An r2modman code or modpack"
 msgstr "An r2modman code or modpack"
 
-#: src/mods/updateReview/ReviewTitle.tsx:40
+#: src/mods/updateReview/ReviewTitle.tsx:26
 msgid "{count, plural, one {# update for {profileName}} other {# updates for {profileName}}}"
 msgstr "{count, plural, one {# update for {profileName}} other {# updates for {profileName}}}"
 
@@ -2259,7 +2259,7 @@ msgstr "Nexus account"
 #. placeholder {0}: mod.name
 #. placeholder {0}: update.name
 #: src/mods/ModMenu.tsx:426
-#: src/mods/updateReview/UpdateActions.tsx:95
+#: src/mods/updateReview/UpdateActions.tsx:96
 msgid "More actions for {0}"
 msgstr "More actions for {0}"
 
@@ -2335,7 +2335,7 @@ msgstr "The game loader chooses this order. Mortar does not change it."
 msgid "The Proton build from Steam that runs this copy, which Steam does not start"
 msgstr "The Proton build from Steam that runs this copy, which Steam does not start"
 
-#: src/mods/updateReview/Row.tsx:90
+#: src/mods/updateReview/Row.tsx:78
 msgid "Changes dependencies"
 msgstr "Changes dependencies"
 
@@ -2567,8 +2567,8 @@ msgstr "Include libraries and supporting mods"
 #: src/mods/ModDependencyTree.tsx:76
 #: src/mods/ModDependencyTree.tsx:76
 #: src/mods/problemFix/WhereButtons.tsx:47
-#: src/mods/updateReview/UpdateActions.tsx:90
-#: src/mods/updateReview/UpdateActions.tsx:90
+#: src/mods/updateReview/UpdateActions.tsx:91
+#: src/mods/updateReview/UpdateActions.tsx:91
 #: src/profiles/HealthDialog.tsx:120
 #: src/saves/lackChips.tsx:57
 msgid "Queued"
@@ -3062,7 +3062,7 @@ msgid "Dismissed folders"
 msgstr "Dismissed folders"
 
 #. placeholder {0}: update.source
-#: src/mods/updateReview/UpdateActions.tsx:139
+#: src/mods/updateReview/UpdateActions.tsx:150
 msgid "Ignore updates from {0}"
 msgstr "Ignore updates from {0}"
 
@@ -3137,10 +3137,6 @@ msgstr "{name} is not paired with this computer, so Mortar sends the list of mod
 #: src/mods/Toolbar.tsx:398
 msgid "Filter mods, filter active"
 msgstr "Filter mods, filter active"
-
-#: src/mods/updateReview/ReviewFooter.tsx:48
-msgid "Mortar checks for updates at startup, on F5, and at most hourly while it runs."
-msgstr "Mortar checks for updates at startup, on F5, and at most hourly while it runs."
 
 #. placeholder {0}: notice.totalUpdates
 #. placeholder {1}: notice.profilesWith
@@ -4246,7 +4242,7 @@ msgstr "Already has {0}"
 
 #: src/browse/BrowseDetails.tsx:101
 #: src/mods/Sidebar.tsx:388
-#: src/mods/updateReview/Row.tsx:133
+#: src/mods/updateReview/Row.tsx:121
 msgid "Changelog"
 msgstr "Changelog"
 
@@ -5047,8 +5043,8 @@ msgstr "Delete group {name}?"
 #: src/mods/runErrorFixButtons.tsx:51
 #: src/mods/Sidebar.tsx:241
 #: src/mods/updateReview/EverywhereDialog.tsx:143
-#: src/mods/updateReview/UpdateActions.tsx:90
-#: src/mods/updateReview/UpdateActions.tsx:90
+#: src/mods/updateReview/UpdateActions.tsx:91
+#: src/mods/updateReview/UpdateActions.tsx:91
 #: src/settings/loaderToast.ts:49
 #: src/settings/sections/LoaderRow.tsx:93
 msgid "Update"
@@ -5341,11 +5337,11 @@ msgstr "EA App"
 msgid "{list} do the same job: both change {detail}"
 msgstr "{list} do the same job: both change {detail}"
 
-#: src/mods/updateReview/UpdateActions.tsx:67
+#: src/mods/updateReview/UpdateActions.tsx:68
 msgid "This mod is not in the profile."
 msgstr "This mod is not in the profile."
 
-#: src/mods/updateReview/ReviewFooter.tsx:66
+#: src/mods/updateReview/ReviewFooter.tsx:65
 msgid "Loading changes…"
 msgstr "Loading changes…"
 
@@ -5538,7 +5534,7 @@ msgid "This profile matches {host}."
 msgstr "This profile matches {host}."
 
 #: src/mods/updateReview/EverywhereDialog.tsx:77
-#: src/mods/updateReview/UpdateActions.tsx:63
+#: src/mods/updateReview/UpdateActions.tsx:64
 msgid "Checking profiles…"
 msgstr "Checking profiles…"
 
@@ -6034,7 +6030,7 @@ msgstr "Cosmetic overlaps on the Problems tab"
 #: src/mods/ModMenu.tsx:166
 #: src/mods/ModUpdateControls.tsx:41
 #: src/mods/SelectionBarActions.tsx:84
-#: src/mods/updateReview/UpdateActions.tsx:130
+#: src/mods/updateReview/UpdateActions.tsx:141
 msgid "Pin this version"
 msgstr "Pin this version"
 
@@ -6253,7 +6249,7 @@ msgid "Changed the profile"
 msgstr "Changed the profile"
 
 #. placeholder {0}: listNames(removed)
-#: src/mods/updateReview/Row.tsx:86
+#: src/mods/updateReview/Row.tsx:74
 msgid "No longer needs {0}"
 msgstr "No longer needs {0}"
 
@@ -6563,6 +6559,10 @@ msgstr "Trace"
 #: src/settings/prefCopyAntivirus.ts:27
 msgid "Ask a ClamAV daemon at the socket path below."
 msgstr "Ask a ClamAV daemon at the socket path below."
+
+#: src/mods/updateReview/ReviewFooter.tsx:47
+msgid "Mortar keeps each mod's settings and backs up your saves before updating. Roll back from the mod's details."
+msgstr "Mortar keeps each mod's settings and backs up your saves before updating. Roll back from the mod's details."
 
 #: src/settings/prefCopy.ts:179
 msgid "Absolute"
@@ -6935,7 +6935,7 @@ msgstr "Premium downloads come from this Nexus server when it offers the file."
 #: src/mods/problemFix/BrokenFix.tsx:58
 #: src/mods/problemFix/WhereButtons.tsx:28
 #: src/mods/Sidebar.tsx:223
-#: src/mods/updateReview/Row.tsx:212
+#: src/mods/updateReview/UpdateActions.tsx:112
 #: src/share/ImportPreview.tsx:162
 msgid "Open page"
 msgstr "Open page"
@@ -7241,7 +7241,7 @@ msgstr "New"
 msgid "pins"
 msgstr "pins"
 
-#: src/mods/updateReview/ReviewFooter.tsx:66
+#: src/mods/updateReview/ReviewFooter.tsx:65
 msgid "Load all changes"
 msgstr "Load all changes"
 
@@ -8117,11 +8117,6 @@ msgstr "Open game settings"
 msgid "Show diff"
 msgstr "Show diff"
 
-#. placeholder {0}: update.githubFallback
-#: src/mods/updateReview/Row.tsx:57
-msgid "From GitHub ({0}) when its release matches, else Nexus"
-msgstr "From GitHub ({0}) when its release matches, else Nexus"
-
 #: src/games/storeName.ts:7
 msgid "GOG"
 msgstr "GOG"
@@ -8725,7 +8720,7 @@ msgstr "{gameName} save backups: {0}"
 msgid "Save mod list"
 msgstr "Save mod list"
 
-#: src/mods/updateReview/ReviewFooter.tsx:76
+#: src/mods/updateReview/ReviewFooter.tsx:75
 msgid "Update all ({wantedCount})"
 msgstr "Update all ({wantedCount})"
 
@@ -8955,7 +8950,7 @@ msgstr "Reading the mod's page…"
 msgid "{count, plural, one {{by} already includes everything it changes} other {{by} together include everything it changes}}"
 msgstr "{count, plural, one {{by} already includes everything it changes} other {{by} together include everything it changes}}"
 
-#: src/mods/updateReview/ReviewFooter.tsx:71
+#: src/mods/updateReview/ReviewFooter.tsx:70
 msgid "Update all everywhere…"
 msgstr "Update all everywhere…"
 
@@ -9131,7 +9126,7 @@ msgstr "Open on the Mod DB"
 msgid "Your download is already {have}; the mod's manifest still carries the old number, so SMAPI keeps asking."
 msgstr "Your download is already {have}; the mod's manifest still carries the old number, so SMAPI keeps asking."
 
-#: src/mods/updateReview/UpdateActions.tsx:148
+#: src/mods/updateReview/UpdateActions.tsx:159
 msgid "Switch and update"
 msgstr "Switch and update"
 
@@ -10611,17 +10606,13 @@ msgid "Free account: one click on Nexus per download"
 msgstr "Free account: one click on Nexus per download"
 
 #. placeholder {0}: g.list.length
-#: src/mods/updateReview/SourceGroups.tsx:32
+#: src/mods/updateReview/SourceGroups.tsx:39
 msgid "{name} ({0})"
 msgstr "{name} ({0})"
 
 #: src/settings/sections/Updates.tsx:50
 msgid "Updated by your package manager"
 msgstr "Updated by your package manager"
-
-#: src/mods/updateReview/ReviewFooter.tsx:47
-msgid "Update downloads the new file from the mod's site when Mortar can; otherwise, drop the downloaded archive on this window. Either way Mortar updates the mod in place, keeps its settings and backs up your saves first. Roll back later from the mod's details."
-msgstr "Update downloads the new file from the mod's site when Mortar can; otherwise, drop the downloaded archive on this window. Either way Mortar updates the mod in place, keeps its settings and backs up your saves first. Roll back later from the mod's details."
 
 #: src/settings/prefCopy.ts:117
 #: src/settings/prefCopy.ts:126
@@ -11559,12 +11550,6 @@ msgstr "Use it anyway; {conflictName} becomes unbound"
 msgid "Change it in the game"
 msgstr "Change it in the game"
 
-#. placeholder {0}: update.source
-#. placeholder {1}: update.fromSource
-#: src/mods/updateReview/Row.tsx:76
-msgid "from {0} (was {1})"
-msgstr "from {0} (was {1})"
-
 #: src/mods/problemText.ts:42
 msgid "Deprecated"
 msgstr "Deprecated"
@@ -11763,7 +11748,7 @@ msgid "{clean} clean"
 msgstr "{clean} clean"
 
 #. placeholder {0}: libraries.length
-#: src/mods/updateReview/SourceGroups.tsx:39
+#: src/mods/updateReview/SourceGroups.tsx:46
 msgid "Libraries ({0})"
 msgstr "Libraries ({0})"
 
@@ -12053,7 +12038,7 @@ msgstr "SOMEONE ELSE'S"
 
 #. placeholder {0}: update.name
 #. placeholder {1}: update.source
-#: src/mods/updateReview/UpdateActions.tsx:146
+#: src/mods/updateReview/UpdateActions.tsx:157
 msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
@@ -12163,7 +12148,7 @@ msgstr "View licences…"
 #: src/mods/ModMenu.tsx:166
 #: src/mods/ModUpdateControls.tsx:41
 #: src/mods/SelectionBarActions.tsx:84
-#: src/mods/updateReview/UpdateActions.tsx:130
+#: src/mods/updateReview/UpdateActions.tsx:141
 msgid "Unpin version"
 msgstr "Unpin version"
 
@@ -12917,7 +12902,7 @@ msgstr "This launch preset will be deleted."
 
 #: src/mods/EverywhereMenuItem.tsx:35
 #: src/mods/updateReview/EverywhereDialog.tsx:142
-#: src/mods/updateReview/UpdateActions.tsx:113
+#: src/mods/updateReview/UpdateActions.tsx:124
 msgid "Update in all profiles ({n})"
 msgstr "Update in all profiles ({n})"
 
@@ -13065,7 +13050,7 @@ msgid "Keep explicit"
 msgstr "Keep explicit"
 
 #. placeholder {0}: listNames(added)
-#: src/mods/updateReview/Row.tsx:85
+#: src/mods/updateReview/Row.tsx:73
 msgid "Now needs {0}"
 msgstr "Now needs {0}"
 
@@ -13419,7 +13404,7 @@ msgstr "A plugin it needs failed"
 #. placeholder {0}: update.name
 #. placeholder {1}: update.version
 #. placeholder {2}: update.source
-#: src/mods/updateReview/UpdateActions.tsx:147
+#: src/mods/updateReview/UpdateActions.tsx:158
 msgid "{0} was installed from another site. Updating installs {1} from {2} instead and keeps your settings."
 msgstr "{0} was installed from another site. Updating installs {1} from {2} instead and keeps your settings."
 
@@ -13520,7 +13505,7 @@ msgstr "{0, plural, one {# more pack} other {# more packs}}"
 msgid "Nexus Mods · Signed in as {name}"
 msgstr "Nexus Mods · Signed in as {name}"
 
-#: src/mods/updateReview/ReviewFooter.tsx:55
+#: src/mods/updateReview/ReviewFooter.tsx:54
 msgid "Also update other profiles that hold the same files"
 msgstr "Also update other profiles that hold the same files"
 
@@ -13641,7 +13626,7 @@ msgstr "{count, plural, one {{name} · # mod} other {{name} · # mods}}"
 #: src/mods/parts.tsx:400
 #: src/mods/SelectionBarActions.tsx:96
 #: src/mods/Sidebar.tsx:236
-#: src/mods/updateReview/UpdateActions.tsx:122
+#: src/mods/updateReview/UpdateActions.tsx:133
 msgid "Skip this update"
 msgstr "Skip this update"
 
@@ -13788,7 +13773,7 @@ msgid "{0, plural, one {Set category for # mod} other {Set category for # mods}}
 msgstr "{0, plural, one {Set category for # mod} other {Set category for # mods}}"
 
 #: src/mods/updateReview/EverywhereDialog.tsx:41
-#: src/mods/updateReview/UpdateActions.tsx:63
+#: src/mods/updateReview/UpdateActions.tsx:64
 msgid "No eligible profiles."
 msgstr "No eligible profiles."
 
@@ -14359,8 +14344,8 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/mods/ChangelogDialog.tsx:104
 #: src/mods/GameModsReviewDialog.tsx:236
 #: src/mods/OldFilesCallouts.tsx:275
-#: src/mods/updateReview/ReviewFooter.tsx:62
-#: src/mods/updateReview/ReviewTitle.tsx:47
+#: src/mods/updateReview/ReviewFooter.tsx:61
+#: src/mods/updateReview/ReviewTitle.tsx:33
 #: src/profiles/CompareTop.tsx:148
 #: src/profiles/HealthDialog.tsx:272
 #: src/profiles/HistoryPanel.tsx:135

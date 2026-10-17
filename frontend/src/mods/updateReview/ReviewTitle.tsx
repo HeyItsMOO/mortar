@@ -1,9 +1,8 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
-import { alpha, Box, DialogTitle, IconButton, Typography } from '@mui/material'
-import { ArrowUp, X } from 'lucide-react'
+import { Box, DialogTitle, IconButton, Typography } from '@mui/material'
+import { X } from 'lucide-react'
 import { space } from '../../theme/density.ts'
-import { ICON_FILL, ICON_TILE } from './constants.ts'
 
 export function ReviewTitle({
   count,
@@ -22,19 +21,6 @@ export function ReviewTitle({
       component="div"
       sx={{ display: 'flex', alignItems: 'center', gap: space.pad, p: space.pad }}
     >
-      <Box
-        sx={{
-          width: ICON_TILE,
-          height: ICON_TILE,
-          display: 'grid',
-          placeItems: 'center',
-          borderRadius: '10px',
-          color: 'var(--mortar-accent-ink)',
-          bgcolor: (th) => alpha(th.palette.primary.main, ICON_FILL),
-        }}
-      >
-        <ArrowUp size={22} aria-hidden={true} />
-      </Box>
       <Box sx={{ flexGrow: 1 }}>
         <Typography component="h2" sx={{ fontSize: 22, fontWeight: 700 }}>
           {plural(count, {

@@ -1,7 +1,7 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Chip, ListItem, Tooltip } from '@mui/material'
-import { ArrowRight, ExternalLink } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import type { Update } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/models.ts'
 import { formatKb } from '../../i18n/bytes.ts'
 import { listNames } from '../../i18n/list.ts'
@@ -53,9 +53,6 @@ function useRowNotes(update: Update, profileId: string) {
           t`From ${update.source}, not the site you installed it from. Updating switches its source.`,
         ]
       : []),
-    ...(update.githubFallback && !update.githubRepo
-      ? [t`From GitHub (${update.githubFallback}) when its release matches, else Nexus`]
-      : []),
   ]
   return { mod, entry, notes }
 }
@@ -68,15 +65,6 @@ function VersionLine({ update }: { update: Update }) {
       <Version>{update.installed}</Version>
       <ArrowRight size={14} aria-hidden={true} />
       <Version isNew={true}>{update.version}</Version>
-      {update.source ? (
-        <Chip
-          size="small"
-          variant="outlined"
-          label={
-            update.fromSource ? t`from ${update.source} (was ${update.fromSource})` : update.source
-          }
-        />
-      ) : null}
       {added.length + removed.length > 0 ? (
         <Tooltip
           describeChild={true}
@@ -158,7 +146,6 @@ function Row({
   onInclude: (on: boolean) => void
   picture?: string
 }) {
-  const { t } = useLingui()
   const { mod, entry, notes } = useRowNotes(update, profileId)
   const details = useNexusDetails((s) => s.byId[update.nexusId]?.details)
   const riskyChangelog =
@@ -203,15 +190,6 @@ function Row({
         <OptionalUpdates update={update} profileId={profileId} />
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
-        {update.url ? (
-          <Button
-            variant="outlined"
-            endIcon={<ExternalLink size={12} />}
-            onClick={() => openPage(update.url)}
-          >
-            {t`Open page`}
-          </Button>
-        ) : null}
         <UpdateActions
           update={update}
           {...(mod ? { mod } : {})}

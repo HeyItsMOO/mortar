@@ -18,6 +18,7 @@ import { updateSources, useOfflineReason } from '../../shell/offlineText.ts'
 import { StableLabel } from '../../shell/StableLabel.tsx'
 import { reportUnexpected } from '../../toasts/report.ts'
 import { installableUpdate } from '../lookup.ts'
+import { openPage } from '../menu.ts'
 import { useNexusDetails } from '../nexusDetails.ts'
 import { useOptionalSkips } from '../optionalFiles.ts'
 import { useMods } from '../store.ts'
@@ -101,6 +102,16 @@ export function UpdateActions({
         <MoreHorizontal size={18} />
       </IconButton>
       <Menu open={anchor !== null} anchorEl={anchor} onClose={() => setAnchor(null)}>
+        {update.url ? (
+          <MenuItem
+            onClick={() => {
+              setAnchor(null)
+              openPage(update.url)
+            }}
+          >
+            {t`Open page`}
+          </MenuItem>
+        ) : null}
         {installableUpdate(update) ? (
           <DisabledReason title={everywhereWhy} disabled={everywhereBlocked}>
             <MenuItem

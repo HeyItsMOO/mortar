@@ -44,8 +44,7 @@ export function ReviewFooter({
           <ShieldCheck size={18} aria-hidden={true} />
         </Box>
         <Typography sx={{ fontSize: 13, lineHeight: 1.45, color: 'text.secondary' }}>
-          {t`Update downloads the new file from the mod's site when Mortar can; otherwise, drop the downloaded archive on this window. Either way Mortar updates the mod in place, keeps its settings and backs up your saves first. Roll back later from the mod's details.`}{' '}
-          {t`Mortar checks for updates at startup, on F5, and at most hourly while it runs.`}
+          {t`Mortar keeps each mod's settings and backs up your saves before updating. Roll back from the mod's details.`}
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap, flexWrap: 'wrap' }}>
