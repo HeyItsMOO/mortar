@@ -115,13 +115,22 @@ const sourceIcons = (html: string) =>
     return `<span class="icon-row">${icons}</span>${run.endsWith(' ') ? ' ' : ''}`
   })
 
-export function whyPage(w: Why): string {
+/** Mortar's own counts, filled into a comparison page's GAME_COUNT and THUNDERSTORE_COUNT. */
+interface Counts {
+  games: number
+  thunderstore: number
+}
+
+export function whyPage(w: Why, counts: Counts): string {
+  const md = w.md
+    .replaceAll('GAME_COUNT', String(counts.games))
+    .replaceAll('THUNDERSTORE_COUNT', String(counts.thunderstore))
   return page({
     path: `site/why/${w.id}/index.html`,
     title: `Why Mortar? (vs ${w.name})`,
     description: `How Mortar compares with ${w.name}, with sources for every claim about ${w.name}.`,
     body: `      <h1 class="ext-title">Why Mortar? (vs ${escapeHTML(w.name)})</h1>
-${sourceIcons(render(w.md))
+${sourceIcons(render(md))
   .replaceAll('<td>!win ', '<td class="win">')
   // An even row highlights both sides: every value cell after the row's label.
   .replace(/<tr><td>(.*?)<\/td>(.*?)<\/tr>/g, (row, label: string, cells: string) =>

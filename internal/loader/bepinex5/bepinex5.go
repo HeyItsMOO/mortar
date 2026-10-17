@@ -70,7 +70,8 @@ type Installed struct {
 }
 
 // InstallPack lays the pack zip's root folder (BepInExPack/, or a community build's own name such as
-// BepInExPack_Valheim/: whichever holds an entry assembly) out into profileRoot, replacing files already there.
+// BepInExPack_Valheim/: whichever holds an entry assembly, or the zip itself for a pack with BepInEx/ at its top, as
+// bbepis-BepInEx_Rogue_Tower) out into profileRoot, replacing files already there.
 func InstallPack(zipPath, profileRoot string) (Installed, error) {
 	if err := os.MkdirAll(profileRoot, 0o750); err != nil {
 		return Installed{}, err
@@ -100,6 +101,9 @@ func InstallPack(zipPath, profileRoot string) (Installed, error) {
 			return walkErr
 		}
 		rel, _ := filepath.Rel(src, p)
+		if src == tmp && thunderstoreMeta[rel] {
+			return nil
+		}
 		dst := filepath.Join(profileRoot, rel)
 		if d.IsDir() {
 			return os.MkdirAll(dst, 0o750)
@@ -145,8 +149,17 @@ func clearPack(profileRoot string) error {
 	return nil
 }
 
-// packRoot is the top-level folder of the extracted pack that holds a BepInEx entry assembly.
+// thunderstoreMeta are the files Thunderstore requires at a package's top, kept out of the profile when the pack's
+// BepInEx files share that top.
+var thunderstoreMeta = map[string]bool{"manifest.json": true, "README.md": true, "CHANGELOG.md": true, "icon.png": true}
+
+// packRoot is the folder of the extracted pack that holds a BepInEx entry assembly: a top-level folder, or dir itself.
 func packRoot(dir string) (string, error) {
+	for _, entry := range entries {
+		if _, err := os.Stat(filepath.Join(dir, entry)); err == nil {
+			return dir, nil
+		}
+	}
 	ents, err := os.ReadDir(dir)
 	if err != nil {
 		return "", err

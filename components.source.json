@@ -6723,6 +6723,352 @@
       ]
     },
     {
+      "id": "20-minutes-till-dawn",
+      "name": "20 Minutes Till Dawn",
+      "enabled": true,
+      "marker": "MinutesTillDawn.exe",
+      "r2modmanFolder": "20MinutesTillDawn",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "epic": {
+          "appNames": ["4656facc740742a39e265b026e13d075"]
+        },
+        "steam": {
+          "appId": "1966900"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "BepInExPackMTD-BepInExPack_20MTD"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "20-minutes-till-dawn"
+        }
+      ]
+    },
+    {
+      "id": "stick-fight-the-game",
+      "name": "Stick Fight: The Game",
+      "enabled": true,
+      "marker": "StickFight.exe",
+      "r2modmanFolder": "StickFightTheGame",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "674940"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "SFTG_Modding-BepInExPack_SFTG"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "stick-fight-the-game"
+        }
+      ]
+    },
+    {
+      "id": "sineus-arena-survivors",
+      "name": "Sineus Arena Survivors",
+      "enabled": true,
+      "marker": "SineusArena.exe",
+      "r2modmanFolder": "SineusArenaSurvivors",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4227400"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_Sineus",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "sineus-arena-survivors"
+        }
+      ]
+    },
+    {
+      "id": "rogue-genesia",
+      "name": "Rogue : Genesia",
+      "enabled": true,
+      "marker": "Rogue Genesia.exe",
+      "r2modmanFolder": "RogueGenesia",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2067920"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_RogueGenesia",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "rogue-genesia"
+        }
+      ]
+    },
+    {
+      "id": "bombanana",
+      "name": "BOMBANANA!",
+      "enabled": true,
+      "marker": "BOMBANANA.exe",
+      "r2modmanFolder": "Bombanana",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "4656000"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "Bombanana_Modding-BepInExPack_BOMBANANA",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "bombanana"
+        }
+      ]
+    },
+    {
+      "id": "among-us",
+      "name": "Among Us",
+      "enabled": true,
+      "marker": "Among Us.exe",
+      "r2modmanFolder": "AmongUs",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "945360"
+        },
+        "xbox": {
+          "package": "Innersloth.AmongUs"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_AmongUs",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "among-us"
+        }
+      ]
+    },
+    {
+      "id": "lost-skies",
+      "name": "Lost Skies",
+      "enabled": true,
+      "marker": "LostSkies.exe",
+      "r2modmanFolder": "LostSkies",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1931180"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_LostSkies",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "lost-skies"
+        }
+      ]
+    },
+    {
+      "id": "v-rising",
+      "name": "V Rising",
+      "enabled": true,
+      "marker": "VRising.exe",
+      "r2modmanFolder": "VRising",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1604030"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_V_Rising",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "v-rising"
+        }
+      ]
+    },
+    {
+      "id": "core-keeper",
+      "name": "Core Keeper",
+      "enabled": true,
+      "marker": "CoreKeeper.exe",
+      "r2modmanFolder": "CoreKeeper",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1621690"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_Core_Keeper",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "core-keeper"
+        }
+      ]
+    },
+    {
+      "id": "rogue-tower",
+      "name": "Rogue Tower",
+      "enabled": true,
+      "marker": "Rogue Tower.exe",
+      "r2modmanFolder": "RogueTower",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1843760"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "bbepis-BepInEx_Rogue_Tower"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "rogue-tower"
+        }
+      ]
+    },
+    {
       "id": "sims4",
       "name": "The Sims 4",
       "enabled": true,
@@ -6757,7 +7103,9 @@
       },
       "saveFiles": ["Slot_*.save"],
       "saveCopies": ["{name}.ver?"],
-      "folderNames": { "The Sims 4": ["Die Sims 4", "Les Sims 4", "Los Sims 4", "De Sims 4"] },
+      "folderNames": {
+        "The Sims 4": ["Die Sims 4", "Les Sims 4", "Los Sims 4", "De Sims 4"]
+      },
       "newProfileSeparateSaves": true,
       "caches": [
         {

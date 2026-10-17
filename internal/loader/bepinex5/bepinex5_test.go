@@ -35,7 +35,7 @@ func buildPackIn(t *testing.T, root, doorstop string) string {
 		if name == ".doorstop_version" && doorstop == "" {
 			continue
 		}
-		if name != "manifest.json" && name != "README.md" {
+		if root != "" && name != "manifest.json" && name != "README.md" {
 			name = root + "/" + name
 		}
 		w, _ := zw.Create(name)
@@ -52,7 +52,8 @@ func buildPackIn(t *testing.T, root, doorstop string) string {
 
 func TestInstallPackAndDoorstopFiles(t *testing.T) {
 	root := filepath.Join(t.TempDir(), "profile")
-	for _, packDir := range []string{"BepInExPack", "BepInExPack", "BepInExPack_Valheim"} { // a reinstall replaces in place
+	// A reinstall replaces in place; "" is a pack with BepInEx/ at the zip's top (bbepis-BepInEx_Rogue_Tower).
+	for _, packDir := range []string{"BepInExPack", "BepInExPack", "BepInExPack_Valheim", ""} {
 		got, err := InstallPack(buildPackIn(t, packDir, "4.3.0.0\n"), root)
 		if err != nil || got.Version != "5.4.2305" || got.Doorstop != 4 {
 			t.Fatalf("%s: got %+v, %v", packDir, got, err)

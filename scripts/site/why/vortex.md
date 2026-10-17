@@ -5,7 +5,7 @@ Vortex is the Nexus Mods manager, with the widest game list here. Mortar works w
 | | Mortar | Vortex |
 |---|---|---|
 | Platforms | !win Windows, Linux, Steam Deck | Windows ([v2.8.2 assets](https://github.com/Nexus-Mods/Vortex/releases/tag/v2.8.2)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
-| Games | 188 | !win Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
+| Games | GAME_COUNT | !win Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :nexus: ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Account | !win None needed; Nexus sign-in only for Nexus downloads | Nexus login to download from Nexus |
 | Sharing | A link or a `.mortar` file; opens Nexus Collections and drafts one from a profile | Nexus Collections ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/mod-management/collections.md)) |

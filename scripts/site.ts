@@ -150,9 +150,13 @@ for (const [path, bytes] of brandArt()) {
 }
 files.set('site/guide/index.html', guidePage())
 const whys = whyPages()
+const counts = {
+  games: games.length,
+  thunderstore: games.filter((g) => g.sources?.some((s) => s.id === 'thunderstore')).length,
+}
 files.set('site/faq/index.html', faqPage(games.length, whys))
 for (const w of whys) {
-  files.set(`site/why/${w.id}/index.html`, whyPage(w))
+  files.set(`site/why/${w.id}/index.html`, whyPage(w, counts))
 }
 files.set('site/404.html', notFoundPage())
 const listedPages = [
