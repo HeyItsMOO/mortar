@@ -69,7 +69,7 @@ step shellcheck bash -c "set -o pipefail; git ls-files -co --exclude-standard -z
 pids[racechain]=$!
 step golangci-windows env GOGC=400 GOOS=windows golangci-lint run --allow-parallel-runners
 step version go run ./cmd/version -check
-step site-games bun scripts/site-games.ts --check
+step site bun scripts/site.ts --check
 step i18n-dupes bun scripts/i18n-dupes.ts
 step metainfo appstreamcli validate --strict --no-net build/linux/tech.rethunk.Mortar.metainfo.xml
 

@@ -201,3 +201,39 @@ code {
 .prose .lede {
   margin: 0 0 1.5rem;
 }
+.prose h3 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.15rem;
+}
+.prose h4 {
+  margin: 1.25rem 0 0.4rem;
+  color: var(--sand);
+  font-size: 0.95rem;
+}
+.prose ul,
+.prose ol {
+  max-width: 48rem;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+.prose li {
+  margin: 0.35rem 0;
+}
+.prose h2 time {
+  margin-left: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.prose section + section {
+  margin-top: 3.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+.toc ol {
+  columns: 2 16rem;
+  margin: 0 0 2rem;
+  padding: 1rem 1.25rem 1rem 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}

@@ -18,7 +18,7 @@
     "mem": "scripts/mem-budget.sh",
     "renders": "scripts/render-budget.sh",
     "vuln": "govulncheck ./...",
-    "site:games": "bun scripts/site-games.ts --check",
+    "site": "bun scripts/site.ts --check",
     "site:downloads": "bun scripts/site-downloads.ts",
     "i18n:dupes": "bun scripts/i18n-dupes.ts"
   },
