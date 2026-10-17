@@ -191,6 +191,7 @@ Add the game to `games` in `components.source.json`, then publish as under [Publ
 | --- | --- |
 | `id` | the slug; permanent, because profiles, settings and links store it |
 | `name`, `enabled` | display name; false lists the game as coming later |
+| `minVersion` | the oldest Mortar that can run the entry (`0.3.6`): set it when the entry needs driver code or catalog fields an older build lacks, and older builds leave the game out |
 | `marker`, `markerDir`, `linuxMarker` | a file every install holds, at its root or one `game` folder down. `markerDir` is the slash path below the install root that holds it (The Sims 4's `Game/Bin`); the install folder stays the root. A `.exe` marker makes a Windows build. `linuxMarker` names a native executable (Valheim's `valheim.x86_64`); an install holding it and not `marker` runs natively |
 | `stores` | the game's id per store driver key: `steam.appId`, `gog.productId`, `gog.folder`, `lutris.slug`, `lutris.keyword`, `bottles.folder`, `ea.folder`, `epic.appNames` (one per product sold), `xbox.package` |
 | `templates` | starter profiles for "Starter templates" in the New profile dialog: `id`, `name`, `description`, `packages` (`source`, `ref` (Nexus mod id, GitHub `owner/repo` or Thunderstore `Namespace-Name`), `name`) |

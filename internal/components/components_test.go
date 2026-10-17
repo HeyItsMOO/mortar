@@ -628,6 +628,7 @@ func TestValidateChecksCachePaths(t *testing.T) {
 }
 
 // A catalog published with a game this build cannot read (a value a later Mortar added) still delivers the rest.
+// A game this build cannot read, or one that names a newer Mortar than this one, is left out; the rest load.
 func TestDecodeSkipsAGameThisBuildCannotRead(t *testing.T) {
 	var m Manifest
 	if err := json.Unmarshal(bundledJSON, &m); err != nil {
@@ -636,8 +637,13 @@ func TestDecodeSkipsAGameThisBuildCannotRead(t *testing.T) {
 	if err := m.Validate(); err != nil {
 		t.Fatalf("bundled manifest fails strict validation: %v", err)
 	}
-	want := len(m.Games) - 1
+	SetRunning("0.3.5")
+	t.Cleanup(func() { SetRunning("") })
+	want := len(m.Games) - 3
 	m.Games[0].Marker = ""
+	m.Games[1].MinVersion = "0.4.0"
+	m.Games[2].MinVersion = "soon"
+	m.Games[3].MinVersion = "0.3.5"
 	b, err := json.Marshal(m)
 	if err != nil {
 		t.Fatal(err)

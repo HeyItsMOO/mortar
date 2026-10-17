@@ -33,6 +33,8 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/github"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
+
+	"golang.org/x/mod/semver"
 )
 
 const (
@@ -117,6 +119,9 @@ type GameInfo struct {
 	Name string `json:"name"`
 	// Enabled is false for a game listed as coming later.
 	Enabled bool `json:"enabled"`
+	// MinVersion is the oldest Mortar that can run the entry, for one that needs driver code an older build lacks; an
+	// older build leaves the game out rather than listing a game it cannot set up.
+	MinVersion string `json:"minVersion,omitempty"`
 	// ImportIDs are the names Vortex and Mod Organizer 2 give the game, so their profiles can be imported; a game
 	// neither manager has an extension or plugin for has none.
 	ImportIDs ImportIDs `json:"importIds,omitzero"`
@@ -711,6 +716,9 @@ func (g GameInfo) Validate() error {
 	if g.ID == "" || g.Name == "" || g.Marker == "" {
 		return errors.New("a game needs an id, a name and a marker file")
 	}
+	if g.MinVersion != "" && !semver.IsValid("v"+g.MinVersion) {
+		return fmt.Errorf("game %q has minVersion %q, not a version", g.ID, g.MinVersion)
+	}
 	if len(g.Loaders) == 0 {
 		return fmt.Errorf("game %q needs a loader", g.ID)
 	}
@@ -1041,6 +1049,13 @@ func Decode(data []byte) (Manifest, error) {
 }
 
 // withoutUnreadable is m less the components and games that fail validation, and how many games it left out.
+// running is this Mortar's version (SetRunning), against which a game's MinVersion is checked; empty in tests and
+// tools, which keep every game.
+var running string
+
+// SetRunning records this Mortar's version, before the first manifest is decoded.
+func SetRunning(version string) { running = version }
+
 func withoutUnreadable(m Manifest) (Manifest, int) {
 	m.Components = slices.DeleteFunc(m.Components, func(c Component) bool {
 		err := c.Validate()
@@ -1051,6 +1066,10 @@ func withoutUnreadable(m Manifest) (Manifest, int) {
 	})
 	listed := len(m.Games)
 	m.Games = slices.DeleteFunc(m.Games, func(g GameInfo) bool {
+		if g.MinVersion != "" && running != "" && semver.Compare("v"+running, "v"+g.MinVersion) < 0 {
+			slog.Info("component manifest: leaving out a game that needs a newer Mortar", "game", g.ID, "needs", g.MinVersion)
+			return true
+		}
 		err := g.Validate()
 		if err != nil {
 			slog.Warn("component manifest: skipping a game this Mortar cannot read", "game", g.ID, "err", err)
