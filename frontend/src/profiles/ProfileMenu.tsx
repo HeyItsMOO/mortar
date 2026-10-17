@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase } from '@mui/material'
 import { ChevronDown, LayoutTemplate, ListOrdered, Plus, Search } from 'lucide-react'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { compact } from '../game/compact.ts'
 import { NewProfileDialog } from '../game/NewProfileDialog.tsx'
@@ -134,7 +134,8 @@ function ProfileButton({
 
 // The title bar's profile switcher for the open game: the open profile and its mod count over a menu that switches,
 // creates, imports and manages profiles. A profile's right-click menu opens from its row and from the button.
-export function ProfileMenu({ game }: { game: string }) {
+// Memoised: the title bar re-renders on every navigation, and this one does not need to.
+export const ProfileMenu = memo(function ProfileMenuView({ game }: { game: string }) {
   const { t } = useLingui()
   const gameName = useGameName(game)
   const { profiles } = useOrderedProfiles(game)
@@ -253,4 +254,4 @@ export function ProfileMenu({ game }: { game: string }) {
       {dialogs}
     </>
   )
-}
+})

@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from '@mui/material'
 import { useEffect, useState } from 'react'
 import type { Update } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/models.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
-import { useNow } from '../i18n/useNow.ts'
+import { useNowValue } from '../i18n/useNow.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { useQueue } from '../queue/store.ts'
 import { useNexus } from '../settings/nexus.ts'
@@ -65,6 +65,8 @@ function UpdateReview({ profile }: { profile: Profile }) {
   const open = useUpdates((s) => s.reviewing)
   const updates = useUpdates((s) => s.updates)
   const checkedAt = useUpdates((s) => s.checkedAt)
+  const unknown = updates?.unknown === true
+  const checked = useNowValue((now) => checkedLabel(checkedAt, now, unknown))
   const setReviewing = useUpdates((s) => s.setReviewing)
   const close = () => setReviewing(false)
   const byId = useNexusDetails((s) => s.byId)
@@ -73,7 +75,6 @@ function UpdateReview({ profile }: { profile: Profile }) {
   const items = useQueue((s) => s.state.items)
   const mods = useMods((s) => s.mods)
   const [acked, setAcked] = useState<Record<string, boolean>>({})
-  const now = useNow()
   const [propagating, setPropagating] = useState<Update[]>([])
   const [firstPropagating] = propagating
   const [include, setInclude] = useState<Record<string, boolean>>({})
@@ -108,7 +109,7 @@ function UpdateReview({ profile }: { profile: Profile }) {
       <ReviewTitle
         count={list.length}
         profileName={profile.name}
-        checkedLabel={checkedLabel(checkedAt, now, updates?.unknown === true)}
+        checkedLabel={checked}
         onClose={close}
       />
       <DialogContent sx={{ p: 0, borderTop: '1px solid var(--mortar-hairline-muted)' }}>

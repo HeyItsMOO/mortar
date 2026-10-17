@@ -1,6 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase } from '@mui/material'
 import { ChevronDown } from 'lucide-react'
+import { memo } from 'react'
 import type { GameInfo } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
 import { compact } from '../game/compact.ts'
 import { routeGame, useNav } from '../nav/store.ts'
@@ -36,7 +37,8 @@ function Thumb({ game }: { game: GameInfo | undefined }) {
 }
 
 // The title bar's game switcher: the open game's art and name (or "Choose a game") over a menu of the playable games.
-export function GameMenu() {
+// Memoised: the title bar re-renders on every navigation, and this one does not need to.
+export const GameMenu = memo(function GameMenuView() {
   const { t } = useLingui()
   // The game being set up has no game route yet but is still the one the title bar names.
   const game = useNav(
@@ -121,4 +123,4 @@ export function GameMenu() {
       </TitleMenu>
     </>
   )
-}
+})

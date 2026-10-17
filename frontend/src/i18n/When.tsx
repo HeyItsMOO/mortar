@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core'
 import type { ReactNode } from 'react'
 import { formatWhen } from './formatWhen.ts'
-import { useNow } from './useNow.ts'
+import { useNowValue } from './useNow.ts'
 import { absoluteWhen } from './when.ts'
 
 interface WhenProps {
@@ -10,8 +10,7 @@ interface WhenProps {
 }
 
 export function When({ value, withTime = false }: WhenProps): ReactNode {
-  useNow()
-  const text = formatWhen(value, { withTime })
+  const text = useNowValue(() => formatWhen(value, { withTime }))
   if (!text) {
     return null
   }

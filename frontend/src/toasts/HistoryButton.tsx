@@ -2,7 +2,7 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Badge, Box, Button, IconButton, Popover, Typography } from '@mui/material'
 import { Bell } from 'lucide-react'
-import { type ReactNode, useEffect, useRef, useState } from 'react'
+import { memo, type ReactNode, useEffect, useRef, useState } from 'react'
 import { When } from '../i18n/When.tsx'
 import { useProfileLocked } from '../mods/useLocked.ts'
 import { HistoryDialog } from '../profiles/HistoryDialog.tsx'
@@ -206,7 +206,8 @@ function HistoryPopover({
   )
 }
 
-export function HistoryButton() {
+// Memoised: the title bar re-renders on every navigation, and this one does not need to.
+export const HistoryButton = memo(function HistoryButtonView() {
   const { t } = useLingui()
   const historyOpen = useToasts((s) => s.historyOpen)
   const setHistoryOpen = useToasts((s) => s.setHistoryOpen)
@@ -281,7 +282,7 @@ export function HistoryButton() {
       <HistoryDialog profileId={openId} open={allOpen} onClose={() => setAllOpen(false)} />
     </>
   )
-}
+})
 
 export function HistoryFallback() {
   const historyOpen = useToasts((s) => s.historyOpen)

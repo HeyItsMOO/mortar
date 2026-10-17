@@ -54,7 +54,7 @@ function Slash() {
 
 export function TitleBar({ maximised }: { maximised: boolean }) {
   const { t } = useLingui()
-  const route = useNav((s) => s.route)
+  const routeName = useNav((s) => s.route.name)
   const game = useNav((s) => routeGame(s.route))
   return (
     <Box
@@ -77,7 +77,7 @@ export function TitleBar({ maximised }: { maximised: boolean }) {
     >
       <AppMenu />
       <Box sx={rule} />
-      {route.name === 'setup' ? (
+      {routeName === 'setup' ? (
         <Box component="span" sx={{ px: '10px', fontSize: 14, fontWeight: 600 }}>
           {t`Setup`}
         </Box>
@@ -90,7 +90,7 @@ export function TitleBar({ maximised }: { maximised: boolean }) {
           <ProfileMenu game={game} />
         </>
       ) : null}
-      {route.name === 'settings' ? (
+      {routeName === 'settings' ? (
         <>
           <Slash />
           <Box component="span" sx={{ fontSize: 14, fontWeight: 600 }}>

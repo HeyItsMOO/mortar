@@ -26,10 +26,16 @@ function stop() {
 }
 
 export function useNow() {
-  const now = useNowStore((state) => state.now)
+  return useNowValue((now) => now)
+}
+
+/** compute's answer from the minute clock; the component re-renders only when the answer changes, so compute returns a
+ * primitive (a label rather than the time). */
+export function useNowValue<T extends string | number | boolean>(compute: (now: number) => T): T {
+  const value = useNowStore((state) => compute(state.now))
   useEffect(() => {
     start()
     return stop
   }, [])
-  return now
+  return value
 }

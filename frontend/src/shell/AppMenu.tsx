@@ -15,7 +15,7 @@ import {
   Settings,
   Sparkles,
 } from 'lucide-react'
-import { type ReactNode, useEffect } from 'react'
+import { memo, type ReactNode, useEffect } from 'react'
 import { SignOut } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexussvc/service.ts'
 import { OpenDataFolder } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { DiscordLogo } from '../brand/Discord.tsx'
@@ -119,7 +119,8 @@ function ProjectLinks({ close }: { close: () => void }) {
   )
 }
 
-export function AppMenu() {
+// Memoised: the title bar re-renders on every navigation, and this one does not need to.
+export const AppMenu = memo(function AppMenuView() {
   const { t } = useLingui()
   const { anchor, close, trigger } = useTitleMenu('app')
   const updatesOffline = useUpdatesOfflineReason()
@@ -249,4 +250,4 @@ export function AppMenu() {
       </TitleMenu>
     </>
   )
-}
+})

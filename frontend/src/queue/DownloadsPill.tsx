@@ -2,6 +2,7 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase } from '@mui/material'
 import { Download } from 'lucide-react'
+import { memo } from 'react'
 import { compact } from '../game/compact.ts'
 import { closeTitleMenu } from '../shell/titleMenus.ts'
 import { space } from '../theme/density.ts'
@@ -9,7 +10,8 @@ import { useQueue } from './store.ts'
 import { pillProgress } from './totals.ts'
 
 // The title bar's downloads button: there only while the queue has items under way, with how many and how far along.
-export function DownloadsPill() {
+// Memoised: the title bar re-renders on every navigation, and this one does not need to.
+export const DownloadsPill = memo(function DownloadsPillView() {
   const { t } = useLingui()
   const items = useQueue((s) => s.state.items)
   const setOpen = useQueue((s) => s.setOpen)
@@ -74,4 +76,4 @@ export function DownloadsPill() {
       </Box>
     </ButtonBase>
   )
-}
+})
