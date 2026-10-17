@@ -59,7 +59,10 @@ With Mortar running, `mortar <command>` asks the open app and prints a table, or
 | `perf reports <game> <profile>` | saved performance reports |
 | `launchers`, `launchers add\|remove <id> <folder>` | what Settings › Launchers shows and changes |
 | `tools <game>`, `tools run <game> <profile> <tool>` | configured external tools; start one |
-| `bundles <game>`, `bundles apply <game> <bundle> <profile>` | list saved bundles; copy one into a profile |
+| `groups <game>`, `groups apply <game> <saved group> <profile>` | list saved groups; add one to a profile, which also creates the group there |
+| `groups create <game> <name> <profile> [mod id...]`, `groups delete <game> <saved group>`, `groups rename <game> <saved group> <name>` | save a profile's mods (all when none named) as a saved group; delete or rename one |
+| `groups add <game> <saved group> <profile> <mod id>...`, `groups remove <game> <saved group> <mod id>...` | add mods of a profile to a saved group; drop mods (and their optional files) from it |
+| `mods group <game> <profile> list\|create\|rename\|delete\|add\|remove\|on\|off …` | the profile's own groups |
 | `nexus untrack <game> --all\|--unused` | untrack that game's Nexus mods (`--yes` skips the prompt) |
 | `update game profile <mod id>...\|--all` | queue selected or all available mod updates |
 | `queue retry\|skip [id]`, `queue pause\|resume\|clear` | control queued downloads |
