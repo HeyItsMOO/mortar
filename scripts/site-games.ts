@@ -2,7 +2,9 @@
 // pages that share them, and each game's share page (site/<game>/p/, where its share links point) from
 // scripts/share-page.html, so the site never lists games by hand or copies its chrome.
 // `--check` fails instead of writing when anything is stale; the gate runs it that way.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+// Either way it fails when a picture under site/ is linked from no page, stylesheet or script, so none ships unused.
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { basename } from 'node:path'
 
 const CATALOG = 'internal/components/components.json'
 const REPO = 'https://github.com/Rethunk-Tech/mortar'
@@ -134,5 +136,17 @@ for (const page of PAGES) {
 }
 if (check && stale) {
   console.error('site game lists or share pages are stale: run bun scripts/site-games.ts')
+  process.exit(1)
+}
+
+const PICTURE = /\.(webp|png|jpe?g|svg|ico|avif|gif)$/
+const siteFiles = readdirSync('site', { recursive: true, encoding: 'utf8' })
+const linking = siteFiles
+  .filter((f) => /\.(html|css|js)$/.test(f))
+  .map((f) => readFileSync(`site/${f}`, 'utf8'))
+  .join('\n')
+const unlinked = siteFiles.filter((f) => PICTURE.test(f) && !linking.includes(basename(f)))
+if (unlinked.length > 0) {
+  console.error(`site pictures nothing links: ${unlinked.join(', ')}`)
   process.exit(1)
 }
