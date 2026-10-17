@@ -124,7 +124,7 @@ func (Loader) Vanilla(_ context.Context, plan *launchplan.Plan, _ loader.Target)
 }
 
 // OverrideDLL is version: MelonLoader injects through version.dll, which Wine only loads when the prefix overrides it.
-func (Loader) OverrideDLL() string { return "version" }
+func (Loader) OverrideDLL(string) string { return "version" }
 
 // ProfileFiles are what InstallPack lays out in each profile's folder, with the marker that records the version.
 func (Loader) ProfileFiles() []string { return []string{loaderDir, proxyDLL, markerFile} }

@@ -15,7 +15,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 )
 
-var _ interface{ OverrideDLL() string } = Loader{}
+var _ interface{ OverrideDLL(string) string } = Loader{}
 
 func buildPack(t *testing.T, doorstop string) string { return buildPackIn(t, "BepInExPack", doorstop) }
 
@@ -434,5 +434,19 @@ func TestAPackWhoseProxyIsVersionDllLoadsThatOne(t *testing.T) {
 	}
 	if got := strings.Join(DoorstopFiles(profile), " "); got != "doorstop_config.ini winhttp.dll" || fsx.IsFile(filepath.Join(profile, "version.dll")) {
 		t.Fatalf("placed %q after the swap", got)
+	}
+}
+
+func TestTheCatalogNamesTheProxyBeforeAProfileHoldsAPack(t *testing.T) {
+	if got, other := (Loader{}).OverrideDLL("in-silence"), (Loader{}).OverrideDLL("lethal-company"); got != "version" || other != "winhttp" {
+		t.Fatalf("OverrideDLL = %q for In Silence, %q for Lethal Company", got, other)
+	}
+	plan := launchplan.New(launchplan.ModeProfile)
+	view := loader.ProfileView{Game: "in-silence", Dir: t.TempDir(), Runtime: "proton"}
+	if err := (Loader{}).Contribute(t.Context(), plan, view); err != nil {
+		t.Fatal(err)
+	}
+	if len(plan.RuntimeReqs) != 1 || plan.RuntimeReqs[0].Key != "version" {
+		t.Fatalf("overrides %+v", plan.RuntimeReqs)
 	}
 }

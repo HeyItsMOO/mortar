@@ -101,7 +101,7 @@ func (l Loader) ImportRoots() []string { return l.ImportDirs }
 func (l Loader) ConfigDirs() []string { return l.ConfigFolders }
 
 // OverrideDLL is the proxy library of every release, for the Proton prefix check.
-func (l Loader) OverrideDLL() string { return l.ProxyDLL }
+func (l Loader) OverrideDLL(string) string { return l.ProxyDLL }
 
 // VersionScheme is Thunderstore's strict d.d.d.
 func (Loader) VersionScheme() string { return deps.SemverStrict }

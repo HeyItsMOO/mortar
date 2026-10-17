@@ -439,6 +439,22 @@ type GameLoader struct {
 	Major int `json:"major,omitempty"`
 	// Routes are folders beyond BepInEx's own that the game's mods install into, from r2modman's install rules.
 	Routes []LoaderRoute `json:"routes,omitempty"`
+	// Proxy is the Doorstop proxy library the game's BepInEx pack ships when it is not winhttp.dll (In Silence's pack
+	// renames it to version.dll); one of DoorstopProxies. Checks that run before a profile holds the pack read it here.
+	Proxy string `json:"proxy,omitempty"`
+}
+
+// DoorstopProxies are the names a BepInEx pack gives its Doorstop proxy, the usual one first.
+var DoorstopProxies = []string{"winhttp.dll", "version.dll", "winmm.dll"}
+
+// DoorstopProxy is the Doorstop proxy the game's BepInEx pack ships: the loader entry's Proxy, else winhttp.dll.
+func (g GameInfo) DoorstopProxy() string {
+	for _, l := range g.Loaders {
+		if strings.HasPrefix(l.ID, "bepinex") && l.Proxy != "" {
+			return l.Proxy
+		}
+	}
+	return DoorstopProxies[0]
 }
 
 // A LoaderRoute's Track says where a package's files go below its folder.
@@ -743,6 +759,9 @@ func (g GameInfo) Validate() error {
 		}
 	}
 	for _, l := range g.Loaders {
+		if l.Proxy != "" && !slices.Contains(DoorstopProxies, l.Proxy) {
+			return fmt.Errorf("game %q names an unknown Doorstop proxy %q", g.ID, l.Proxy)
+		}
 		for _, r := range l.Routes {
 			if err := r.Validate(); err != nil {
 				return fmt.Errorf("game %q: %w", g.ID, err)

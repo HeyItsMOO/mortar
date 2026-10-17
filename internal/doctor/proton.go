@@ -14,8 +14,8 @@ import (
 
 // OverrideLoader is implemented by a loader that injects through a proxy library next to the game (winhttp for BepInEx,
 // version for MelonLoader), which Wine only loads when the prefix overrides it to native. OverrideDLL names the library
-// without its extension.
-type OverrideLoader interface{ OverrideDLL() string }
+// the game needs without its extension.
+type OverrideLoader interface{ OverrideDLL(gameID string) string }
 
 // loaders are the loaders that contribute checks, by game id; a game without one skips those checks.
 var loaders = map[string]OverrideLoader{}
@@ -59,8 +59,8 @@ func protonChecks(g game.GameInfo) []Check {
 		if !ok {
 			continue
 		}
-		if l, has := loaders[g.ID]; has && l.OverrideDLL() != "" {
-			checks = append(checks, overrideCheck(g, compat, l.OverrideDLL()))
+		if l, has := loaders[g.ID]; has && l.OverrideDLL(g.ID) != "" {
+			checks = append(checks, overrideCheck(g, compat, l.OverrideDLL(g.ID)))
 		}
 		if in.Store == "flatpak-steam" {
 			checks = append(checks, flatpakCheck(g, compat))

@@ -9953,7 +9953,12 @@
       "targets": [{ "id": "profile", "root": "{profile}" }],
       "stores": { "steam": { "appId": "1361000" } },
       "loaders": [
-        { "id": "bepinex5", "name": "BepInEx 5", "package": "BepInEx-BepInExPack_InSilence" }
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "BepInEx-BepInExPack_InSilence",
+          "proxy": "version.dll"
+        }
       ],
       "sources": [{ "id": "thunderstore", "key": "in-silence" }]
     }

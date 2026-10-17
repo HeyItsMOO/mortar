@@ -12,7 +12,7 @@ import (
 
 type bepinex struct{ dll string }
 
-func (b bepinex) OverrideDLL() string { return b.dll }
+func (b bepinex) OverrideDLL(string) string { return b.dll }
 
 func TestProtonChecks(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())

@@ -122,7 +122,7 @@ func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.Prof
 		plan.AddFile(launchplan.PlanFile{Src: src, Dst: filepath.FromSlash(f)})
 	}
 	if proton {
-		plan.RequireRuntime(launchplan.RuntimeReq{Kind: "dll-override", Key: strings.TrimSuffix(proxyDLL(p.Dir), ".dll"), Value: "native,builtin"})
+		plan.RequireRuntime(launchplan.RuntimeReq{Kind: "dll-override", Key: strings.TrimSuffix(proxyDLL(p.Dir, p.Game), ".dll"), Value: "native,builtin"})
 	}
 	return nil
 }
@@ -197,9 +197,12 @@ func (Loader) Prelaunch(p loader.ProfileView) error {
 	return applyConsole(p.Dir, readMarker(p.Dir).Console)
 }
 
-// OverrideDLL is winhttp, the proxy most packs ship: Wine only loads it when the prefix overrides it to native. A pack that
-// renames its proxy is overridden by name at launch (Contribute).
-func (Loader) OverrideDLL() string { return "winhttp" }
+// OverrideDLL is the game's Doorstop proxy without its extension (winhttp unless the catalog names another): Wine only
+// loads it when the prefix overrides it to native.
+func (Loader) OverrideDLL(gameID string) string {
+	info, _ := components.Game(gameID)
+	return strings.TrimSuffix(info.DoorstopProxy(), ".dll")
+}
 
 func (Loader) Path(p loader.ProfileView) (string, error) {
 	return filepath.Join(p.Dir, "BepInEx", "LogOutput.log"), nil

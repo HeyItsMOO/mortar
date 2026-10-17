@@ -133,7 +133,7 @@ func InstallPack(zipPath, profileRoot string) (Installed, error) {
 // pass Doorstop 4 flags to a Doorstop 3 proxy, which then never starts BepInEx. A package's own core files sit in
 // folders below core and stay.
 func clearPack(profileRoot string) error {
-	for _, name := range append(append([]string{doorstopFile, "doorstop_config.ini", "doorstop_libs"}, proxyDLLs...), packRuntimeDirs...) {
+	for _, name := range append(append([]string{doorstopFile, "doorstop_config.ini", "doorstop_libs"}, components.DoorstopProxies...), packRuntimeDirs...) {
 		if err := fsx.RemoveAll(filepath.Join(profileRoot, name)); err != nil {
 			return err
 		}
@@ -199,18 +199,16 @@ func doorstopMajor(profileRoot string) int {
 	return defaultDoorstop
 }
 
-// proxyDLLs are the names a pack gives its Doorstop proxy, which the game loads in place of the system library of that
-// name: winhttp.dll unless the game does not load it (In Silence's pack renames it to version.dll).
-var proxyDLLs = []string{"winhttp.dll", "version.dll", "winmm.dll"}
-
-// proxyDLL is the Doorstop proxy the pack in profileRoot ships, winhttp.dll when it ships none.
-func proxyDLL(profileRoot string) string {
-	for _, name := range proxyDLLs {
+// proxyDLL is the Doorstop proxy the pack in profileRoot ships; before it holds a pack, the one the game's catalog entry
+// names.
+func proxyDLL(profileRoot, gameID string) string {
+	for _, name := range components.DoorstopProxies {
 		if fsx.IsFile(filepath.Join(profileRoot, name)) {
 			return name
 		}
 	}
-	return proxyDLLs[0]
+	info, _ := components.Game(gameID)
+	return info.DoorstopProxy()
 }
 
 // DoorstopFiles lists, relative to profileRoot and with forward slashes, the proxy files that must sit next to the game
@@ -218,7 +216,7 @@ func proxyDLL(profileRoot string) string {
 // stays in the profile.
 func DoorstopFiles(profileRoot string) []string {
 	var files []string
-	for _, name := range []string{doorstopConfig, proxyDLL(profileRoot)} {
+	for _, name := range []string{doorstopConfig, proxyDLL(profileRoot, "")} {
 		if _, err := os.Stat(filepath.Join(profileRoot, name)); err == nil {
 			files = append(files, name)
 		}
