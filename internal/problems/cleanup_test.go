@@ -50,7 +50,7 @@ func TestCleanupHintsFindsUnusedFrameworkNeededOnlyByDisabledMod(t *testing.T) {
 		},
 	}
 
-	got := cleanupHints(mods, nil)
+	got := cleanupHints(mods, nil, nil)
 	if len(got) != 2 || got[0].Key != "content-framework" || got[1].Key != "spacecore" {
 		t.Fatalf("cleanupHints() = %#v, want both unused frameworks", got)
 	}
@@ -66,13 +66,13 @@ func TestCleanupHintsIgnoresOptionalDependents(t *testing.T) {
 		{Key: "a", Enabled: true, Manifest: worldMaps},
 		{Key: "b", Enabled: false, Manifest: earthyMaps},
 	}
-	if got := cleanupHints(mods, nil); len(got) != 0 {
+	if got := cleanupHints(mods, nil, nil); len(got) != 0 {
 		t.Fatalf("cleanupHints() = %#v, want none", got)
 	}
 }
 
-// An implicit mod nothing switched on needs is offered for removal; one a switched-on mod needs, an explicit one, and
-// an implicit content pack are not.
+// An implicit mod nothing switched on needs is offered for removal; one a switched-on mod requires or lists as optional,
+// one switched-on content names in a condition, an explicit one, and an implicit content pack are not.
 func TestCleanupHintsFindsOrphanedImplicitMods(t *testing.T) {
 	lib := func(id string, implicit bool) framework.Mod {
 		m := framework.Mod{Key: id, Enabled: true, Implicit: implicit}
@@ -80,10 +80,10 @@ func TestCleanupHintsFindsOrphanedImplicitMods(t *testing.T) {
 		return m
 	}
 	user := lib("Me.User", false)
-	user.Dependencies = []manifest.Dependency{{UniqueID: "Lib.Used", Required: true}}
+	user.Dependencies = []manifest.Dependency{{UniqueID: "Lib.Used", Required: true}, {UniqueID: "Lib.Optional"}}
 	pack := lib("Lib.Tiles", true)
 	pack.ContentPackFor = "Pathoschild.ContentPatcher"
-	got := cleanupHints([]framework.Mod{user, lib("Lib.Used", true), lib("Lib.Orphan", true), lib("Me.Chosen", false), pack}, nil)
+	got := cleanupHints([]framework.Mod{user, lib("Lib.Used", true), lib("Lib.Optional", true), lib("Lib.Named", true), lib("Lib.Orphan", true), lib("Me.Chosen", false), pack}, nil, []string{"smapi:lib.named"})
 	if len(got) != 1 || got[0].Key != "Lib.Orphan" || got[0].Reason != orphanReason {
 		t.Fatalf("cleanup = %+v", got)
 	}

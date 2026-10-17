@@ -8,14 +8,17 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 )
 
-// orphanReason is why an implicit mod nothing switched on requires is offered for removal.
+// orphanReason is why an implicit mod no switched-on mod requires or can use is offered for removal.
 const orphanReason = "Brought in for other mods, and none that is switched on needs it"
 
 // cleanupHints lists framework mods only disabled mods need, implicit mods nothing switched on needs (a content pack
 // is left to its framework's own check, since maps use tilesheet packs without naming them), and what the frameworks
-// found unused.
-func cleanupHints(mods []framework.Mod, found []framework.Cleanup) []framework.Cleanup {
+// found unused. A mod switched-on content names in its conditions is in use too.
+func cleanupHints(mods []framework.Mod, found []framework.Cleanup, mentioned []string) []framework.Cleanup {
 	enabledNeeds := map[string]bool{}
+	for _, id := range mentioned {
+		enabledNeeds[id] = true
+	}
 	disabledDependents := map[string]bool{}
 	frameworkIDs := map[string]bool{}
 	for _, c := range found {
@@ -23,7 +26,9 @@ func cleanupHints(mods []framework.Mod, found []framework.Cleanup) []framework.C
 	}
 	for _, im := range mods {
 		for _, dep := range im.Dependencies {
-			if !dep.Required {
+			// A switched-on mod keeps what it can use as well as what it requires: removing an optional dependency
+			// takes away the feature it adds.
+			if !dep.Required && !im.Enabled {
 				continue
 			}
 			recordCleanupDependency(im, dep.ModID(), enabledNeeds, disabledDependents)

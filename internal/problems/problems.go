@@ -255,7 +255,7 @@ func Check(ctx context.Context, m Meta, env Environment, mods []framework.Mod, r
 	otherStart := time.Now()
 	r.Duplicates = duplicatesWithNexus(ctx, m, env.VersionScheme, enabled)
 	r.Settings = found.Settings
-	r.Cleanup = cleanupHints(mods, found.Cleanup)
+	r.Cleanup = cleanupHints(mods, found.Cleanup, found.Mentioned)
 	r.Supporting = found.Supporting
 	broken, unknown := brokenMods(ctx, m, env, enabled)
 	broken = append(broken, dependencyCycles(enabled)...)
@@ -283,6 +283,7 @@ func runFrameworks(in framework.Input) (framework.Findings, []CheckTiming) {
 		all.Cleanup = append(all.Cleanup, got.Cleanup...)
 		all.Redundant = append(all.Redundant, got.Redundant...)
 		all.Supporting = append(all.Supporting, got.Supporting...)
+		all.Mentioned = append(all.Mentioned, got.Mentioned...)
 	}
 	return all, timings
 }

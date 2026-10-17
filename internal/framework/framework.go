@@ -19,6 +19,9 @@ type Findings struct {
 	Redundant      []Redundant
 	// Supporting are the keys of mods that only supply assets for other mods (a pack that only loads tilesheets).
 	Supporting []string
+	// Mentioned are the folded ids of mods switched-on content names in its conditions: content that changes with a
+	// mod uses it.
+	Mentioned []string
 }
 
 // Framework is a framework mod's driver, keyed by the framework's mod id.

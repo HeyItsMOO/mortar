@@ -9,11 +9,15 @@ import { readsImplicit } from './installReason.ts'
 import { entryOf } from './lookup.ts'
 
 const requires = (a: Mod, b: Mod) => requiredIdsOf(a).some((id) => idKey(id) === idKey(b.id))
+// What a mod requires or can use: its needs include its optional dependencies.
+const uses = (a: Mod, b: Mod) =>
+  [...(a.needs ?? []), a.contentPackFor ?? ''].some((id) => idKey(id) === idKey(b.id))
 
 /**
  * The implicit mods still on that only the mods just switched off needed: what those mods require, followed through
  * what that requires in turn, each implicit and needed by no mod that stays on. When the mods are being removed, a
- * switched-off library goes too, and a switched-off mod that stays still needs what it requires.
+ * switched-off library goes too, and a switched-off mod that stays still needs what it requires. A mod that stays on
+ * keeps what it can use as well, since removing an optional dependency takes away the feature it adds.
  */
 export function unneededImplicit(
   all: readonly Mod[],
@@ -43,7 +47,7 @@ export function unneededImplicit(
     changed = false
     for (const c of candidates) {
       const stillNeeded = all.some(
-        (m) => (removing || m.enabled) && !offIds.has(idKey(m.id)) && requires(m, c),
+        (m) => !offIds.has(idKey(m.id)) && (m.enabled ? uses(m, c) : removing && requires(m, c)),
       )
       if (!(offIds.has(idKey(c.id)) || stillNeeded)) {
         offIds.add(idKey(c.id))

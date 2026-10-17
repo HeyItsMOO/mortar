@@ -6,9 +6,11 @@ const mod = (id: string, needs: string[] = [], over: Partial<Mod> = {}) =>
   ({ key: id, id, name: id, enabled: true, needs, ...over }) as Mod
 
 test('switching a mod off names the implicit mods only it needed, through what they need', () => {
-  const pack = mod('Me.Pack', ['Lib.Core', 'Lib.Shared', 'Me.Chosen'])
+  const pack = mod('Me.Pack', ['Lib.Core', 'Lib.Shared', 'Me.Chosen', 'Lib.Extra'])
   const all = [
     pack,
+    mod('Lib.Extra'),
+    mod('Uses.Extra', ['Lib.Extra'], { optional: ['Lib.Extra'] }),
     mod('Lib.Core', ['Lib.Deep']),
     mod('Lib.Deep'),
     mod('Lib.Shared'),

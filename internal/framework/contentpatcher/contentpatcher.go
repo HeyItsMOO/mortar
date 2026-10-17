@@ -197,7 +197,7 @@ type cachedPack struct {
 	farms map[string]string
 }
 
-const contentPackParserVersion = 22
+const contentPackParserVersion = 23
 
 // absentSize stamps a file that was not there, so the cache is dropped when it appears.
 const absentSize = -1
@@ -1131,6 +1131,7 @@ func scanContentFile(root, rel string, seen map[string]bool, outer cpWhen, pack 
 		withConfigValues(ch.When, pack.values)
 		when := outer.with(parseWhenWithTokens(ch.When, pack.mentions, pack.schema, pack.tokens))
 		when.conditional = when.conditional || len(ch.When) > 0
+		noteAssetOwners(ch.Target, pack.mentions)
 		var kind string
 		var shapes []cpShape
 		switch {
@@ -1933,6 +1934,17 @@ func scalarValue(v json.RawMessage) (string, bool) {
 		return string(n), true
 	}
 	return "", false
+}
+
+// noteAssetOwners records the mods whose own assets a change targets ("Author.Mod/Data"): changing a mod's asset uses
+// that mod. Built-in assets ("Data/Objects") have no dot before the first slash.
+func noteAssetOwners(target string, mentions map[string]bool) {
+	for _, t := range splitTargets(target) {
+		owner, _, found := strings.Cut(strings.TrimSpace(t), "/")
+		if found && strings.Contains(owner, ".") && !hasToken(owner) {
+			note([]string{owner}, mentions)
+		}
+	}
 }
 
 func note(ids []string, mentions map[string]bool) []string {

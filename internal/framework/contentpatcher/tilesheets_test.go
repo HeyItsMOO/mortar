@@ -2,6 +2,7 @@ package contentpatcher
 
 import (
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/framework"
@@ -130,5 +131,17 @@ func TestSupportingPacks(t *testing.T) {
 		if got := isSupportingPack(tilesheetPack(t, c.id, c.content)); got != c.want {
 			t.Errorf("%s: supporting = %v, want %v", c.id, got, c.want)
 		}
+	}
+}
+
+// A switched-on pack names the mods its conditions ask for and the mods whose own assets it changes; a built-in asset
+// names none.
+func TestMentionedIDs(t *testing.T) {
+	pack := tilesheetPack(t, "Me.Pack", `{"Changes":[
+		{"Action":"EditData","Target":"Other.Mod/ItemQueries","Entries":{}},
+		{"Action":"EditData","Target":"Data/Objects","Entries":{},"When":{"HasMod":"Some.Lib"}}]}`)
+	pack.Enabled = true
+	if got := mentionedIDs([]framework.Mod{pack}); !slices.Equal(got, []string{"smapi:other.mod", "smapi:some.lib"}) {
+		t.Fatalf("mentioned = %q", got)
 	}
 }

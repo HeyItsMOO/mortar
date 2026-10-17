@@ -41,6 +41,7 @@ type analysisMemo struct {
 	Cleanup        []framework.Cleanup       `json:"cleanup"`
 	Redundant      []framework.Redundant     `json:"redundant"`
 	Supporting     []string                  `json:"supporting,omitempty"`
+	Mentioned      []string                  `json:"mentioned,omitempty"`
 }
 
 func analysisMemoDir() (string, error) {
@@ -92,7 +93,7 @@ func lookupAnalysis(key string) (framework.Findings, bool) {
 	}
 	now := time.Now()
 	_ = os.Chtimes(path, now, now)
-	return framework.Findings{AssetConflicts: memo.AssetConflicts, Settings: memo.Settings, Cleanup: memo.Cleanup, Redundant: memo.Redundant, Supporting: memo.Supporting}, true
+	return framework.Findings{AssetConflicts: memo.AssetConflicts, Settings: memo.Settings, Cleanup: memo.Cleanup, Redundant: memo.Redundant, Supporting: memo.Supporting, Mentioned: memo.Mentioned}, true
 }
 
 // stampsValid stats in chunks on every core: a large profile's packs stamp tens of thousands of files.
@@ -138,7 +139,7 @@ func storeAnalysis(key string, files []packFileStamp, f framework.Findings) {
 	}
 	raw, err := json.Marshal(analysisMemo{
 		Files: files, AssetConflicts: f.AssetConflicts, Settings: f.Settings, Cleanup: f.Cleanup, Redundant: f.Redundant,
-		Supporting: f.Supporting,
+		Supporting: f.Supporting, Mentioned: f.Mentioned,
 	})
 	if err != nil {
 		return

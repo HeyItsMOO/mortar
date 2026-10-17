@@ -3,6 +3,9 @@
 package contentpatcher
 
 import (
+	"maps"
+	"slices"
+
 	"github.com/Rethunk-Tech/mortar/internal/framework"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 )
@@ -49,6 +52,7 @@ func (Driver) Analyze(in framework.Input) framework.Findings {
 		Redundant:      shadowed,
 		Cleanup:        append(cleanup, recolourAddons(in.All)...),
 		Supporting:     supportingPackKeys(in.All),
+		Mentioned:      mentionedIDs(in.Enabled),
 	}
 	files, complete := reads()
 	if complete {
@@ -72,4 +76,14 @@ func (Driver) Forget() {
 	footprintMemo.Lock()
 	footprintMemo.last = nil
 	footprintMemo.Unlock()
+}
+
+// mentionedIDs are the mods the switched-on packs name in a HasMod condition.
+func mentionedIDs(enabled []framework.Mod) []string {
+	preloadPacks(enabled, readContentPackForCleanup)
+	set := map[string]bool{}
+	for _, im := range enabled {
+		maps.Copy(set, readContentPackForCleanup(im).mentions)
+	}
+	return slices.Sorted(maps.Keys(set))
 }
