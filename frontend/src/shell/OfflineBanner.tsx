@@ -46,8 +46,12 @@ function useOfflineSync() {
 export function OfflineBanner() {
   const { t, i18n } = useLingui()
   useOfflineSync()
-  const down = unreachable(useOffline((s) => s.states))
-  if (down.length === 0) {
+  // The message, not the states: a source's last success changes with every request, and that is not shown here.
+  const message = useOffline((s) => {
+    const down = unreachable(s.states)
+    return down.length === 0 ? '' : offlineMessage(down, i18n.locale)
+  })
+  if (message === '') {
     return null
   }
   return (
@@ -67,9 +71,12 @@ export function OfflineBanner() {
     >
       <Box component={CloudOff} size={16} aria-hidden={true} sx={{ color: 'warning.main' }} />
       <Box component="span" sx={{ flex: 1, minWidth: 0 }}>
-        {offlineMessage(down, i18n.locale)}
+        {message}
       </Box>
-      <Button size="small" onClick={() => retry(down).catch(reportUnexpected)}>
+      <Button
+        size="small"
+        onClick={() => retry(unreachable(useOffline.getState().states)).catch(reportUnexpected)}
+      >
         {t`Retry`}
       </Button>
     </Box>

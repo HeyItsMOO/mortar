@@ -92,7 +92,7 @@ function updatesOfflineReason(): string {
 }
 
 function useUpdatesOfflineReason(): string {
-  return updatesReasonOf(useOffline((s) => s.states))
+  return useOffline((s) => updatesReasonOf(s.states))
 }
 
 // The sources an update downloads from: its own, or Nexus when it names only a Nexus mod.

@@ -16,3 +16,15 @@ export function keepUnchanged<T>(prev: readonly T[], next: T[], keyOf: (item: T)
     ? (prev as T[])
     : kept
 }
+
+/** next, with each field equal to the same field of prev kept as prev's value, so a selector of an unchanged field
+ * keeps returning the same object. */
+export function keepFields<T extends object>(prev: T, next: T): T {
+  const out = { ...next }
+  for (const k of Object.keys(next) as (keyof T)[]) {
+    if (sameValue(prev[k], next[k])) {
+      out[k] = prev[k]
+    }
+  }
+  return out
+}

@@ -8,6 +8,7 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { i18n } from '../i18n/index.ts'
 import { follow } from '../shell/follow.ts'
+import { keepFields } from '../shell/sameValue.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { loadPrefSpecs } from './prefSpecs.ts'
@@ -128,7 +129,16 @@ export const useSettings = create<Settings>(() => defaults)
 
 export const initSettings = async () => {
   await loadPrefSpecs()
-  await follow('settings:changed', Get, (next) => useSettings.setState(next))
+  // Unchanged fields, and unchanged per-game blocks, keep their objects, so a component that selects one (the last-played
+  // map, a game's column list) does not redraw when another setting is saved.
+  await follow('settings:changed', Get, (next) =>
+    useSettings.setState((prev) => {
+      const kept = keepFields(prev, next)
+      return kept.games === prev.games || !(prev.games && kept.games)
+        ? kept
+        : { ...kept, games: keepFields(prev.games, kept.games) }
+    }),
+  )
   const path = await CorruptSettingsPath()
   if (path) {
     useToasts.getState().push({

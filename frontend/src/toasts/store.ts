@@ -170,7 +170,9 @@ export const useToasts = create<{
     },
     update: (id, input) => {
       set((s) => ({
-        toasts: s.toasts.map((toast) => (toast.id === id ? { ...toast, ...input } : toast)),
+        toasts: s.toasts.some((toast) => toast.id === id)
+          ? s.toasts.map((toast) => (toast.id === id ? { ...toast, ...input } : toast))
+          : s.toasts,
         history: s.history.map((item) => {
           if (item.id !== id) {
             return item
@@ -187,7 +189,10 @@ export const useToasts = create<{
     dismiss: (id) => {
       clearTimeout(timers.get(id))
       timers.delete(id)
-      set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) }))
+      // A toast already gone leaves the list as it is, so the host does not redraw for nothing.
+      set((s) =>
+        s.toasts.some((t) => t.id === id) ? { toasts: s.toasts.filter((t) => t.id !== id) } : s,
+      )
     },
     // Hovering pauses the countdown; leaving restarts it in full.
     hold: (id) => clearTimeout(timers.get(id)),

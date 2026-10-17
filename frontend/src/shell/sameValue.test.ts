@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test'
-import { keepUnchanged } from './sameValue.ts'
+import { keepFields, keepUnchanged } from './sameValue.ts'
 
 test('keepUnchanged reuses equal items and the whole list when nothing changed', () => {
   const a = { k: 'a', v: 1 }
@@ -38,4 +38,11 @@ test('keepUnchanged reuses equal items and the whole list when nothing changed',
   )
   expect(reordered).toEqual([b, a])
   expect(reordered[0]).toBe(b)
+})
+
+test('keepFields keeps each unchanged field and replaces the changed ones', () => {
+  const prev = { a: { x: 1 }, b: { y: 2 } }
+  const next = keepFields(prev, { a: { x: 1 }, b: { y: 3 } })
+  expect(next.a).toBe(prev.a)
+  expect(next.b).toEqual({ y: 3 })
 })
