@@ -133,7 +133,7 @@ func InstallPack(zipPath, profileRoot string) (Installed, error) {
 // pass Doorstop 4 flags to a Doorstop 3 proxy, which then never starts BepInEx. A package's own core files sit in
 // folders below core and stay.
 func clearPack(profileRoot string) error {
-	for _, name := range append([]string{doorstopFile, "winhttp.dll", "doorstop_config.ini", "doorstop_libs"}, packRuntimeDirs...) {
+	for _, name := range append(append([]string{doorstopFile, "doorstop_config.ini", "doorstop_libs"}, proxyDLLs...), packRuntimeDirs...) {
 		if err := fsx.RemoveAll(filepath.Join(profileRoot, name)); err != nil {
 			return err
 		}
@@ -199,11 +199,26 @@ func doorstopMajor(profileRoot string) int {
 	return defaultDoorstop
 }
 
+// proxyDLLs are the names a pack gives its Doorstop proxy, which the game loads in place of the system library of that
+// name: winhttp.dll unless the game does not load it (In Silence's pack renames it to version.dll).
+var proxyDLLs = []string{"winhttp.dll", "version.dll", "winmm.dll"}
+
+// proxyDLL is the Doorstop proxy the pack in profileRoot ships, winhttp.dll when it ships none.
+func proxyDLL(profileRoot string) string {
+	for _, name := range proxyDLLs {
+		if fsx.IsFile(filepath.Join(profileRoot, name)) {
+			return name
+		}
+	}
+	return proxyDLLs[0]
+}
+
 // DoorstopFiles lists, relative to profileRoot and with forward slashes, the proxy files that must sit next to the game
-// executable: winhttp.dll and doorstop_config.ini. Absent ones are left out. Everything else of the pack stays in the profile.
+// executable: the pack's Doorstop proxy and doorstop_config.ini. Absent ones are left out. Everything else of the pack
+// stays in the profile.
 func DoorstopFiles(profileRoot string) []string {
 	var files []string
-	for _, name := range []string{doorstopConfig, "winhttp.dll"} {
+	for _, name := range []string{doorstopConfig, proxyDLL(profileRoot)} {
 		if _, err := os.Stat(filepath.Join(profileRoot, name)); err == nil {
 			files = append(files, name)
 		}

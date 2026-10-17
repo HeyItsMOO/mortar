@@ -23,7 +23,7 @@ const lastReleases = 10
 // ProfileFiles are what InstallPack lays out in each profile's folder (BepInEx's files sit there, not in the game's
 // install), with the marker that records the installed version.
 func (Loader) ProfileFiles() []string {
-	return append([]string{"BepInEx", "winhttp.dll", "doorstop_config.ini", "doorstop_libs", doorstopFile, markerFile}, packRuntimeDirs...)
+	return append(append([]string{"BepInEx", "doorstop_config.ini", "doorstop_libs", doorstopFile, markerFile}, proxyDLLs...), packRuntimeDirs...)
 }
 
 // thunderstoreDriver is the registered Thunderstore source, so the pack is read from the index the rest of Mortar

@@ -22,13 +22,19 @@ func buildPack(t *testing.T, doorstop string) string { return buildPackIn(t, "Be
 // buildPackIn builds a pack whose files sit under root, as a community build names it (BepInExPack_Valheim).
 func buildPackIn(t *testing.T, root, doorstop string) string {
 	t.Helper()
+	return buildPackWithProxy(t, root, doorstop, "winhttp.dll")
+}
+
+// buildPackWithProxy builds a pack whose Doorstop proxy has the given name.
+func buildPackWithProxy(t *testing.T, root, doorstop, proxy string) string {
+	t.Helper()
 	p := filepath.Join(t.TempDir(), "pack.zip")
 	var buf bytes.Buffer
 	zw := zip.NewWriter(&buf)
 	for name, body := range map[string]string{
 		"manifest.json":                      `{"name":"BepInExPack","version_number":"5.4.2305"}`,
 		"README.md":                          "pack",
-		"winhttp.dll":                        "proxy",
+		proxy:                                "proxy",
 		"doorstop_config.ini":                "[UnityDoorstop]",
 		".doorstop_version":                  doorstop,
 		"doorstop_libs/x64/libdoorstop.so":   "lib",
@@ -404,5 +410,29 @@ func TestLaunchHidesTheConsoleWindowUnlessChosen(t *testing.T) {
 	}
 	if got := enabled(); got != "true" {
 		t.Fatalf("chosen console: Enabled = %q", got)
+	}
+}
+
+func TestAPackWhoseProxyIsVersionDllLoadsThatOne(t *testing.T) {
+	profile := filepath.Join(t.TempDir(), "profile")
+	if _, err := (Loader{}).Install(t.Context(), loader.Target{ProfileDir: profile}, loader.Package{Archive: buildPackWithProxy(t, "BepInExPack", "4.5.0", "version.dll")}, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(DoorstopFiles(profile), " "); got != "doorstop_config.ini version.dll" {
+		t.Fatalf("placed %q", got)
+	}
+	plan := launchplan.New(launchplan.ModeProfile)
+	if err := (Loader{}).Contribute(t.Context(), plan, loader.ProfileView{Dir: profile, Runtime: "proton"}); err != nil {
+		t.Fatal(err)
+	}
+	if len(plan.RuntimeReqs) != 1 || plan.RuntimeReqs[0].Key != "version" {
+		t.Fatalf("overrides %+v: Wine must load the pack's own proxy natively", plan.RuntimeReqs)
+	}
+	// An older pack with the usual proxy replaces the renamed one rather than leaving both.
+	if _, err := (Loader{}).Install(t.Context(), loader.Target{ProfileDir: profile}, loader.Package{Archive: buildPack(t, "4.3.0.0")}, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(DoorstopFiles(profile), " "); got != "doorstop_config.ini winhttp.dll" || fsx.IsFile(filepath.Join(profile, "version.dll")) {
+		t.Fatalf("placed %q after the swap", got)
 	}
 }

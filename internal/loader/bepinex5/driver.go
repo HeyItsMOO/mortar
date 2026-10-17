@@ -103,7 +103,7 @@ func (Loader) Install(ctx context.Context, t loader.Target, pkg loader.Package, 
 }
 
 // Contribute points Doorstop at the profile's entry assembly, declares the proxy files for the game folder and, under
-// Proton, asks for the winhttp override. A native Linux build is started through LD_PRELOAD instead (see contributeLinux).
+// Proton, asks for the override of the pack's proxy library. A native Linux build is started through LD_PRELOAD instead (see contributeLinux).
 func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.ProfileView) error {
 	m := readMarker(p.Dir)
 	if p.Platform == "linux" {
@@ -122,7 +122,7 @@ func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.Prof
 		plan.AddFile(launchplan.PlanFile{Src: src, Dst: filepath.FromSlash(f)})
 	}
 	if proton {
-		plan.RequireRuntime(launchplan.RuntimeReq{Kind: "dll-override", Key: "winhttp", Value: "native,builtin"})
+		plan.RequireRuntime(launchplan.RuntimeReq{Kind: "dll-override", Key: strings.TrimSuffix(proxyDLL(p.Dir), ".dll"), Value: "native,builtin"})
 	}
 	return nil
 }
@@ -197,7 +197,8 @@ func (Loader) Prelaunch(p loader.ProfileView) error {
 	return applyConsole(p.Dir, readMarker(p.Dir).Console)
 }
 
-// OverrideDLL is winhttp: Doorstop injects through winhttp.dll, which Wine only loads when the prefix overrides it.
+// OverrideDLL is winhttp, the proxy most packs ship: Wine only loads it when the prefix overrides it to native. A pack that
+// renames its proxy is overridden by name at launch (Contribute).
 func (Loader) OverrideDLL() string { return "winhttp" }
 
 func (Loader) Path(p loader.ProfileView) (string, error) {
