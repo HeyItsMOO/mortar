@@ -213,16 +213,20 @@ function GroupByControl() {
       </Button>
       <Menu open={anchor !== null} anchorEl={anchor} onClose={() => setAnchor(null)}>
         {[
-          { id: 'none' as const, label: t`None`, Icon: Ban },
-          { id: 'status' as const, label: t`Status`, Icon: ToggleRight },
-          { id: 'category' as const, label: t`Category`, Icon: Tag },
-          { id: 'source' as const, label: t`Source`, Icon: Library },
-          { id: 'tag' as const, label: t`Tag`, Icon: Tag, hint: tagHint },
-          ...(frameworks ? [{ id: 'framework' as const, label: t`Framework`, Icon: Layers }] : []),
-          ...(downloads ? [{ id: 'download' as const, label: t`Download`, Icon: Download }] : []),
-          { id: 'author' as const, label: t`Author`, Icon: User },
-          { id: 'group' as const, label: t`Group`, Icon: FolderTree },
-          { id: 'reason' as const, label: t`Install reason`, Icon: UserCheck },
+          { id: 'none' as const, label: t`None`, Icon: Ban, hint: undefined },
+          ...[
+            { id: 'status' as const, label: t`Status`, Icon: ToggleRight },
+            { id: 'category' as const, label: t`Category`, Icon: Tag },
+            { id: 'source' as const, label: t`Source`, Icon: Library },
+            { id: 'tag' as const, label: t`Tag`, Icon: Tag, hint: tagHint },
+            ...(frameworks
+              ? [{ id: 'framework' as const, label: t`Framework`, Icon: Layers }]
+              : []),
+            ...(downloads ? [{ id: 'download' as const, label: t`Download`, Icon: Download }] : []),
+            { id: 'author' as const, label: t`Author`, Icon: User },
+            { id: 'group' as const, label: t`Group`, Icon: FolderTree },
+            { id: 'reason' as const, label: t`Install reason`, Icon: UserCheck },
+          ].sort((a, b) => a.label.localeCompare(b.label)),
         ].map((item) => (
           <Tooltip key={item.id} title={item.hint ?? ''} placement="right">
             <MenuItem
