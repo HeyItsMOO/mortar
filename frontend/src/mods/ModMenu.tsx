@@ -31,7 +31,6 @@ import {
   RemoveEntry,
   SetModEnabled,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
-import { AddToBundleDialog } from '../bundles/dialogs.tsx'
 import { useFomod } from '../fomod/store.ts'
 import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { IconAction } from '../shell/IconAction.tsx'
@@ -92,7 +91,6 @@ function ModMenuItems({
   close,
   onSetCategory,
   onAlsoAdd,
-  onAddBundle,
   onRemoveOther,
   trailing,
 }: {
@@ -100,7 +98,6 @@ function ModMenuItems({
   close: () => void
   onSetCategory: () => void
   onAlsoAdd: () => void
-  onAddBundle: () => void
   onRemoveOther: () => void
   trailing: ReactNode[]
 }) {
@@ -208,14 +205,12 @@ function ModMenuItems({
       hasFomod,
       onSetCategory,
       onAlsoAdd,
-      onAddBundle,
       onRemoveOther,
       onEditConfig: configured ? () => openConfigPage(mod.id) : undefined,
       labels: {
         editConfig: t`Edit config`,
         category: t`Set category…`,
         alsoAdd: t`Also add to…`,
-        addBundle: t`Add to bundle…`,
       },
       splitCombine,
       trailing,
@@ -329,7 +324,6 @@ function ModActionMenu({
       : (siteCategory(entry, byId[nexusIdOf(profile, mod)]?.details?.category) ?? '')
   const [categoryOpen, setCategoryOpen] = useState(false)
   const [alsoOpen, setAlsoOpen] = useState(false)
-  const [bundleOpen, setBundleOpen] = useState(false)
   const [groupOpen, setGroupOpen] = useState(false)
   const [removeOtherOpen, setRemoveOtherOpen] = useState(false)
   const game = useProfiles((s) => s.game?.id ?? '')
@@ -350,7 +344,6 @@ function ModActionMenu({
           close={onClose}
           onSetCategory={() => setCategoryOpen(true)}
           onAlsoAdd={() => setAlsoOpen(true)}
-          onAddBundle={() => setBundleOpen(true)}
           onRemoveOther={() => setRemoveOtherOpen(true)}
           trailing={[
             <PackageMoveItems key="package-move" mod={mod} close={onClose} />,
@@ -398,13 +391,6 @@ function ModActionMenu({
         mod={mod}
         game={game}
         currentProfileId={currentProfileId}
-      />
-      <AddToBundleDialog
-        open={bundleOpen}
-        onClose={() => setBundleOpen(false)}
-        game={game}
-        profileId={currentProfileId}
-        ids={[mod.id]}
       />
       <AddToGroupDialog
         open={groupOpen}

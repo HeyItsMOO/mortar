@@ -15,7 +15,7 @@ import { EmptyState } from '../shell/EmptyState.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import { LockedReason } from './LockedReason.tsx'
-import { addModToGroup } from './storeEntries.ts'
+import { addModToGroup } from './storeGroups.ts'
 import { useLocked } from './useLocked.ts'
 
 const ICON_SIZE = 16

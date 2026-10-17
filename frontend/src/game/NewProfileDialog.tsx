@@ -19,7 +19,7 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import type { Template } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/templates/models.ts'
 import { NewProfileFromTemplate } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/templates/service.ts'
-import { bundleWants } from '../bundles/missingWants.ts'
+import { savedGroupWants } from '../groups/missingWants.ts'
 import { listNames } from '../i18n/list.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { download } from '../queue/actions.ts'
@@ -149,7 +149,7 @@ function useCreate(game: string, onClose: () => void) {
         useProfiles.getState().open(result.profile.id)
         onClose()
         const missing = result.missing ?? []
-        const wants = bundleWants(result.missingMods)
+        const wants = savedGroupWants(result.missingMods)
         const queued = wants.length > 0 && (await download(wants))
         let title = t`Created ${name}`
         if (missing.length > 0) {

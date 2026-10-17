@@ -20,7 +20,7 @@ import {
   PreviewApplyTemplate,
   UndoApplyTemplate,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/templates/service.ts'
-import { bundleWants } from '../bundles/missingWants.ts'
+import { savedGroupWants } from '../groups/missingWants.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { download } from '../queue/actions.ts'
 import { useLoaded } from '../shell/useLoaded.ts'
@@ -71,7 +71,7 @@ function useApply(game: string, profileId: string, onClose: () => void) {
         useProfiles.getState().replace(result.profile)
         onClose()
         const missing = result.missing ?? []
-        const wants = bundleWants(result.missingMods)
+        const wants = savedGroupWants(result.missingMods)
         const queued = wants.length > 0 && (await download(wants))
         const left = missing.length
         let title = plural(result.added, {

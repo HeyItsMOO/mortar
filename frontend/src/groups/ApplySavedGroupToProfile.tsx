@@ -9,21 +9,21 @@ import {
   TextField,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import type { Bundle } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/bundles/models.ts'
-import { Apply } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/bundles/service.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import type { SavedGroup } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savedgroups/models.ts'
+import { Apply } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savedgroups/service.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { usePending } from '../toasts/usePending.ts'
-import { bundleApplied } from './applied.ts'
+import { savedGroupApplied } from './applied.ts'
 
-// Adds a saved bundle to a chosen profile from the Bundles panel, the other way round from a profile's menu.
-export function ApplyBundleToProfile({
-  bundle,
+// Adds a saved group to a chosen profile from the Saved groups panel, the other way round from a profile's menu.
+export function ApplySavedGroupToProfile({
+  group,
   game,
   profiles,
   onClose,
 }: {
-  bundle: Bundle | null
+  group: SavedGroup | null
   game: string
   profiles: Profile[]
   onClose: () => void
@@ -31,28 +31,28 @@ export function ApplyBundleToProfile({
   const { t } = useLingui()
   const [profileId, setProfileId] = useState('')
   const [busy, run] = usePending()
-  const open = bundle !== null
+  const open = group !== null
   useEffect(() => {
     if (open) {
       setProfileId(useProfiles.getState().openId || (profiles[0]?.id ?? ''))
     }
   }, [open, profiles])
   const apply = () => {
-    if (!bundle) {
+    if (!group) {
       return
     }
     run(
       async () => {
-        const result = await Apply(game, bundle.id, profileId)
+        const result = await Apply(game, group.id, profileId)
         onClose()
-        bundleApplied(result, profileId)
+        savedGroupApplied(result, profileId)
       },
-      { errorTitle: t`Could not add the bundle` },
+      { errorTitle: t`Could not add the saved group` },
     )
   }
   return (
     <Dialog open={open} onClose={busy ? undefined : onClose}>
-      <DialogTitle>{t`Add ${bundle?.name ?? ''} to a profile`}</DialogTitle>
+      <DialogTitle>{t`Add ${group?.name ?? ''} to a profile`}</DialogTitle>
       <DialogContent sx={{ minWidth: 340 }}>
         <TextField
           select={true}

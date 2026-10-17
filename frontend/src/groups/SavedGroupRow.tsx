@@ -2,8 +2,8 @@ import { useLingui } from '@lingui/react/macro'
 import { Box, Collapse, Typography } from '@mui/material'
 import { ChevronDown, ChevronRight, PackagePlus, Pencil, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
-import type { Bundle } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/bundles/models.ts'
-import { RemoveMods } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/bundles/service.ts'
+import type { SavedGroup } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savedgroups/models.ts'
+import { RemoveMods } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savedgroups/service.ts'
 import { modsLabel } from '../i18n/counts.ts'
 import { TipIconButton } from '../shell/TipIconButton.tsx'
 import { space } from '../theme/density.ts'
@@ -11,10 +11,10 @@ import { reportError } from '../toasts/report.ts'
 
 const ICON_SIZE = 15
 
-// One saved bundle: its name and holders, a list of its mods (each removable) and the Add, Rename and Delete actions.
-export function BundleRow({
+// One saved group: its name and holders, a list of its mods (each removable) and the Add, Rename and Delete actions.
+export function SavedGroupRow({
   game,
-  bundle,
+  group,
   holderNames,
   onApply,
   onRename,
@@ -22,41 +22,37 @@ export function BundleRow({
   onChanged,
 }: {
   game: string
-  bundle: Bundle
+  group: SavedGroup
   holderNames: string
   onApply: () => void
   onRename: () => void
   onDelete: () => void
-  onChanged: (bundle: Bundle) => void
+  onChanged: (group: SavedGroup) => void
 }) {
   const { t } = useLingui()
   const [open, setOpen] = useState(false)
-  const mods = bundle.mods ?? []
+  const mods = group.mods ?? []
   const modCount = modsLabel(mods.length)
   return (
     <Box sx={{ p: space.gap, bgcolor: 'var(--mortar-raised)', borderRadius: '6px' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <TipIconButton
-          label={open ? t`Hide mods of ${bundle.name}` : t`Show mods of ${bundle.name}`}
+          label={open ? t`Hide mods of ${group.name}` : t`Show mods of ${group.name}`}
           aria-expanded={open}
           onClick={() => setOpen(!open)}
         >
           {open ? <ChevronDown size={ICON_SIZE} /> : <ChevronRight size={ICON_SIZE} />}
         </TipIconButton>
-        <Typography
-          noWrap={true}
-          title={bundle.name}
-          sx={{ flex: 1, minWidth: 0, fontWeight: 600 }}
-        >
-          {bundle.name}
+        <Typography noWrap={true} title={group.name} sx={{ flex: 1, minWidth: 0, fontWeight: 600 }}>
+          {group.name}
         </Typography>
-        <TipIconButton label={t`Add ${bundle.name} to a profile`} onClick={onApply}>
+        <TipIconButton label={t`Add ${group.name} to a profile`} onClick={onApply}>
           <PackagePlus size={ICON_SIZE} />
         </TipIconButton>
-        <TipIconButton label={t`Rename ${bundle.name}`} onClick={onRename}>
+        <TipIconButton label={t`Rename ${group.name}`} onClick={onRename}>
           <Pencil size={ICON_SIZE} />
         </TipIconButton>
-        <TipIconButton label={t`Delete ${{ name: bundle.name }}`} color="error" onClick={onDelete}>
+        <TipIconButton label={t`Delete ${{ name: group.name }}`} color="error" onClick={onDelete}>
           <Trash2 size={ICON_SIZE} />
         </TipIconButton>
       </Box>
@@ -83,14 +79,14 @@ export function BundleRow({
                 <TipIconButton
                   label={
                     mods.length === 1
-                      ? t`A bundle keeps at least one mod; delete the bundle instead`
-                      : t`Remove ${mod.name} from ${bundle.name}`
+                      ? t`A saved group keeps at least one mod; delete the saved group instead`
+                      : t`Remove ${mod.name} from ${group.name}`
                   }
                   disabled={mods.length === 1}
                   onClick={() => {
-                    RemoveMods(game, bundle.id, [mod.id])
+                    RemoveMods(game, group.id, [mod.id])
                       .then(onChanged)
-                      .catch(reportError(t`Could not remove the mod from the bundle`))
+                      .catch(reportError(t`Could not remove the mod from the saved group`))
                   }}
                 >
                   <X size={ICON_SIZE} />

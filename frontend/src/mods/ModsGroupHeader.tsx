@@ -11,7 +11,8 @@ import { toggleCollapsed } from './group.ts'
 import { LockedReason } from './LockedReason.tsx'
 import type { ListRow } from './listColumns.ts'
 import { useMods } from './store.ts'
-import { findSources, setGroupEnabled } from './storeEntries.ts'
+import { findSources } from './storeEntries.ts'
+import { setGroupEnabled } from './storeGroups.ts'
 import { useLocked } from './useLocked.ts'
 
 function ModsGroupHeader({

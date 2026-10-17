@@ -6,7 +6,7 @@ import {
   Copy,
   Ellipsis,
   Folder,
-  PackagePlus,
+  FolderPlus,
   Pin,
   PinOff,
   Power,
@@ -41,7 +41,7 @@ export function SelectionBarActions({
   setSkipSourceMany,
   askRemove,
   openAlso,
-  openSave,
+  openGroup,
   openTag,
   openCategory,
   share,
@@ -59,7 +59,7 @@ export function SelectionBarActions({
   setSkipSourceMany: (groups: ReadonlyMap<string, Mod[]>, skip: boolean) => Promise<void>
   askRemove: (mods: Mod[]) => void
   openAlso: () => void
-  openSave: () => void
+  openGroup: () => void
   openTag: () => void
   openCategory: () => void
   share: () => void
@@ -120,7 +120,7 @@ export function SelectionBarActions({
         ]
       : []),
     { label: t`Also add to…`, icon: <Copy size={16} />, run: openAlso, edits: true },
-    { label: t`Save as bundle…`, icon: <PackagePlus size={16} />, run: openSave, edits: true },
+    { label: t`Make a group…`, icon: <FolderPlus size={16} />, run: openGroup, edits: true },
     { label: t`Share selection`, icon: <Share2 size={16} />, run: share, edits: false },
   ]
   return (

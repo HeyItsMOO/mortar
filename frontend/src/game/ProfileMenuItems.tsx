@@ -22,8 +22,8 @@ import {
   Exists as ShortcutExists,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/shortcut/service.ts'
 import { AddResult } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/steam/models.ts'
-import { bundleApplied } from '../bundles/applied.ts'
-import { ApplyBundleDialog } from '../bundles/dialogs.tsx'
+import { savedGroupApplied } from '../groups/applied.ts'
+import { ApplySavedGroupDialog } from '../groups/dialogs.tsx'
 import { CompareDialog } from '../profiles/CompareDialog.tsx'
 import { HealthDialog } from '../profiles/HealthDialog.tsx'
 import { useProfiles } from '../profiles/store.ts'
@@ -241,8 +241,8 @@ function ProfileDialogs({
   setCompare,
   deleting,
   setDeleting,
-  bundleOpen,
-  setBundleOpen,
+  savedGroupOpen,
+  setSavedGroupOpen,
 }: {
   profile: Profile
   currentGame: { id: string } | null
@@ -250,8 +250,8 @@ function ProfileDialogs({
   setCompare: (value: { a: Profile; b: Profile | null } | null) => void
   deleting: boolean
   setDeleting: (value: boolean) => void
-  bundleOpen: boolean
-  setBundleOpen: (value: boolean) => void
+  savedGroupOpen: boolean
+  setSavedGroupOpen: (value: boolean) => void
 }) {
   return (
     <>
@@ -261,13 +261,13 @@ function ProfileDialogs({
         onClose={() => setCompare(null)}
       />
       <DeleteProfileDialog profile={profile} open={deleting} onClose={() => setDeleting(false)} />
-      <ApplyBundleDialog
-        open={bundleOpen}
+      <ApplySavedGroupDialog
+        open={savedGroupOpen}
         game={currentGame?.id ?? ''}
         profileName={profile.name}
         profileId={profile.id}
-        onClose={() => setBundleOpen(false)}
-        onApplied={(result) => bundleApplied(result, profile.id)}
+        onClose={() => setSavedGroupOpen(false)}
+        onApplied={(result) => savedGroupApplied(result, profile.id)}
       />
     </>
   )
@@ -296,7 +296,7 @@ function MoreMenuItems({
   const duplicate = useProfiles((s) => s.duplicate)
   const [compare, setCompare] = useState<{ a: Profile; b: Profile | null } | null>(null)
   const [deleting, setDeleting] = useState(false)
-  const [bundleOpen, setBundleOpen] = useState(false)
+  const [savedGroupOpen, setSavedGroupOpen] = useState(false)
   return [
     <ProfileMenuItem
       key="history"
@@ -328,15 +328,15 @@ function MoreMenuItems({
       }}
     />,
     <ShareMenuItems key="share" profile={profile} close={close} />,
-    <MenuRule key="bundle-divider" />,
+    <MenuRule key="saved-group-divider" />,
     <ProfileMenuItem
-      key="bundle"
+      key="saved-group"
       icon={<PackagePlus size={16} />}
-      label={t`Add a bundle…`}
+      label={t`Add a saved group…`}
       disabled={!currentGame}
       onClick={() => {
         close()
-        setBundleOpen(true)
+        setSavedGroupOpen(true)
       }}
     />,
     <TemplateMenuItems key="templates" profile={profile} close={close} />,
@@ -360,8 +360,8 @@ function MoreMenuItems({
       setCompare={setCompare}
       deleting={deleting}
       setDeleting={setDeleting}
-      bundleOpen={bundleOpen}
-      setBundleOpen={setBundleOpen}
+      savedGroupOpen={savedGroupOpen}
+      setSavedGroupOpen={setSavedGroupOpen}
     />,
   ]
 }

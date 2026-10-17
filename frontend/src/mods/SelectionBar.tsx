@@ -1,13 +1,12 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { useState } from 'react'
-import { Create } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/bundles/service.ts'
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { CopyModsWithNeeds } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
-import { BundleNameDialog } from '../bundles/dialogs.tsx'
 import { useProfiles } from '../profiles/store.ts'
 import { openShare } from '../share/store.ts'
-import { useToasts } from '../toasts/store.ts'
+import { PromptDialog } from '../shell/PromptDialog.tsx'
+import { reportUnexpected } from '../toasts/report.ts'
 import { useCustomCategories } from './customCategories.ts'
 import { modId, visibleUpdates } from './lookup.ts'
 import { OtherProfilesDialog } from './OtherProfilesDialog.tsx'
@@ -16,38 +15,11 @@ import { CategorySelectionDialog, TagSelectionDialog } from './SelectionBarDialo
 import { useSelection } from './selection.ts'
 import { skipSourceGroups } from './skipSources.ts'
 import { useMods } from './store.ts'
+import { addModsToGroup } from './storeGroups.ts'
 import { useUpdates } from './updates.ts'
 import { useLocked } from './useLocked.ts'
 
-function SaveSelectionDialog({
-  open,
-  onClose,
-  profileId,
-  selected,
-}: {
-  open: boolean
-  onClose: () => void
-  profileId: string
-  selected: Mod[]
-}) {
-  const { t } = useLingui()
-  return (
-    <BundleNameDialog
-      open={open}
-      title={t`Save selection as bundle`}
-      submitLabel={t`Save`}
-      errorTitle={t`Could not create the bundle`}
-      onClose={onClose}
-      onSubmit={async (name) => {
-        const game = useProfiles.getState().game?.id ?? ''
-        const created = await Create(game, name, profileId, [
-          ...new Set(selected.map((mod) => mod.id)),
-        ])
-        useToasts.getState().push({ kind: 'success', title: t`Created ${{ name: created.name }}` })
-      }}
-    />
-  )
-}
+const MAX_GROUP_NAME = 60
 
 function SelectionBar({ profileId, mods }: { profileId: string; mods: Mod[] }) {
   const { t } = useLingui()
@@ -62,7 +34,7 @@ function SelectionBar({ profileId, mods }: { profileId: string; mods: Mod[] }) {
   const askRemove = useMods((s) => s.askRemove)
   const locked = useLocked()
   const [alsoOpen, setAlsoOpen] = useState(false)
-  const [saveOpen, setSaveOpen] = useState(false)
+  const [groupOpen, setGroupOpen] = useState(false)
   const [tagOpen, setTagOpen] = useState(false)
   const [categoryOpen, setCategoryOpen] = useState(false)
   const [tag, setTag] = useState('')
@@ -97,18 +69,24 @@ function SelectionBar({ profileId, mods }: { profileId: string; mods: Mod[] }) {
           setSkipSourceMany={setSkipSourceMany}
           askRemove={askRemove}
           openAlso={() => setAlsoOpen(true)}
-          openSave={() => setSaveOpen(true)}
+          openGroup={() => setGroupOpen(true)}
           openTag={() => setTagOpen(true)}
           openCategory={() => setCategoryOpen(true)}
           share={() => openShare(profileId, keys)}
           clear={clear}
         />
       ) : null}
-      <SaveSelectionDialog
-        open={saveOpen}
-        onClose={() => setSaveOpen(false)}
-        profileId={profileId}
-        selected={selected}
+      <PromptDialog
+        open={groupOpen}
+        title={t`Make a group`}
+        label={t`Group name`}
+        maxLength={MAX_GROUP_NAME}
+        confirmLabel={t`Make group`}
+        onCancel={() => setGroupOpen(false)}
+        onSubmit={(name) => {
+          setGroupOpen(false)
+          addModsToGroup(keys, name).catch(reportUnexpected)
+        }}
       />
       <TagSelectionDialog
         open={tagOpen}

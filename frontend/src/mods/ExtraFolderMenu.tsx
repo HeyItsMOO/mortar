@@ -2,9 +2,9 @@ import { useLingui } from '@lingui/react/macro'
 import { Button, ButtonGroup, type ButtonGroupProps, Menu } from '@mui/material'
 import { ChevronDown, Download, FolderOpen, PackagePlus } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
-import { bundleApplied } from '../bundles/applied.ts'
-import { ApplyBundleDialog } from '../bundles/dialogs.tsx'
 import { ApplyTemplateMenuItem } from '../game/TemplateMenuItems.tsx'
+import { savedGroupApplied } from '../groups/applied.ts'
+import { ApplySavedGroupDialog } from '../groups/dialogs.tsx'
 import { openDownloadsDialog } from '../install/downloadsDialog.ts'
 import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { DisabledReason } from '../shell/DisabledReason.tsx'
@@ -13,7 +13,7 @@ import { MenuHeading, MenuRule } from '../shell/TitleMenu.tsx'
 import { ExtraFolderDialog } from './ExtraFolderDialog.tsx'
 
 // The chevron of the Add split button: archives from the downloads folder or the game's extra mods folder (when
-// one is set), and whole sets of mods (a template, a bundle). The archive pick is the button beside it, so the menu
+// one is set), and whole sets of mods (a template, a saved group). The archive pick is the button beside it, so the menu
 // does not repeat it.
 export function ExtraFolderMenu({
   folder,
@@ -32,7 +32,7 @@ export function ExtraFolderMenu({
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)
   const profile = useProfiles(openProfileOf)
   const [open, setOpen] = useState(false)
-  const [bundleOpen, setBundleOpen] = useState(false)
+  const [savedGroupOpen, setSavedGroupOpen] = useState(false)
   const close = () => setAnchor(null)
   return (
     <>
@@ -77,22 +77,22 @@ export function ExtraFolderMenu({
         {profile ? (
           <MenuAction
             icon={<PackagePlus size={16} aria-hidden={true} />}
-            label={t`Add a bundle…`}
+            label={t`Add a saved group…`}
             onClick={() => {
               close()
-              setBundleOpen(true)
+              setSavedGroupOpen(true)
             }}
           />
         ) : null}
       </Menu>
       {profile ? (
-        <ApplyBundleDialog
-          open={bundleOpen}
+        <ApplySavedGroupDialog
+          open={savedGroupOpen}
           game={game}
           profileName={profile.name}
           profileId={profile.id}
-          onClose={() => setBundleOpen(false)}
-          onApplied={(result) => bundleApplied(result, profile.id)}
+          onClose={() => setSavedGroupOpen(false)}
+          onApplied={(result) => savedGroupApplied(result, profile.id)}
         />
       ) : null}
       <ExtraFolderDialog open={open} game={game} folder={folder} onClose={() => setOpen(false)} />

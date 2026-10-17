@@ -1,8 +1,17 @@
 import { useLingui } from '@lingui/react/macro'
 import { Menu } from '@mui/material'
-import { FolderMinus, MoreHorizontal, Pencil, Power, PowerOff, Trash2 } from 'lucide-react'
+import {
+  FolderMinus,
+  MoreHorizontal,
+  PackagePlus,
+  Pencil,
+  Power,
+  PowerOff,
+  Trash2,
+} from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { SaveGroupToLibrary } from '../groups/SaveGroupToLibrary.tsx'
 import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { IconAction } from '../shell/IconAction.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
@@ -11,19 +20,21 @@ import { reportUnexpected } from '../toasts/report.ts'
 import { AddToGroupMenuItem } from './AddToGroupDialog.tsx'
 import { LockedReason } from './LockedReason.tsx'
 import { useMods } from './store.ts'
-import { deleteGroup, removeModFromGroup, renameGroup, setGroupEnabled } from './storeEntries.ts'
+import { deleteGroup, removeModFromGroup, renameGroup, setGroupEnabled } from './storeGroups.ts'
 import { useLocked } from './useLocked.ts'
 
 const ICON_SIZE = 16
 const MAX_NAME = 60
 
-// The group header's ⋯ menu: rename, delete (its mods stay in the profile) and switch every mod of the group.
+// The group header's ⋯ menu: rename, save to the library, delete (its mods stay in the profile) and switch every mod
+// of the group.
 export function GroupMenu({ name }: { name: string }) {
   const { t } = useLingui()
   const locked = useLocked()
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)
   const [renaming, setRenaming] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [saving, setSaving] = useState(false)
   const close = () => setAnchor(null)
   const switchAll = (on: boolean) =>
     setGroupEnabled(name, on)
@@ -52,6 +63,14 @@ export function GroupMenu({ name }: { name: string }) {
         <LockedReason locked={locked}>
           {item(t`Rename…`, <Pencil size={ICON_SIZE} />, () => setRenaming(true))}
         </LockedReason>
+        <MenuAction
+          icon={<PackagePlus size={ICON_SIZE} />}
+          label={t`Save to library…`}
+          onClick={() => {
+            close()
+            setSaving(true)
+          }}
+        />
         <LockedReason locked={locked}>
           {item(t`Enable all`, <Power size={ICON_SIZE} />, () => switchAll(true))}
         </LockedReason>
@@ -75,6 +94,7 @@ export function GroupMenu({ name }: { name: string }) {
           renameGroup(name, next).catch(reportUnexpected)
         }}
       />
+      <SaveGroupToLibrary open={saving} group={name} onClose={() => setSaving(false)} />
       <ConfirmDialog
         open={deleting}
         color="error"

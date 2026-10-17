@@ -102,7 +102,7 @@ function TemplateRow({
   onDelete: () => void
 }) {
   const { t } = useLingui()
-  const mods = modsLabel(template.bundle?.length ?? 0)
+  const mods = modsLabel(template.mods?.length ?? 0)
   return (
     <ListItem
       disableGutters={true}

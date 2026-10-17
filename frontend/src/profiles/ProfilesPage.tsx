@@ -31,10 +31,10 @@ import type {
   Profile,
   TrashItem,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
-import { BundlesSection } from '../bundles/BundlesSection.tsx'
 import { compact } from '../game/compact.ts'
 import { NewProfileDialog } from '../game/NewProfileDialog.tsx'
 import { useProfilePageBadges } from '../game/useSidebarProfiles.ts'
+import { SavedGroupsSection } from '../groups/SavedGroupsSection.tsx'
 import { localId } from '../mods/dependents.ts'
 import { useCurrentGame } from '../nav/currentGame.ts'
 import { useNav } from '../nav/store.ts'
@@ -468,7 +468,7 @@ export function ProfilesPage() {
             flexShrink: 0,
           }}
         >
-          <BundlesSection game={game} profiles={profiles} />
+          <SavedGroupsSection game={game} profiles={profiles} />
           <Trash />
         </Box>
       </Box>

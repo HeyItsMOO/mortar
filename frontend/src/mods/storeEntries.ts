@@ -6,18 +6,13 @@ import type {
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import {
-  AddToGroup,
-  DeleteGroup,
   OpenConfig,
   RemoveEntries,
-  RemoveFromGroup,
-  RenameGroup,
   RestoreEntries,
   RestoreEntryFields,
   SetEntryCategoryMany,
   SetEntryNoteTags,
   SetEntryTagsMany,
-  SetGroupEnabled,
   SetModEnabled,
   SetModsEnabled,
   SetPinned,
@@ -159,32 +154,6 @@ async function afterEnable(
     await considerEnableRequirements(get().mods, enabling, 'toggle')
   }
 }
-
-async function groupCall(
-  failure: MessageDescriptor,
-  call: (game: string, id: string) => Promise<Profile>,
-) {
-  const target = openTarget()
-  if (!target) {
-    return
-  }
-  try {
-    useProfiles.getState().replace(await call(target.game, target.id))
-  } catch (e) {
-    reportError(i18n._(failure))(e)
-  }
-}
-
-const removeModFromGroup = (key: string, name: string) =>
-  groupCall(msg`Could not remove from the group`, (game, id) =>
-    RemoveFromGroup(game, id, name, key),
-  )
-
-const renameGroup = (name: string, next: string) =>
-  groupCall(msg`Could not rename the group`, (game, id) => RenameGroup(game, id, name, next))
-
-const deleteGroup = (name: string) =>
-  groupCall(msg`Could not delete the group`, (game, id) => DeleteGroup(game, id, name))
 
 export async function enableMany(
   set: (fn: (s: { mods: Mod[] }) => { mods: Mod[] }) => void,
@@ -470,29 +439,3 @@ export async function openModConfig(mod: Mod) {
     reportError(i18n._(msg`Could not open config.json of ${mod.name}`))(e)
   }
 }
-
-export async function addModToGroup(key: string, name: string) {
-  const target = openTarget()
-  if (!target) {
-    return
-  }
-  try {
-    useProfiles.getState().replace(await AddToGroup(target.game, target.id, name, key))
-  } catch (e) {
-    reportError(i18n._(msg`Could not add to the group`))(e)
-  }
-}
-
-export async function setGroupEnabled(name: string, on: boolean) {
-  const target = openTarget()
-  if (!target) {
-    return
-  }
-  try {
-    useProfiles.getState().replace(await SetGroupEnabled(target.game, target.id, name, on))
-  } catch (e) {
-    reportError(i18n._(msg`Could not switch the group`))(e)
-  }
-}
-
-export { deleteGroup, removeModFromGroup, renameGroup }

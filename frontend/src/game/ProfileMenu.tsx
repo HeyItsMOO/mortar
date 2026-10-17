@@ -25,7 +25,7 @@ import { HomeButton } from './HomeButton.tsx'
 import { DeleteProfileDialog } from './ProfileMenuItems.tsx'
 import { SaveTemplateMenuItem } from './TemplateMenuItems.tsx'
 
-// The Profile menu on Home. The sidebar's profile menu keeps the rest (cover, check, export, send, bundles).
+// The Profile menu on Home. The sidebar's profile menu keeps the rest (cover, check, export, send, saved groups).
 export function ProfileMenu({ profile }: { profile: Profile }) {
   const { t } = useLingui()
   const profiles = useProfiles((s) => s.profiles)

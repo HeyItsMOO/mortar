@@ -10,7 +10,7 @@ test('the Add split menu lists its sources and the extra folder dialog adds 2 mo
     'The downloads folder…',
     'The extra mods folder…',
     'Apply a template…',
-    'Add a bundle…',
+    'Add a saved group…',
   ])
   await page.getByRole('menuitem', { name: 'The extra mods folder…' }).click()
   const dialog = page.getByRole('dialog', { name: 'Add from the extra mods folder' })

@@ -1,8 +1,8 @@
-import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/bundles/models.ts'
+import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savedgroups/models.ts'
 import type { Want } from '../queue/actions.ts'
 
-// The download for one bundle mod; a mod with no Nexus or GitHub source cannot be fetched.
-function bundleModWant({ name, source, implicit }: Mod): Want | null {
+// The download for one saved group mod; a mod with no Nexus or GitHub source cannot be fetched.
+function savedGroupModWant({ name, source, implicit }: Mod): Want | null {
   const reason = implicit ? { implicit: true } : {}
   if (source.kind === 'nexus' && source.modId) {
     return {
@@ -28,11 +28,11 @@ function bundleModWant({ name, source, implicit }: Mod): Want | null {
   return null
 }
 
-// Downloads for bundle or template mods the store no longer holds, one per archive.
-export function bundleWants(mods: Mod[] | null | undefined): Want[] {
+// Downloads for saved group or template mods the store no longer holds, one per archive.
+export function savedGroupWants(mods: Mod[] | null | undefined): Want[] {
   const wants = new Map<string, Want>()
   for (const mod of mods ?? []) {
-    const want = wants.has(mod.entryKey) ? null : bundleModWant(mod)
+    const want = wants.has(mod.entryKey) ? null : savedGroupModWant(mod)
     if (want) {
       wants.set(mod.entryKey, want)
     }

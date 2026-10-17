@@ -4,7 +4,6 @@ import {
   ChevronDown,
   ChevronRight,
   CopyPlus,
-  PackagePlus,
   SlidersHorizontal,
   Tag,
   Trash2,
@@ -100,7 +99,6 @@ function ModActionItems({
   hasFomod,
   onSetCategory,
   onAlsoAdd,
-  onAddBundle,
   onRemoveOther,
   onEditConfig,
   labels,
@@ -114,11 +112,10 @@ function ModActionItems({
   hasFomod: boolean
   onSetCategory: () => void
   onAlsoAdd: () => void
-  onAddBundle: () => void
   onRemoveOther: () => void
   // Set only for a mod with a config source; the item is left out otherwise.
   onEditConfig: (() => void) | undefined
-  labels: { category: string; alsoAdd: string; addBundle: string; editConfig: string }
+  labels: { category: string; alsoAdd: string; editConfig: string }
   splitCombine: ReactNode
   trailing: ReactNode[]
 }) {
@@ -172,16 +169,6 @@ function ModActionItems({
         icon={<Tag size={ICON_SIZE} />}
         label={labels.category}
         onClick={closeThen(onSetCategory)}
-      />,
-    )
-    result.push(
-      <MenuAction
-        key="add-bundle"
-        disabled={locked}
-        reason={lockedTip}
-        icon={<PackagePlus size={ICON_SIZE} />}
-        label={labels.addBundle}
-        onClick={closeThen(onAddBundle)}
       />,
     )
     if (has('pin')) {
