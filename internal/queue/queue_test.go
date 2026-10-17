@@ -259,8 +259,13 @@ func TestPremiumDownloadsAndInstallsWithoutClicks(t *testing.T) {
 	if st.Items[1].FileID != 11 || st.Items[1].FileName != "a-2.0.zip" || st.Items[0].Name != "Alpha" {
 		t.Errorf("update resolved or named wrongly: %+v", st.Items)
 	}
-	src := f.installs[0]
-	if src.Kind != "nexus" || src.ModID != 1 || src.FileID != 10 || src.Picture != "https://img/a.png" || src.EndorsementCount != 7 || src.Name != "a-1.0.zip" {
+	// The two items install side by side, so the first install recorded may be either.
+	at := slices.IndexFunc(f.installs, func(s profile.Source) bool { return s.FileID == 10 })
+	if at < 0 {
+		t.Fatalf("file 10 never installed: %+v", f.installs)
+	}
+	src := f.installs[at]
+	if src.Kind != "nexus" || src.ModID != 1 || src.Picture != "https://img/a.png" || src.EndorsementCount != 7 || src.Name != "a-1.0.zip" {
 		t.Errorf("source %+v", src)
 	}
 	if len(f.opened) != 0 {
