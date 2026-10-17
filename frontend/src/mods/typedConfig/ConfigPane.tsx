@@ -312,6 +312,17 @@ function TextFile({ target, name }: { target: Target; name: string }) {
       />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: space.gap }}>
         <Button
+          variant="text"
+          size="small"
+          sx={{ mr: 'auto' }}
+          disabled={saved === null}
+          onClick={() =>
+            configApi.openText(target, name).catch((e: unknown) => setError(String(e)))
+          }
+        >
+          {t`Open in editor`}
+        </Button>
+        <Button
           variant="outlined"
           size="small"
           disabled={!dirty}

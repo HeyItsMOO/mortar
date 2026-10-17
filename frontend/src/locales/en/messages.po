@@ -277,7 +277,7 @@ msgstr "Stop the game to change mods."
 msgid "Could not delete the template"
 msgstr "Could not delete the template"
 
-#: src/mods/typedConfig/ConfigPane.tsx:407
+#: src/mods/typedConfig/ConfigPane.tsx:418
 msgid "Every entry in {current} goes back to its default."
 msgstr "Every entry in {current} goes back to its default."
 
@@ -1333,7 +1333,7 @@ msgstr "Sort: most downloaded"
 msgid "Scan command"
 msgstr "Scan command"
 
-#: src/mods/ModsTab.tsx:135
+#: src/mods/ModsTab.tsx:136
 msgid "Show all mods"
 msgstr "Show all mods"
 
@@ -1639,7 +1639,7 @@ msgid "Newest lines kept in the Console"
 msgstr "Newest lines kept in the Console"
 
 #: src/mods/typedConfig/ConfigPane.tsx:165
-#: src/mods/typedConfig/ConfigPane.tsx:409
+#: src/mods/typedConfig/ConfigPane.tsx:420
 #: src/settings/sections/Shortcuts.tsx:107
 #: src/settings/sections/Shortcuts.tsx:113
 msgid "Reset all"
@@ -1886,8 +1886,8 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/lan/SendPanel.tsx:194
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:394
-#: src/mods/ModsTab.tsx:110
-#: src/mods/typedConfig/ConfigPane.tsx:386
+#: src/mods/ModsTab.tsx:111
+#: src/mods/typedConfig/ConfigPane.tsx:397
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
 #: src/profiles/HealthDialog.tsx:245
@@ -3954,7 +3954,7 @@ msgstr "Console"
 msgid "{both, plural, one {# mod is in both} other {# mods are in both}}"
 msgstr "{both, plural, one {# mod is in both} other {# mods are in both}}"
 
-#: src/mods/ModsTab.tsx:137
+#: src/mods/ModsTab.tsx:138
 msgid "Try a different search or filter."
 msgstr "Try a different search or filter."
 
@@ -7058,6 +7058,10 @@ msgstr "That download is no longer waiting to retry."
 msgid "{0, plural, one {Update # mod} other {Update # mods}}"
 msgstr "{0, plural, one {Update # mod} other {Update # mods}}"
 
+#: src/mods/typedConfig/ConfigPane.tsx:323
+msgid "Open in editor"
+msgstr "Open in editor"
+
 #: src/profiles/historyRevert.ts:74
 msgid "Download missing"
 msgstr "Download missing"
@@ -7439,7 +7443,7 @@ msgstr "Unity exception"
 
 #: src/mods/problemFixButtons.tsx:251
 #: src/mods/problemFixButtons.tsx:256
-#: src/mods/typedConfig/ConfigPane.tsx:320
+#: src/mods/typedConfig/ConfigPane.tsx:331
 #: src/profiles/HealthDialog.tsx:287
 msgid "Revert"
 msgstr "Revert"
@@ -7515,7 +7519,7 @@ msgstr "Asset map"
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:406
+#: src/mods/typedConfig/ConfigPane.tsx:417
 msgid "Every change waiting for the next start is discarded."
 msgstr "Every change waiting for the next start is discarded."
 
@@ -7739,7 +7743,7 @@ msgstr "Installed and up to date"
 msgid "Regenerate token"
 msgstr "Regenerate token"
 
-#: src/mods/typedConfig/ConfigPane.tsx:368
+#: src/mods/typedConfig/ConfigPane.tsx:379
 msgid "Config of {name}"
 msgstr "Config of {name}"
 
@@ -9230,7 +9234,7 @@ msgstr "Launchers"
 msgid "Could not save the template"
 msgstr "Could not save the template"
 
-#: src/mods/ModsTab.tsx:108
+#: src/mods/ModsTab.tsx:109
 msgid "Could not read the mods: {loadError}"
 msgstr "Could not read the mods: {loadError}"
 
@@ -11765,7 +11769,7 @@ msgstr "Beach farm"
 #: src/mods/CategoryEditor.tsx:163
 #: src/mods/ConfigPresets.tsx:135
 #: src/mods/SelectionBar.tsx:38
-#: src/mods/typedConfig/ConfigPane.tsx:323
+#: src/mods/typedConfig/ConfigPane.tsx:334
 #: src/profiles/EditProfileDialog.tsx:490
 #: src/profiles/LaunchPresetDialog.tsx:96
 #: src/saves/SaveListRow.tsx:66
@@ -12674,7 +12678,7 @@ msgstr "Could not use that image"
 msgid "{0}'s {1} is {2}; it can match {installed} instead."
 msgstr "{0}'s {1} is {2}; it can match {installed} instead."
 
-#: src/mods/ModsTab.tsx:116
+#: src/mods/ModsTab.tsx:117
 msgid "Loading mods"
 msgstr "Loading mods"
 
@@ -13385,7 +13389,7 @@ msgstr "Replace {name}?"
 msgid "Mods you put there show up here to add."
 msgstr "Mods you put there show up here to add."
 
-#: src/mods/typedConfig/ConfigPane.tsx:403
+#: src/mods/typedConfig/ConfigPane.tsx:414
 msgid "Reset all entries?"
 msgstr "Reset all entries?"
 
@@ -13949,7 +13953,7 @@ msgstr "imported from a .mortar file"
 msgid "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 msgstr "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 
-#: src/mods/ModsTab.tsx:284
+#: src/mods/ModsTab.tsx:309
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
@@ -14646,7 +14650,7 @@ msgstr "Personal API key"
 msgid "Template deleted"
 msgstr "Template deleted"
 
-#: src/mods/ModsTab.tsx:134
+#: src/mods/ModsTab.tsx:135
 #: src/mods/typedConfig/ConfigTab.tsx:363
 msgid "No mods match"
 msgstr "No mods match"

@@ -3,8 +3,11 @@ package configsvc
 import (
 	"bytes"
 	"cmp"
+	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -17,9 +20,13 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/gmcm"
+	"github.com/Rethunk-Tech/mortar/internal/jsonc"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/modconfig"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
+	"github.com/Rethunk-Tech/mortar/internal/usererr"
+
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -329,11 +336,56 @@ func (s *Service) SetText(game, profileID, modID, file, text string) error {
 	if err != nil {
 		return err
 	}
+	if err := checkSyntax(file, text); err != nil {
+		return usererr.Wrap(usererr.Invalid, err)
+	}
 	out := []byte(text)
 	if old, err := fsx.ReadFile(p); err == nil && bytes.HasPrefix(old, utf8BOM) {
 		out = append(slices.Clone(utf8BOM), out...)
 	}
 	return datadir.WriteFile(p, out, 0o600)
+}
+
+// OpenText opens one of a mod's text config files in the system's editor for it.
+func (s *Service) OpenText(game, profileID, modID, file string) error {
+	p, err := s.textFile(game, profileID, modID, file)
+	if err != nil {
+		return err
+	}
+	return datadir.Open(p)
+}
+
+// checkSyntax refuses JSON (as Newtonsoft reads it, comments and trailing commas allowed), YAML and XML that does not
+// parse, naming the line; other text is the mod's to read.
+func checkSyntax(file, text string) error {
+	switch strings.ToLower(filepath.Ext(file)) {
+	case jsonExt:
+		clean := jsonc.Clean([]byte(text))
+		var v any
+		if err := json.Unmarshal(clean, &v); err != nil {
+			if se, ok := errors.AsType[*json.SyntaxError](err); ok {
+				return fmt.Errorf("%s is not valid JSON at line %d: %w", file, 1+bytes.Count(clean[:se.Offset], []byte("\n")), err)
+			}
+			return fmt.Errorf("%s is not valid JSON: %w", file, err)
+		}
+	case ".yaml", ".yml":
+		var v any
+		if err := yaml.Unmarshal([]byte(text), &v); err != nil {
+			return fmt.Errorf("%s is not valid YAML: %w", file, err)
+		}
+	case ".xml":
+		d := xml.NewDecoder(strings.NewReader(text))
+		for {
+			_, err := d.Token()
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			if err != nil {
+				return fmt.Errorf("%s is not valid XML: %w", file, err)
+			}
+		}
+	}
+	return nil
 }
 
 func (s *Service) textFile(game, profileID, modID, file string) (string, error) {

@@ -1,5 +1,6 @@
 import {
   Files,
+  OpenText,
   Reset,
   ResetAll,
   Schema,
@@ -27,6 +28,7 @@ const configApi = {
   resetAll: (t: Target, file: string) => ResetAll(t.game, t.profile, t.id, file),
   text: (t: Target, file: string) => Text(t.game, t.profile, t.id, file),
   setText: (t: Target, file: string, text: string) => SetText(t.game, t.profile, t.id, file, text),
+  openText: (t: Target, file: string) => OpenText(t.game, t.profile, t.id, file),
 }
 
 export { configApi }
