@@ -636,7 +636,7 @@ msgstr "Search settings"
 
 #: src/game/HomeNotes.tsx:118
 #: src/share/ImportPreview.tsx:368
-#: src/share/Included.tsx:92
+#: src/share/Included.tsx:93
 msgid "Notes"
 msgstr "Notes"
 
@@ -1751,7 +1751,7 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:541
+#: src/games/GameSelect.tsx:542
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -2457,7 +2457,7 @@ msgstr "Stop comparing"
 msgid "Skip tour"
 msgstr "Skip tour"
 
-#: src/share/Included.tsx:108
+#: src/share/Included.tsx:119
 msgid "Its Nexus file is not known. Group the Mods list by Source and choose Find on Nexus."
 msgstr "Its Nexus file is not known. Group the Mods list by Source and choose Find on Nexus."
 
@@ -3780,7 +3780,7 @@ msgstr "Last updated"
 msgid "L{0}"
 msgstr "L{0}"
 
-#: src/share/Included.tsx:129
+#: src/share/Included.tsx:140
 msgid "Included"
 msgstr "Included"
 
@@ -3808,7 +3808,7 @@ msgstr "config.json, changed from the mod's own"
 #: src/game/FarmMenuItem.tsx:97
 #: src/launch/SaveWarnDialog.tsx:62
 #: src/mods/updateReview/Row.tsx:35
-#: src/share/Included.tsx:110
+#: src/share/Included.tsx:121
 msgid "Disabled in this profile"
 msgstr "Disabled in this profile"
 
@@ -3972,7 +3972,7 @@ msgstr "Device name"
 msgid "{0} · {1} · {farms}"
 msgstr "{0} · {1} · {farms}"
 
-#: src/share/Included.tsx:93
+#: src/share/Included.tsx:94
 msgid "FOMOD choices"
 msgstr "FOMOD choices"
 
@@ -3985,7 +3985,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:522
+#: src/games/GameSelect.tsx:523
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4356,7 +4356,7 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:544
+#: src/games/GameSelect.tsx:545
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
@@ -4551,7 +4551,7 @@ msgstr "Reported by {0}"
 msgid "Automatic"
 msgstr "Automatic"
 
-#: src/share/Included.tsx:92
+#: src/share/Included.tsx:93
 msgid "Mod notes"
 msgstr "Mod notes"
 
@@ -5646,7 +5646,7 @@ msgstr "Could not export the modpack"
 msgid "{names} all {0} ship the plugin {guid}, and BepInEx loads only one."
 msgstr "{names} all {0} ship the plugin {guid}, and BepInEx loads only one."
 
-#: src/share/Included.tsx:106
+#: src/share/Included.tsx:117
 msgid "Added from an archive, so it only exists on this computer."
 msgstr "Added from an archive, so it only exists on this computer."
 
@@ -6369,7 +6369,7 @@ msgstr "Allow cleanup before deleting."
 msgid "Starter templates"
 msgstr "Starter templates"
 
-#: src/share/Included.tsx:120
+#: src/share/Included.tsx:131
 msgid "{local, plural, one {# mod you added from an archive can't be linked} other {# mods you added from archives can't be linked}}"
 msgstr "{local, plural, one {# mod you added from an archive can't be linked} other {# mods you added from archives can't be linked}}"
 
@@ -6590,7 +6590,7 @@ msgstr "Saved on version {0}"
 
 #: src/mods/typedConfig/ConfigPane.tsx:185
 #: src/share/ImportPreview.tsx:369
-#: src/share/Included.tsx:94
+#: src/share/Included.tsx:95
 msgid "Config files"
 msgstr "Config files"
 
@@ -6746,7 +6746,7 @@ msgid "When you press Play"
 msgstr "When you press Play"
 
 #: src/share/ImportPreview.tsx:370
-#: src/share/Included.tsx:96
+#: src/share/Included.tsx:97
 msgid "Problem choices"
 msgstr "Problem choices"
 
@@ -7187,6 +7187,10 @@ msgstr "Press Play to start."
 msgid "New"
 msgstr "New"
 
+#: src/share/Included.tsx:104
+msgid "pins"
+msgstr "pins"
+
 #: src/mods/updateReview/ReviewFooter.tsx:66
 msgid "Load all changes"
 msgstr "Load all changes"
@@ -7199,7 +7203,7 @@ msgstr "The log does not name a mod."
 msgid "Create a profile first."
 msgstr "Create a profile first."
 
-#: src/share/Included.tsx:158
+#: src/share/Included.tsx:169
 msgid "Which?"
 msgstr "Which?"
 
@@ -7520,7 +7524,7 @@ msgstr "Could not switch {0}"
 msgid "Asset map"
 msgstr "Asset map"
 
-#: src/games/GameSelect.tsx:433
+#: src/games/GameSelect.tsx:434
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
@@ -8533,7 +8537,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:109
-#: src/games/GameSelect.tsx:516
+#: src/games/GameSelect.tsx:517
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -9512,7 +9516,7 @@ msgstr "What Mortar shows when it opens."
 
 #: src/console/PerformanceComparison.tsx:57
 #: src/console/StartupTable.tsx:295
-#: src/share/Included.tsx:138
+#: src/share/Included.tsx:149
 msgid "Change"
 msgstr "Change"
 
@@ -9581,7 +9585,7 @@ msgstr "Mod or event"
 msgid "Untrack every {gameName} mod on Nexus"
 msgstr "Untrack every {gameName} mod on Nexus"
 
-#: src/share/Included.tsx:124
+#: src/share/Included.tsx:135
 msgid "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 msgstr "{other, plural, one {# more mod is left out} other {# more mods are left out}}"
 
@@ -10048,7 +10052,7 @@ msgstr "Mortar stays on screen beside the game."
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:529
+#: src/games/GameSelect.tsx:530
 msgid "Other games"
 msgstr "Other games"
 
@@ -10245,7 +10249,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
 #: src/game/ProfileWorkspace.tsx:42
-#: src/games/GameSelect.tsx:471
+#: src/games/GameSelect.tsx:472
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -10703,7 +10707,7 @@ msgstr "Open download page"
 
 #: src/profiles/HistoryEventRow.tsx:108
 #: src/profiles/MergeDialog.tsx:60
-#: src/share/Included.tsx:146
+#: src/share/Included.tsx:157
 msgid "Show mods"
 msgstr "Show mods"
 
@@ -11757,7 +11761,7 @@ msgstr "Your profiles have {0}. Update replaces each profile's copy."
 msgid "Done ({0}): {1}"
 msgstr "Done ({0}): {1}"
 
-#: src/share/Included.tsx:116
+#: src/share/Included.tsx:127
 msgid "{local, plural, one {# mod you added from an archive can't go in the file} other {# mods you added from archives can't go in the file}}"
 msgstr "{local, plural, one {# mod you added from an archive can't go in the file} other {# mods you added from archives can't go in the file}}"
 
@@ -11980,7 +11984,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:529
+#: src/games/GameSelect.tsx:530
 msgid "All games"
 msgstr "All games"
 
@@ -12224,7 +12228,7 @@ msgstr "Checked in {0}: {parts}"
 msgid "Saved to {0}"
 msgstr "Saved to {0}"
 
-#: src/share/Included.tsx:100
+#: src/share/Included.tsx:101
 msgid "{shared} of {total} mods"
 msgstr "{shared} of {total} mods"
 
@@ -12495,7 +12499,7 @@ msgstr "Updated fixable mods"
 msgid "Order"
 msgstr "Order"
 
-#: src/games/GameSelect.tsx:412
+#: src/games/GameSelect.tsx:413
 msgid "Jump to a letter"
 msgstr "Jump to a letter"
 
@@ -12583,7 +12587,7 @@ msgstr "{0, plural, one {Last run: {list}} other {Last # runs: {list}}}"
 msgid "You can roll back the completed updates from the profile history."
 msgstr "You can roll back the completed updates from the profile history."
 
-#: src/share/Included.tsx:112
+#: src/share/Included.tsx:123
 msgid "Its source is not known."
 msgstr "Its source is not known."
 
@@ -13329,6 +13333,10 @@ msgstr "Play this profile and save a game. Each save shows here, with its backup
 #: src/install/RemapDialog.tsx:61
 msgid "Expand {0}"
 msgstr "Expand {0}"
+
+#: src/share/Included.tsx:106
+msgid "install reasons"
+msgstr "install reasons"
 
 #: src/mods/problemText.ts:93
 msgid "A plugin it needs failed"
@@ -14138,6 +14146,10 @@ msgstr "{0, plural, one {# download needs your decision} other {# downloads need
 #: src/mods/ConfigPresets.tsx:132
 msgid "Save current as…"
 msgstr "Save current as…"
+
+#: src/share/Included.tsx:105
+msgid "groups"
+msgstr "groups"
 
 #: src/shell/AppMenu.tsx:246
 msgid "Quit Mortar"

@@ -87,7 +87,8 @@ export function Included({
   const [which, setWhich] = useState(false)
   const [showMods, setShowMods] = useState(false)
   const profileId = useShareDialog((s) => s.profileId)
-  const fomod = useProfiles((s) => offersFomod(s.profiles.find((p) => p.id === profileId)?.entries))
+  const profile = useProfiles((s) => s.profiles.find((p) => p.id === profileId))
+  const fomod = offersFomod(profile?.entries)
   const labels = {
     notes: (file ? t`Notes` : t`Mod notes`).toLocaleLowerCase(i18n.locale),
     fomodChoices: t`FOMOD choices`,
@@ -98,7 +99,17 @@ export function Included({
   const shared = sharedMods(info)
   const count = total
   const mods = shared < total ? t`${shared} of ${total} mods` : modsLabel(count)
-  const line = [mods, ...includedKeys(include, { target, fomod }).map((k) => labels[k])].join(' · ')
+  // Every share carries these with its mods, whatever the options.
+  const carried = [
+    (profile?.entries ?? []).some((e) => e.pinned) ? t`pins` : '',
+    (profile?.groups ?? []).length > 0 ? t`groups` : '',
+    t`install reasons`,
+  ].filter(Boolean)
+  const line = [
+    mods,
+    ...includedKeys(include, { target, fomod }).map((k) => labels[k]),
+    ...carried,
+  ].join(' · ')
   const { local, other } = leftOutCounts(info.leftOut)
   const reason = (id: string) => {
     switch (id) {
