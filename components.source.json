@@ -9634,6 +9634,286 @@
           "key": "balatro"
         }
       ]
+    },
+    {
+      "id": "7-days-to-die",
+      "name": "7 Days to Die",
+      "enabled": true,
+      "marker": "7DaysToDie.exe",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "modRoot": "ModInfo.xml" }],
+      "stores": { "steam": { "appId": "251570" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "7daystodie", "gameId": 1059 }]
+    },
+    {
+      "id": "blade-and-sorcery",
+      "name": "Blade & Sorcery",
+      "enabled": true,
+      "marker": "BladeAndSorcery.exe",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/BladeAndSorcery_Data/StreamingAssets/Mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "modRoot": "manifest.json" }],
+      "stores": { "steam": { "appId": "629730" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "bladeandsorcery", "gameId": 2673 }]
+    },
+    {
+      "id": "monster-hunter-world",
+      "name": "Monster Hunter: World",
+      "enabled": true,
+      "marker": "MonsterHunterWorld.exe",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/nativePC" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods" }],
+      "stores": { "steam": { "appId": "582010" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "monsterhunterworld", "gameId": 2531 }]
+    },
+    {
+      "id": "x4-foundations",
+      "name": "X4: Foundations",
+      "enabled": true,
+      "marker": "X4.exe",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/extensions" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "modRoot": "content.xml" }],
+      "stores": { "steam": { "appId": "392160" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "x4foundations", "gameId": 2659 }]
+    },
+    {
+      "id": "kingdom-come-deliverance",
+      "name": "Kingdom Come: Deliverance",
+      "enabled": true,
+      "marker": "KingdomCome.exe",
+      "markerDir": "Bin/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "modRoot": "mod.manifest" }],
+      "stores": { "steam": { "appId": "379430" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "kingdomcomedeliverance", "gameId": 2298 }]
+    },
+    {
+      "id": "kingdom-come-deliverance-2",
+      "name": "Kingdom Come: Deliverance II",
+      "enabled": true,
+      "marker": "KingdomCome.exe",
+      "markerDir": "Bin/Win64MasterMasterSteamPGO",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "modRoot": "mod.manifest" }],
+      "stores": { "steam": { "appId": "1771300" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "kingdomcomedeliverance2", "gameId": 7286 }]
+    },
+    {
+      "id": "ready-or-not",
+      "name": "Ready or Not",
+      "enabled": true,
+      "marker": "ReadyOrNot-Win64-Shipping.exe",
+      "markerDir": "ReadyOrNot/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/ReadyOrNot/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods" }],
+      "stores": { "steam": { "appId": "1144200" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "readyornot", "gameId": 4205 }]
+    },
+    {
+      "id": "code-vein",
+      "name": "CODE VEIN",
+      "enabled": true,
+      "marker": "CodeVein-Win64-Shipping.exe",
+      "markerDir": "CodeVein/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/CodeVein/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods" }],
+      "stores": { "steam": { "appId": "678960" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "codevein", "gameId": 2981 }]
+    },
+    {
+      "id": "stellar-blade",
+      "name": "Stellar Blade",
+      "enabled": true,
+      "marker": "SB-Win64-Shipping.exe",
+      "markerDir": "SB/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/SB/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": {
+        "steam": { "appId": "3489700" },
+        "epic": { "appNames": ["4013d48a20c1403282fc9d1453ec8f5a"] }
+      },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "stellarblade", "gameId": 7804 }]
+    },
+    {
+      "id": "tekken-8",
+      "name": "TEKKEN 8",
+      "enabled": true,
+      "marker": "Polaris-Win64-Shipping.exe",
+      "markerDir": "Polaris/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Polaris/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": { "steam": { "appId": "1778820" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "tekken8", "gameId": 5622 }]
+    },
+    {
+      "id": "sifu",
+      "name": "Sifu",
+      "enabled": true,
+      "marker": "Sifu-Win64-Shipping.exe",
+      "markerDir": "Sifu/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Sifu/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["sig"] }],
+      "stores": {
+        "steam": { "appId": "2138710" },
+        "epic": { "appNames": ["d36336f190094951873ed6138ac208d8"] }
+      },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "sifu", "gameId": 4309 }]
+    },
+    {
+      "id": "clair-obscur-expedition-33",
+      "name": "Clair Obscur: Expedition 33",
+      "enabled": true,
+      "marker": "Sandfall-Win64-Shipping.exe",
+      "markerDir": "Sandfall/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Sandfall/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": {
+        "steam": { "appId": "1903340" },
+        "epic": { "appNames": ["f18fc860e6b4419e89147983bf769723"] }
+      },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "clairobscurexpedition33", "gameId": 7635 }]
+    },
+    {
+      "id": "dead-as-disco",
+      "name": "Dead as Disco",
+      "enabled": true,
+      "marker": "Pagoda-Win64-Shipping.exe",
+      "markerDir": "Pagoda/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Pagoda/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": {
+        "steam": { "appId": "3404260" },
+        "epic": { "appNames": ["1e51c1bc910d4881a950947e5590783b"] }
+      },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "deadasdisco", "gameId": 7897 }]
+    },
+    {
+      "id": "inzoi",
+      "name": "inZOI",
+      "enabled": true,
+      "marker": "BlueClient-Win64-Shipping.exe",
+      "markerDir": "BlueClient/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/BlueClient/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": { "steam": { "appId": "2456740" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "inzoi", "gameId": 7480 }]
+    },
+    {
+      "id": "final-fantasy-vii-rebirth",
+      "name": "FINAL FANTASY VII REBIRTH",
+      "enabled": true,
+      "marker": "ff7rebirth_.exe",
+      "markerDir": "End/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/End/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": {
+        "steam": { "appId": "2909400" },
+        "epic": { "appNames": ["33e6ac38b5a14098b079fd62d71aabc6"] }
+      },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "finalfantasy7rebirth", "gameId": 7237 }]
+    },
+    {
+      "id": "the-blood-of-dawnwalker",
+      "name": "The Blood of Dawnwalker",
+      "enabled": true,
+      "marker": "Dawnwalker.exe",
+      "markerDir": "Dawnwalker/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Dawnwalker/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": { "steam": { "appId": "3751260" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "thebloodofdawnwalker", "gameId": 9719 }]
+    },
+    {
+      "id": "state-of-decay-2",
+      "name": "State of Decay 2",
+      "enabled": true,
+      "marker": "StateOfDecay2-Win64-Shipping.exe",
+      "markerDir": "StateOfDecay2/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{localAppData}/StateOfDecay2/Saved/Paks" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods" }],
+      "stores": { "steam": { "appId": "495420" }, "epic": { "appNames": ["Snoek"] } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "stateofdecay2", "gameId": 2433 }]
+    },
+    {
+      "id": "runescape-dragonwilds",
+      "name": "RuneScape: Dragonwilds",
+      "enabled": true,
+      "marker": "RSDragonwilds-Win64-Shipping.exe",
+      "markerDir": "RSDragonwilds/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/RSDragonwilds/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": {
+        "steam": { "appId": "1374490" },
+        "epic": { "appNames": ["9d918774f1db4b26b23a93a78847f4eb"] }
+      },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "runescapedragonwilds", "gameId": 7597 }]
+    },
+    {
+      "id": "stalker-2",
+      "name": "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+      "enabled": true,
+      "marker": "Stalker2-Win64-Shipping.exe",
+      "markerDir": "Stalker2/Binaries/Win64",
+      "metadata": [],
+      "paths": { "mods": { "windows": "{install}/Stalker2/Content/Paks/~mods" } },
+      "deploy": "profile",
+      "targets": [{ "id": "mods", "root": "{profile}/Mods", "keepWhole": ["utoc"] }],
+      "stores": { "steam": { "appId": "1643320" } },
+      "loaders": [{ "id": "folder" }],
+      "sources": [{ "id": "nexus", "key": "stalker2heartofchornobyl", "gameId": 6944 }]
     }
   ]
 }
