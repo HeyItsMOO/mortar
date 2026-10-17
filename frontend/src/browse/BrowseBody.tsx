@@ -2,7 +2,7 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Pagination, Typography } from '@mui/material'
 import { CloudOff, Search, SearchX } from 'lucide-react'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { memo, useLayoutEffect, useRef, useState } from 'react'
 import { arrowFocus } from '../shell/arrowFocus.ts'
 import { EmptyState } from '../shell/EmptyState.tsx'
 import { unreachableNote } from '../shell/offlineText.ts'
@@ -120,7 +120,8 @@ function ResultFooter({ result }: { result: BrowseResult }) {
   )
 }
 
-function BrowseBody(props: BrowseBodyProps) {
+// Memoised: category names or sources arriving re-render the page around the results, not the results.
+const BrowseBody = memo(function BrowseBodyView(props: BrowseBodyProps) {
   const { t } = useLingui()
   const { status, result, text, hint, error, offline, page, pageCount, onRetry, onClear, onPage } =
     props
@@ -183,6 +184,6 @@ function BrowseBody(props: BrowseBodyProps) {
       ) : null}
     </>
   )
-}
+})
 
 export { BrowseBody, ResultFooter }

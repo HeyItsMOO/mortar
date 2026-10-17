@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Link } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import type { GameInfo } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
 import { List as ListGames } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/game/service.ts'
 import type { LinkSource } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/nxmsvc/models.ts'
@@ -162,7 +162,8 @@ function ExtensionSteps() {
 }
 
 // One row for each source with a link scheme that Mortar handles only on request (Thunderstore's ror2mm).
-function SourceLinks() {
+// Memoised: the Nexus link status arriving re-renders the rows above, not every source's link row.
+const SourceLinks = memo(function SourceLinksView() {
   const { t } = useLingui()
   const [sources, setSources] = useState<LinkSource[]>([])
   const load = useCallback(() => {
@@ -191,7 +192,7 @@ function SourceLinks() {
       />
     </SettingRow>
   ))
-}
+})
 
 function NxmLinks() {
   const { t } = useLingui()

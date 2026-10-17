@@ -68,6 +68,8 @@ function useTopOnPage(page: number) {
   return ref
 }
 // The toolbar's and filters' handlers, stable so those memoised parts skip a render when results arrive.
+const clearSearch = () => useBrowseView.getState().setDraft('')
+
 function useBrowseHandlers(
   game: string,
   {
@@ -142,6 +144,8 @@ function BrowsePage({
     [searchable, t],
   )
   const { onSource, onText, onFilter, onModes } = useBrowseHandlers(game, query)
+  const { setRetry } = query
+  const retry = useCallback(() => setRetry((n) => n + 1), [setRetry])
   const sourceName = sources.find((s) => s.value === source)?.label ?? ''
   useSelectionKeys(result.items)
   const results = useTopOnPage(page)
@@ -223,8 +227,8 @@ function BrowsePage({
               page={page}
               pageCount={pageCount}
               card={card}
-              onRetry={() => query.setRetry((n) => n + 1)}
-              onClear={() => useBrowseView.getState().setDraft('')}
+              onRetry={retry}
+              onClear={clearSearch}
               onPage={setPage}
             />
           </Box>

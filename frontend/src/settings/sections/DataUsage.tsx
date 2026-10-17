@@ -118,6 +118,13 @@ function Legend({
   )
 }
 
+// Its own component, so each progress tick redraws this text and not the bar.
+function MeasuringBytes() {
+  const { t } = useLingui()
+  const bytes = useUsageBytes((s) => s.bytes)
+  return t`Measuring… ${formatBytes(bytes)}`
+}
+
 function StorageBar({
   usage,
   labels,
@@ -128,7 +135,6 @@ function StorageBar({
   actions: ReactNode
 }) {
   const { t } = useLingui()
-  const bytes = useUsageBytes((s) => s.bytes)
   const colors = useSegmentColors()
   const segs = usage ? storageSegments(usage).filter((s) => s.size > 0) : []
   const sizes = usage
@@ -142,7 +148,7 @@ function StorageBar({
     <Box sx={{ px: space.pad, py: space.pad }}>
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: space.pad, pb: space.pad }}>
         <Box sx={{ flex: 1, fontSize: 16 }}>
-          {usage ? t`${formatBytes(usage.total)} used` : t`Measuring… ${formatBytes(bytes)}`}
+          {usage ? t`${formatBytes(usage.total)} used` : <MeasuringBytes />}
         </Box>
         {usage?.sharedSavedKnown && usage.sharedSaved > 0 ? (
           <Box sx={{ fontSize: 14, color: 'text.secondary' }}>
