@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase } from '@mui/material'
 import { Layers } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { type ReactNode, useEffect, useRef } from 'react'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
 import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
 import { DisabledReason } from '../shell/DisabledReason.tsx'
@@ -12,6 +12,7 @@ import { Tooltip } from '../shell/Tooltip.tsx'
 import { ViewToggle } from '../shell/ViewToggle.tsx'
 import { space } from '../theme/density.ts'
 import { ALL } from './browseConstants.ts'
+import { DEBOUNCE_MS } from './browseState.ts'
 import { useBrowseView } from './view.ts'
 
 interface SourceOption {
@@ -100,19 +101,40 @@ function SourceToggle({
   )
 }
 
+// The search box, which hands its text on once typing pauses.
+function BrowseSearch({ label, onText }: { label: string; onText: (text: string) => void }) {
+  const draft = useBrowseView((s) => s.draft)
+  const setDraft = useBrowseView((s) => s.setDraft)
+  const latest = useRef(onText)
+  useEffect(() => {
+    latest.current = onText
+  })
+  useEffect(() => {
+    const timer = setTimeout(() => latest.current(draft), DEBOUNCE_MS)
+    return () => clearTimeout(timer)
+  }, [draft])
+  return (
+    <SearchField
+      autoFocus={true}
+      value={draft}
+      onChange={setDraft}
+      label={label}
+      fullWidth={true}
+    />
+  )
+}
+
 function BrowseToolbar({
   sources,
   source,
   onSource,
-  draft,
-  onDraft,
+  onText,
   placeholder,
 }: {
   sources: SourceOption[]
   source: string
   onSource: (next: string) => void
-  draft: string
-  onDraft: (next: string) => void
+  onText: (text: string) => void
   placeholder: string
 }) {
   const view = useBrowseView((s) => s.view)
@@ -132,13 +154,7 @@ function BrowseToolbar({
       <SourceToggle sources={sources} value={source} onChange={onSource} />
       <Box sx={{ flex: 1, minWidth: 0 }}>
         <OfflineGate reason={offline}>
-          <SearchField
-            autoFocus={true}
-            value={draft}
-            onChange={onDraft}
-            label={placeholder}
-            fullWidth={true}
-          />
+          <BrowseSearch label={placeholder} onText={onText} />
         </OfflineGate>
       </Box>
     </Box>

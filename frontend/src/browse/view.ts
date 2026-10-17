@@ -12,6 +12,9 @@ const useBrowseView = create<{
   /** A search another screen asked Browse to run; Browse takes it once. */
   pendingQuery: string
   setPendingQuery: (query: string) => void
+  /** The search box's text before it settles; only the box reads it, so typing re-renders the box alone. */
+  draft: string
+  setDraft: (draft: string) => void
 }>((set) => ({
   view: 'grid',
   setView: (view) => set({ view }),
@@ -19,6 +22,8 @@ const useBrowseView = create<{
   setFilter: (game, filter) => set((s) => ({ filters: { ...s.filters, [game]: filter } })),
   pendingQuery: '',
   setPendingQuery: (pendingQuery) => set({ pendingQuery }),
+  draft: '',
+  setDraft: (draft) => set({ draft }),
 }))
 
 export { useBrowseView }

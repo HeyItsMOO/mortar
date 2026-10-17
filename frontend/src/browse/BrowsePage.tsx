@@ -85,7 +85,7 @@ function BrowsePage({
   const view = useBrowseView((s) => s.view)
   const setFilter = useBrowseView((s) => s.setFilter)
   const query = useBrowseQuery({ game, profileID, search, sources: searchable })
-  const { filter, sorts, modes, source, setSource, draft, setDraft, page, setPage, result } = query
+  const { filter, sorts, modes, source, setSource, setText, page, setPage, result } = query
   const offline = useOfflineEmpty(source === ALL ? searchable.map((s) => s.id) : [source])
   const categoryNames = useCategoryNames({ categories, game, source, skip: source === GITHUB })
   const pageCount = Math.max(FIRST_PAGE, Math.ceil(pagedTotal(result) / PAGE_SIZE) || FIRST_PAGE)
@@ -137,8 +137,10 @@ function BrowsePage({
           setSource(next)
           setPage(FIRST_PAGE)
         }}
-        draft={draft}
-        onDraft={setDraft}
+        onText={(next) => {
+          setText(next)
+          setPage(FIRST_PAGE)
+        }}
         placeholder={placeholder}
       />
       <BrowseFilters
@@ -188,7 +190,7 @@ function BrowsePage({
               pageCount={pageCount}
               card={card}
               onRetry={() => query.setRetry((n) => n + 1)}
-              onClear={() => setDraft('')}
+              onClear={() => useBrowseView.getState().setDraft('')}
               onPage={setPage}
             />
           </Box>

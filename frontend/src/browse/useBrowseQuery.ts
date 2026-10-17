@@ -4,7 +4,7 @@ import { type InlineError, inlineError } from '../toasts/report.ts'
 import { ALL, FIRST_PAGE } from './browseConstants.ts'
 import { parseModes } from './browseModes.ts'
 import { effectiveSort, sortsFor } from './browseSort.ts'
-import { clampPage, DEBOUNCE_MS, PAGE_SIZE } from './browseState.ts'
+import { clampPage, PAGE_SIZE } from './browseState.ts'
 import type { BrowseFilter, BrowseItem, BrowsePageProps } from './browseTypes.ts'
 import { useBrowseView } from './view.ts'
 
@@ -52,7 +52,6 @@ function useBrowseQuery({
     () => ({ ...stored, ...modes, sort: effectiveSort(stored.sort, sorts) }),
     [stored, modes, sorts],
   )
-  const [draft, setDraft] = useState('')
   const [text, setText] = useState('')
   const [page, setPage] = useState(FIRST_PAGE)
   const [retry, setRetry] = useState(0)
@@ -64,20 +63,11 @@ function useBrowseQuery({
   useEffect(() => {
     if (pendingQuery !== '') {
       setSource(ALL)
-      setDraft(pendingQuery)
+      useBrowseView.getState().setDraft(pendingQuery)
       useBrowseView.getState().setPendingQuery('')
     }
   }, [pendingQuery])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setText(draft)
-      setPage(FIRST_PAGE)
-    }, DEBOUNCE_MS)
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [draft])
+  useEffect(() => () => useBrowseView.getState().setDraft(''), [])
 
   useEffect(() => {
     if (source === '' || retry < 0) {
@@ -112,9 +102,8 @@ function useBrowseQuery({
     modes,
     source,
     setSource,
-    draft,
-    setDraft,
     text,
+    setText,
     page,
     setPage,
     setRetry,
