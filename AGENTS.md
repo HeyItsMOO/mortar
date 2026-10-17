@@ -32,7 +32,6 @@ Mortar is a desktop mod manager for several games (`mortar games` lists the cata
 - Docs never state a setting's default value; defaults live in code (`settings.Defaults()`, checked by the registry test) and `mortar settings get` shows them.
 - Anything tied to a game's loader, launcher, saves or content format (SMAPI options, launch method, backup/update-before-Play, run logs, Content Patcher display, default nxm profile, pre-Play check) is a per-game setting with per-profile override. Mortar-wide settings are app chrome only (theme, density, dates, notifications, data folder, LAN, Mortar's own updates).
 - A new loader driver, source, store or game honours every existing setting that applies to it and adds a setting only for behaviour no existing one covers. Adding a driver includes walking `internal/settings/registry.go` and stating, per setting, whether the driver reads it or why not.
-- Stardrop and Vortex are never suggested, compared against, or contributed to (reading their source for file formats is fine).
 - AUR packages are prepared and checked locally (PKGBUILD, `.SRCINFO`, makepkg/namcap in an Arch container); each push to aur.archlinux.org needs the AUR account holder's permission, relayed by the maintainer.
 - Flatpak: Mortar hosts its own repo until Flathub approves it.
 - The CLI exists for agents and automation; end users are GUI-only, so GUI work ranks above CLI parity.
