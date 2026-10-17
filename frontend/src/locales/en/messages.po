@@ -176,6 +176,7 @@ msgid "Unofficial build"
 msgstr "Unofficial build"
 
 #: src/mods/listRows.ts:144
+#: src/mods/Toolbar.tsx:70
 #: src/mods/useListHeading.ts:22
 msgid "Implicit"
 msgstr "Implicit"
@@ -260,7 +261,7 @@ msgstr "Imported {0}: {1} to install"
 #: src/mods/problemFix/SettingFix.tsx:27
 #: src/mods/problemFix/WinFix.tsx:35
 #: src/mods/SplitCombineItems.tsx:36
-#: src/mods/Toolbar.tsx:288
+#: src/mods/Toolbar.tsx:290
 #: src/profiles/MergeDialog.tsx:180
 #: src/saves/lackChipActions.tsx:44
 #: src/saves/lackChips.tsx:60
@@ -1332,7 +1333,7 @@ msgstr "Sort: most downloaded"
 msgid "Scan command"
 msgstr "Scan command"
 
-#: src/mods/ModsTab.tsx:134
+#: src/mods/ModsTab.tsx:135
 msgid "Show all mods"
 msgstr "Show all mods"
 
@@ -1885,7 +1886,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/lan/SendPanel.tsx:194
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:394
-#: src/mods/ModsTab.tsx:109
+#: src/mods/ModsTab.tsx:110
 #: src/mods/typedConfig/ConfigPane.tsx:386
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
@@ -2370,9 +2371,9 @@ msgstr "No tools yet"
 msgid "Mortar is up to date"
 msgstr "Mortar is up to date"
 
-#: src/mods/Toolbar.tsx:348
-#: src/mods/Toolbar.tsx:374
-#: src/mods/Toolbar.tsx:392
+#: src/mods/Toolbar.tsx:350
+#: src/mods/Toolbar.tsx:376
+#: src/mods/Toolbar.tsx:394
 #: src/mods/typedConfig/ConfigTab.tsx:411
 #: src/profiles/CompareDialog.tsx:284
 #: src/profiles/CompareTop.tsx:182
@@ -2519,8 +2520,8 @@ msgstr "Show the first-run tips again"
 #: src/browse/BrowseShow.tsx:55
 #: src/browse/BrowseShow.tsx:59
 #: src/browse/BrowseShow.tsx:65
-#: src/mods/Toolbar.tsx:142
-#: src/mods/Toolbar.tsx:161
+#: src/mods/Toolbar.tsx:144
+#: src/mods/Toolbar.tsx:163
 #: src/mods/typedConfig/ConfigTab.tsx:113
 #: src/nxm/store.ts:57
 #: src/profiles/CompareDialog.tsx:185
@@ -3061,8 +3062,8 @@ msgstr "Cleanup"
 msgid "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 msgstr "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 
-#: src/mods/Toolbar.tsx:202
-#: src/mods/Toolbar.tsx:210
+#: src/mods/Toolbar.tsx:204
+#: src/mods/Toolbar.tsx:212
 msgid "Group by"
 msgstr "Group by"
 
@@ -3112,7 +3113,7 @@ msgstr "Could not find Mortar users"
 msgid "{name} is not paired with this computer, so Mortar sends the list of mods, not their files. {name} will download each mod from its site, one click per mod on a free Nexus account."
 msgstr "{name} is not paired with this computer, so Mortar sends the list of mods, not their files. {name} will download each mod from its site, one click per mod on a free Nexus account."
 
-#: src/mods/Toolbar.tsx:392
+#: src/mods/Toolbar.tsx:394
 msgid "Filter mods, filter active"
 msgstr "Filter mods, filter active"
 
@@ -3389,7 +3390,7 @@ msgstr "Could not open the file dialog"
 msgid "Could not disable {0}"
 msgstr "Could not disable {0}"
 
-#: src/mods/Toolbar.tsx:245
+#: src/mods/Toolbar.tsx:247
 msgid "Edit categories…"
 msgstr "Edit categories…"
 
@@ -3574,7 +3575,7 @@ msgid "Open on Thunderstore"
 msgstr "Open on Thunderstore"
 
 #. placeholder {0}: active.label(i18n)
-#: src/mods/Toolbar.tsx:142
+#: src/mods/Toolbar.tsx:144
 msgid "Show: {0}"
 msgstr "Show: {0}"
 
@@ -3693,7 +3694,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #: src/mods/columnLabel.ts:18
-#: src/mods/Toolbar.tsx:223
+#: src/mods/Toolbar.tsx:225
 #: src/settings/prefCopy.ts:145
 msgid "Install reason"
 msgstr "Install reason"
@@ -3953,7 +3954,7 @@ msgstr "Console"
 msgid "{both, plural, one {# mod is in both} other {# mods are in both}}"
 msgstr "{both, plural, one {# mod is in both} other {# mods are in both}}"
 
-#: src/mods/ModsTab.tsx:136
+#: src/mods/ModsTab.tsx:137
 msgid "Try a different search or filter."
 msgstr "Try a different search or filter."
 
@@ -4181,7 +4182,7 @@ msgid "Should Mortar open Nexus \"Mod Manager Download\" links, so a click on Ne
 msgstr "Should Mortar open Nexus \"Mod Manager Download\" links, so a click on Nexus starts the download here?"
 
 #. placeholder {0}: listNames(also)
-#: src/mods/storeView.ts:58
+#: src/mods/storeView.ts:68
 msgid "Also enabled {0}"
 msgstr "Also enabled {0}"
 
@@ -4662,7 +4663,7 @@ msgstr "{off} switched off"
 
 #: src/mods/ModCards.tsx:510
 #: src/mods/ModList.tsx:371
-#: src/mods/Toolbar.tsx:197
+#: src/mods/Toolbar.tsx:199
 #: src/mods/typedConfig/ConfigTab.tsx:167
 msgid "A mod with several tags appears under its first tag."
 msgstr "A mod with several tags appears under its first tag."
@@ -4890,7 +4891,7 @@ msgstr "Get the extension"
 
 #: src/bundles/BundlesSection.tsx:80
 #: src/mods/ModDependencyTree.tsx:161
-#: src/mods/Toolbar.tsx:214
+#: src/mods/Toolbar.tsx:216
 #: src/settings/prefCopy.ts:136
 msgid "None"
 msgstr "None"
@@ -5149,7 +5150,7 @@ msgstr "Could not save that setting"
 msgid "There are no mods to share."
 msgstr "There are no mods to share."
 
-#: src/mods/Toolbar.tsx:267
+#: src/mods/Toolbar.tsx:269
 #: src/queue/QueueBody.tsx:411
 msgid "Browse mods"
 msgstr "Browse mods"
@@ -6148,7 +6149,7 @@ msgstr "Moving"
 msgid "Keep this profile's saves separate"
 msgstr "Keep this profile's saves separate"
 
-#: src/mods/Toolbar.tsx:166
+#: src/mods/Toolbar.tsx:168
 msgid "All mods"
 msgstr "All mods"
 
@@ -6280,7 +6281,7 @@ msgstr "Download folder"
 msgid "How to send it"
 msgstr "How to send it"
 
-#: src/mods/Toolbar.tsx:435
+#: src/mods/Toolbar.tsx:437
 msgid "Import a shared profile…"
 msgstr "Import a shared profile…"
 
@@ -6749,8 +6750,8 @@ msgstr "Problem choices"
 msgid "Next"
 msgstr "Next"
 
-#: src/mods/Toolbar.tsx:295
-#: src/mods/Toolbar.tsx:302
+#: src/mods/Toolbar.tsx:297
+#: src/mods/Toolbar.tsx:304
 msgid "Add archive…"
 msgstr "Add archive…"
 
@@ -7758,7 +7759,7 @@ msgstr "Large"
 #: src/mods/NexusDetails.tsx:107
 #: src/mods/SelectionBarDialogs.tsx:122
 #: src/mods/Sidebar.tsx:160
-#: src/mods/Toolbar.tsx:216
+#: src/mods/Toolbar.tsx:218
 #: src/settings/prefCopy.ts:138
 msgid "Category"
 msgstr "Category"
@@ -8212,7 +8213,7 @@ msgstr "Install {0} as from {1}?"
 msgid "Edit tool"
 msgstr "Edit tool"
 
-#: src/mods/Toolbar.tsx:222
+#: src/mods/Toolbar.tsx:224
 #: src/settings/prefCopy.ts:144
 msgid "Group"
 msgstr "Group"
@@ -9032,7 +9033,7 @@ msgid "Store"
 msgstr "Store"
 
 #: src/browse/CardAction.tsx:52
-#: src/mods/Toolbar.tsx:220
+#: src/mods/Toolbar.tsx:222
 #: src/settings/prefCopy.ts:142
 #: src/share/ImportPreview.tsx:72
 msgid "Download"
@@ -9229,7 +9230,7 @@ msgstr "Launchers"
 msgid "Could not save the template"
 msgstr "Could not save the template"
 
-#: src/mods/ModsTab.tsx:107
+#: src/mods/ModsTab.tsx:108
 msgid "Could not read the mods: {loadError}"
 msgstr "Could not read the mods: {loadError}"
 
@@ -9959,7 +9960,7 @@ msgstr "Check updates and problems in the background for profiles you are not lo
 msgid "Choose the mod folder"
 msgstr "Choose the mod folder"
 
-#: src/mods/Toolbar.tsx:440
+#: src/mods/Toolbar.tsx:442
 msgid "Browse for mods, add an archive, or paste a share or collection link with Ctrl+V."
 msgstr "Browse for mods, add an archive, or paste a share or collection link with Ctrl+V."
 
@@ -11612,7 +11613,7 @@ msgstr "Running {who}"
 msgid "Flagged by {0}: {1}{2}"
 msgstr "Flagged by {0}: {1}{2}"
 
-#: src/mods/Toolbar.tsx:347
+#: src/mods/Toolbar.tsx:349
 #: src/mods/typedConfig/ConfigTab.tsx:412
 msgid "{total, plural, one {Filter # mod} other {Filter # mods}}"
 msgstr "{total, plural, one {Filter # mod} other {Filter # mods}}"
@@ -11689,6 +11690,7 @@ msgid "Could not mark the mods explicit"
 msgstr "Could not mark the mods explicit"
 
 #: src/mods/listRows.ts:144
+#: src/mods/Toolbar.tsx:69
 #: src/mods/useListHeading.ts:21
 msgid "Explicit"
 msgstr "Explicit"
@@ -12144,7 +12146,7 @@ msgid "Include pre-release mod versions"
 msgstr "Include pre-release mod versions"
 
 #: src/mods/columnLabel.ts:20
-#: src/mods/Toolbar.tsx:215
+#: src/mods/Toolbar.tsx:217
 #: src/settings/prefCopy.ts:137
 msgid "Status"
 msgstr "Status"
@@ -12278,7 +12280,7 @@ msgid "{0} needs a newer version than this."
 msgstr "{0} needs a newer version than this."
 
 #: src/mods/SelectionBarDialogs.tsx:65
-#: src/mods/Toolbar.tsx:218
+#: src/mods/Toolbar.tsx:220
 #: src/settings/prefCopy.ts:140
 msgid "Tag"
 msgstr "Tag"
@@ -12606,7 +12608,7 @@ msgid "Enjoying these mods? Endorse them on Nexus"
 msgstr "Enjoying these mods? Endorse them on Nexus"
 
 #: src/mods/columnLabel.ts:11
-#: src/mods/Toolbar.tsx:221
+#: src/mods/Toolbar.tsx:223
 #: src/settings/prefCopy.ts:143
 msgid "Author"
 msgstr "Author"
@@ -12672,7 +12674,7 @@ msgstr "Could not use that image"
 msgid "{0}'s {1} is {2}; it can match {installed} instead."
 msgstr "{0}'s {1} is {2}; it can match {installed} instead."
 
-#: src/mods/ModsTab.tsx:115
+#: src/mods/ModsTab.tsx:116
 msgid "Loading mods"
 msgstr "Loading mods"
 
@@ -13033,14 +13035,14 @@ msgstr "Group name"
 msgid "{0, plural, one {Created {name}; # mod still to download} other {Created {name}; # mods still to download}}"
 msgstr "{0, plural, one {Created {name}; # mod still to download} other {Created {name}; # mods still to download}}"
 
-#: src/mods/Toolbar.tsx:219
+#: src/mods/Toolbar.tsx:221
 #: src/settings/prefCopy.ts:141
 msgid "Framework"
 msgstr "Framework"
 
 #: src/browse/BrowseToolbar.tsx:85
 #: src/mods/columnLabel.ts:12
-#: src/mods/Toolbar.tsx:217
+#: src/mods/Toolbar.tsx:219
 #: src/settings/prefCopy.ts:139
 msgid "Source"
 msgstr "Source"
@@ -13804,7 +13806,7 @@ msgstr "Share {0}"
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/mods/Toolbar.tsx:423
+#: src/mods/Toolbar.tsx:425
 msgid "No mods yet"
 msgstr "No mods yet"
 
@@ -13947,7 +13949,7 @@ msgstr "imported from a .mortar file"
 msgid "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 msgstr "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 
-#: src/mods/ModsTab.tsx:281
+#: src/mods/ModsTab.tsx:284
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
@@ -14313,7 +14315,7 @@ msgstr "Older."
 msgid "{0} rolled back"
 msgstr "{0} rolled back"
 
-#: src/mods/Toolbar.tsx:288
+#: src/mods/Toolbar.tsx:290
 msgid "Adding…"
 msgstr "Adding…"
 
@@ -14644,7 +14646,7 @@ msgstr "Personal API key"
 msgid "Template deleted"
 msgstr "Template deleted"
 
-#: src/mods/ModsTab.tsx:133
+#: src/mods/ModsTab.tsx:134
 #: src/mods/typedConfig/ConfigTab.tsx:363
 msgid "No mods match"
 msgstr "No mods match"

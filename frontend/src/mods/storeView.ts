@@ -16,7 +16,17 @@ const isView = (v: unknown): v is View => v === 'list' || v === 'grid'
 
 const isFilter = (v: unknown): v is ModFilter =>
   typeof v === 'string' &&
-  ['all', 'disabled', 'update', 'problem', 'pinned', 'local', 'recent'].includes(v)
+  [
+    'all',
+    'disabled',
+    'update',
+    'problem',
+    'pinned',
+    'local',
+    'recent',
+    'explicit',
+    'implicit',
+  ].includes(v)
 const isTags = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every((t) => typeof t === 'string')
 

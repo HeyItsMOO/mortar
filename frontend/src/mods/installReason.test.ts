@@ -22,7 +22,24 @@ test('every mod of a download but its main one reads implicit', () => {
   const zuzuCc = { key: 'zuzu', id: 'DTZ.CC', contentPackFor: 'PeacefulEnd.CustomCompanions' }
   // No pack at all: the first code mod.
   const workbench = { key: 'bc', id: 'leclair.bcworkbench' }
+  // A tagged base gives way to its untagged twin: the code reads explicit even where it requires its pack.
+  const luckCp = {
+    key: 'luck',
+    id: 'moonslime.LuckSkill.CP',
+    name: '[CP] Luck Skill',
+    contentPackFor: CP,
+  }
+  const laceyCore = { key: 'lacey', id: 'Hat.Core', name: 'Hat Mouse Lacey - Core' }
   const mods = [
+    luckCp,
+    {
+      key: 'luck',
+      id: 'moonslime.LuckSkill',
+      name: 'Luck Skill',
+      needs: ['moonslime.LuckSkill.CP'],
+    },
+    laceyCore,
+    { key: 'lacey', id: 'Hat.Lacey', name: 'Hat Mouse Lacey', needs: ['Hat.Core'] },
     { key: 'other', id: 'Other.Pack', contentPackFor: CP },
     loveEn,
     loveCp,
@@ -35,6 +52,6 @@ test('every mod of a download but its main one reads implicit', () => {
     { key: 'lib', id: 'Other.Lib' },
   ]
   expect(supportParts(mods)).toEqual(
-    new Set([loveCp, loveEn, zuzuFtm, zuzuCc, workbench].map(partKey)),
+    new Set([loveCp, loveEn, zuzuFtm, zuzuCc, workbench, luckCp, laceyCore].map(partKey)),
   )
 })

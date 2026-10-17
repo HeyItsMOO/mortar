@@ -3,6 +3,7 @@ import { Box, Button, Skeleton, Typography } from '@mui/material'
 import { SearchX } from 'lucide-react'
 import { useEffect, useMemo, useRef } from 'react'
 import type {
+  Entry,
   Mod,
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
@@ -19,6 +20,7 @@ import { useCustomCategories } from './customCategories.ts'
 import { useDetail } from './detail.ts'
 import { EndorsePrompt } from './EndorsePrompt.tsx'
 import { customCategoryById, profileTags } from './group.ts'
+import { partKey, supportParts } from './installReason.ts'
 import { LegacyReasonsCallout } from './LegacyReasonsCallout.tsx'
 import { LockedNote } from './LockedNote.tsx'
 import { useLastRun } from './lastRun.ts'
@@ -39,7 +41,7 @@ import { ModSidebar } from './Sidebar.tsx'
 import { useSelection } from './selection.ts'
 import { useMods } from './store.ts'
 import { storedFilter, storedTags, type View } from './storeView.ts'
-import { EmptyMods, Toolbar } from './Toolbar.tsx'
+import { EmptyMods, type ModFilter, Toolbar } from './Toolbar.tsx'
 import { TrackedNotInProfile } from './TrackedNotInProfile.tsx'
 import { UpdateBar, UpdateReview } from './UpdateReview.tsx'
 import { useUpdates } from './updates.ts'
@@ -171,6 +173,35 @@ function useSelectedTags(profileId: string): string[] {
   return useMods((s) => s.tagFilters[profileId]) ?? saved
 }
 
+// Whether a mod passes the Show menu's choice; the costlier checks run only for their own choice.
+function passesShow(
+  filter: ModFilter,
+  m: Mod,
+  entry: Entry | undefined,
+  check: { update: () => boolean; problem: () => boolean; implicit: () => boolean },
+): boolean {
+  switch (filter) {
+    case 'all':
+      return true
+    case 'disabled':
+      return !m.enabled
+    case 'update':
+      return check.update()
+    case 'problem':
+      return check.problem()
+    case 'pinned':
+      return Boolean(entry?.pinned)
+    case 'local':
+      return entry?.source.kind === 'local'
+    case 'recent':
+      return addedWithin(entry?.added, WEEK_MS, Date.now())
+    case 'explicit':
+      return !check.implicit()
+    default:
+      return check.implicit()
+  }
+}
+
 export function ModsTab({ profile }: { profile: Profile }) {
   const { t } = useLingui()
   const mods = useMods((s) => s.mods)
@@ -257,21 +288,18 @@ export function ModsTab({ profile }: { profile: Profile }) {
 
   const q = query.trim().toLowerCase()
   const customById = customCategoryById(customCategories)
+  const parts = supportParts(mods)
   const shown = mods.filter((m) => {
     const entry = entryOf(profile, m.key)
     const searchable = searchFields(m, entry, nexusById, customById)
     if (!(matchesQuery(q, searchable) && hasAllTags(entry?.tags, selectedTags))) {
       return false
     }
-    return (
-      filter === 'all' ||
-      (filter === 'disabled' && !m.enabled) ||
-      (filter === 'update' && Boolean(updateFor(updates, m, profile))) ||
-      (filter === 'problem' && modStatusProblem(problems, m)) ||
-      (filter === 'pinned' && Boolean(entry?.pinned)) ||
-      (filter === 'local' && entry?.source.kind === 'local') ||
-      (filter === 'recent' && addedWithin(entry?.added, WEEK_MS, Date.now()))
-    )
+    return passesShow(filter, m, entry, {
+      update: () => Boolean(updateFor(updates, m, profile)),
+      problem: () => modStatusProblem(problems, m),
+      implicit: () => Boolean(entry?.implicit) || parts.has(partKey(m)),
+    })
   })
   return (
     <Box

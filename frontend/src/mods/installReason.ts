@@ -1,11 +1,18 @@
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { idKey, requiredIdsOf } from './dependents.ts'
 
-type PartMod = Pick<Mod, 'key' | 'id' | 'needs' | 'optional' | 'contentPackFor'>
+type PartMod = Pick<Mod, 'key' | 'id' | 'needs' | 'optional' | 'contentPackFor'> & { name?: string }
 
 export const partKey = (m: Pick<Mod, 'key' | 'id'>) => `${m.key}\n${idKey(m.id)}`
 
 const framework = (m: PartMod) => idKey(m.contentPackFor ?? '')
+
+// The words a download's parts are tagged with, so "[CP] Luck Skill" and "Luck Skill" name the same mod.
+const PART_TAG =
+  /\[[^\]]*\]|\([^)]*\)|(^|[\s\-_:])(cp|c#|smapi|code|content patcher|component|core|dll)(?=$|[\s\-_:])/gi
+const NOT_ALNUM = /[^a-z0-9]/gi
+const letters = (name: string) => name.replace(NOT_ALNUM, '').toLowerCase()
+const bare = (name: string) => letters(name.replace(PART_TAG, ' '))
 
 // The framework most content packs in the list are written for (Content Patcher in Stardew), or none.
 function primaryFramework(mods: readonly PartMod[]): string {
@@ -47,9 +54,16 @@ export function supportParts(
       dependents(m) * 4 +
       (primary !== '' && framework(m) === primary ? 2 : 0) +
       (framework(m) === '' ? 1 : 0)
-    const main = (bases.length > 0 ? bases : parts).reduce((best, m) =>
+    const base = (bases.length > 0 ? bases : parts).reduce((best, m) =>
       score(m) > score(best) ? m : best,
     )
+    // A tagged base ("[CP] Luck Skill") gives way to its untagged twin, the part named as the mod is.
+    const name = bare(base.name ?? '')
+    const untagged = (m: PartMod) => bare(m.name ?? '') === letters(m.name ?? '')
+    const twin = parts.find(
+      (m) => m !== base && name !== '' && bare(m.name ?? '') === name && untagged(m),
+    )
+    const main = twin && !untagged(base) ? twin : base
     for (const m of parts) {
       if (m !== main) {
         out.add(partKey(m))
