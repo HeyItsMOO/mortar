@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useDetail } from './detail.ts'
 import { useSelection } from './selection.ts'
 
@@ -10,9 +11,15 @@ export function useMarked(id: string): boolean {
   return selected || (none && open)
 }
 
-/** Whether mod id is its list's one Tab stop: the open mod's row, or the first row when the open mod is not listed. */
-export function useTabStop(orderedIds: readonly string[], id: string): boolean {
-  return useDetail((s) =>
-    orderedIds.includes(s.detailId) ? s.detailId === id : orderedIds[0] === id,
-  )
+/** The list's one Tab stop: the open mod's row, or the first row when the open mod is not listed. The list asks once
+ * and hands each row a boolean, so a row never holds the whole order (which changes whenever a mod moves group). */
+function useTabStopId(orderedIds: readonly string[]): string {
+  return useDetail((s) => (orderedIds.includes(s.detailId) ? s.detailId : (orderedIds[0] ?? '')))
+}
+
+/** The Tab stop, and the current order behind a stable ref for shift-click ranges. */
+export function useRowFocus(orderedIds: readonly string[]) {
+  const orderedRef = useRef(orderedIds)
+  orderedRef.current = orderedIds
+  return { tabStopId: useTabStopId(orderedIds), orderedRef }
 }

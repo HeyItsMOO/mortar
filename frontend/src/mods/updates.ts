@@ -10,6 +10,7 @@ import { formatWhen } from '../i18n/formatWhen.ts'
 import { i18n } from '../i18n/index.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { useSettings } from '../settings/store.ts'
+import { sameValue } from '../shell/sameValue.ts'
 import { toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { useBadges } from './badges.ts'
@@ -82,7 +83,7 @@ const useUpdates = create<{
   load: () => Promise<void>
   checkNow: () => Promise<number | null>
   setReviewing: (reviewing: boolean) => void
-}>((set) => ({
+}>((set, get) => ({
   updates: null,
   checkedAt: null,
   reviewing: false,
@@ -93,12 +94,14 @@ const useUpdates = create<{
     }
     try {
       const updates = await loadUpdates(at.game, at.id)
+      // Every mod change reloads the updates; only an answer that differs from the shown one is news.
+      const unchanged = sameValue(get().updates, updates)
       if (useProfiles.getState().openId === at.id) {
-        set({ updates, checkedAt: Date.now() })
+        set({ updates: unchanged ? get().updates : updates, checkedAt: Date.now() })
       }
       syncBadge()
       const count = countFor(updates, at.id)
-      if (count > 0 && useSettings.getState().notifyModUpdates) {
+      if (!unchanged && count > 0 && useSettings.getState().notifyModUpdates) {
         useToasts.getState().push({
           kind: 'info',
           title: i18n._(

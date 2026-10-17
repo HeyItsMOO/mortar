@@ -5,6 +5,7 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/service.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { useSettings } from '../settings/store.ts'
+import { sameValue } from '../shell/sameValue.ts'
 import { runBackgroundBadgeChecks } from './badgeDisplay.ts'
 import { missingCount, problemCount, updateCount } from './lookup.ts'
 import { useNexusDetails } from './nexusDetails.ts'
@@ -25,18 +26,11 @@ export const useBadges = create<{
 }>((set) => ({
   byProfile: {},
   patch: (profileId, counts) =>
-    set((s) => ({
-      byProfile: {
-        ...s.byProfile,
-        [profileId]: {
-          updates: 0,
-          problems: 0,
-          missing: 0,
-          ...s.byProfile[profileId],
-          ...counts,
-        },
-      },
-    })),
+    set((s) => {
+      const was = s.byProfile[profileId]
+      const next = { updates: 0, problems: 0, missing: 0, ...was, ...counts }
+      return was && sameValue(was, next) ? s : { byProfile: { ...s.byProfile, [profileId]: next } }
+    }),
   loadAll: async (game, profiles, skip) => {
     const prefs = useSettings.getState()
     if (!runBackgroundBadgeChecks(prefs.sidebarBadges, prefs.backgroundBadgeChecks)) {

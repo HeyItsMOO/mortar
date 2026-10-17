@@ -219,15 +219,21 @@ export function LetterTile({
   )
 }
 
+// Most cards have no problem, and describing one reads every mod's name, so only a card with a problem subscribes to
+// the mods list.
 export function ProblemBadge({ mod }: { mod: Mod }) {
+  const has = useMods((s) => problemsOf(s.problems).some((p) => concerns(p, mod)))
+  return has ? <ProblemMark mod={mod} /> : null
+}
+
+function ProblemMark({ mod }: { mod: Mod }) {
   const { t } = useLingui()
   const describe = useDescribe()
   const result = useMods((s) => s.problems)
-  const mine = problemsOf(result).filter((p) => concerns(p, mod))
-  if (mine.length === 0) {
-    return null
-  }
-  const text = mine.map(describe).join(' ')
+  const text = problemsOf(result)
+    .filter((p) => concerns(p, mod))
+    .map(describe)
+    .join(' ')
   return (
     <Tooltip title={text}>
       <Box
@@ -265,8 +271,10 @@ export function LiveBadge({ mod }: { mod: Mod }) {
 
 export function NexusGoneBadge({ mod }: { mod: Mod }) {
   const { t } = useLingui()
-  const profile = useProfiles(openProfileOf)
-  const nexusId = profile ? nexusIdOf(profile, mod) : 0
+  const nexusId = useProfiles((s) => {
+    const profile = openProfileOf(s)
+    return profile ? nexusIdOf(profile, mod) : 0
+  })
   const page = useNexusPage(nexusId)
   const mark = nexusPageMark(page?.status, page?.available, page?.updated, page?.created)
   if (mark.kind === '') {
@@ -335,14 +343,15 @@ export function LastRunBadge({ mod }: { mod: Mod }) {
 
 export function PinBadge({ mod }: { mod: Mod }) {
   const { t } = useLingui()
-  const profile = useProfiles(openProfileOf)
-  const entry = entryOf(profile, mod.key)
-  if (!entry?.pinned) {
+  // The reason, or null while unpinned: a primitive, so saving the profile re-renders only this mod's badge.
+  const reason = useProfiles((s) => {
+    const entry = entryOf(openProfileOf(s), mod.key)
+    return entry?.pinned ? (entry.pinReason ?? '') : null
+  })
+  if (reason === null) {
     return null
   }
-  const text = entry.pinReason
-    ? t`Pinned: ${{ pinned: entry.pinReason }}`
-    : t`Pinned at this version`
+  const text = reason ? t`Pinned: ${{ pinned: reason }}` : t`Pinned at this version`
   return (
     <Tooltip title={text}>
       <Box
@@ -358,9 +367,13 @@ export function PinBadge({ mod }: { mod: Mod }) {
 
 export function UpdateBadge({ mod }: { mod: Mod }) {
   const { t } = useLingui()
-  const profile = useProfiles(openProfileOf)
-  const update = useUpdates((s) => updateFor(s.updates, mod, profile))
-  const nexusId = profile ? nexusIdOf(profile, mod) : 0
+  const updates = useUpdates((s) => s.updates)
+  // updateFor returns the stored update itself, so a profile save that leaves this mod's offer alone changes nothing.
+  const update = useProfiles((s) => updateFor(updates, mod, openProfileOf(s)))
+  const nexusId = useProfiles((s) => {
+    const profile = openProfileOf(s)
+    return profile ? nexusIdOf(profile, mod) : 0
+  })
   const page = useNexusPage(nexusId)
   const setSkipVersion = useMods((s) => s.setSkipVersion)
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)

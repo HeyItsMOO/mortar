@@ -5,6 +5,7 @@ import {
   type Status,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/launchsvc/models.ts'
 import { idKey } from '../mods/dependents.ts'
+import { sameValue } from '../shell/sameValue.ts'
 
 interface Live {
   game: string
@@ -17,10 +18,6 @@ interface Live {
 
 const EMPTY: Live = { game: '', profile: '', scene: '', loaded: {} }
 
-function same(a: Live, b: Live): boolean {
-  return JSON.stringify(a) === JSON.stringify(b)
-}
-
 export const useLive = create<Live>(() => EMPTY)
 
 export function applyLive(run: LiveRun) {
@@ -29,7 +26,7 @@ export function applyLive(run: LiveRun) {
     loaded[idKey(m.id)] = m.loaded
   }
   const next = { game: run.game, profile: run.profile, scene: run.scene, loaded }
-  if (!same(useLive.getState(), next)) {
+  if (!sameValue(useLive.getState(), next)) {
     useLive.setState(next)
   }
 }

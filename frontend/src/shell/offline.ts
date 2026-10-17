@@ -5,6 +5,7 @@ import {
   Retry,
   States,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/netstate/service.ts'
+import { sameValue } from './sameValue.ts'
 
 // Local, in-process reads of what the last real requests showed; the only network cost is the Recheck below.
 const STATE_POLL_MS = 15_000
@@ -14,10 +15,17 @@ const RECHECK_MS = RECHECK_MINUTES * MINUTE_MS
 // Go's zero time.
 const NEVER_YEAR = 2000
 
-const useOffline = create<{ states: State[]; set: (states: State[] | null) => void }>((set) => ({
-  states: [],
-  set: (states) => set({ states: states ?? [] }),
-}))
+const useOffline = create<{ states: State[]; set: (states: State[] | null) => void }>(
+  (set, get) => ({
+    states: [],
+    set: (states) => {
+      const next = states ?? []
+      if (!sameValue(next, get().states)) {
+        set({ states: next })
+      }
+    },
+  }),
+)
 
 function unreachable(states: State[], ids?: string[]): State[] {
   return states.filter((s) => s.unreachable && (!ids || ids.includes(s.id)))

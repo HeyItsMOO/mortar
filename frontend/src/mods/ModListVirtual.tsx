@@ -165,11 +165,7 @@ function ListSlot({
   groupBy: ReturnType<typeof sanitizeListGroupBy>
   tagHint: string
   groups: readonly { key: string; items: readonly ListRow[] }[]
-  renderRow: (
-    row: ListRow,
-    striped: boolean,
-    onArrow: (id: string, dir: -1 | 1) => void,
-  ) => ReactNode
+  renderRow: (row: ListRow, onArrow: (id: string, dir: -1 | 1) => void) => ReactNode
   onArrow: (id: string, dir: -1 | 1) => void
 }) {
   if (item.kind === 'header') {
@@ -192,7 +188,7 @@ function ListSlot({
     )
   }
   if (item.kind === 'row') {
-    return renderRow(item.item, item.stripe, onArrow)
+    return renderRow(item.item, onArrow)
   }
   if (item.kind === 'overlay') {
     return <OverlayListRow overlay={item.overlay} />
@@ -239,11 +235,7 @@ export function ModListTable({
   visible: ListColumnId[]
   menu: { top: number; left: number } | null
   setMenu: (menu: { top: number; left: number } | null) => void
-  renderRow: (
-    row: ListRow,
-    striped: boolean,
-    onArrow: (id: string, dir: -1 | 1) => void,
-  ) => ReactNode
+  renderRow: (row: ListRow, onArrow: (id: string, dir: -1 | 1) => void) => ReactNode
 }) {
   const { t } = useLingui()
   const detailId = useDetail((s) => s.detailId)
@@ -319,6 +311,8 @@ export function ModListTable({
           <Box
             key={item.key}
             data-index={vi.index}
+            // The stripe lives on the slot, so a mod moving group restripes the slots, not every memoised row.
+            data-striped={item.kind === 'row' && item.stripe ? '' : undefined}
             sx={{
               position: 'absolute',
               top: 0,

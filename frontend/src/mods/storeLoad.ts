@@ -11,10 +11,11 @@ import { i18n } from '../i18n/index.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { useSettings } from '../settings/store.ts'
 import { coalescer } from '../shell/coalesce.ts'
+import { keepUnchanged, sameValue } from '../shell/sameValue.ts'
 import { errorMessage, reportError, reportUnexpected } from '../toasts/report.ts'
 import { useBadges } from './badges.ts'
 import { loadCollapsed, persistCollapsed } from './group.ts'
-import { missingCount, problemCount } from './lookup.ts'
+import { missingCount, modId, problemCount } from './lookup.ts'
 import { openTarget } from './storeView.ts'
 import { useUpdates } from './updates.ts'
 
@@ -25,7 +26,7 @@ let latestLoad = 0
 async function scanProblems(
   target: { game: string; id: string },
   set: (p: { problems: Result | null; problemsFor?: string; problemsAt?: number }) => void,
-  get: () => { problemsFor: string },
+  get: () => { problemsFor: string; problems: Result | null },
 ) {
   if (get().problemsFor !== target.id) {
     set({ problems: null })
@@ -33,7 +34,12 @@ async function scanProblems(
   try {
     const problems = await Problems(target.game, target.id)
     if (openTarget()?.id === target.id) {
-      set({ problems, problemsFor: target.id, problemsAt: Date.now() })
+      const was = get().problemsFor === target.id ? get().problems : null
+      set({
+        problems: was && sameValue(was, problems) ? was : problems,
+        problemsFor: target.id,
+        problemsAt: Date.now(),
+      })
     }
     const missing = missingCount(problems)
     useBadges.getState().patch(target.id, {
@@ -74,7 +80,12 @@ export async function loadMods(
     loaded?: boolean
     modsFor?: string
   }) => void,
-  get: () => { loadProblems: () => Promise<void> },
+  get: () => {
+    loadProblems: () => Promise<void>
+    mods: Mod[]
+    modsFor: string
+    pages: Record<string, string | undefined>
+  },
 ) {
   const target = openTarget()
   if (!target) {
@@ -90,7 +101,14 @@ export async function loadMods(
       Pages(target.game, target.id),
     ])
     if (current()) {
-      set({ mods: mods ?? [], pages: pages ?? {}, loaded: true, modsFor: target.id })
+      const same = get().modsFor === target.id
+      const prevPages = get().pages
+      set({
+        mods: same ? keepUnchanged(get().mods, mods ?? [], modId) : (mods ?? []),
+        pages: same && sameValue(prevPages, pages ?? {}) ? prevPages : (pages ?? {}),
+        loaded: true,
+        modsFor: target.id,
+      })
     }
   } catch (e) {
     if (current()) {
@@ -104,7 +122,7 @@ export async function loadMods(
 // One Problems scan per profile at a time, since a scan is slow and the page, the sidebar and a profile switch all ask.
 export function loadModProblems(
   set: (p: { problems: Result | null; problemsFor?: string; problemsAt?: number }) => void,
-  get: () => { problemsFor: string },
+  get: () => { problemsFor: string; problems: Result | null },
 ): Promise<void> {
   const target = openTarget()
   if (!target) {

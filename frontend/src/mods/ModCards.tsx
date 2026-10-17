@@ -5,16 +5,15 @@ import type {
   Mod,
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
-import { parseCardStats, useModCardStats } from '../browse/stats.ts'
+import { parseCardStats } from '../browse/stats.ts'
 import { compact, compactQuery } from '../game/compact.ts'
 import { boundShortcut } from '../settings/shortcuts.ts'
 import { useSettings } from '../settings/store.ts'
 import { space } from '../theme/density.ts'
 import { PAD_FOCUS } from '../theme/theme.ts'
 import { reportUnexpected } from '../toasts/report.ts'
-import { AuthorLink } from './AuthorLink.tsx'
 import { actingMods, toggleActing } from './actingMods.ts'
-import { formatAuthors } from './authorNormalize.ts'
+import { CardMeta } from './CardMeta.tsx'
 import { CompatChip } from './CompatChip.tsx'
 import { showModId, useDetail } from './detail.ts'
 import { ExtraFilesChip } from './ExtraFilesChip.tsx'
@@ -23,7 +22,7 @@ import type { ListRow } from './listColumns.ts'
 import { entryOf, modId, nexusIdOf } from './lookup.ts'
 import { ModMenu } from './ModMenu.tsx'
 import { GroupHeaderRow, StickyGroupSlot } from './ModsGroupHeader.tsx'
-import { useMarked, useTabStop } from './marked.ts'
+import { useMarked, useRowFocus } from './marked.ts'
 import { contextMenuProps } from './menu.ts'
 import { useNexusFresh } from './nexusDetails.ts'
 import { OverlayCountChip } from './OverlayRow.tsx'
@@ -70,7 +69,6 @@ const CARD_GAP_PX = '10px'
 const CARD_RADIUS_PX = '6px'
 const NAME_FONT_PX = 14
 const NAME_WEIGHT = 600
-const META_FONT_PX = 12
 const TAG_MAX_PX = 96
 const LANE_GAP_PX = '6px'
 const DIVIDER = '1px solid var(--mortar-hairline-12)'
@@ -90,7 +88,9 @@ const ARROWS: Record<string, string | undefined> = { ArrowLeft: 'left', ArrowRig
 interface ModCardProps {
   mod: Mod
   row: ListRow
-  orderedIds: readonly string[]
+  tabStop: boolean
+  // The current order for a shift-click range, read from a ref so a mod moving group re-renders only its own card.
+  orderedRef: { readonly current: readonly string[] }
   profile: Profile
   // The column count at the time of a key press, read from a ref so a change of width re-lays the grid out without
   // re-rendering every card.
@@ -98,69 +98,29 @@ interface ModCardProps {
   onMove: (id: string, delta: number) => void
 }
 
-// A card's second line (author and version) and, when Card details are ticked, the line of chosen details under it.
-function CardMeta({
-  mod: m,
-  row,
-  profile,
-  statsLine,
-}: {
-  mod: Mod
-  row: ListRow
-  profile: Profile
-  statsLine: boolean
-}) {
-  const showAuthor = useSettings((s) => s.showAuthorOnCards) !== false
-  const stats = useModCardStats(row, parseCardStats(useSettings((s) => s.browseCardStats))).join(
-    ' · ',
-  )
-  return (
-    <>
-      <Typography
-        noWrap={true}
-        title={showAuthor ? `${formatAuthors(m.author)} · ${m.version}` : m.version}
-        sx={{ fontSize: META_FONT_PX, color: 'text.secondary' }}
-      >
-        {showAuthor ? (
-          <>
-            <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>
-              <AuthorLink authorField={m.author} mod={m} profile={profile} />
-            </Box>
-            {` · ${m.version}`}
-          </>
-        ) : (
-          m.version
-        )}
-      </Typography>
-      {statsLine ? (
-        <Typography
-          className="card-stats"
-          noWrap={true}
-          title={stats}
-          sx={{ fontSize: META_FONT_PX, color: 'text.secondary' }}
-        >
-          {stats || '\u00a0'}
-        </Typography>
-      ) : null}
-    </>
-  )
-}
-
 const sameCard = (a: ModCardProps, b: ModCardProps) =>
   a.mod === b.mod &&
   a.row.size === b.row.size &&
   a.row.details === b.row.details &&
-  a.orderedIds === b.orderedIds &&
+  a.tabStop === b.tabStop &&
+  a.orderedRef === b.orderedRef &&
   a.onMove === b.onMove &&
   (a.profile === b.profile || ownSlice(a.profile, a.mod.key) === ownSlice(b.profile, b.mod.key))
 
-function ModCardView({ mod: m, row, orderedIds, profile, columnsRef, onMove }: ModCardProps) {
+function ModCardView({
+  mod: m,
+  row,
+  tabStop,
+  orderedRef,
+  profile,
+  columnsRef,
+  onMove,
+}: ModCardProps) {
   const { t } = useLingui()
   const openDetail = useDetail((s) => s.show)
   const askRemove = useMods((s) => s.askRemove)
   const id = modId(m)
   const marked = useMarked(id)
-  const tabStop = useTabStop(orderedIds, id)
   const fresh = useNexusFresh(nexusIdOf(profile, m))
   const tag = firstTag(entryOf(profile, m.key)?.tags)
   const cardSize = useSettings((s) => s.gridCardSize) || 'medium'
@@ -249,7 +209,7 @@ function ModCardView({ mod: m, row, orderedIds, profile, columnsRef, onMove }: M
               }
             }}
             onClick={(e) => {
-              useSelection.getState().click(orderedIds, id, e)
+              useSelection.getState().click(orderedRef.current, id, e)
               openDetail(m)
             }}
             sx={{
@@ -306,7 +266,8 @@ function GridWindow({
   tagHint,
   columns,
   columnsRef,
-  orderedIds,
+  tabStopId,
+  orderedRef,
   profile,
   groups,
   onMove,
@@ -321,7 +282,8 @@ function GridWindow({
   tagHint: string
   columns: number
   columnsRef: { readonly current: number }
-  orderedIds: readonly string[]
+  tabStopId: string
+  orderedRef: { readonly current: readonly string[] }
   profile: Profile
   groups: readonly { key: string; items: readonly ListRow[] }[]
   onMove: (id: string, delta: number) => void
@@ -370,7 +332,8 @@ function GridWindow({
             key={modId(r.mod)}
             mod={r.mod}
             row={r}
-            orderedIds={orderedIds}
+            tabStop={tabStopId === modId(r.mod)}
+            orderedRef={orderedRef}
             profile={profile}
             columnsRef={columnsRef}
             onMove={onMove}
@@ -430,6 +393,7 @@ function CardsPane({
   const visibleStart = virtualItems[0]?.start ?? 0
   const stuck = stuckHeader(items, virtualizer.measurementsCache, virtualizer.scrollOffset ?? 0)
   const detailId = useDetail((s) => s.detailId)
+  const { tabStopId, orderedRef } = useRowFocus(orderedIds)
   // Measured before paint, so the first frame lays out the real column count rather than one column.
   useLayoutEffect(() => {
     const el = parentRef.current
@@ -508,7 +472,8 @@ function CardsPane({
           tagHint={tagHint}
           columns={columns}
           columnsRef={columnsRef}
-          orderedIds={orderedIds}
+          tabStopId={tabStopId}
+          orderedRef={orderedRef}
           profile={profile}
           groups={groups}
           onMove={onMove}

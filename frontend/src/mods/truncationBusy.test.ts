@@ -5,9 +5,8 @@ import { join } from 'node:path'
 const src = (...parts: string[]) => readFileSync(join(import.meta.dir, ...parts), 'utf8')
 
 test('mod cards expose a tooltip for clipped author/version and first tag', () => {
-  const cards = src('ModCards.tsx')
-  expect(/title=\{showAuthor \? .*m\.author.*: m\.version\}/.test(cards)).toBe(true)
-  expect(cards).toContain('title={tag}')
+  expect(/title=\{showAuthor \? .*m\.author.*: m\.version\}/.test(src('CardMeta.tsx'))).toBe(true)
+  expect(src('ModCards.tsx')).toContain('title={tag}')
 })
 
 test('also-in-profiles rows and load-order names truncate with a title', () => {
