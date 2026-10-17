@@ -1,7 +1,7 @@
-// Each Steam game's store art (the header for cards, the library hero for its page's banner), as the addresses on
-// Steam's CDN its store names. Newer games keep their art under hashed paths only the store API reveals, so the
-// addresses are looked up once by `bun scripts/site.ts --refresh-art` and committed, which keeps building the site
-// offline.
+// Each Steam game's store art (the library capsule for its card, the library hero for its page's banner, the header
+// where a game has neither), as the addresses on Steam's CDN its store names. Newer games keep their art under hashed
+// paths only the store API reveals, so the addresses are looked up once by `bun scripts/site.ts --refresh-art` and
+// committed, which keeps building the site offline.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 
 const ART = 'scripts/site/steam-art.json'
@@ -12,6 +12,8 @@ const BATCH = 50
 export interface SteamArt {
   header: string
   hero?: string
+  capsule?: string
+  capsule2x?: string
 }
 
 export function steamArt(): Record<string, SteamArt> {
@@ -20,7 +22,13 @@ export function steamArt(): Record<string, SteamArt> {
 
 interface StoreItem {
   appid: number
-  assets?: { asset_url_format?: string; header?: string; library_hero?: string }
+  assets?: {
+    asset_url_format?: string
+    header?: string
+    library_hero?: string
+    library_capsule?: string
+    library_capsule_2x?: string
+  }
 }
 
 export async function refreshSteamArt(appIds: string[]): Promise<void> {
@@ -38,10 +46,21 @@ export async function refreshSteamArt(appIds: string[]): Promise<void> {
     }
     const body = (await res.json()) as { response?: { store_items?: StoreItem[] } }
     for (const item of body.response?.store_items ?? []) {
-      const { asset_url_format: format, header, library_hero: hero } = item.assets ?? {}
+      const {
+        asset_url_format: format,
+        header,
+        library_hero: hero,
+        library_capsule: capsule,
+        library_capsule_2x: capsule2x,
+      } = item.assets ?? {}
       if (format && header) {
         const url = (file: string) => STORE_ASSETS + format.replace(/\$\{FILENAME\}/, file)
-        art[String(item.appid)] = { header: url(header), ...(hero ? { hero: url(hero) } : {}) }
+        art[String(item.appid)] = {
+          header: url(header),
+          ...(hero ? { hero: url(hero) } : {}),
+          ...(capsule ? { capsule: url(capsule) } : {}),
+          ...(capsule2x ? { capsule2x: url(capsule2x) } : {}),
+        }
       }
     }
   }

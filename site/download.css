@@ -242,15 +242,6 @@ code {
   color: var(--muted);
   font-size: 0.9rem;
 }
-.game-art {
-  display: block;
-  width: 100%;
-  max-width: 460px;
-  height: auto;
-  margin: 0 0 1.5rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
 .game-filters {
   display: flex;
   flex-wrap: wrap;

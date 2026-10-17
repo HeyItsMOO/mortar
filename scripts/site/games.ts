@@ -67,18 +67,11 @@ function facts(g: Game) {
   }
 }
 
-// Steam's header art is this size; the games grid shows it at half.
+// Steam's header and library capsule art sizes.
 const HEADER = { width: 460, height: 215 }
+const CAPSULE = { width: 300, height: 450 }
 
 const steamAppId = (g: Game) => (g.stores?.steam as { appId?: string } | undefined)?.appId
-
-function artImage(g: Game, art: Record<string, SteamArt>, width: number, height: number): string {
-  const appId = steamAppId(g)
-  const src = appId ? art[appId]?.header : undefined
-  return src
-    ? `<img class="game-art" src="${src}" width="${width}" height="${height}" alt="${escapeHTML(g.name)} on Steam" loading="lazy" referrerpolicy="no-referrer" />`
-    : ''
-}
 
 /** The game's own page on a mod site, where the catalog key names one. */
 function sourceURL(s: { id: string; key?: string }): string | undefined {
@@ -95,8 +88,18 @@ function sourceURL(s: { id: string; key?: string }): string | undefined {
 }
 
 function gameCard(g: Game, art: Record<string, SteamArt>, data = ''): string {
+  const appId = steamAppId(g)
+  const a = appId ? art[appId] : undefined
+  const meta = escapeHTML(facts(g).loader || 'No loader needed')
+  let cover = ''
+  if (a?.capsule) {
+    const srcset = a.capsule2x ? ` srcset="${a.capsule} 1x, ${a.capsule2x} 2x"` : ''
+    cover = `<img class="cover-art" src="${a.capsule}"${srcset} width="${CAPSULE.width}" height="${CAPSULE.height}" alt="" loading="lazy" referrerpolicy="no-referrer" />`
+  } else if (a?.header) {
+    cover = `<img class="cover-art" src="${a.header}" width="${HEADER.width}" height="${HEADER.height}" alt="" loading="lazy" referrerpolicy="no-referrer" />`
+  }
   return `        <li${data}>
-          <a href="/${g.id}/">${artImage(g, art, HEADER.width / 2, Math.round(HEADER.height / 2))}<span class="game-name">${escapeHTML(g.name)}</span><span class="game-meta">${escapeHTML(facts(g).loader || 'No loader needed')}</span></a>
+          <a class="cover${cover ? '' : ' no-art'}" href="/${g.id}/">${cover}<span class="cover-text"><span class="game-name">${escapeHTML(g.name)}</span><span class="game-meta">${meta}</span></span></a>
         </li>`
 }
 
