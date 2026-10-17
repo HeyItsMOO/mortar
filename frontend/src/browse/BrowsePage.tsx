@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box } from '@mui/material'
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { SetByKey } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { persist } from '../settings/persist.ts'
 import { useOfflineEmpty } from '../shell/offlineText.ts'
@@ -11,9 +11,9 @@ import { BrowseFilters } from './BrowseFilters.tsx'
 import { BrowseMenu } from './BrowseMenu.tsx'
 import { BrowseToolbar } from './BrowseToolbar.tsx'
 import { ALL, FIRST_PAGE, GITHUB, searchHint } from './browseConstants.ts'
-import { formatModes } from './browseModes.ts'
+import { type BrowseModes, formatModes } from './browseModes.ts'
 import { PAGE_SIZE } from './browseState.ts'
-import type { BrowseItem, BrowsePageProps } from './browseTypes.ts'
+import type { BrowseFilter, BrowseItem, BrowsePageProps } from './browseTypes.ts'
 import { hitKey, stepSelection, useBrowseSelection } from './selection.ts'
 import { pagedTotal, useBrowseQuery } from './useBrowseQuery.ts'
 import { useCategoryNames } from './useCategoryNames.ts'
@@ -67,6 +67,51 @@ function useTopOnPage(page: number) {
   }, [page])
   return ref
 }
+// The toolbar's and filters' handlers, stable so those memoised parts skip a render when results arrive.
+function useBrowseHandlers(
+  game: string,
+  {
+    setSource,
+    setText,
+    setPage,
+  }: Pick<ReturnType<typeof useBrowseQuery>, 'setSource' | 'setText' | 'setPage'>,
+) {
+  const { t } = useLingui()
+  const setFilter = useBrowseView((s) => s.setFilter)
+  const onSource = useCallback(
+    (next: string) => {
+      setSource(next)
+      setPage(FIRST_PAGE)
+    },
+    [setSource, setPage],
+  )
+  const onText = useCallback(
+    (next: string) => {
+      setText(next)
+      setPage(FIRST_PAGE)
+    },
+    [setText, setPage],
+  )
+  const onFilter = useCallback(
+    (next: BrowseFilter) => {
+      setFilter(game, next)
+      setPage(FIRST_PAGE)
+    },
+    [setFilter, game, setPage],
+  )
+  const onModes = useCallback(
+    (next: BrowseModes) => {
+      persist(
+        () => SetByKey('browseFilters', formatModes(next), game),
+        t`Could not save that setting`,
+      )
+      setPage(FIRST_PAGE)
+    },
+    [game, t, setPage],
+  )
+  return { onSource, onText, onFilter, onModes }
+}
+
 function BrowsePage({
   game,
   profileID,
@@ -83,16 +128,20 @@ function BrowsePage({
 }: BrowsePageProps) {
   const { t } = useLingui()
   const view = useBrowseView((s) => s.view)
-  const setFilter = useBrowseView((s) => s.setFilter)
   const query = useBrowseQuery({ game, profileID, search, sources: searchable })
-  const { filter, sorts, modes, source, setSource, setText, page, setPage, result } = query
+  const { filter, sorts, modes, source, page, setPage, result } = query
   const offline = useOfflineEmpty(source === ALL ? searchable.map((s) => s.id) : [source])
   const categoryNames = useCategoryNames({ categories, game, source, skip: source === GITHUB })
   const pageCount = Math.max(FIRST_PAGE, Math.ceil(pagedTotal(result) / PAGE_SIZE) || FIRST_PAGE)
-  const sources = [
-    ...(searchable.length > 1 ? [{ value: ALL, label: t`All sources` }] : []),
-    ...searchable.map((s) => ({ value: s.id, label: s.name, unavailable: s.unavailable })),
-  ]
+  // Stable, so the memoised toolbar skips a render when results arrive.
+  const sources = useMemo(
+    () => [
+      ...(searchable.length > 1 ? [{ value: ALL, label: t`All sources` }] : []),
+      ...searchable.map((s) => ({ value: s.id, label: s.name, unavailable: s.unavailable })),
+    ],
+    [searchable, t],
+  )
+  const { onSource, onText, onFilter, onModes } = useBrowseHandlers(game, query)
   const sourceName = sources.find((s) => s.value === source)?.label ?? ''
   useSelectionKeys(result.items)
   const results = useTopOnPage(page)
@@ -133,34 +182,19 @@ function BrowsePage({
       <BrowseToolbar
         sources={sources}
         source={source}
-        onSource={(next) => {
-          setSource(next)
-          setPage(FIRST_PAGE)
-        }}
-        onText={(next) => {
-          setText(next)
-          setPage(FIRST_PAGE)
-        }}
+        onSource={onSource}
+        onText={onText}
         placeholder={placeholder}
       />
       <BrowseFilters
         categories={categoryNames}
         filter={filter}
-        onFilter={(next) => {
-          setFilter(game, next)
-          setPage(FIRST_PAGE)
-        }}
+        onFilter={onFilter}
         modes={modes}
         hasCompat={hasCompat}
         source={source}
         sorts={sorts}
-        onModes={(next) => {
-          persist(
-            () => SetByKey('browseFilters', formatModes(next), game),
-            t`Could not save that setting`,
-          )
-          setPage(FIRST_PAGE)
-        }}
+        onModes={onModes}
       />
       <Box
         sx={{ flex: 1, minHeight: 0, display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto' }}

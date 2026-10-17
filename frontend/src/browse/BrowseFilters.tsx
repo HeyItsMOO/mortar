@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Autocomplete, Box, TextField } from '@mui/material'
+import { memo } from 'react'
 import { PrefSelect } from '../settings/PrefControls.tsx'
 import { space } from '../theme/density.ts'
 import { BrowseShow } from './BrowseShow.tsx'
@@ -54,7 +55,7 @@ function CategoryPicker({
 
 // One compact row: include and exclude category pickers, then the sort. The pickers are disabled for a source with
 // no categories (GitHub, or Nexus while signed out).
-function BrowseFilters({
+const BrowseFilters = memo(function BrowseFiltersView({
   categories,
   filter,
   onFilter,
@@ -132,6 +133,6 @@ function BrowseFilters({
       />
     </Box>
   )
-}
+})
 
 export { BrowseFilters }

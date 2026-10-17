@@ -1,6 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Menu } from '@mui/material'
 import { ExternalLink, Info, Link2, Plus } from 'lucide-react'
+import { memo } from 'react'
 import { copyText } from '../share/copyText.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { NEXUS } from './browseConstants.ts'
@@ -79,7 +80,7 @@ function Items({
 }
 
 /** The right-click menu of a Browse hit, in the Mods tab's menu style. */
-export function BrowseMenu({
+export const BrowseMenu = memo(function BrowseMenuView({
   card,
   sourceNames,
 }: {
@@ -110,4 +111,4 @@ export function BrowseMenu({
       />
     </Menu>
   )
-}
+})

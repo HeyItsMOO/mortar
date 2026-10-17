@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Chip, Typography } from '@mui/material'
-import { type ReactNode, useEffect, useState } from 'react'
+import { memo, type ReactNode, useEffect, useState } from 'react'
 import { Details as ReadDetails } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/browse/service.ts'
 import type { Changelog } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexus/models.ts'
 import type { Details } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/source/models.ts'
@@ -243,7 +243,7 @@ function Panel({
 }
 
 /** The details panel of the Browse hit the player clicked, beside the results. */
-export function BrowseDetails({
+export const BrowseDetails = memo(function BrowseDetailsView({
   game,
   card,
   sourceNames,
@@ -272,4 +272,4 @@ export function BrowseDetails({
       ) : null}
     </DetailsAside>
   )
-}
+})

@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, ButtonBase } from '@mui/material'
 import { Layers } from 'lucide-react'
-import { type ReactNode, useEffect, useRef } from 'react'
+import { memo, type ReactNode, useEffect, useRef } from 'react'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
 import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
 import { DisabledReason } from '../shell/DisabledReason.tsx'
@@ -124,7 +124,7 @@ function BrowseSearch({ label, onText }: { label: string; onText: (text: string)
   )
 }
 
-function BrowseToolbar({
+const BrowseToolbar = memo(function BrowseToolbarView({
   sources,
   source,
   onSource,
@@ -159,6 +159,6 @@ function BrowseToolbar({
       </Box>
     </Box>
   )
-}
+})
 
 export { BrowseToolbar }
