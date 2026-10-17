@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/fs"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -80,10 +81,15 @@ func (Loader) Status(t loader.Target) (loader.Status, error) {
 }
 
 // Install lays the BepInExPack archive out in the profile and records its version and Doorstop major.
-func (Loader) Install(_ context.Context, t loader.Target, pkg loader.Package, progress func(loader.Step)) (string, error) {
+func (Loader) Install(ctx context.Context, t loader.Target, pkg loader.Package, progress func(loader.Step)) (string, error) {
 	got, err := InstallPack(pkg.Archive, t.ProfileDir)
 	if err != nil {
 		return "", err
+	}
+	if hasCLR(t.ProfileDir) {
+		if err := placeUnityLibs(ctx, t.InstallDir, t.ProfileDir); err != nil {
+			log.Printf("bepinex: the Unity base libraries are left for BepInEx to fetch at first start: %v", err)
+		}
 	}
 	if progress != nil {
 		progress(loader.StepFiles)
