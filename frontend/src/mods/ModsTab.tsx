@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
 import { SearchX } from 'lucide-react'
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import type {
   Entry,
   Mod,
@@ -84,7 +84,7 @@ function SelectionKeys({ shown }: { shown: Mod[] }) {
   return null
 }
 
-function ModsBody({
+const ModsBody = memo(function ModsBodyView({
   profile,
   shown,
   view,
@@ -161,7 +161,7 @@ function ModsBody({
       <ModSidebar profile={profile} />
     </Box>
   )
-}
+})
 
 // Placeholder rows while a profile's mods load for the first time.
 const LOADING_ROW_COUNT = 8
@@ -202,6 +202,9 @@ function passesShow(
   }
 }
 
+const NO_DETAILS: ReturnType<typeof useNexusDetails.getState>['byId'] = {}
+const NO_CATEGORIES: ReturnType<typeof useCustomCategories.getState>['categories'] = []
+
 // The search, Show filter and tags, and the mods they leave. Its own component, so a key typed into the search
 // re-renders the toolbar and the list and not the tab's callouts and dialogs.
 function FilteredMods({ profile }: { profile: Profile }) {
@@ -209,17 +212,34 @@ function FilteredMods({ profile }: { profile: Profile }) {
   const view = useMods((s) => s.view)
   const query = useMods((s) => s.queries[profile.id] ?? '')
   const setQuery = useMods((s) => s.setQuery)
-  const problems = useMods((s) => s.problems)
-  const updates = useUpdates((s) => s.updates)
   const filter = useMods((s) => s.filters[profile.id]) ?? storedFilter(profile.id)
   const setFilter = useMods((s) => s.setFilter)
   const implicitView = useSettings((s) => s.implicitModsView)
   const selectedTags = useSelectedTags(profile.id)
   const setTagFilter = useMods((s) => s.setTagFilter)
-  const nexusById = useNexusDetails((s) => s.byId)
-  const customCategories = useCustomCategories((s) => s.categories)
   const q = query.trim().toLowerCase()
-  const shown = useMemo(() => {
+  // Read only while the search or the Show choice uses them, so their answers arriving re-render nothing here.
+  const problems = useMods((s) => (filter === 'problem' ? s.problems : null))
+  const updates = useUpdates((s) => (filter === 'update' ? s.updates : null))
+  const nexusById = useNexusDetails((s) => (q === '' ? NO_DETAILS : s.byId))
+  const customCategories = useCustomCategories((s) => (q === '' ? NO_CATEGORIES : s.categories))
+  // Stable for the memoised Show menu, which a key typed into the search then skips.
+  const tags = useMemo(() => profileTags(profile.entries), [profile.entries])
+  const onFilter = useCallback(
+    (value: ModFilter) => setFilter(profile.id, value),
+    [setFilter, profile.id],
+  )
+  const onTags = useCallback(
+    (next: string[]) => setTagFilter(profile.id, next),
+    [setTagFilter, profile.id],
+  )
+  const onClear = useCallback(() => {
+    setQuery(profile.id, '')
+    setFilter(profile.id, 'all')
+    setTagFilter(profile.id, [])
+  }, [setQuery, setFilter, setTagFilter, profile.id])
+  const lastShown = useRef<Mod[]>([])
+  const filtered = useMemo(() => {
     const customById = customCategoryById(customCategories)
     const parts = supportParts(mods)
     // Hidden implicit mods still show when the search or the Show filter asks for them.
@@ -251,6 +271,11 @@ function FilteredMods({ profile }: { profile: Profile }) {
     updates,
     problems,
   ])
+  // The same mods keep the previous array, so an answer that changes nothing they show does not redraw the list.
+  const last = lastShown.current
+  const shown =
+    filtered.length === last.length && filtered.every((m, i) => m === last[i]) ? last : filtered
+  lastShown.current = shown
   return (
     <>
       <Toolbar
@@ -258,10 +283,10 @@ function FilteredMods({ profile }: { profile: Profile }) {
         onQuery={(value) => setQuery(profile.id, value)}
         total={mods.length}
         filter={filter}
-        onFilter={(value) => setFilter(profile.id, value)}
-        tags={profileTags(profile.entries)}
+        onFilter={onFilter}
+        tags={tags}
         selectedTags={selectedTags}
-        onTags={(tags) => setTagFilter(profile.id, tags)}
+        onTags={onTags}
       />
       <TrackedNotInProfile profile={profile} />
       <LockedNote />
@@ -272,11 +297,7 @@ function FilteredMods({ profile }: { profile: Profile }) {
         shown={shown}
         view={view}
         filtering={q !== '' || filter !== 'all' || selectedTags.length > 0}
-        onClear={() => {
-          setQuery(profile.id, '')
-          setFilter(profile.id, 'all')
-          setTagFilter(profile.id, [])
-        }}
+        onClear={onClear}
       />
     </>
   )
@@ -306,11 +327,9 @@ export function ModsTab({ profile }: { profile: Profile }) {
       .load(gameId, profile.id)
       .then(() => undefined)
   }, [gameId, profile.id, gameBusy])
+  // A different profile starts clean; a save of this one (a mod switched, pinned or noted) keeps the open details
+  // and the selection, and only rereads the mods below.
   useEffect(() => {
-    if (loadKey === '') {
-      return
-    }
-    const pending = useDetail.getState().pendingId
     if (useMods.getState().modsFor !== profile.id) {
       useMods.setState({
         mods: [],
@@ -322,11 +341,16 @@ export function ModsTab({ profile }: { profile: Profile }) {
       })
       useUpdates.setState({ updates: null })
     }
-    if (!pending) {
+    if (!useDetail.getState().pendingId) {
       useDetail.getState().show(null)
     }
     useContextMenu.getState().close()
     useSelection.getState().clear()
+  }, [profile.id])
+  useEffect(() => {
+    if (loadKey === '') {
+      return
+    }
     if (loading.current) {
       return
     }
@@ -342,7 +366,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
       .finally(() => {
         loading.current = false
       })
-  }, [load, loadKey, profile.id])
+  }, [load, loadKey])
 
   if (userModCount(profile) === 0) {
     return (
