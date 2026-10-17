@@ -9,14 +9,8 @@ import { refreshSteamArt, steamArt } from './site/art.ts'
 import { brandArt, brandSprite } from './site/brands.ts'
 import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
-import {
-  gameList,
-  gamePage,
-  gamesBand,
-  gamesIndexPage,
-  playableGames,
-  sharePage,
-} from './site/games.ts'
+import { faqPage, landingFaq, whyPage, whyPages } from './site/faq.ts'
+import { gamePage, gamesBand, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
 import { guidePage } from './site/guide.ts'
 
 const block = (name: string) =>
@@ -65,22 +59,6 @@ function appLd(): object {
   }
 }
 
-/** The landing page's FAQ as FAQPage data: each <details> summary and its answer's text. */
-function faqLd(html: string): object {
-  const text = (raw: string) =>
-    unescapeHTML(raw.replace(/<[^>]+>/g, ''))
-      .replace(/\s+/g, ' ')
-      .trim()
-  const mainEntity = [
-    ...html.matchAll(/<details[^>]*>\s*<summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g),
-  ].map(([, q, a]) => ({
-    '@type': 'Question',
-    name: text(q ?? ''),
-    acceptedAnswer: { '@type': 'Answer', text: text(a ?? '') },
-  }))
-  return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity }
-}
-
 /** A hand-written page with its nav, footer, metadata and (on the landing page) game list filled in. */
 function handPage(
   p: Page,
@@ -102,7 +80,7 @@ function handPage(
   after = fill(after, 'foot', chrome(footer(p)))
   const landing = p.path === 'site/index.html'
   if (landing) {
-    after = fill(after, 'games', gameList(playable))
+    after = fill(after, 'faq', landingFaq(playable.length, whyPages()))
     after = fill(after, 'game-count', String(playable.length))
     after = fill(after, 'games-band', gamesBand(playable, steam))
   }
@@ -116,7 +94,7 @@ function handPage(
         description: unescapeHTML(description),
         ownTitle: /property="og:title"/.test(outside),
         ownDescription: /property="og:description"/.test(outside),
-        ...(landing ? { jsonLd: [appLd(), faqLd(after)], feed: true } : {}),
+        ...(landing ? { jsonLd: appLd(), feed: true } : {}),
       }),
     ),
   )
@@ -171,10 +149,17 @@ for (const [path, bytes] of brandArt()) {
   files.set(path, bytes)
 }
 files.set('site/guide/index.html', guidePage())
+const whys = whyPages()
+files.set('site/faq/index.html', faqPage(games.length, whys))
+for (const w of whys) {
+  files.set(`site/why/${w.id}/index.html`, whyPage(w))
+}
 files.set('site/404.html', notFoundPage())
 const listedPages = [
   ...PAGES.map((p) => p.path),
   'site/games/index.html',
+  'site/faq/index.html',
+  ...whys.map((w) => `site/why/${w.id}/index.html`),
   'site/guide/index.html',
   'site/changelog/index.html',
   ...games.map((g) => `site/${g.id}/index.html`),

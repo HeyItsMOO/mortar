@@ -14,7 +14,7 @@ const OG_IMAGE = {
 export interface Page {
   path: string
   root: string
-  current?: 'download' | 'extension' | 'guide' | 'games'
+  current?: 'download' | 'extension' | 'guide' | 'games' | 'faq'
   footer: { downloads?: boolean; agpl?: boolean; source?: string }
 }
 
@@ -41,7 +41,7 @@ export function nav(p: Page): string {
     [`${home}#features`, 'Features'],
     ['/extension/', 'Extension', 'extension'],
     ['/guide/', 'Guide', 'guide'],
-    [`${home}#faq`, 'FAQ'],
+    ['/faq/', 'FAQ', 'faq'],
   ]
   const outbound: [href: string, label: string, mark: string][] = [
     [REPO, 'GitHub', 'github'],

@@ -91,3 +91,7 @@ a {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* A linked heading lands below the sticky nav rather than under it. */
+:target {
+  scroll-margin-top: 4.5rem;
+}

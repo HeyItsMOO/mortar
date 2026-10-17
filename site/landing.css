@@ -354,36 +354,27 @@ html.os-windows .platform.windows {
 }
 
 /* FAQ */
-.faq {
+.faq-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.75rem;
   max-width: 48rem;
-  margin: 0 auto;
-}
-.faq details {
-  border-bottom: 1px solid var(--line);
-}
-.faq p {
-  margin: 0 0 1.15rem;
-  color: var(--muted);
-}
-.faq summary {
-  cursor: pointer;
-  padding: 1.15rem 0;
-  font-weight: 500;
-  font-size: 1.05rem;
+  margin: 2rem auto 1.5rem;
+  padding: 0;
   list-style: none;
 }
-.faq summary::-webkit-details-marker {
-  display: none;
+.faq-links a {
+  display: block;
+  height: 100%;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--raised);
+  color: var(--text);
+  text-decoration: none;
 }
-.faq summary::after {
-  content: "+";
-  float: right;
-  color: var(--sand);
-  font-size: 1.3rem;
-  line-height: 1;
-}
-.faq details[open] summary::after {
-  content: "\2212";
+.faq-links a:hover {
+  border-color: var(--sand);
 }
 
 /* Footer */

@@ -246,15 +246,6 @@ export function sharePage(g: Game, art: Record<string, SteamArt>): string {
   })
 }
 
-const FEATURED = ['stardew', 'lethal-company', 'valheim', 'vintage-story', 'sims4']
-
-/** The landing page's answer to which games: the best known by name, then a link to the full list. */
-export function gameList(games: Game[]): string {
-  const featured = FEATURED.flatMap((id) => games.filter((g) => g.id === id))
-  const links = featured.map((g) => `<a href="/${g.id}/">${escapeHTML(g.name)}</a>`)
-  return `${links.join(', ')} and <a href="/games/">${games.length - featured.length} more</a>`
-}
-
 function options(label: string, id: string, values: string[]): string {
   const opts = [...new Set(values)].sort((a, b) => a.localeCompare(b))
   return `<label>${label}

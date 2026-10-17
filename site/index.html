@@ -31,7 +31,7 @@
     <meta property="og:image:alt" content="Mortar&#39;s game select: the supported games as a grid of cover art" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="alternate" type="application/atom+xml" title="Mortar releases" href="https://mortar.rethunk.tech/changelog/feed.xml" />
-    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Mortar","applicationCategory":"GameApplication","operatingSystem":"Windows, Linux","softwareVersion":"0.3.4","url":"https://mortar.rethunk.tech/","downloadUrl":"https://mortar.rethunk.tech/download/","license":"https://www.gnu.org/licenses/agpl-3.0.html","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Mortar free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Mortar is free and open source under the AGPL-3.0 licence, with no account, ads or tracking in the app."}},{"@type":"Question","name":"Do I need Nexus Mods Premium?","acceptedAnswer":{"@type":"Answer","text":"No. With a free Nexus account you click Mod Manager Download on a mod's page and Mortar takes it from there. Premium members can also download from inside Mortar."}},{"@type":"Question","name":"Does Mortar host mod files?","acceptedAnswer":{"@type":"Answer","text":"No. Every mod downloads from its own page on Nexus Mods, GitHub or Thunderstore, so authors keep their downloads and endorsements. The one exception is sending a profile to another of your own computers on your network."}},{"@type":"Question","name":"Which games does it support?","acceptedAnswer":{"@type":"Answer","text":"Stardew Valley, Lethal Company, Valheim, Vintage Story, The Sims 4 and 183 more, from Steam (including Flatpak Steam), GOG, Heroic and Lutris. Mortar is built for many games, and more are on the way."}},{"@type":"Question","name":"Does Mortar work on the Steam Deck?","acceptedAnswer":{"@type":"Answer","text":"Yes. In Desktop Mode, download the AppImage and run it. Open a profile's menu, choose Add to Steam, and the profile shows up in Game Mode. The Flatpak cannot add itself to Steam, so the AppImage is the one to use on the Deck."}},{"@type":"Question","name":"Windows says it protected my PC. Is that normal?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Windows builds are not code-signed, so SmartScreen warns the first time. Choose More info, then Run anyway. The source and the release builds are public on GitHub."}},{"@type":"Question","name":"How do I know a download is genuine?","acceptedAnswer":{"@type":"Answer","text":"Every release is built from the public source by GitHub Actions. The package repositories, Flatpak repository and each release's checksums are signed with the Mortar packages key, and Mortar checks a signature on every update before installing it. The code signing policy shows how to check a file yourself."}},{"@type":"Question","name":"What happened to Concrete?","acceptedAnswer":{"@type":"Answer","text":"Concrete, our Lethal Company mod manager, is archived. Mortar is its successor, rebuilt from scratch for several games."}},{"@type":"Question","name":"Where do I report a bug?","acceptedAnswer":{"@type":"Answer","text":"Use Report a Mortar bug in the app's help menu, which attaches diagnostics, or open an issue on GitHub."}}]}]</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Mortar","applicationCategory":"GameApplication","operatingSystem":"Windows, Linux","softwareVersion":"0.3.4","url":"https://mortar.rethunk.tech/","downloadUrl":"https://mortar.rethunk.tech/download/","license":"https://www.gnu.org/licenses/agpl-3.0.html","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
     <!-- seo:end -->
     <link rel="icon" href="favicon.png" />
     <link rel="apple-touch-icon" href="img/icon-192.png" />
@@ -52,7 +52,7 @@
           <a class="optional" href="#features">Features</a>
           <a class="optional" href="/extension/">Extension</a>
           <a class="optional" href="/guide/">Guide</a>
-          <a class="optional" href="#faq">FAQ</a>
+          <a class="optional" href="/faq/">FAQ</a>
           <span class="nav-sep optional" aria-hidden="true"></span>
           <span class="nav-tools">
           <button type="button" class="nav-search" aria-label="Search" aria-keyshortcuts="/ Control+K Meta+K">
@@ -72,7 +72,7 @@
         <a href="#features">Features</a>
         <a href="/extension/">Extension</a>
         <a href="/guide/">Guide</a>
-        <a href="#faq">FAQ</a>
+        <a href="/faq/">FAQ</a>
         <a href="https://github.com/Rethunk-Tech/mortar">GitHub</a>
         <a href="https://discord.gg/TfecaTm8J2">Discord</a>
       </div>
@@ -98,7 +98,7 @@
           and shares a whole profile as a link. It supports
           <!-- game-count:start -->188<!-- game-count:end --> games, Stardew
           Valley, Lethal Company, Valheim and The Sims 4 among them:
-          <a href="#which-games">see them all</a>.
+          <a href="/games/">see them all</a>.
         </p>
         <div class="cta">
           <a class="btn" id="primary-download" href="#download">
@@ -666,84 +666,15 @@
           <p class="kicker">FAQ</p>
           <h2>Questions</h2>
         </div>
-        <div class="faq">
-          <details>
-            <summary>Is Mortar free?</summary>
-            <p>
-              Yes. Mortar is free and open source under the AGPL-3.0 licence,
-              with no account, ads or tracking in the app.
-            </p>
-          </details>
-          <details>
-            <summary>Do I need Nexus Mods Premium?</summary>
-            <p>
-              No. With a free Nexus account you click Mod Manager Download on a
-              mod's page and Mortar takes it from there. Premium members can
-              also download from inside Mortar.
-            </p>
-          </details>
-          <details>
-            <summary>Does Mortar host mod files?</summary>
-            <p>
-              No. Every mod downloads from its own page on Nexus Mods, GitHub or Thunderstore,
-              so authors keep their downloads and endorsements. The one
-              exception is sending a profile to another of your own computers on
-              your network.
-            </p>
-          </details>
-          <details id="which-games">
-            <summary>Which games does it support?</summary>
-            <p>
-              <!-- games:start --><a href="/stardew/">Stardew Valley</a>, <a href="/lethal-company/">Lethal Company</a>, <a href="/valheim/">Valheim</a>, <a href="/vintage-story/">Vintage Story</a>, <a href="/sims4/">The Sims 4</a> and <a href="/games/">183 more</a><!-- games:end -->, from Steam
-              (including Flatpak Steam), GOG, Heroic and Lutris. Mortar is built for many games, and more are on the
-              way.
-            </p>
-          </details>
-          <details>
-            <summary>Does Mortar work on the Steam Deck?</summary>
-            <p>
-              Yes. In Desktop Mode, download the AppImage and run it. Open a
-              profile's menu, choose Add to Steam, and the profile shows up in
-              Game Mode. The Flatpak cannot add itself to Steam, so the
-              <a href="/download/#appimage">AppImage</a> is the one to use on
-              the Deck.
-            </p>
-          </details>
-          <details>
-            <summary>Windows says it protected my PC. Is that normal?</summary>
-            <p>
-              Yes. The Windows builds are not code-signed, so SmartScreen
-              warns the first time. Choose More info, then Run anyway. The
-              source and the release builds are public on GitHub.
-            </p>
-          </details>
-          <details>
-            <summary>How do I know a download is genuine?</summary>
-            <p>
-              Every release is built from the public source by GitHub Actions. The package repositories, Flatpak
-              repository and each release's checksums are signed with the Mortar packages key, and Mortar checks a
-              signature on every update before installing it. The <a href="/code-signing/">code signing policy</a>
-              shows how to check a file yourself.
-            </p>
-          </details>
-          <details>
-            <summary>What happened to Concrete?</summary>
-            <p>
-              <a href="https://github.com/LethalModding/Concrete">Concrete</a>,
-              our Lethal Company mod manager, is archived. Mortar is its
-              successor, rebuilt from scratch for several games.
-            </p>
-          </details>
-          <details>
-            <summary>Where do I report a bug?</summary>
-            <p>
-              Use Report a Mortar bug in the app's help menu, which attaches
-              diagnostics, or open an issue on
-              <a href="https://github.com/Rethunk-Tech/mortar/issues">GitHub</a
-              >.
-            </p>
-          </details>
-        </div>
+        <div><!-- faq:start -->
+          <ul class="faq-links">
+            <li><a href="/faq/#is-mortar-free">Is Mortar free?</a></li>
+            <li><a href="/faq/#which-games-does-it-support">Which games does it support?</a></li>
+            <li><a href="/faq/#coming-from-another-mod-manager">Coming from another mod manager?</a></li>
+            <li><a href="/faq/#do-i-need-nexus-mods-premium">Do I need Nexus Mods Premium?</a></li>
+          </ul>
+          <p class="center"><a class="btn-ghost" href="/faq/">All 10 questions</a></p>
+          <!-- faq:end --></div>
       </section>
     </main>
 
