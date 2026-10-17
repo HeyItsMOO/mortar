@@ -313,24 +313,6 @@ code {
   color: var(--muted);
   font-size: 0.85rem;
 }
-.game-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 2.5rem;
-}
-.game-hero .game-art {
-  margin: 0;
-}
-.game-hero .cta {
-  margin: 1.25rem 0 0;
-}
-@media (max-width: 48rem) {
-  .game-hero {
-    grid-template-columns: 1fr;
-  }
-}
 .game-facts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
@@ -381,6 +363,58 @@ a.chip:hover {
 .game-grid + p {
   margin-top: 1rem;
 }
-.game-hero.no-art {
-  grid-template-columns: 1fr;
+.bleed {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 26rem;
+  background: var(--base) var(--hero) center 30% / cover no-repeat;
+}
+/* An alpha fade from the art into the page, so the art never ends on an edge. */
+.bleed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(25, 25, 30, 0.15) 0%,
+    rgba(25, 25, 30, 0.55) 55%,
+    rgba(25, 25, 30, 1) 100%
+  );
+}
+.bleed.plain {
+  min-height: 0;
+  padding-top: 4rem;
+}
+.bleed.plain::after {
+  content: none;
+}
+.bleed .wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-bottom: 2.25rem;
+}
+.bleed h1 {
+  margin: 0.4rem 0 0.5rem;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.05;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+.bleed .lede {
+  margin: 0;
+  max-width: 36rem;
+  color: rgb(220, 220, 228);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+}
+.bleed .cta {
+  justify-content: flex-start;
+  margin: 1.25rem 0 0;
+}
+.bleed .crumbs,
+.bleed .crumbs a {
+  color: rgb(220, 220, 228);
+}
+main.after-bleed {
+  padding-top: 2rem;
 }

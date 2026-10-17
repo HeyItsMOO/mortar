@@ -134,6 +134,7 @@ export function page(p: {
   jsonLd?: object
   feed?: boolean
   script?: string
+  hero?: string
 }): string {
   const frame: Page = {
     path: p.path,
@@ -161,7 +162,7 @@ export function page(p: {
   <body>
     ${nav(frame)}
 
-    <main class="wrap dl prose"${p.index === false ? '' : ' data-pagefind-body'}>
+${p.hero ?? ''}    <main class="wrap dl prose${p.hero ? ' after-bleed' : ''}"${p.index === false ? '' : ' data-pagefind-body'}>
 ${p.body}
     </main>
 

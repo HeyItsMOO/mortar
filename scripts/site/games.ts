@@ -1,5 +1,6 @@
 // A page and a share page per playable game in the bundled catalog, and the linked game list on the landing page.
 import { readFileSync } from 'node:fs'
+import type { SteamArt } from './art.ts'
 import { brandChip } from './brands.ts'
 import { escapeHTML, listed, page, SITE } from './chrome.ts'
 
@@ -72,9 +73,9 @@ const HEADER = { width: 460, height: 215 }
 
 const steamAppId = (g: Game) => (g.stores?.steam as { appId?: string } | undefined)?.appId
 
-function artImage(g: Game, art: Record<string, string>, width: number, height: number): string {
+function artImage(g: Game, art: Record<string, SteamArt>, width: number, height: number): string {
   const appId = steamAppId(g)
-  const src = appId ? art[appId] : undefined
+  const src = appId ? art[appId]?.header : undefined
   return src
     ? `<img class="game-art" src="${src}" width="${width}" height="${height}" alt="${escapeHTML(g.name)} on Steam" loading="lazy" referrerpolicy="no-referrer" />`
     : ''
@@ -94,7 +95,7 @@ function sourceURL(s: { id: string; key?: string }): string | undefined {
   }
 }
 
-function gameCard(g: Game, art: Record<string, string>, data = ''): string {
+function gameCard(g: Game, art: Record<string, SteamArt>, data = ''): string {
   return `        <li${data}>
           <a href="/${g.id}/">${artImage(g, art, HEADER.width / 2, Math.round(HEADER.height / 2))}<span class="game-name">${escapeHTML(g.name)}</span><span class="game-meta">${escapeHTML(facts(g).loader || 'No loader needed')}</span></a>
         </li>`
@@ -116,7 +117,7 @@ function neighbours(g: Game, games: Game[]): Game[] {
 }
 
 /** The game's own page: what Mortar does for it and how to start, from its catalog entry. */
-export function gamePage(g: Game, art: Record<string, string>, games: Game[]): string {
+export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]): string {
   const f = facts(g)
   const name = escapeHTML(g.name)
   const appId = steamAppId(g)
@@ -134,20 +135,20 @@ export function gamePage(g: Game, art: Record<string, string>, games: Game[]): s
     ? `Pick ${name}. Mortar installs ${escapeHTML(f.loader)} and makes your first profile.`
     : `Pick ${name}. Mortar makes your first profile and keeps its mods apart from every other profile's.`
   const more = neighbours(g, games)
-  const hero = artImage(g, art, HEADER.width, HEADER.height)
-  const body = `      <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore><a href="/">Mortar</a> › <a href="/games/">Games</a></nav>
-      <div class="game-hero${hero ? '' : ' no-art'}">
-        ${hero}
-        <div>
-          <h1 class="ext-title">${name}</h1>
-          <p class="lede">Mod ${name} with Mortar, the free and open source mod manager for Linux, Windows and Steam Deck.</p>
-          <div class="cta ext-cta">
-            <a class="btn" href="/download/">Download Mortar</a>
-            <a class="btn-ghost" href="/guide/">User guide</a>
-          </div>
+  const heroArt = appId ? art[appId]?.hero : undefined
+  const hero = `    <header class="bleed${heroArt ? '' : ' plain'}" data-pagefind-body${heroArt ? ` style="--hero: url('${heroArt}')"` : ''}>
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore><a href="/">Mortar</a> › <a href="/games/">Games</a></nav>
+        <h1>${name}</h1>
+        <p class="lede">Mod ${name} with Mortar, the free and open source mod manager for Linux, Windows and Steam Deck.</p>
+        <div class="cta ext-cta">
+          <a class="btn" href="/download/">Download Mortar</a>
+          <a class="btn-ghost" href="/guide/">User guide</a>
         </div>
       </div>
-      <div class="game-facts">
+    </header>
+`
+  const body = `      <div class="game-facts">
         <section>
           <h2>Mod loader</h2>
           <div class="chips">${f.loader ? `<span class="chip"><span>${escapeHTML(f.loader)}</span></span>` : '<span class="chip"><span>None needed</span></span>'}</div>
@@ -189,6 +190,7 @@ ${more.map((o) => gameCard(o, art)).join('\n')}
     title: `${g.name} mod manager: Mortar`,
     description: `Mortar is a free, open source mod manager for ${g.name} on Linux, Windows and Steam Deck: it ${loaderText}keeps each set of mods in its own profile and downloads from ${f.sources}.`,
     body,
+    hero,
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -222,7 +224,7 @@ function options(label: string, id: string, values: string[]): string {
 }
 
 /** /games/: every playable game as a card, filtered in the browser by name, loader, mod site and store. */
-export function gamesIndexPage(games: Game[], art: Record<string, string>): string {
+export function gamesIndexPage(games: Game[], art: Record<string, SteamArt>): string {
   const loaderOf = (g: Game) => facts(g).loader || 'No loader needed'
   const sourcesOf = (g: Game) =>
     named(
