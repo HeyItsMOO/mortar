@@ -134,6 +134,8 @@ export function page(p: {
   jsonLd?: object
   feed?: boolean
   script?: string
+  module?: string
+  css?: string
   hero?: string
 }): string {
   const frame: Page = {
@@ -157,7 +159,7 @@ export function page(p: {
     <link rel="apple-touch-icon" href="/img/icon-192.png" />
     <link rel="stylesheet" href="/base.css" />
     <link rel="stylesheet" href="/landing.css" />
-    <link rel="stylesheet" href="/download.css" />
+    <link rel="stylesheet" href="/download.css" />${p.css ? `\n    <link rel="stylesheet" href="${p.css}" />` : ''}
   </head>
   <body>
     ${nav(frame)}
@@ -166,7 +168,7 @@ ${p.hero ?? ''}    <main class="wrap dl prose${p.hero ? ' after-bleed' : ''}"${p
 ${p.body}
     </main>
 
-    ${footer(frame)}${p.script ? `\n    <script src="${p.script}" defer></script>` : ''}
+    ${footer(frame)}${p.script ? `\n    <script src="${p.script}" defer></script>` : ''}${p.module ? `\n    <script type="module" src="${p.module}"></script>` : ''}
   </body>
 </html>
 `

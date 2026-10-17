@@ -147,7 +147,7 @@ const files = new Map<string, string | Buffer>()
 files.set('site/games/index.html', gamesIndexPage(games, art))
 for (const g of games) {
   files.set(`site/${g.id}/index.html`, gamePage(g, art, games))
-  files.set(`site/${g.id}/p/index.html`, sharePage(g))
+  files.set(`site/${g.id}/p/index.html`, sharePage(g, art))
 }
 for (const p of PAGES) {
   files.set(p.path, handPage(p, games))

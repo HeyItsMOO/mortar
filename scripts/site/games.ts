@@ -5,7 +5,6 @@ import { brandIcon } from './brands.ts'
 import { escapeHTML, listed, page, SITE } from './chrome.ts'
 
 const CATALOG = 'internal/components/components.json'
-const SHARE_PAGE = 'scripts/site/share-page.html'
 
 export interface Game {
   id: string
@@ -116,6 +115,19 @@ function neighbours(g: Game, games: Game[]): Game[] {
   )
 }
 
+/** The full-bleed header of a game's pages: its Steam library art behind the breadcrumbs and the given content. */
+function banner(g: Game, art: Record<string, SteamArt>, content: string): string {
+  const appId = steamAppId(g)
+  const heroArt = appId ? art[appId]?.hero : undefined
+  return `    <header class="bleed${heroArt ? '' : ' plain'}" data-pagefind-body${heroArt ? ` style="--hero: url('${heroArt}')"` : ''}>
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore><a href="/">Mortar</a> › <a href="/games/">Games</a> › <a href="/${g.id}/">${escapeHTML(g.name)}</a></nav>
+        ${content}
+      </div>
+    </header>
+`
+}
+
 /** The game's own page: what Mortar does for it and how to start, from its catalog entry. */
 export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]): string {
   const f = facts(g)
@@ -135,19 +147,16 @@ export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]):
     ? `Pick ${name}. Mortar installs ${escapeHTML(f.loader)} and makes your first profile.`
     : `Pick ${name}. Mortar makes your first profile and keeps its mods apart from every other profile's.`
   const more = neighbours(g, games)
-  const heroArt = appId ? art[appId]?.hero : undefined
-  const hero = `    <header class="bleed${heroArt ? '' : ' plain'}" data-pagefind-body${heroArt ? ` style="--hero: url('${heroArt}')"` : ''}>
-      <div class="wrap">
-        <nav class="crumbs" aria-label="Breadcrumb" data-pagefind-ignore><a href="/">Mortar</a> › <a href="/games/">Games</a></nav>
-        <h1>${name}</h1>
+  const hero = banner(
+    g,
+    art,
+    `<h1>${name}</h1>
         <p class="lede">Mod ${name} with Mortar, the free and open source mod manager for Linux, Windows and Steam Deck.</p>
         <div class="cta ext-cta">
           <a class="btn" href="/download/">Download Mortar</a>
           <a class="btn-ghost" href="/guide/">User guide</a>
-        </div>
-      </div>
-    </header>
-`
+        </div>`,
+  )
   const loader = f.loader
     ? `<span class="fact-icon">${escapeHTML(f.loader)}</span>`
     : '<span class="fact-icon">None needed</span>'
@@ -196,8 +205,42 @@ ${more.map((o) => gameCard(o, art)).join('\n')}
   })
 }
 
-export function sharePage(g: Game): string {
-  return readFileSync(SHARE_PAGE, 'utf8').replaceAll('GAME_NAME', escapeHTML(g.name))
+/** The page a shared profile link opens (`/<game>/p#<payload>`): site/share/app.js reads the payload in the browser. */
+export function sharePage(g: Game, art: Record<string, SteamArt>): string {
+  const name = escapeHTML(g.name)
+  return page({
+    path: `site/${g.id}/p/index.html`,
+    title: `Mortar: shared ${g.name} profile`,
+    description: `A ${g.name} mod profile shared from Mortar.`,
+    index: false,
+    css: '/share/share.css',
+    module: '/share/app.js',
+    hero: banner(
+      g,
+      art,
+      `<h1>Shared ${name} profile</h1>
+        <p class="lede">A ${name} mod profile made with Mortar. Look through its mods, then open it in Mortar, or get Mortar first.</p>`,
+    ),
+    body: `      <p id="error" class="card share-card" hidden></p>
+      <noscript><p class="card share-card">This page needs JavaScript to read the shared profile.</p></noscript>
+      <section id="profile" class="card share-card" hidden>
+        <p id="name" class="title"></p>
+        <p class="muted"><span id="count"></span>. Mortar resolves mod names when you import.</p>
+        <label id="versionRow" hidden>Your game version
+          <input id="version" inputmode="decimal" autocomplete="off" />
+          <span id="flagged" class="muted"></span>
+        </label>
+        <ul id="list"></ul>
+      </section>
+      <div class="actions">
+        <a id="open" class="btn" href="mortar://" hidden>Open in Mortar</a>
+        <a id="download" class="btn-ghost" href="/download/" hidden>Get Mortar</a>
+      </div>
+      <p id="copied" class="muted" hidden>Link copied. After installing Mortar, paste it into Import.</p>
+      <h2>What is Mortar?</h2>
+      <p>A free, open source mod manager for Linux, Windows and Steam Deck. It installs each game's mod loader, keeps each set of mods in its own profile and downloads every mod from its own page. <a href="/${g.id}/">How Mortar handles ${name}</a> · <a href="/download/">Download Mortar</a></p>
+      <p class="muted">Everything on this page happens in your browser; the profile is never sent anywhere. Pictures of GitHub and Thunderstore mods load from those sites.</p>`,
+  })
 }
 
 const FEATURED = ['stardew', 'lethal-company', 'valheim', 'vintage-story', 'sims4']
