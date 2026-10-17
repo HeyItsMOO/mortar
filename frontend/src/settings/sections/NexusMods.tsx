@@ -244,7 +244,7 @@ export function NexusSignIn() {
     return nxm.dialog
   }
   return (
-    <Searchable terms={`${t`Nexus account`} Nexus ${t`API key`} ${t`Sign in`}`}>
+    <Searchable terms={`${t`Nexus account`} Nexus ${t`Personal API key`} ${t`Sign in`}`}>
       {nxm.dialog}
       <NexusSSO />
       {keyAllowed ? (

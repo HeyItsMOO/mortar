@@ -7196,7 +7196,6 @@ msgstr "Moon"
 
 #: src/settings/sections/ItchAccount.tsx:63
 #: src/settings/sections/ItchAccount.tsx:74
-#: src/settings/sections/NexusMods.tsx:247
 msgid "API key"
 msgstr "API key"
 
@@ -14750,6 +14749,7 @@ msgstr "Switch profile"
 msgid " · "
 msgstr " · "
 
+#: src/settings/sections/NexusMods.tsx:247
 #: src/settings/sections/NexusMods.tsx:252
 #: src/settings/sections/NexusMods.tsx:263
 msgid "Personal API key"
