@@ -27,6 +27,10 @@ export function useProfileCardsMeta(
     })
   }, [gameId, profiles, loadBadges, stamp, sidebarBadges, backgroundBadgeChecks])
 
+  // Keyed on the ids and the last-played fields: the visible cards are a fresh slice every render, and loading on each
+  // one called Runs for every card in a loop.
+  const playedProfile = lastPlayed?.profile ?? ''
+  const playedAt = lastPlayed?.at ?? ''
   useEffect(() => {
     if (!stamp) {
       return
@@ -34,15 +38,15 @@ export function useProfileCardsMeta(
     let cancelled = false
     const load = async () => {
       const next: Record<string, string> = {}
-      for (const p of visible) {
-        if (lastPlayed?.profile === p.id && lastPlayed.at) {
-          next[p.id] = lastPlayed.at
+      for (const id of stamp.split(',')) {
+        if (playedProfile === id && playedAt) {
+          next[id] = playedAt
         } else {
           try {
-            const runs = await Runs(gameId, p.id)
+            const runs = await Runs(gameId, id)
             const started = runs?.[0]?.started ?? ''
             if (started) {
-              next[p.id] = started
+              next[id] = started
             }
           } catch {
             // Omit last played for this card when runs cannot be read.
@@ -57,7 +61,7 @@ export function useProfileCardsMeta(
     return () => {
       cancelled = true
     }
-  }, [gameId, stamp, visible, lastPlayed])
+  }, [gameId, stamp, playedProfile, playedAt])
 
   return runStarted
 }
