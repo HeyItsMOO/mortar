@@ -35,7 +35,7 @@ export function LaunchMenu({ game, profile }: { game: string; profile: Profile }
         {t`Launch`}
         <ChevronDown size={14} aria-hidden={true} />
       </HomeButton>
-      <Menu open={anchor !== null} anchorEl={anchor} onClose={close} keepMounted={true}>
+      <Menu open={anchor !== null} anchorEl={anchor} onClose={close}>
         <MenuHeading>{t`Run with this profile`}</MenuHeading>
         {tools.length === 0 ? (
           <MenuItem disabled={true} dense={true} sx={{ opacity: 1 }}>

@@ -51,7 +51,7 @@ export function ExtraFolderMenu({
           </Button>
         </DisabledReason>
       </ButtonGroup>
-      <Menu open={anchor !== null} anchorEl={anchor} onClose={close} keepMounted={true}>
+      <Menu open={anchor !== null} anchorEl={anchor} onClose={close}>
         <MenuHeading>{t`Add from`}</MenuHeading>
         <MenuAction
           icon={<Download size={16} aria-hidden={true} />}

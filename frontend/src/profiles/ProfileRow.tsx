@@ -8,6 +8,7 @@ import type { ProfileBudget } from '../../bindings/github.com/Rethunk-Tech/morta
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { NameField } from '../game/NameField.tsx'
 import { CoverMenuItems, MoreMenuItems, ProfileMenuItem } from '../game/ProfileMenuItems.tsx'
+import { openProfileDialog } from '../game/profileDialog.ts'
 import { useRestoreFocus } from '../game/useRestoreFocus.ts'
 import { formatBytes } from '../i18n/bytes.ts'
 import { modsLabel, problemsLabel, updatesLabel } from '../i18n/counts.ts'
@@ -17,9 +18,7 @@ import { MenuRule } from '../shell/TitleMenu.tsx'
 import { Tooltip } from '../shell/Tooltip.tsx'
 import { space } from '../theme/density.ts'
 import { chosenModCount, userModCount } from './count.ts'
-import { EditProfileDialog } from './EditProfileDialog.tsx'
 import { HealthCheckBadge } from './HealthCheckBadge.tsx'
-import { HistoryDialog } from './HistoryDialog.tsx'
 import { ProfileMark } from './ProfileMark.tsx'
 import { useProfiles } from './store.ts'
 import { joinSummary, knownCount, originLine } from './summary.ts'
@@ -31,19 +30,16 @@ function RowMenu({
   anchor,
   onClose,
   onRename,
-  onEdit,
   returnFocus,
 }: {
   profile: Profile
   anchor: HTMLElement | null
   onClose: () => void
   onRename: () => void
-  onEdit: () => void
   returnFocus: () => void
 }) {
   const { t } = useLingui()
   const game = useProfiles((s) => s.game?.id ?? '')
-  const [historyOpen, setHistoryOpen] = useState(false)
   // An action that moves focus itself (rename, delete) turns the return to the ⋯ button off.
   const refocus = useRef(true)
   const choose =
@@ -54,50 +50,38 @@ function RowMenu({
       run()
     }
   return (
-    <>
-      <Menu
-        anchorEl={anchor}
-        open={anchor !== null}
-        onClose={() => {
-          refocus.current = true
-          onClose()
-        }}
-        disableRestoreFocus={true}
-        keepMounted={true}
-        slotProps={{
-          transition: {
-            onExited: () => {
-              if (refocus.current) {
-                returnFocus()
-              }
-            },
+    <Menu
+      anchorEl={anchor}
+      open={anchor !== null}
+      onClose={() => {
+        refocus.current = true
+        onClose()
+      }}
+      disableRestoreFocus={true}
+      slotProps={{
+        transition: {
+          onExited: () => {
+            if (refocus.current) {
+              returnFocus()
+            }
           },
-        }}
-      >
-        <ProfileMenuItem
-          icon={<Pencil size={16} />}
-          label={t`Rename`}
-          onClick={choose(onRename, false)}
-        />
-        <ProfileMenuItem
-          icon={<Palette size={16} />}
-          label={t`Edit profile…`}
-          onClick={choose(onEdit, false)}
-        />
-        <CoverMenuItems game={game} profile={profile} close={choose(() => undefined)} />
-        <MenuRule />
-        <MoreMenuItems
-          profile={profile}
-          close={choose(() => undefined)}
-          onHistory={() => setHistoryOpen(true)}
-        />
-      </Menu>
-      <HistoryDialog
-        profileId={profile.id}
-        open={historyOpen}
-        onClose={() => setHistoryOpen(false)}
+        },
+      }}
+    >
+      <ProfileMenuItem
+        icon={<Pencil size={16} />}
+        label={t`Rename`}
+        onClick={choose(onRename, false)}
       />
-    </>
+      <ProfileMenuItem
+        icon={<Palette size={16} />}
+        label={t`Edit profile…`}
+        onClick={choose(() => openProfileDialog('edit', profile.id), false)}
+      />
+      <CoverMenuItems game={game} profile={profile} close={choose(() => undefined)} />
+      <MenuRule />
+      <MoreMenuItems profile={profile} close={choose(() => undefined)} />
+    </Menu>
   )
 }
 
@@ -157,7 +141,6 @@ export function ProfileRow({
   const game = useProfiles((s) => s.game?.id ?? '')
   const rename = useProfiles((s) => s.rename)
   const [renaming, setRenaming] = useState(false)
-  const [editing, setEditing] = useState(false)
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)
   const more = useRef<HTMLButtonElement>(null)
   useRestoreFocus(renaming, more)
@@ -278,10 +261,8 @@ export function ProfileRow({
         anchor={anchor}
         onClose={() => setAnchor(null)}
         onRename={() => setRenaming(true)}
-        onEdit={() => setEditing(true)}
         returnFocus={() => more.current?.focus()}
       />
-      <EditProfileDialog profile={profile} open={editing} onClose={() => setEditing(false)} />
     </Box>
   )
 }

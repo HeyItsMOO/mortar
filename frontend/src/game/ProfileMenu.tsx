@@ -12,17 +12,13 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
-import { CompareDialog } from '../profiles/CompareDialog.tsx'
-import { EditProfileDialog } from '../profiles/EditProfileDialog.tsx'
-import { HistoryDialog } from '../profiles/HistoryDialog.tsx'
-import { MergeDialog } from '../profiles/MergeDialog.tsx'
 import { useProfiles } from '../profiles/store.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { MenuHeading, MenuRule } from '../shell/TitleMenu.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import { BackupMenuItem } from './BackupMenuItems.tsx'
 import { HomeButton } from './HomeButton.tsx'
-import { DeleteProfileDialog } from './ProfileMenuItems.tsx'
+import { openProfileDialog } from './profileDialog.ts'
 import { SaveTemplateMenuItem } from './TemplateMenuItems.tsx'
 
 // The Profile menu on Home. The sidebar's profile menu keeps the rest (cover, check, export, send, saved groups).
@@ -31,11 +27,6 @@ export function ProfileMenu({ profile }: { profile: Profile }) {
   const profiles = useProfiles((s) => s.profiles)
   const duplicate = useProfiles((s) => s.duplicate)
   const [anchor, setAnchor] = useState<HTMLElement | null>(null)
-  const [editing, setEditing] = useState(false)
-  const [historyOpen, setHistoryOpen] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const [merging, setMerging] = useState(false)
-  const [compare, setCompare] = useState<{ a: Profile; b: Profile | null } | null>(null)
   const close = () => setAnchor(null)
   return (
     <>
@@ -48,14 +39,14 @@ export function ProfileMenu({ profile }: { profile: Profile }) {
         {t`Profile`}
         <ChevronDown size={14} aria-hidden={true} />
       </HomeButton>
-      <Menu open={anchor !== null} anchorEl={anchor} onClose={close} keepMounted={true}>
+      <Menu open={anchor !== null} anchorEl={anchor} onClose={close}>
         <MenuHeading>{t`This profile`}</MenuHeading>
         <MenuAction
           icon={<Palette size={16} />}
           label={t`Edit profile…`}
           onClick={() => {
             close()
-            setEditing(true)
+            openProfileDialog('edit', profile.id)
           }}
         />
         <MenuRule />
@@ -75,7 +66,7 @@ export function ProfileMenu({ profile }: { profile: Profile }) {
           reason={profiles.length < 2 ? t`No other profile to add them to.` : undefined}
           onClick={() => {
             close()
-            setMerging(true)
+            openProfileDialog('merge', profile.id)
           }}
         />
         <SaveTemplateMenuItem profile={profile} close={close} />
@@ -87,7 +78,7 @@ export function ProfileMenu({ profile }: { profile: Profile }) {
           label={t`History…`}
           onClick={() => {
             close()
-            setHistoryOpen(true)
+            openProfileDialog('history', profile.id)
           }}
         />
         <MenuAction
@@ -95,7 +86,7 @@ export function ProfileMenu({ profile }: { profile: Profile }) {
           label={t`Compare…`}
           onClick={() => {
             close()
-            setCompare({ a: profile, b: profiles.find((p) => p.id !== profile.id) ?? null })
+            openProfileDialog('compare', profile.id)
           }}
         />
         <MenuRule />
@@ -105,23 +96,10 @@ export function ProfileMenu({ profile }: { profile: Profile }) {
           tone="error"
           onClick={() => {
             close()
-            setDeleting(true)
+            openProfileDialog('delete', profile.id)
           }}
         />
       </Menu>
-      <EditProfileDialog profile={profile} open={editing} onClose={() => setEditing(false)} />
-      <HistoryDialog
-        profileId={profile.id}
-        open={historyOpen}
-        onClose={() => setHistoryOpen(false)}
-      />
-      <CompareDialog
-        a={compare?.a ?? null}
-        b={compare?.b ?? null}
-        onClose={() => setCompare(null)}
-      />
-      <MergeDialog source={merging ? profile : null} onClose={() => setMerging(false)} />
-      <DeleteProfileDialog profile={profile} open={deleting} onClose={() => setDeleting(false)} />
     </>
   )
 }

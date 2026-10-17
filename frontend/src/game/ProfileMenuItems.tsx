@@ -22,12 +22,7 @@ import {
   Exists as ShortcutExists,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/shortcut/service.ts'
 import { AddResult } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/steam/models.ts'
-import { savedGroupApplied } from '../groups/applied.ts'
-import { ApplySavedGroupDialog } from '../groups/dialogs.tsx'
-import { CompareDialog } from '../profiles/CompareDialog.tsx'
-import { HealthDialog } from '../profiles/HealthDialog.tsx'
 import { useProfiles } from '../profiles/store.ts'
-import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { MenuRule } from '../shell/TitleMenu.tsx'
 import { reportError, reportUnexpected } from '../toasts/report.ts'
@@ -35,6 +30,7 @@ import { useToasts } from '../toasts/store.ts'
 import { BackupMenuItem } from './BackupMenuItems.tsx'
 import { applyStagedCover, hasPickedCover } from './cover.ts'
 import { FarmMenuItem } from './FarmMenuItem.tsx'
+import { openProfileDialog } from './profileDialog.ts'
 import { TemplateMenuItems } from './TemplateMenuItems.tsx'
 
 // The profile actions shared by the profile page's buttons and the sidebar's context menu, so both offer the same.
@@ -54,33 +50,6 @@ function ProfileMenuItem({
 }) {
   return (
     <MenuAction icon={icon} label={label} disabled={disabled} reason={tooltip} onClick={onClick} />
-  )
-}
-
-function DeleteProfileDialog({
-  profile,
-  open,
-  onClose,
-}: {
-  profile: Profile
-  open: boolean
-  onClose: () => void
-}) {
-  const { t } = useLingui()
-  const remove = useProfiles((s) => s.remove)
-  return (
-    <ConfirmDialog
-      open={open}
-      title={t`Delete ${profile.name}?`}
-      body={t`The profile stays restorable for 30 days from Recently deleted.`}
-      confirmLabel={t`Delete`}
-      color="error"
-      onCancel={onClose}
-      onConfirm={() => {
-        onClose()
-        remove(profile.id).catch(reportUnexpected)
-      }}
-    />
   )
 }
 
@@ -175,19 +144,15 @@ function ShortcutMenuItems({ profile, close }: { profile: Profile; close: () => 
 
 function CheckProfileMenuItem({ profile, close }: { profile: Profile; close: () => void }) {
   const { t } = useLingui()
-  const [open, setOpen] = useState(false)
   return (
-    <>
-      <ProfileMenuItem
-        icon={<ShieldCheck size={16} />}
-        label={t`Check this profile`}
-        onClick={() => {
-          close()
-          setOpen(true)
-        }}
-      />
-      <HealthDialog profileId={profile.id} open={open} onClose={() => setOpen(false)} />
-    </>
+    <ProfileMenuItem
+      icon={<ShieldCheck size={16} />}
+      label={t`Check this profile`}
+      onClick={() => {
+        close()
+        openProfileDialog('health', profile.id)
+      }}
+    />
   )
 }
 
@@ -234,45 +199,6 @@ function CoverMenuItems({
   ]
 }
 
-function ProfileDialogs({
-  profile,
-  currentGame,
-  compare,
-  setCompare,
-  deleting,
-  setDeleting,
-  savedGroupOpen,
-  setSavedGroupOpen,
-}: {
-  profile: Profile
-  currentGame: { id: string } | null
-  compare: { a: Profile; b: Profile | null } | null
-  setCompare: (value: { a: Profile; b: Profile | null } | null) => void
-  deleting: boolean
-  setDeleting: (value: boolean) => void
-  savedGroupOpen: boolean
-  setSavedGroupOpen: (value: boolean) => void
-}) {
-  return (
-    <>
-      <CompareDialog
-        a={compare?.a ?? null}
-        b={compare?.b ?? null}
-        onClose={() => setCompare(null)}
-      />
-      <DeleteProfileDialog profile={profile} open={deleting} onClose={() => setDeleting(false)} />
-      <ApplySavedGroupDialog
-        open={savedGroupOpen}
-        game={currentGame?.id ?? ''}
-        profileName={profile.name}
-        profileId={profile.id}
-        onClose={() => setSavedGroupOpen(false)}
-        onApplied={(result) => savedGroupApplied(result, profile.id)}
-      />
-    </>
-  )
-}
-
 // Sharing, exporting and backing up the profile, as one menu group.
 function ShareMenuItems({ profile, close }: { profile: Profile; close: () => void }) {
   return [
@@ -281,22 +207,10 @@ function ShareMenuItems({ profile, close }: { profile: Profile; close: () => voi
   ]
 }
 
-function MoreMenuItems({
-  profile,
-  close,
-  onHistory,
-}: {
-  profile: Profile
-  close: () => void
-  onHistory: () => void
-}) {
+function MoreMenuItems({ profile, close }: { profile: Profile; close: () => void }) {
   const { t } = useLingui()
-  const profiles = useProfiles((s) => s.profiles)
-  const currentGame = useProfiles((s) => s.game)
+  const hasGame = useProfiles((s) => s.game !== null)
   const duplicate = useProfiles((s) => s.duplicate)
-  const [compare, setCompare] = useState<{ a: Profile; b: Profile | null } | null>(null)
-  const [deleting, setDeleting] = useState(false)
-  const [savedGroupOpen, setSavedGroupOpen] = useState(false)
   return [
     <ProfileMenuItem
       key="history"
@@ -304,7 +218,7 @@ function MoreMenuItems({
       label={t`History…`}
       onClick={() => {
         close()
-        onHistory()
+        openProfileDialog('history', profile.id)
       }}
     />,
     <CheckProfileMenuItem key="check" profile={profile} close={close} />,
@@ -324,7 +238,7 @@ function MoreMenuItems({
       label={t`Compare…`}
       onClick={() => {
         close()
-        setCompare({ a: profile, b: profiles.find((p) => p.id !== profile.id) ?? null })
+        openProfileDialog('compare', profile.id)
       }}
     />,
     <ShareMenuItems key="share" profile={profile} close={close} />,
@@ -333,10 +247,10 @@ function MoreMenuItems({
       key="saved-group"
       icon={<PackagePlus size={16} />}
       label={t`Add a saved group…`}
-      disabled={!currentGame}
+      disabled={!hasGame}
       onClick={() => {
         close()
-        setSavedGroupOpen(true)
+        openProfileDialog('savedGroup', profile.id)
       }}
     />,
     <TemplateMenuItems key="templates" profile={profile} close={close} />,
@@ -349,21 +263,10 @@ function MoreMenuItems({
       label={t`Delete profile…`}
       onClick={() => {
         close()
-        setDeleting(true)
+        openProfileDialog('delete', profile.id)
       }}
-    />,
-    <ProfileDialogs
-      key="dialogs"
-      profile={profile}
-      currentGame={currentGame}
-      compare={compare}
-      setCompare={setCompare}
-      deleting={deleting}
-      setDeleting={setDeleting}
-      savedGroupOpen={savedGroupOpen}
-      setSavedGroupOpen={setSavedGroupOpen}
     />,
   ]
 }
 
-export { CoverMenuItems, DeleteProfileDialog, MoreMenuItems, ProfileMenuItem, ShortcutMenuItems }
+export { CoverMenuItems, MoreMenuItems, ProfileMenuItem, ShortcutMenuItems }

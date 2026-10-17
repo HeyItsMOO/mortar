@@ -8,6 +8,7 @@ import { gameSetupNeeded } from './firstrun/needed.ts'
 import { FirstRunTour } from './firstrunTour/FirstRunTour.tsx'
 import { FomodDialog } from './fomod/Dialog.tsx'
 import { MainScreen } from './game/MainScreen.tsx'
+import { ProfileDialogHost } from './game/ProfileDialogHost.tsx'
 import { GameSelect } from './games/GameSelect.tsx'
 import { loadGameStatus } from './games/status.ts'
 import { DownloadsDialog } from './install/DownloadsDialog.tsx'
@@ -35,18 +36,35 @@ import { ToastHost } from './toasts/ToastHost.tsx'
 import { UpdateReadyBanner } from './updates/UpdateReadyBanner.tsx'
 import { WhatsNewDialog } from './updates/WhatsNewDialog.tsx'
 
-// Pages opened on demand load on first use, which keeps the startup bundle under Vite's chunk size warning.
+// The launch overlay follows the route and the running game; its own component, so neither re-renders the app.
+function Overlay() {
+  const game = overlayGame(
+    useNav((s) => s.route.name),
+    useNav((s) => (s.route.name === 'game' ? s.route.game : '')),
+    useLaunch((s) => s.status?.game ?? ''),
+  )
+  return <LaunchLayer game={game} />
+}
+
+function Routes({ ready }: { ready: boolean }) {
+  const route = useNav((s) => s.route)
+  return (
+    <ErrorBoundary resetKey={route.name}>
+      {route.name === 'settings' ? <SettingsPage section={route.section} /> : null}
+      {route.name === 'game-settings' ? <GameSettingsPage /> : null}
+      {route.name === 'profiles' ? <ProfilesPage /> : null}
+      {route.name === 'game' ? <MainScreen game={route.game} /> : null}
+      {route.name === 'setup' ? <FirstRun /> : null}
+      {route.name === 'game-setup' ? <GameSetup game={route.game} /> : null}
+      {ready && route.name === 'game-select' ? <GameSelect /> : null}
+    </ErrorBoundary>
+  )
+}
 
 export function App() {
   useAppShortcuts()
   useStartupChecks()
   const { t } = useLingui()
-  const route = useNav((s) => s.route)
-  const game = overlayGame(
-    route.name,
-    route.name === 'game' ? route.game : '',
-    useLaunch((s) => s.status?.game ?? ''),
-  )
   const [ready, setReady] = useState(false)
   const solo = usePlayMode((s) => s.solo)
   const boot = useCallback((): void => {
@@ -74,23 +92,15 @@ export function App() {
   }, [t])
   useEffect(boot, [boot])
   if (solo) {
-    return <LaunchLayer game={game} />
+    return <Overlay />
   }
   return (
     <>
       <AppFrame>
         <UpdateReadyBanner />
-        <ErrorBoundary resetKey={route.name}>
-          {route.name === 'settings' ? <SettingsPage section={route.section} /> : null}
-          {route.name === 'game-settings' ? <GameSettingsPage /> : null}
-          {route.name === 'profiles' ? <ProfilesPage /> : null}
-          {route.name === 'game' ? <MainScreen game={route.game} /> : null}
-          {route.name === 'setup' ? <FirstRun /> : null}
-          {route.name === 'game-setup' ? <GameSetup game={route.game} /> : null}
-          {ready && route.name === 'game-select' ? <GameSelect /> : null}
-        </ErrorBoundary>
+        <Routes ready={ready} />
       </AppFrame>
-      <LaunchLayer game={game} />
+      <Overlay />
       <ArrivalDialog />
       <FomodDialog />
       <CommandPalette />
@@ -99,6 +109,7 @@ export function App() {
       <FirstRunTour />
       <PinReasonDialog />
       <ShareDialog />
+      <ProfileDialogHost />
       <ImportDialog />
       <DownloadsDialog />
       <WhatsNewDialog />

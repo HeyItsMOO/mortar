@@ -26,6 +26,7 @@ import { MenuAction } from '../shell/MenuAction.tsx'
 import { space } from '../theme/density.ts'
 import { toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
+import { openProfileDialog } from './profileDialog.ts'
 
 export function FarmDialog({
   open,
@@ -166,22 +167,18 @@ export function FarmDialog({
 // differs.
 export function FarmMenuItem({ profile, close }: { profile: Profile; close: () => void }) {
   const { t } = useLingui()
-  const game = useProfiles((s) => s.game)
-  const [open, setOpen] = useState(false)
-  if (game?.id !== 'stardew') {
+  const stardew = useProfiles((s) => s.game?.id === 'stardew')
+  if (!stardew) {
     return null
   }
   return (
-    <>
-      <MenuAction
-        icon={<Users size={16} />}
-        label={t`Multiplayer mod list…`}
-        onClick={() => {
-          close()
-          setOpen(true)
-        }}
-      />
-      <FarmDialog open={open} profile={profile} onClose={() => setOpen(false)} />
-    </>
+    <MenuAction
+      icon={<Users size={16} />}
+      label={t`Multiplayer mod list…`}
+      onClick={() => {
+        close()
+        openProfileDialog('farm', profile.id)
+      }}
+    />
   )
 }
