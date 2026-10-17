@@ -324,7 +324,7 @@ Each save's backups button lists the backups that hold it. For Valheim, The Sims
 
 ## Screenshots
 
-The **Screenshots** tab shows the game's screenshots, newest first: the ones the game saves itself (Vintage Story, Stardew Valley, The Sims 4) and, for a Steam game, the ones Steam takes. Choose one to see it full size, and use the arrow keys to step through. **Open folder** shows where they are.
+The **Screenshots** tab shows the game's screenshots, newest first: the ones the game saves itself (Vintage Story, Stardew Valley, The Sims 4) and, for a Steam game, the ones Steam takes. Choose one to see it full size, and use the arrow keys to step through; **Use as profile cover** under it makes it the open profile's cover. **Open folder** shows where they are.
 
 ## Where your data lives
 

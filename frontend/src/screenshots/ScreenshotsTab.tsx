@@ -4,18 +4,22 @@ import { Camera, FolderOpen } from 'lucide-react'
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import {
   OpenScreenshotsFolder,
+  ScreenshotFile,
   Screenshots,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/service.ts'
+import { SetCover } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import type {
   Gallery,
   Shot,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/shots/models.ts'
 import { PageActions } from '../game/PageActions.tsx'
 import { When } from '../i18n/When.tsx'
+import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { EmptyState } from '../shell/EmptyState.tsx'
 import { LoadingRow } from '../shell/LoadingRow.tsx'
 import { space } from '../theme/density.ts'
-import { errorMessage, reportUnexpected } from '../toasts/report.ts'
+import { errorMessage, reportError, reportUnexpected } from '../toasts/report.ts'
+import { useToasts } from '../toasts/store.ts'
 
 const TILE_MIN_PX = 220
 const STEAM = 'steam'
@@ -36,9 +40,23 @@ function Viewer({
   onIndex: (i: number) => void
   onClose: () => void
 }) {
+  const { t } = useLingui()
+  const profile = useProfiles(openProfileOf)
   const shot = shots[index]
   if (!shot) {
     return null
+  }
+  const makeCover = async () => {
+    if (!profile) {
+      return
+    }
+    try {
+      const file = await ScreenshotFile(game, shot.source, shot.name)
+      useProfiles.getState().replace(await SetCover(game, profile.id, file))
+      useToasts.getState().push({ kind: 'success', title: t`${profile.name} has a new cover` })
+    } catch (e) {
+      reportError(t`Could not set the cover`)(e)
+    }
   }
   return (
     <Dialog
@@ -62,6 +80,7 @@ function Viewer({
       <Box
         sx={{
           display: 'flex',
+          alignItems: 'center',
           gap: space.gap,
           px: space.pad,
           py: 1,
@@ -77,6 +96,11 @@ function Viewer({
           {shot.name}
         </Typography>
         <When value={shot.at} withTime={true} />
+        {profile ? (
+          <Button size="small" onClick={() => makeCover().catch(reportUnexpected)}>
+            {t`Use as profile cover`}
+          </Button>
+        ) : null}
       </Box>
     </Dialog>
   )

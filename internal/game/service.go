@@ -296,6 +296,15 @@ func ValidateFolder(id, dir string) error {
 	return g.ValidInstall(dir)
 }
 
+// ScreenshotFile is the file of one of the game's screenshots, named as Screenshots lists it, to copy as a cover.
+func (s *Service) ScreenshotFile(gameID, source, name string) (string, error) {
+	dir, ok := ScreenshotDirs(s.home, s.store.Get(), gameID)[source]
+	if !ok || !shots.IsPicture(name) {
+		return "", usererr.New(usererr.Invalid, "no such screenshot")
+	}
+	return filepath.Join(dir, name), nil
+}
+
 // Screenshots lists the game's screenshots, newest first.
 func (s *Service) Screenshots(gameID string) (shots.Gallery, error) {
 	return shots.List(ScreenshotDirs(s.home, s.store.Get(), gameID))

@@ -558,7 +558,7 @@ msgstr "Older copies of the same mod"
 msgid "How many times to retry a failed download"
 msgstr "How many times to retry a failed download"
 
-#: src/screenshots/ScreenshotsTab.tsx:102
+#: src/screenshots/ScreenshotsTab.tsx:126
 msgid "Open Steam's folder"
 msgstr "Open Steam's folder"
 
@@ -775,7 +775,7 @@ msgstr "Dismiss"
 msgid "All profiles"
 msgstr "All profiles"
 
-#: src/screenshots/ScreenshotsTab.tsx:102
+#: src/screenshots/ScreenshotsTab.tsx:126
 msgid "Open the game's folder"
 msgstr "Open the game's folder"
 
@@ -1896,7 +1896,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/queue/store.ts:165
 #: src/saves/BackupsDialog.tsx:161
 #: src/saves/SavesTab.tsx:57
-#: src/screenshots/ScreenshotsTab.tsx:110
+#: src/screenshots/ScreenshotsTab.tsx:134
 #: src/settings/sections/DataStoreReport.tsx:398
 #: src/settings/sections/Storage.tsx:87
 #: src/settings/sections/Updates.tsx:38
@@ -5217,6 +5217,11 @@ msgstr "and {count} more"
 msgid "The local port OBS reads the overlay from"
 msgstr "The local port OBS reads the overlay from"
 
+#. placeholder {0}: profile.name
+#: src/screenshots/ScreenshotsTab.tsx:56
+msgid "{0} has a new cover"
+msgstr "{0} has a new cover"
+
 #: src/mods/describe.ts:218
 msgid "{dependentName} needs {dep} {minimumVersion} or newer, and this profile has {installedVersion}."
 msgstr "{dependentName} needs {dep} {minimumVersion} or newer, and this profile has {installedVersion}."
@@ -5802,7 +5807,7 @@ msgstr "Warn"
 msgid "Switch to Home"
 msgstr "Switch to Home"
 
-#: src/screenshots/ScreenshotsTab.tsx:115
+#: src/screenshots/ScreenshotsTab.tsx:139
 msgid "Reading your screenshots…"
 msgstr "Reading your screenshots…"
 
@@ -5904,7 +5909,7 @@ msgstr "{total} messages"
 msgid "Stop the game before moving the data folder."
 msgstr "Stop the game before moving the data folder."
 
-#: src/screenshots/ScreenshotsTab.tsx:119
+#: src/screenshots/ScreenshotsTab.tsx:143
 msgid "Screenshots you take while playing show here, newest first."
 msgstr "Screenshots you take while playing show here, newest first."
 
@@ -8123,7 +8128,7 @@ msgstr "Open backups folder"
 msgid "Preparing transfer…"
 msgstr "Preparing transfer…"
 
-#: src/screenshots/ScreenshotsTab.tsx:118
+#: src/screenshots/ScreenshotsTab.tsx:142
 msgid "No screenshots yet"
 msgstr "No screenshots yet"
 
@@ -9964,6 +9969,10 @@ msgstr "Check updates and problems in the background for profiles you are not lo
 msgid "Choose the mod folder"
 msgstr "Choose the mod folder"
 
+#: src/screenshots/ScreenshotsTab.tsx:101
+msgid "Use as profile cover"
+msgstr "Use as profile cover"
+
 #: src/mods/Toolbar.tsx:442
 msgid "Browse for mods, add an archive, or paste a share or collection link with Ctrl+V."
 msgstr "Browse for mods, add an archive, or paste a share or collection link with Ctrl+V."
@@ -10218,7 +10227,7 @@ msgstr "Dark"
 
 #: src/mods/HiddenInside.tsx:70
 #: src/profiles/ProfilesPage.tsx:158
-#: src/screenshots/ScreenshotsTab.tsx:100
+#: src/screenshots/ScreenshotsTab.tsx:124
 #: src/settings/sections/DataUsage.tsx:281
 msgid "Open folder"
 msgstr "Open folder"
@@ -10560,6 +10569,10 @@ msgstr "Never"
 #: src/profiles/historyLabel.ts:107
 msgid "Changed groups"
 msgstr "Changed groups"
+
+#: src/screenshots/ScreenshotsTab.tsx:58
+msgid "Could not set the cover"
+msgstr "Could not set the cover"
 
 #: src/settings/shortcutLabels.ts:9
 msgid "Focus the search"
@@ -12009,7 +12022,7 @@ msgid "Already installed"
 msgstr "Already installed"
 
 #: src/games/storeName.ts:5
-#: src/screenshots/ScreenshotsTab.tsx:166
+#: src/screenshots/ScreenshotsTab.tsx:190
 #: src/settings/prefCopy.ts:52
 #: src/settings/sections/GameSettings.tsx:51
 #: src/settings/sections/GameSettings.tsx:185
