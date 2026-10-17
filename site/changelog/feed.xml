@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Mortar releases</title>
+  <id>https://mortar.rethunk.tech/changelog/</id>
+  <link href="https://mortar.rethunk.tech/changelog/" />
+  <link rel="self" href="https://mortar.rethunk.tech/changelog/feed.xml" />
+  <updated>2026-10-17T00:00:00Z</updated>
+  <author><name>Rethunk.Tech</name></author>
+  <entry>
+    <title>Mortar 0.3.4</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.4</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.4" />
+    <updated>2026-10-17T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;h4&#62;Games&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;136 more Thunderstore games: 104 on BepInEx 5, and 32 Unity IL2CPP games (Cat Mail Co. among them) on the shared BepInEx 6 pack&#60;/li&#62;
+        &#60;li&#62;BepInEx 6 IL2CPP games get the game&#38;#39;s Unity base libraries with the loader, so the first start needs no network&#60;/li&#62;
+        &#60;li&#62;Each game, or each profile, can choose which of Steam&#38;#39;s Proton builds runs its Windows copy outside Steam&#60;/li&#62;
+        &#60;li&#62;Game select&#38;#39;s group headings count their games&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Mods and browsing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Mortar records whether you asked for each mod or it came in for another one (Explicit or Implicit): group, sort and filter by it, mark a mod either way, and show implicit mods in place, nested under the mods that need them, or hidden&#60;/li&#62;
+        &#60;li&#62;A profile made before this offers once to mark its libraries, frameworks and tilesheet packs implicit, and Review… lists why each was picked&#60;/li&#62;
+        &#60;li&#62;Removing or switching off mods offers to remove or switch off the libraries only they needed&#60;/li&#62;
+        &#60;li&#62;Saved groups replace bundles: save a group to your library and add it to any profile&#60;/li&#62;
+        &#60;li&#62;A BepInEx mod&#38;#39;s other text files (YAML, TOML, XML, INI, JSON and TXT) open in the Config page for editing&#60;/li&#62;
+        &#60;li&#62;A tidier details sidebar, and the group header at the top stays in view while the list scrolls&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Profiles and sharing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A share can leave out libraries and supporting mods and name only the mods you chose; links and .mortar files carry each mod&#38;#39;s install reason, pin and groups&#60;/li&#62;
+        &#60;li&#62;The import preview shows the mods a share marks as dependencies&#60;/li&#62;
+        &#60;li&#62;A profile row counts the mods you chose beside the total&#60;/li&#62;
+        &#60;li&#62;A screenshot can become the profile&#38;#39;s cover&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Problems and diagnostics&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Cleanup lists dependencies no switched-on mod needs any more&#60;/li&#62;
+        &#60;li&#62;A mod that needs a newer game version than you have shows as Broken, Vintage Story&#38;#39;s included&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Downloads and updates&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A simpler update review: one Update button per mod, library updates last under Libraries, and a one-row footer&#60;/li&#62;
+        &#60;li&#62;When smapi.io stops answering, the offline banner says so, and it clears when smapi.io answers again&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;h4&#62;Mods and browsing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Large profiles are much quicker: switching a mod, filtering, opening the list or grid, Browse search and Settings search redraw a fraction of what they did&#60;/li&#62;
+        &#60;li&#62;Switching, pinning or noting a mod keeps its details open and your selection&#60;/li&#62;
+        &#60;li&#62;The details panel follows the selected mod again&#60;/li&#62;
+        &#60;li&#62;Updating or rolling back a mod keeps it in its groups&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Problems and diagnostics&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Cleanup no longer offers to remove a mod a switched-on mod needs, whether its manifest, its Nexus page, a content condition or the images it changes say so&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Profiles and sharing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A .mortar file carries the profile&#38;#39;s groups whether or not it carries notes, and restoring a zip backup restores them&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Mods for an IL2CPP game get the BepInEx 6 the catalog names, not BepInEx 5&#60;/li&#62;
+        &#60;li&#62;Bridge features are offered only for games Mortar has a bridge for&#60;/li&#62;
+        &#60;li&#62;On Linux, whether WebKit&#38;#39;s DMA-BUF renderer is turned off now follows the installed graphics drivers, not PRIME offload&#60;/li&#62;
+        &#60;li&#62;Game select no longer reloads every game&#38;#39;s run history in a loop&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;No more message codes in place of text, such as the one that stood in for &#38;#34;4 updates ready&#38;#34;&#60;/li&#62;
+        &#60;li&#62;Every popover is solid, the Saves backups menu included&#60;/li&#62;
+        &#60;li&#62;The Mods page callouts match the update bar&#38;#39;s height&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
+  <entry>
+    <title>Mortar 0.3.3</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.3</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.3" />
+    <updated>2026-10-16T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;h4&#62;Games&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Vintage Story: Mortar finds the copy its installer or Flatpak put in place, browses and installs mods from the Vintage Story Mod DB (and Nexus and GitHub), names each mod from its modinfo.json, fetches the mods each one requires, and turns them on for the length of each launch&#60;/li&#62;
+        &#60;li&#62;The Mod DB&#38;#39;s 1-click install button can open in Mortar: turn on Handle Vintage Story Mod DB links in Settings › Downloads&#60;/li&#62;
+        &#60;li&#62;Each Vintage Story profile keeps its own mod settings (ModConfig), and the Config page edits them&#60;/li&#62;
+        &#60;li&#62;A game no store has art for shows art from its own install&#60;/li&#62;
+        &#60;li&#62;On Linux, a Windows game outside Steam, such as a copy in a folder you chose or one Heroic or Lutris installed, runs through a Proton version your Steam already has, in a prefix Mortar keeps for it&#60;/li&#62;
+        &#60;li&#62;Settings › Launchers lists launchers that only run on Windows, and a row for games found where their own installer or Flatpak put them&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Saves&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Vintage Story worlds show their name, play style, play time and the game version that last saved them&#60;/li&#62;
+        &#60;li&#62;A Vintage Story world lists the mods it was played with that the profile lacks, and installs each from the Mod DB&#60;/li&#62;
+        &#60;li&#62;The world backups Vintage Story makes itself (Modify World and /genbackup) are listed under each world and restore like Mortar&#38;#39;s own&#60;/li&#62;
+        &#60;li&#62;A Vintage Story world&#38;#39;s minimap is backed up and restored with it&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A Screenshots tab shows the game&#38;#39;s own screenshots and, for a Steam game, the ones Steam takes, newest first, full size on a click&#60;/li&#62;
+        &#60;li&#62;Browse cards put Add under the mod&#38;#39;s picture, so the name, author, summary and stats get the card&#38;#39;s width and read apart&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Profiles and sharing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Vintage Story Mod DB mods travel in share links, sends to your other computers and the share page&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;The Console shows Vintage Story&#38;#39;s own log while it runs, and a run that crashes keeps the game&#38;#39;s crash report&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;h4&#62;Saves&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Restoring a save no longer leaves the current save&#38;#39;s leftover files beside it, which could undo a Vintage Story restore&#60;/li&#62;
+        &#60;li&#62;Saves lists every game&#38;#39;s saves without the internet; only Stardew Valley&#38;#39;s mod matching needs it&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Mortar finds your Steam account on current Steam clients, so Steam launch options, shortcuts and screenshots work again&#60;/li&#62;
+        &#60;li&#62;mortar.log keeps the startup lines that are the only trace of a WebView2 failure&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;On Linux laptops with an NVIDIA graphics card beside an AMD or Intel one, Mortar no longer renders at a crawl: it keeps WebKit&#38;#39;s fast renderer unless it is running on the NVIDIA card&#60;/li&#62;
+        &#60;li&#62;Menu items no longer say &#38;#34;Stop the game to change mods.&#38;#34; when no game is running&#60;/li&#62;
+        &#60;li&#62;Performance&#38;#39;s Where the time goes is one stacked bar again, with each phase&#38;#39;s time beside its colour&#60;/li&#62;
+        &#60;li&#62;Buttons beside a text field are as tall as the field&#60;/li&#62;
+        &#60;li&#62;The Nexus key and the browser extension steps sit in their setting rows&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
+  <entry>
+    <title>Mortar 0.3.2</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.2</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.2" />
+    <updated>2026-10-16T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Animated backgrounds: an animated GIF, WebP or PNG plays behind Mortar, and holds still when Reduce motion is on or while a game is running&#60;/li&#62;
+        &#60;li&#62;Settings › Appearance says when a background image is large enough to cost memory and GPU, and suggests WebP&#60;/li&#62;
+        &#60;li&#62;What&#38;#39;s new groups each release&#38;#39;s changes by area, with a New or Fixed label on every line, and after an update that skipped versions it also shows each release you missed&#60;/li&#62;
+        &#60;li&#62;Bottles shows its own icon in Settings › Launchers&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Saves&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A save&#38;#39;s backups also list the copies the game keeps itself, Valheim&#38;#39;s automatic world backups and The Sims 4&#38;#39;s rollback copies, and restore them like Mortar&#38;#39;s own&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Games&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Games installed through the Epic Games Launcher on Windows are found, and Play starts them through the launcher: Risk of Rain 2, Enter the Gungeon, Outward and Totally Accurate Battle Simulator&#60;/li&#62;
+        &#60;li&#62;On Linux, Mortar also lists those games when Heroic installed them from Epic&#60;/li&#62;
+        &#60;li&#62;Games installed through the Xbox app on Windows are found: Valheim, Inscryption and Bomb Rush Cyberfunk&#60;/li&#62;
+        &#60;li&#62;Setting up a game that no launcher found offers any copy Mortar finds in your Desktop, Downloads or Games folders before you pick a folder yourself&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Problems and diagnostics&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A bug report names the build beside the version, and mortar.log starts with the version, build and platform&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Mods and browsing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Browse cards can show downloads, endorsements, likes or stars, file size, version and last updated under the summary: tick the ones you want under Show › Card details&#60;/li&#62;
+        &#60;li&#62;Card details show file size for Nexus Mods and Modrinth mods too, as for Thunderstore and CurseForge&#60;/li&#62;
+        &#60;li&#62;The Mods tab&#38;#39;s cards show the same Card details: endorsements, downloads, size on disk and last updated&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;h4&#62;Games&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Creating a Lethal Company or Valheim profile no longer fails with &#38;#34;does not say who published it&#38;#34;&#60;/li&#62;
+        &#60;li&#62;Newer Steam games, such as Super Battle Golf, show their art in Game select and the game menu&#60;/li&#62;
+        &#60;li&#62;The Sims 4 played in German, French, Spanish or Dutch finds its Mods, saves and Options.ini, which the game keeps in a folder named in that language&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A catalog update holding a game this version cannot read no longer sends Mortar back to its built-in catalog; it leaves out only that game&#60;/li&#62;
+        &#60;li&#62;When Mortar cannot start, it says why in a message instead of closing without a word, with a button that opens the folder holding its log; on Linux without zenity or kdialog the message arrives as a desktop notification&#60;/li&#62;
+        &#60;li&#62;Starting Mortar while it is already open brings its window back even when the page inside had stopped responding&#60;/li&#62;
+        &#60;li&#62;A Mortar that has frozen no longer swallows the next start: that start offers to end it and open a fresh one&#60;/li&#62;
+        &#60;li&#62;Windows: the installer installs the WebView2 Runtime when it is missing or was removed, says so if that fails, and Mortar asks before starting without it&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Downloads and updates&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;What&#38;#39;s new no longer shows an error when GitHub cannot serve a release&#38;#39;s notes; it waits for the next update instead&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Mods and browsing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Browse and imports leave out Mortar&#38;#39;s own bridges, which Mortar installs itself, so a profile can no longer load a second copy&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Saves&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Lethal Company&#38;#39;s Saves lists each slot once: the backup and temporary files the game writes beside a slot belong to it, and each save says whether it is a save slot, an extra slot added by a mod, or the weekly challenge&#60;/li&#62;
+        &#60;li&#62;Saves leaves out the Season and Fits columns for games whose saves record neither, such as Lethal Company&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Menus are wide enough for their longest item, so Check mods and Mortar for updates is no longer cut off&#60;/li&#62;
+        &#60;li&#62;A menu item still cut off at the menu&#38;#39;s widest, such as a long profile name, shows its full text on hover&#60;/li&#62;
+        &#60;li&#62;Game select&#38;#39;s letter rail spreads down the whole window, with letters that grow with it&#60;/li&#62;
+        &#60;li&#62;Game select lists the games found on this computer right after the ones you played recently, ahead of the rest of the catalog, and the game menu in the title bar lists only those, with All games for the rest&#60;/li&#62;
+        &#60;li&#62;Saves no longer scrolls sideways in the list view&#60;/li&#62;
+        &#60;li&#62;An error message names what went wrong instead of &#38;#34;Something went wrong&#38;#34;&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
+  <entry>
+    <title>Mortar 0.3.1</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.1</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.1" />
+    <updated>2026-10-15T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;h4&#62;Games&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;46 more games modded through BepInEx and Thunderstore, among them R.E.P.O., Risk of Rain 2, PEAK, Content Warning, Inscryption, Cult of the Lamb, Sun Haven and Enter the Gungeon; 14 of them also browse Nexus Mods&#60;/li&#62;
+        &#60;li&#62;The Sims 4: each profile has its own Mods, saves and game options, Tray files go to the game&#38;#39;s library, and mods come from CurseForge, Nexus Mods, GitHub, Patreon posts and itch.io pages&#60;/li&#62;
+        &#60;li&#62;Games installed through the EA App are found and started&#60;/li&#62;
+        &#60;li&#62;The Sims 4: Import from the game&#38;#39;s Mods folder reads the mods already in Documents › Electronic Arts › The Sims 4 › Mods, at first set-up and from the Import menu, switched-off files included, and can move them out of that folder&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Mods and browsing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Paste a Patreon post or an itch.io page in Add mod: it opens in your browser, and the file you save from it is offered and recorded under that page&#60;/li&#62;
+        &#60;li&#62;Review the mods in the game&#38;#39;s own Mods folder against a profile and bring them in&#60;/li&#62;
+        &#60;li&#62;Typing in the mod list jumps to a mod the way Game select does: punctuation is ignored and digits count&#60;/li&#62;
+        &#60;li&#62;Find on Nexus: mods imported from another manager or a folder with no page get their Nexus page and file back, from the Source grouping of the Mods list; Set Nexus page… in a mod&#38;#39;s menu names the page by hand&#60;/li&#62;
+        &#60;li&#62;CurseForge&#38;#39;s Install button can open Mortar: turn on Handle CurseForge links in Settings › Downloads; links for games Mortar does not manage go back to the CurseForge app&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Profiles and sharing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Merge one profile into another, as one step you can undo&#60;/li&#62;
+        &#60;li&#62;Scheduled save backups, the run log, the console, conflicts and requirements can be set per profile&#60;/li&#62;
+        &#60;li&#62;A profile can keep its own copy of the game&#38;#39;s options file&#60;/li&#62;
+        &#60;li&#62;Share › Mod list saves the list to a text file, and Multiplayer mod list loads a host&#38;#39;s list from one&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Play asks which graphics API to use for games that offer more than one, and asks again after a start that fails under another&#60;/li&#62;
+        &#60;li&#62;The game&#38;#39;s caches are cleared on the first start after a profile&#38;#39;s mods change&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Problems and diagnostics&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Problems lists game settings your mods need switched on, and a Redundant finding can be dismissed and restored&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Game select is one alphabetical list with your recently played games on top, a letter rail to jump with, and typing a name finds it&#60;/li&#62;
+        &#60;li&#62;The Windows installer offers to open Nexus and Thunderstore links with Mortar, and Mortar offers to take them back when another app claims them&#60;/li&#62;
+        &#60;li&#62;Settings › About shows the build, and Open log folder finds the log&#60;/li&#62;
+        &#60;li&#62;Join our Discord from the app menu, the Welcome screen and the site&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Windows: SMAPI starts when Steam&#38;#39;s launch options do not name it, a hidden SMAPI no longer hides the game window, Stop ends the whole game, and no console windows flash when Settings opens&#60;/li&#62;
+        &#60;li&#62;A game set up from a folder you chose, or found through another launcher, starts directly instead of being handed to Steam, and on Linux a Windows-only game outside Steam or Bottles says why it cannot start&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Mods and browsing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A Thunderstore update is found by the package&#38;#39;s id, so a namesake cannot hide it, and other mod managers are left out of search and installs&#60;/li&#62;
+        &#60;li&#62;The stored Thunderstore listing takes about a quarter of the disk space, loads twice as fast, and leaves memory after ten idle minutes&#60;/li&#62;
+        &#60;li&#62;A space typed inside a mod&#38;#39;s name no longer switches the focused mod off&#60;/li&#62;
+        &#60;li&#62;A config file no mod owns opens alone instead of beside a second list&#60;/li&#62;
+        &#60;li&#62;An itch.io key is accepted&#60;/li&#62;
+        &#60;li&#62;A mod whose page is not known shows Unknown source instead of Nexus Mods&#60;/li&#62;
+        &#60;li&#62;Installing an archive over a mod from a site keeps its page, picture and update checks instead of turning it into a plain Archive&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Profiles and sharing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Windows: LAN sharing never listens on a network set to Public, and its firewall rules cover every network type so Windows does not prompt&#60;/li&#62;
+        &#60;li&#62;Importing from Vortex reads mods it deployed as links&#60;/li&#62;
+        &#60;li&#62;Multiplayer mod list: Check reads the text Share › Mod list makes, in all three formats&#60;/li&#62;
+        &#60;li&#62;Share › Mod list names a mod once when several parts of one download share its name and version&#60;/li&#62;
+        &#60;li&#62;Edit profile no longer scrolls sideways, and a long game list no longer widens the page&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Downloads and updates&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;A second Install waits for the running download instead of failing&#60;/li&#62;
+        &#60;li&#62;Changing mods no longer puts off the update check&#60;/li&#62;
+        &#60;li&#62;A crafted archive or image can no longer make Mortar run out of memory&#60;/li&#62;
+        &#60;li&#62;Review updates lists an update from another site that Mortar cannot download itself, instead of counting it and showing nothing&#60;/li&#62;
+        &#60;li&#62;A CurseForge Install link for a mod whose author only allows downloads from its page is refused by name with what to do, instead of failing in the queue&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Closing the window quits when Mortar is not kept in the tray, and the tray&#38;#39;s Quit works with the window closed&#60;/li&#62;
+        &#60;li&#62;Tooltips, the reasons a control is off and an update&#38;#39;s requirement changes are reachable by keyboard, and the sidebar is one tab stop walked with the arrow keys&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
+  <entry>
+    <title>Mortar 0.3.0</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.0</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.0" />
+    <updated>2026-10-07T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Lethal Company and Valheim: Mortar finds them, installs BepInEx, and installs mods with all their dependencies. Valheim runs natively on Linux with no Proton needed&#60;/li&#62;
+        &#60;li&#62;Thunderstore is a mod source for Lethal Company and Valheim, and CurseForge is a mod source for Stardew Valley&#60;/li&#62;
+        &#60;li&#62;Browse searches every source at once, shows one card per mod, and lets you pick the source by its logo; an empty search lists each source&#38;#39;s top mods&#60;/li&#62;
+        &#60;li&#62;A details panel for every mod: description, versions, dependencies and changelog, with filters by category and sort&#60;/li&#62;
+        &#60;li&#62;Load order and Performance tabs for Lethal Company and Valheim: the order plugins load, how long each takes at startup, and frame times and each plugin&#38;#39;s cost while you play&#60;/li&#62;
+        &#60;li&#62;While the game runs, each mod shows whether it actually loaded, and Mortar records the game version you played&#60;/li&#62;
+        &#60;li&#62;Skip the intro is a per-game setting&#60;/li&#62;
+        &#60;li&#62;Problems catches much more before you press Play: missing or incompatible plugins, dependency loops, two mods shipping the same plugin, deprecated packages with their replacement, and mods that change the same game code&#60;/li&#62;
+        &#60;li&#62;Crash help names the likely cause of a crash, can find the mod behind it by testing halves of your list, and shares the log with one click&#60;/li&#62;
+        &#60;li&#62;Import profiles from r2modman, Gale, Vortex and Mod Organizer 2, and share as an r2modman code or a Thunderstore modpack&#60;/li&#62;
+        &#60;li&#62;Back up a whole profile to one file, including its saves and mods no site can download again, and restore it as a new profile&#60;/li&#62;
+        &#60;li&#62;Pair two computers with a code to send profiles over your local network, or keep them in step through a sync folder&#60;/li&#62;
+        &#60;li&#62;One Updates list across all sources, with Update all, a restore point and Undo all&#60;/li&#62;
+        &#60;li&#62;A config editor for mods&#38;#39; settings files and their in-game settings menus&#60;/li&#62;
+        &#60;li&#62;Steam Deck: play with the gamepad, larger touch targets, and start games in Game Mode&#60;/li&#62;
+        &#60;li&#62;Mortar finds games installed in Bottles and launches them through it&#60;/li&#62;
+        &#60;li&#62;The browser extension is on the Chrome Web Store for Chrome, Edge and other Chromium browsers&#60;/li&#62;
+        &#60;li&#62;Settings has Accounts and Source health pages, a per-game source order, and a search that understands common words&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;ul&#62;
+        &#60;li&#62;The mod list, details panel, profile checks and startup are much faster&#60;/li&#62;
+        &#60;li&#62;Downloads are checked against the site&#38;#39;s hash, and a damaged one is dropped so Retry fetches it again&#60;/li&#62;
+        &#60;li&#62;Saves are backed up before every update&#60;/li&#62;
+        &#60;li&#62;Only real crashes are reported as crashes, and Stop asks the game to close before ending it&#60;/li&#62;
+        &#60;li&#62;SMAPI no longer refuses to start after an earlier crash&#60;/li&#62;
+        &#60;li&#62;Errors explain what went wrong instead of saying &#38;#34;Something went wrong&#38;#34;&#60;/li&#62;
+        &#60;li&#62;Add to Steam updates its shortcut instead of adding a second one&#60;/li&#62;
+        &#60;li&#62;A damaged mod archive fails that one install instead of closing Mortar&#60;/li&#62;
+        &#60;li&#62;An update never replaces an unrelated mod that came from the same page&#60;/li&#62;
+        &#60;li&#62;Undo covers config edits and keeps a mod&#38;#39;s settings when you roll it back&#60;/li&#62;
+        &#60;li&#62;Menus and tooltips are solid, lists no longer flash on first draw, and keyboard shortcuts no longer take over Enter, Space and the arrow keys&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
+</feed>

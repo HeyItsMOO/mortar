@@ -14,7 +14,7 @@ const OG_IMAGE = {
 export interface Page {
   path: string
   root: string
-  current?: 'download' | 'extension' | 'guide'
+  current?: 'download' | 'extension' | 'guide' | 'games'
   faq?: boolean
   footer: { downloads?: boolean; agpl?: boolean; source?: string }
 }
@@ -47,6 +47,7 @@ export function nav(p: Page): string {
         </a>
         <div class="nav-links">
           ${link(`${home}#features`, 'Features', true)}
+          ${link('/games/', 'Games', true, 'games')}
           ${link('/guide/', 'Guide', true, 'guide')}
           ${link('/extension/', 'Extension', true, 'extension')}
           ${p.faq ? `${link(`${home}#faq`, 'FAQ', true)}\n          ` : ''}${link('/download/', 'Download', false, 'download')}
@@ -88,6 +89,7 @@ export function seo(m: {
   ownTitle?: boolean
   ownDescription?: boolean
   jsonLd?: object
+  feed?: boolean
 }): string {
   const meta = (property: string, content: string) =>
     `<meta property="${property}" content="${escapeHTML(content)}" />`
@@ -105,6 +107,11 @@ export function seo(m: {
     meta('og:image:height', '630'),
     meta('og:image:alt', OG_IMAGE.alt),
     '<meta name="twitter:card" content="summary_large_image" />',
+    ...(m.feed
+      ? [
+          `<link rel="alternate" type="application/atom+xml" title="Mortar releases" href="${SITE}/changelog/feed.xml" />`,
+        ]
+      : []),
     ...(m.jsonLd
       ? [`<script type="application/ld+json">${JSON.stringify(m.jsonLd)}</script>`]
       : []),
@@ -119,6 +126,9 @@ export function page(p: {
   body: string
   current?: Page['current']
   index?: boolean
+  jsonLd?: object
+  feed?: boolean
+  script?: string
 }): string {
   const frame: Page = {
     path: p.path,
@@ -137,7 +147,7 @@ export function page(p: {
     <meta name="color-scheme" content="dark" />${p.index === false ? '\n    <meta name="robots" content="noindex" />' : ''}
     <title>${escapeHTML(p.title)}</title>
     <meta name="description" content="${escapeHTML(p.description)}" />
-    ${seo({ url: urlOf(p.path), title: p.title, description: p.description })}
+    ${seo({ url: urlOf(p.path), title: p.title, description: p.description, ...(p.jsonLd ? { jsonLd: p.jsonLd } : {}), ...(p.feed ? { feed: true } : {}) })}
     <link rel="icon" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/img/icon-192.png" />
     <link rel="stylesheet" href="/base.css" />
@@ -151,7 +161,7 @@ export function page(p: {
 ${p.body}
     </main>
 
-    ${footer(frame)}
+    ${footer(frame)}${p.script ? `\n    <script src="${p.script}" defer></script>` : ''}
   </body>
 </html>
 `

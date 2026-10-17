@@ -5,9 +5,10 @@
 // Either way it fails when a picture under site/ is linked from no page, stylesheet or script, so none ships unused.
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname } from 'node:path'
-import { changelogPage } from './site/changelog.ts'
+import { refreshSteamArt, steamArt } from './site/art.ts'
+import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
-import { gameList, gamePage, playableGames, sharePage } from './site/games.ts'
+import { gameList, gamePage, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
 import { guidePage } from './site/guide.ts'
 
 const block = (name: string) =>
@@ -41,7 +42,7 @@ function unescapeHTML(raw: string): string {
     .replaceAll('&amp;', '&')
 }
 
-function jsonLd(): object {
+function appLd(): object {
   const version = /^\s+version: "([^"]+)"/m.exec(readFileSync('build/config.yml', 'utf8'))?.[1]
   return {
     '@context': 'https://schema.org',
@@ -55,6 +56,22 @@ function jsonLd(): object {
     license: 'https://www.gnu.org/licenses/agpl-3.0.html',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   }
+}
+
+/** The landing page's FAQ as FAQPage data: each <details> summary and its answer's text. */
+function faqLd(html: string): object {
+  const text = (raw: string) =>
+    unescapeHTML(raw.replace(/<[^>]+>/g, ''))
+      .replace(/\s+/g, ' ')
+      .trim()
+  const mainEntity = [
+    ...html.matchAll(/<details[^>]*>\s*<summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g),
+  ].map(([, q, a]) => ({
+    '@type': 'Question',
+    name: text(q ?? ''),
+    acceptedAnswer: { '@type': 'Answer', text: text(a ?? '') },
+  }))
+  return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity }
 }
 
 /** A hand-written page with its nav, footer, metadata and (on the landing page) game list filled in. */
@@ -72,6 +89,11 @@ function handPage(p: Page, playable: ReturnType<typeof playableGames>): string {
   }
   let after = fill(before, 'nav', chrome(nav(p)))
   after = fill(after, 'foot', chrome(footer(p)))
+  const landing = p.path === 'site/index.html'
+  if (landing) {
+    after = fill(after, 'games', gameList(playable))
+    after = fill(after, 'game-count', String(playable.length))
+  }
   after = fill(
     after,
     'seo',
@@ -82,14 +104,10 @@ function handPage(p: Page, playable: ReturnType<typeof playableGames>): string {
         description: unescapeHTML(description),
         ownTitle: /property="og:title"/.test(outside),
         ownDescription: /property="og:description"/.test(outside),
-        ...(p.path === 'site/index.html' ? { jsonLd: jsonLd() } : {}),
+        ...(landing ? { jsonLd: [appLd(), faqLd(after)], feed: true } : {}),
       }),
     ),
   )
-  if (p.path === 'site/index.html') {
-    after = fill(after, 'games', gameList(playable))
-    after = fill(after, 'game-count', String(playable.length))
-  }
   return after
 }
 
@@ -109,19 +127,38 @@ function notFoundPage(): string {
 }
 
 const games = playableGames()
+if (process.argv.includes('--refresh-art')) {
+  await refreshSteamArt(
+    games.flatMap((g) => (g.stores?.steam as { appId?: string } | undefined)?.appId ?? []),
+  )
+}
+const art = steamArt()
+const missingArt = games.filter((g) => {
+  const appId = (g.stores?.steam as { appId?: string } | undefined)?.appId
+  return appId !== undefined && art[appId] === undefined
+})
+if (missingArt.length > 0) {
+  console.error(
+    `site: no Steam art address for ${missingArt.map((g) => g.id).join(', ')}: run bun scripts/site.ts --refresh-art`,
+  )
+  process.exit(1)
+}
 const files = new Map<string, string>()
+files.set('site/games/index.html', gamesIndexPage(games, art))
 for (const g of games) {
-  files.set(`site/${g.id}/index.html`, gamePage(g))
+  files.set(`site/${g.id}/index.html`, gamePage(g, art))
   files.set(`site/${g.id}/p/index.html`, sharePage(g))
 }
 for (const p of PAGES) {
   files.set(p.path, handPage(p, games))
 }
 files.set('site/changelog/index.html', changelogPage())
+files.set('site/changelog/feed.xml', changelogFeed())
 files.set('site/guide/index.html', guidePage())
 files.set('site/404.html', notFoundPage())
 const listedPages = [
   ...PAGES.map((p) => p.path),
+  'site/games/index.html',
   'site/guide/index.html',
   'site/changelog/index.html',
   ...games.map((g) => `site/${g.id}/index.html`),

@@ -1,7 +1,7 @@
 // /changelog/: every release's player-facing notes (build/release/notes/v*.md), newest first, dated from the
 // AppStream metainfo's release list so no git history is needed to build it.
 import { readdirSync, readFileSync } from 'node:fs'
-import { escapeHTML, page, REPO } from './chrome.ts'
+import { escapeHTML, page, REPO, SITE } from './chrome.ts'
 
 const NOTES = 'build/release/notes'
 const METAINFO = 'build/linux/tech.rethunk.Mortar.metainfo.xml'
@@ -46,30 +46,69 @@ function release(md: string): string {
   return out.map((l) => `        ${l}`).join('\n')
 }
 
-export function changelogPage(): string {
+interface Release {
+  version: string
+  date: string
+  html: string
+}
+
+/** Every release with written notes, newest first, dated from the metainfo. */
+function releases(): Release[] {
   const metainfo = readFileSync(METAINFO, 'utf8')
-  const versions = readdirSync(NOTES)
+  return readdirSync(NOTES)
     .map((f) => /^v(\d+\.\d+\.\d+)\.md$/.exec(f)?.[1])
     .filter((v): v is string => v !== undefined)
     .sort(byVersionDesc)
-  const sections = versions.map((v) => {
-    const date = new RegExp(`<release version="${v.replaceAll('.', '\\.')}" date="([^"]+)"`).exec(
-      metainfo,
-    )?.[1]
-    if (!date) {
-      throw new Error(`site: ${METAINFO} has no dated <release version="${v}">`)
-    }
-    return `      <section id="v${v}">
-        <h2><a href="${REPO}/releases/tag/v${v}">${v}</a> <time datetime="${date}">${date}</time></h2>
-${release(readFileSync(`${NOTES}/v${v}.md`, 'utf8'))}
-      </section>`
-  })
+    .map((version) => {
+      const date = new RegExp(
+        `<release version="${version.replaceAll('.', '\\.')}" date="([^"]+)"`,
+      ).exec(metainfo)?.[1]
+      if (!date) {
+        throw new Error(`site: ${METAINFO} has no dated <release version="${version}">`)
+      }
+      return { version, date, html: release(readFileSync(`${NOTES}/v${version}.md`, 'utf8')) }
+    })
+}
+
+export function changelogPage(): string {
+  const sections = releases().map(
+    (r) => `      <section id="v${r.version}">
+        <h2><a href="${REPO}/releases/tag/v${r.version}">${r.version}</a> <time datetime="${r.date}">${r.date}</time></h2>
+${r.html}
+      </section>`,
+  )
   return page({
     path: 'site/changelog/index.html',
     title: 'Mortar changelog',
     description: "What's new in each Mortar release: new games, features and fixes.",
+    feed: true,
     body: `      <h1 class="ext-title">Changelog</h1>
-      <p class="lede">What changed in each release, newest first. The app shows the same notes in What's new after an update.</p>
+      <p class="lede">What changed in each release, newest first. The app shows the same notes in What's new after an update. <a href="/changelog/feed.xml">Follow releases in a feed reader</a>.</p>
 ${sections.join('\n')}`,
   })
+}
+
+/** An Atom feed of the same releases, one entry each. */
+export function changelogFeed(): string {
+  const all = releases()
+  const entries = all.map(
+    (r) => `  <entry>
+    <title>Mortar ${r.version}</title>
+    <id>${SITE}/changelog/#v${r.version}</id>
+    <link href="${SITE}/changelog/#v${r.version}" />
+    <updated>${r.date}T00:00:00Z</updated>
+    <content type="html">${escapeHTML(r.html)}</content>
+  </entry>`,
+  )
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Mortar releases</title>
+  <id>${SITE}/changelog/</id>
+  <link href="${SITE}/changelog/" />
+  <link rel="self" href="${SITE}/changelog/feed.xml" />
+  <updated>${all[0]?.date ?? '1970-01-01'}T00:00:00Z</updated>
+  <author><name>Rethunk.Tech</name></author>
+${entries.join('\n')}
+</feed>
+`
 }
