@@ -106,16 +106,25 @@ function gameCard(g: Game, art: Record<string, SteamArt>, data = ''): string {
 const MORE_GAMES = 4
 
 /** Up to four other games on the same loader, the ones after this game alphabetically, wrapping around. */
-function neighbours(g: Game, games: Game[]): Game[] {
+/** The games after g in name order that share its loader or, for a loader only g runs, its first mod site. */
+function neighbours(g: Game, games: Game[]): { title: string; games: Game[] } {
   const { loader } = facts(g)
-  const same = games
-    .filter((o) => facts(o).loader === loader)
-    .sort((a, b) => a.name.localeCompare(b.name))
+  let same = games.filter((o) => facts(o).loader === loader)
+  let title = loader ? `More games on ${escapeHTML(loader)}` : 'More games without a mod loader'
+  const site = g.sources?.[0]?.id
+  if (same.length < 2 && site) {
+    same = games.filter((o) => o.sources?.some((s) => s.id === site))
+    title = `More games with mods from ${escapeHTML(SOURCE_NAMES[site] ?? site)}`
+  }
+  same.sort((a, b) => a.name.localeCompare(b.name))
   const at = same.findIndex((o) => o.id === g.id)
   const count = Math.min(MORE_GAMES, same.length - 1)
-  return Array.from({ length: count }, (_, i) => same[(at + 1 + i) % same.length]).filter(
-    (o): o is Game => o !== undefined,
-  )
+  return {
+    title,
+    games: Array.from({ length: count }, (_, i) => same[(at + 1 + i) % same.length]).filter(
+      (o): o is Game => o !== undefined,
+    ),
+  }
 }
 
 /** The full-bleed header of a game's pages: its Steam library art behind the breadcrumbs and the given content. */
@@ -177,13 +186,13 @@ export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]):
         <li>Open Browse, add the mods you want, and press Play. Each profile keeps its own mods and settings.</li>
       </ol>
       <h2>Share a profile</h2>
-      <p>A ${name} profile shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click; the profile never leaves their browser.</p>${
-        more.length > 0
+      <p>A profile for ${name} shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click; the profile never leaves their browser.</p>${
+        more.games.length > 0
           ? `
       <div data-pagefind-ignore>
-      <h2>${f.loader ? `More games on ${escapeHTML(f.loader)}` : 'More games without a mod loader'}</h2>
+      <h2>${more.title}</h2>
       <ul class="game-grid">
-${more.map((o) => gameCard(o, art)).join('\n')}
+${more.games.map((o) => gameCard(o, art)).join('\n')}
       </ul>
       <p><a href="/games/">All ${games.length} supported games</a></p>
       </div>`
