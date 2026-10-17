@@ -128,6 +128,7 @@ function NexusModsSignedIn({
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: space.pad }}>
       <Searchable terms={`${t`Nexus account`} Nexus ${t`Sign out`} ${name}`}>
         <Alert
+          variant="compact"
           severity="success"
           icon={<Check size={16} aria-hidden={true} />}
           action={
@@ -146,7 +147,6 @@ function NexusModsSignedIn({
               {t`Sign out`}
             </Button>
           }
-          sx={{ alignItems: 'center', fontSize: 14 }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span>{t`Signed in as ${name}`}</span>
@@ -282,7 +282,7 @@ export function NexusSignIn() {
         </SettingRow>
       ) : null}
       {error ? (
-        <Alert severity="error" title={error.details}>
+        <Alert variant="compact" severity="error" title={error.details}>
           {error.message}
         </Alert>
       ) : null}

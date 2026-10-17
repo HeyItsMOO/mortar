@@ -68,6 +68,7 @@ The tab header is `--m-control` plus twice `--m-gap` tall (52px comfortable, 44p
 - Text: primary `rgba(255,255,255,0.90)`, secondary `rgba(225,225,230,0.95)`. Links are secondary text with a dotted underline.
 - Status colours from Concrete: info `#2B8BDA`, success `#0CDF64`, warning `#F3B416`, error `#C70A0A` on dark. Light darkens those until they meet 4.5:1 on paper. The primary colour is the user's choice, in Settings › Appearance: Sand `#D6B17A`, Moss `#93B86A`, Copper `#D98C5F`, Sky `#79AEDC`, Rose `#E08A9B`, Lavender `#A893DE`, Teal `#5DB8AE` or Slate `#94A7BC` (`frontend/src/theme/accents.ts`), applied at once everywhere the primary appears and never darkened. It is the same for every game; game colour appears only in hero art.
 - Scrollbars are themed: 0.5em wide, in the primary colour at alpha 0.08 for the track, 0.45 for the thumb and 0.7 on hover.
+- **One-line status alerts** (a callout above a list, a read error with Retry, a settings status line) are the theme's compact Alert (`<Alert variant="compact" severity=…>`): 38px tall like the update bar, 14px text, small action buttons, the severity's callout fill and line. Size and colour come from the variant, never from a component's own `sx`. A window-wide banner, an alert with a title, and notes inside a dialog keep the standard Alert.
 
 ## Type
 

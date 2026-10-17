@@ -32,13 +32,13 @@ function MortarUpdate() {
   if (!info) {
     return failed ? (
       <Alert
+        variant="compact"
         severity="error"
         action={
           <Button color="inherit" size="small" onClick={read}>
             {t`Retry`}
           </Button>
         }
-        sx={{ fontSize: 14 }}
       >
         {t`Could not read this Mortar build's version: ${failed}`}
       </Alert>
@@ -46,14 +46,14 @@ function MortarUpdate() {
   }
   if (info.off === 'packaged') {
     return (
-      <Alert severity="info" sx={{ fontSize: 14 }}>
+      <Alert variant="compact" severity="info">
         {t`Updated by your package manager`}
       </Alert>
     )
   }
   if (info.off) {
     return (
-      <Alert severity="info" sx={{ fontSize: 14 }}>
+      <Alert variant="compact" severity="info">
         {t`This is a development build of Mortar ${info.version}, so it does not check for updates.`}
       </Alert>
     )

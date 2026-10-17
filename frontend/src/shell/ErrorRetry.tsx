@@ -7,6 +7,7 @@ export function ErrorRetry({ error, onRetry }: { error: InlineError; onRetry: ()
   const { t } = useLingui()
   return (
     <Alert
+      variant="compact"
       severity="error"
       title={error.details}
       action={

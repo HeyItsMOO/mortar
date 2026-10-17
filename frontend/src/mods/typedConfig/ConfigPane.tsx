@@ -390,6 +390,7 @@ export function ConfigPane({
       />
       {loadError ? (
         <Alert
+          variant="compact"
           severity="error"
           sx={{ mx: space.gutter }}
           action={

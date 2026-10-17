@@ -89,7 +89,7 @@ export function ItchAccount() {
               </Button>
             </Box>
             {error ? (
-              <Alert severity="error" title={error.details}>
+              <Alert variant="compact" severity="error" title={error.details}>
                 {error.message}
               </Alert>
             ) : null}

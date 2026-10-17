@@ -18,10 +18,11 @@ export function LockedNote() {
   return (
     <>
       <Alert
+        variant="compact"
         severity="info"
         icon={<Lock size={18} />}
         // The toolbar above already ends in its own padding.
-        sx={{ mx: space.gutter, mt: 0, mb: 1, fontSize: 14, alignItems: 'center' }}
+        sx={{ mx: space.gutter, mt: 0, mb: 1 }}
         action={
           <Button color="inherit" size="small" onClick={() => setAsking(true)}>
             {t`Stop game`}
