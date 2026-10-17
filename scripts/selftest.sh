@@ -94,7 +94,7 @@ build() {
     if [ ! -d "$REPO/frontend/bindings" ]; then
       (cd "$REPO" && wails3 generate bindings -clean=true -ts -i >"$ROOT/bindings.log" 2>&1)
     fi
-    (cd "$REPO" && MORTAR_KEEP_NAMES=1 bun run --cwd frontend build >"$ROOT/frontend-build.log" 2>&1)
+    (cd "$REPO" && bun run --cwd frontend build >"$ROOT/frontend-build.log" 2>&1)
     (cd "$REPO" && go build -tags server -o "$ROOT/mortar-server.new" .)
     # Filed under the key taken before the build: the tree can change while it runs (another worker's edit), and a
     # key taken after would file an older binary under the newer tree.

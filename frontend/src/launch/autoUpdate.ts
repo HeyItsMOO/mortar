@@ -19,6 +19,7 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/queue/service.ts'
 import { i18n } from '../i18n/index.ts'
 import { installableUpdate, visibleUpdates } from '../mods/lookup.ts'
+import { useMods } from '../mods/store.ts'
 import { updateWant, withOptionalLoaded } from '../mods/updateReview/wants.ts'
 import { foldedOverrides, resolveOverride } from '../profiles/overrideValue.ts'
 import { useProfiles } from '../profiles/store.ts'
@@ -261,7 +262,6 @@ async function rollbackAutoUpdate(point: AutoUpdateRestorePoint): Promise<void> 
       useProfiles.getState().replace(next)
     }
   }
-  const { useMods } = await import('../mods/store.ts')
   await useMods.getState().load()
 }
 

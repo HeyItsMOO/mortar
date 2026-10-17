@@ -26,6 +26,7 @@ Screenshots for the site and the AppStream metainfo are taken at the default win
 
 ## Decided
 
+- The frontend ships as one bundle read from disk: no code splitting, `lazy()` routes or chunk-size work, since splitting only delays pages and size costs a local app nothing (NOMAD 2026-10-17); component names are kept.
 - Wails v3, pinned in `go.mod` (the Rethunk-AI fork) and upgraded on purpose. Pin: [docs/architecture.md](docs/architecture.md#stack). React, TypeScript and MUI on Vite; never Next.js.
 - Solid window with a wallpaper backdrop under a tint, frameless with a themed title bar, and an MUI dark theme over it. Surfaces: [docs/gui-design.md](docs/gui-design.md#surfaces-and-colour). Translucent window: [docs/design.md](docs/design.md#later).
 - Games, stores, runtimes, sources, metadata providers and hosts are registries joined by the signed catalog; no code pairs one with another, and a game normally needs no code. How: [docs/architecture.md](docs/architecture.md#games-and-the-catalog), adding one: [HUMANS.md](HUMANS.md#adding-a-game). Loaders are drivers in `internal/loader` (SMAPI: `internal/loader/smapi`); `internal/game`'s `Game` holds only identity and the install folder.

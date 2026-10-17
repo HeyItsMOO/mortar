@@ -8,8 +8,8 @@ import { sandboxPort, selftest } from './sandbox.ts'
 // measures, per case, what React did (commits, components mounted, components re-rendered and which), what the browser
 // did (DOM mutations, layouts, style recalcs, script time, long tasks), what the page holds (JS heap, DOM nodes, event
 // listeners) and how many backend calls it made: once over the action itself, and once while the screen sits idle.
-// The build measured is the production bundle the sandbox serves (built with MORTAR_KEEP_NAMES=1 so components keep
-// their names), not the dev server, whose StrictMode doubles effects.
+// The build measured is the production bundle the sandbox serves (it keeps component names), not the dev server,
+// whose StrictMode doubles effects.
 //
 //   MORTAR_RENDER_DATA=<data folder>   measure a copy of that data (default: the maintainer's own, selftest --copy-data)
 //   MORTAR_RENDER_SEEDED=1             the small seeded sandbox instead (a smoke run)
@@ -245,9 +245,26 @@ async function typeInto(page: Page, label: RegExp | string, text: string) {
   await field.pressSequentially(text, { delay: TYPE_DELAY_MS })
 }
 
+/** Opens a profile section from Home, so the figure is that section's own and not what the last case left open. */
+const open = (name: string): Case => ({
+  name: name.toLowerCase().replace(/ /g, '-'),
+  setup: (p) => tab(p, name === 'Home' ? 'Saves' : 'Home'),
+  run: (p) => tab(p, name),
+})
+
+/** Opens the Mods tab in a view, from Home. */
+const openMods = (which: 'List view' | 'Grid view'): Case => ({
+  name: which === 'List view' ? 'mods-list' : 'mods-grid',
+  setup: async (p) => {
+    await view(p, which)
+    await tab(p, 'Home')
+  },
+  run: (p) => tab(p, 'Mods'),
+})
+
 const cases: Case[] = [
-  { name: 'home', run: (p) => tab(p, 'Home') },
-  { name: 'mods-list', setup: (p) => tab(p, 'Home'), run: (p) => view(p, 'List view') },
+  open('Home'),
+  openMods('List view'),
   { name: 'mods-list-select', setup: (p) => view(p, 'List view'), run: (p) => row(p, 6).click() },
   {
     name: 'mods-list-switch',
@@ -272,7 +289,12 @@ const cases: Case[] = [
     setup: (p) => view(p, 'List view'),
     run: (p) => typeInto(p, /^Filter/, 'farm'),
   },
-  { name: 'mods-grid', setup: (p) => view(p, 'List view'), run: (p) => view(p, 'Grid view') },
+  {
+    name: 'mods-view-switch',
+    setup: (p) => view(p, 'List view'),
+    run: (p) => view(p, 'Grid view'),
+  },
+  openMods('Grid view'),
   { name: 'mods-grid-select', setup: (p) => view(p, 'Grid view'), run: (p) => row(p, 6).click() },
   {
     name: 'mods-grid-switch',
@@ -282,25 +304,25 @@ const cases: Case[] = [
     },
     run: (p) => row(p, 10).click(),
   },
-  { name: 'saves', run: (p) => tab(p, 'Saves') },
-  { name: 'config', run: (p) => tab(p, 'Config') },
+  open('Saves'),
+  open('Config'),
   {
     name: 'config-select',
     setup: (p) => tab(p, 'Config'),
     run: (p) =>
       p.getByRole('group', { name: 'Mods with settings' }).getByRole('button').nth(4).click(),
   },
-  { name: 'screenshots', run: (p) => tab(p, 'Screenshots') },
-  { name: 'browse', run: (p) => tab(p, 'Browse') },
+  open('Screenshots'),
+  open('Browse'),
   {
     name: 'browse-search',
     setup: (p) => tab(p, 'Browse'),
     run: (p) => typeInto(p, /^Search/, 'farm'),
   },
-  { name: 'problems', run: (p) => tab(p, 'Problems') },
-  { name: 'load-order', run: (p) => tab(p, 'Load order') },
-  { name: 'performance', run: (p) => tab(p, 'Performance') },
-  { name: 'console', run: (p) => tab(p, 'Console') },
+  open('Problems'),
+  open('Load order'),
+  open('Performance'),
+  open('Console'),
   { name: 'settings', setup: toWorkspace, run: openSettings },
   { name: 'settings-search', setup: openSettings, run: (p) => typeInto(p, /^Search/, 'theme') },
   {

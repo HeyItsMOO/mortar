@@ -1,49 +1,26 @@
-import { useLingui } from '@lingui/react/macro'
 import { Box } from '@mui/material'
-import { lazy, Suspense } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { BrowseHost } from '../browse/BrowseHost.tsx'
+import { ConsoleTab } from '../console/ConsoleTab.tsx'
+import { PerformanceTab } from '../console/PerformanceTab.tsx'
 import { DuplicateDialog } from '../mods/DuplicateDialog.tsx'
+import { LoadOrderTab } from '../mods/LoadOrderTab.tsx'
 import { ModsTab } from '../mods/ModsTab.tsx'
 import { ProblemsTab } from '../mods/ProblemsTab.tsx'
 import { RemoveDialog } from '../mods/parts.tsx'
+import { ConfigTab } from '../mods/typedConfig/ConfigTab.tsx'
 import { useConfigListLoaded } from '../mods/typedConfig/configList.ts'
+import { SavesTab } from '../saves/SavesTab.tsx'
+import { ScreenshotsTab } from '../screenshots/ScreenshotsTab.tsx'
 import { usePasteLink } from '../share/usePasteLink.ts'
 import { ErrorBoundary } from '../shell/ErrorBoundary.tsx'
-import { SkeletonRows } from '../shell/SkeletonRows.tsx'
-import { space } from '../theme/density.ts'
 import { Home } from './Home.tsx'
 import { TabHeader } from './TabHeader.tsx'
 import { PANEL_ID, tabDomId, useTab } from './tab.ts'
 
 // Tabs other than Mods, Problems and Browse load on first open, which keeps them out of the startup bundle.
-const ConsoleTab = lazy(() =>
-  import('../console/ConsoleTab.tsx').then((m) => ({ default: m.ConsoleTab })),
-)
-const LoadOrderTab = lazy(() =>
-  import('../mods/LoadOrderTab.tsx').then((m) => ({ default: m.LoadOrderTab })),
-)
-const ScreenshotsTab = lazy(() =>
-  import('../screenshots/ScreenshotsTab.tsx').then((m) => ({ default: m.ScreenshotsTab })),
-)
-const ConfigTab = lazy(() =>
-  import('../mods/typedConfig/ConfigTab.tsx').then((m) => ({ default: m.ConfigTab })),
-)
-const SavesTab = lazy(() => import('../saves/SavesTab.tsx').then((m) => ({ default: m.SavesTab })))
-const PerformanceTab = lazy(() =>
-  import('../console/PerformanceTab.tsx').then((m) => ({ default: m.PerformanceTab })),
-)
 
 // Shown while a tab's code chunk loads, before the tab can draw its own skeleton.
-function TabLoading() {
-  const { t } = useLingui()
-  return (
-    <Box sx={{ p: space.pad }}>
-      <SkeletonRows label={t`Loading…`} count={8} height={36} />
-    </Box>
-  )
-}
-
 export function ProfileWorkspace({
   profile,
   game,
@@ -68,16 +45,14 @@ export function ProfileWorkspace({
       ) : null}
       {tab === 'home' ? null : <TabHeader profile={profile} />}
       <ErrorBoundary resetKey={`${tab}-${profile.id}`}>
-        <Suspense fallback={<TabLoading />}>
-          {tab === 'console' ? <ConsoleTab game={game} /> : null}
-          {tab === 'performance' ? <PerformanceTab game={game} /> : null}
-          {tab === 'config' ? <ConfigTab profile={profile} game={game} /> : null}
-          {tab === 'saves' ? <SavesTab profile={profile} game={game} /> : null}
-          {tab === 'screenshots' ? <ScreenshotsTab game={game} /> : null}
-          {tab === 'load-order' ? (
-            <LoadOrderTab key={`load-order-${profile.id}`} profile={profile} game={game} />
-          ) : null}
-        </Suspense>
+        {tab === 'console' ? <ConsoleTab game={game} /> : null}
+        {tab === 'performance' ? <PerformanceTab game={game} /> : null}
+        {tab === 'config' ? <ConfigTab profile={profile} game={game} /> : null}
+        {tab === 'saves' ? <SavesTab profile={profile} game={game} /> : null}
+        {tab === 'screenshots' ? <ScreenshotsTab game={game} /> : null}
+        {tab === 'load-order' ? (
+          <LoadOrderTab key={`load-order-${profile.id}`} profile={profile} game={game} />
+        ) : null}
         {tab === 'browse' ? (
           <BrowseHost key={`browse-${profile.id}`} game={game} profileID={profile.id} />
         ) : null}

@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { lingui } from '@lingui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import wails from '@wailsio/runtime/plugins/vite'
@@ -14,21 +13,10 @@ export default defineConfig({
     strictPort: true,
   },
   plugins: [react(), lingui({ macroTransform: true }), wails('./bindings')],
+  // A local app reads its bundle from disk: one file loads faster than chunks fetched as pages open, and its size
+  // costs nothing. Component names stay, so the render budget (e2e/render-budget.ts) and stacks name them.
   build: {
-    rolldownOptions: {
-      output: {
-        // Self-test sandboxes keep component names, so the render budget (e2e/render-budget.ts) can name them; the
-        // shipped bundle stays mangled, as names add 230 kB.
-        keepNames: process.env.MORTAR_KEEP_NAMES === '1',
-        // Libraries change less often than the app, and one bundle of everything passed Vite's 500 kB chunk warning.
-        codeSplitting: {
-          groups: [
-            { name: 'mui', test: /node_modules[\\/]@(mui|emotion|popperjs)[\\/]/ },
-            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
-            { name: 'vendor', test: /node_modules[\\/]/ },
-          ],
-        },
-      },
-    },
+    chunkSizeWarningLimit: 10_000,
+    rolldownOptions: { output: { keepNames: true } },
   },
 })
