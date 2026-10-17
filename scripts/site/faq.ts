@@ -121,8 +121,20 @@ interface Counts {
   thunderstore: number
 }
 
+/** The Games row's stronger side follows Mortar's live count against the first number in the other manager's cell.
+ * An "Over N" figure is not exact, so Mortar at or above it reads as even. */
+function gamesWinner(md: string, games: number): string {
+  return md.replace(/^\| Games \| ([^|]*)\| ([^|]*)\|$/m, (row, ours: string, theirs: string) => {
+    const n = Number(/\d+/.exec(theirs)?.[0] ?? Number.NaN)
+    if (Number.isNaN(n) || (/^over /i.test(theirs) && games >= n) || games === n) {
+      return row
+    }
+    return games > n ? `| Games | !win ${ours}| ${theirs}|` : `| Games | ${ours}| !win ${theirs}|`
+  })
+}
+
 export function whyPage(w: Why, counts: Counts): string {
-  const md = w.md
+  const md = gamesWinner(w.md, counts.games)
     .replaceAll('GAME_COUNT', String(counts.games))
     .replaceAll('THUNDERSTORE_COUNT', String(counts.thunderstore))
   return page({

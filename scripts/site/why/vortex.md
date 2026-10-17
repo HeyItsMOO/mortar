@@ -1,11 +1,11 @@
 # Why Mortar? (vs Vortex)
 
-Vortex is the Nexus Mods manager, with the widest game list here. Mortar works with Nexus Mods too, and reads Vortex profiles. Choose Mortar for native Linux and the Steam Deck, for mods from more than one site, or to skip the account.
+Vortex is Nexus Mods' own manager, with deep tooling for Bethesda games. Mortar works with Nexus Mods too, and reads Vortex profiles. Choose Mortar for native Linux and the Steam Deck, for mods from more than one site, or to skip the account.
 
 | | Mortar | Vortex |
 |---|---|---|
 | Platforms | !win Windows, Linux, Steam Deck | Windows ([v2.8.2 assets](https://github.com/Nexus-Mods/Vortex/releases/tag/v2.8.2)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
-| Games | GAME_COUNT | !win Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
+| Games | GAME_COUNT | Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :nexus: ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Account | !win None needed; Nexus sign-in only for Nexus downloads | Nexus login to download from Nexus |
 | Sharing | A link or a `.mortar` file; opens Nexus Collections and drafts one from a profile | Nexus Collections ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/mod-management/collections.md)) |
@@ -20,7 +20,7 @@ Vortex is the Nexus Mods manager, with the widest game list here. Mortar works w
 
 ## Where Vortex is stronger
 
-- Game breadth, and deep Bethesda tooling: LOOT sorting, plugin management, file conflict views and a choice of deployment methods ([README](https://github.com/Nexus-Mods/Vortex)).
+- Deep Bethesda tooling: LOOT sorting, plugin management, file conflict views and a choice of deployment methods ([README](https://github.com/Nexus-Mods/Vortex)).
 - First-party Nexus integration: Collections, endorsements and Premium download speeds in one app.
 
 ## Moving from Vortex
