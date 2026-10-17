@@ -60,19 +60,19 @@ function offlineReasonOf(states: State[], ids: string[], every = false): string 
 }
 
 // The reason a view that found nothing saved is empty, or '' when its sources are up.
+// Each selects its message, not the states: a source flipping re-renders only what now reads differently, not every
+// result card that asks.
 function useOfflineEmpty(ids: string[]): string {
-  const down = unreachable(
-    useOffline((s) => s.states),
-    ids,
-  )
+  return useOffline((s) => emptyMessageOf(s.states, ids))
+}
+
+function emptyMessageOf(states: State[], ids: string[]): string {
+  const down = unreachable(states, ids)
   return down.length === 0 ? '' : offlineEmptyMessage(down)
 }
 
 function useOfflineReason(ids: string[]): string {
-  return offlineReasonOf(
-    useOffline((s) => s.states),
-    ids,
-  )
+  return useOffline((s) => offlineReasonOf(s.states, ids))
 }
 
 // The sources an update check asks.
