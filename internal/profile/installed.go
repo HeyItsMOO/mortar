@@ -16,6 +16,7 @@ type Installed struct {
 	Source        Source
 	Enabled       bool
 	Pinned        bool
+	Implicit      bool
 	SkipVersion   string
 	SkipSources   []string
 	IgnoreUpdates bool
@@ -60,7 +61,7 @@ func (s *Store) Installed(game, id string) ([]Installed, error) {
 			}
 			out = append(out, Installed{
 				Key: e.Key, Folder: folder, Source: e.Source, Enabled: enabled,
-				Pinned: e.Pinned, SkipVersion: e.SkipVersion, SkipSources: e.SkipSources, IgnoreUpdates: e.IgnoreUpdates,
+				Pinned: e.Pinned, Implicit: e.Implicit, SkipVersion: e.SkipVersion, SkipSources: e.SkipSources, IgnoreUpdates: e.IgnoreUpdates,
 				UpdateChannel: e.UpdateChannel,
 				LoadAfter:     m.LoadAfter, Manifest: mf,
 			})
@@ -88,7 +89,7 @@ func (s *Store) packageInstalled(game string, e Entry) []Installed {
 		mf.Dependencies = needs
 		out = append(out, Installed{
 			Key: e.Key, Folder: dir, Source: e.Source, Enabled: e.Enabled(c.ID),
-			Pinned: e.Pinned, SkipVersion: e.SkipVersion, SkipSources: e.SkipSources, IgnoreUpdates: e.IgnoreUpdates,
+			Pinned: e.Pinned, Implicit: e.Implicit, SkipVersion: e.SkipVersion, SkipSources: e.SkipSources, IgnoreUpdates: e.IgnoreUpdates,
 			UpdateChannel: e.UpdateChannel, LoadAfter: c.LoadAfter,
 			Manifest: mf,
 		})

@@ -196,6 +196,9 @@ func fingerprint(env Environment, mods []framework.Mod, runID string) string {
 		if m.Enabled {
 			b.WriteString("|on")
 		}
+		if m.Implicit {
+			b.WriteString("|implicit")
+		}
 		if m.Folder != "" {
 			if info, err := os.Stat(filepath.Join(m.Folder, "content.json")); err == nil {
 				b.WriteString("|" + strconv.FormatInt(info.ModTime().UnixNano(), 10))
@@ -223,7 +226,7 @@ func (s *Service) installed(gameID, id string) ([]framework.Mod, error) {
 	for i, m := range installed {
 		mods[i] = framework.Mod{
 			Key: m.Key, SourceKind: m.Source.Kind, SourceVersion: m.Source.Version, SourceModID: m.Source.ModID, SourceCategory: m.Source.Category, SourceName: m.Source.Name, SourceRepo: m.Source.Repo, SourceDigest: m.Source.Digest, Enabled: m.Enabled, Folder: m.Folder,
-			Pinned: m.Pinned, SkipVersion: m.SkipVersion, SkipSources: m.SkipSources, IgnoreUpdates: m.IgnoreUpdates,
+			Pinned: m.Pinned, Implicit: m.Implicit, SkipVersion: m.SkipVersion, SkipSources: m.SkipSources, IgnoreUpdates: m.IgnoreUpdates,
 			UpdateChannel: m.UpdateChannel,
 			LoadAfter:     m.LoadAfter, Manifest: m.Manifest,
 		}

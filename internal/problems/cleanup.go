@@ -8,7 +8,12 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 )
 
-// cleanupHints lists framework mods only disabled mods need, with what the frameworks found unused.
+// orphanReason is why an implicit mod nothing switched on requires is offered for removal.
+const orphanReason = "Brought in for other mods, and none that is switched on needs it"
+
+// cleanupHints lists framework mods only disabled mods need, implicit mods nothing switched on needs (a content pack
+// is left to its framework's own check, since maps use tilesheet packs without naming them), and what the frameworks
+// found unused.
 func cleanupHints(mods []framework.Mod, found []framework.Cleanup) []framework.Cleanup {
 	enabledNeeds := map[string]bool{}
 	disabledDependents := map[string]bool{}
@@ -35,6 +40,14 @@ func cleanupHints(mods []framework.Mod, found []framework.Cleanup) []framework.C
 			continue
 		}
 		out = append(out, framework.Cleanup{Key: im.Key, ID: im.ModID(), Name: im.Name})
+	}
+	for _, im := range mods {
+		id := im.ModID().Fold()
+		if !im.Implicit || id == "" || im.ContentPackFor != "" || im.SourceKind == "smapi" || im.SourceKind == "mortar" ||
+			frameworkIDs[id] || enabledNeeds[id] || disabledDependents[id] {
+			continue
+		}
+		out = append(out, framework.Cleanup{Key: im.Key, ID: im.ModID(), Name: im.Name, Reason: orphanReason})
 	}
 	out = append(out, found...)
 	slices.SortFunc(out, func(a, b framework.Cleanup) int {

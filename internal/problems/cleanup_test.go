@@ -70,3 +70,21 @@ func TestCleanupHintsIgnoresOptionalDependents(t *testing.T) {
 		t.Fatalf("cleanupHints() = %#v, want none", got)
 	}
 }
+
+// An implicit mod nothing switched on needs is offered for removal; one a switched-on mod needs, an explicit one, and
+// an implicit content pack are not.
+func TestCleanupHintsFindsOrphanedImplicitMods(t *testing.T) {
+	lib := func(id string, implicit bool) framework.Mod {
+		m := framework.Mod{Key: id, Enabled: true, Implicit: implicit}
+		m.Name, m.UniqueID = id, id
+		return m
+	}
+	user := lib("Me.User", false)
+	user.Dependencies = []manifest.Dependency{{UniqueID: "Lib.Used", Required: true}}
+	pack := lib("Lib.Tiles", true)
+	pack.ContentPackFor = "Pathoschild.ContentPatcher"
+	got := cleanupHints([]framework.Mod{user, lib("Lib.Used", true), lib("Lib.Orphan", true), lib("Me.Chosen", false), pack}, nil)
+	if len(got) != 1 || got[0].Key != "Lib.Orphan" || got[0].Reason != orphanReason {
+		t.Fatalf("cleanup = %+v", got)
+	}
+}

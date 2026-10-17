@@ -23,9 +23,11 @@ type Mod struct {
 	SourceName string
 	SourceRepo string
 	// SourceDigest is the downloaded file's "sha512:<hex>" where its site published one.
-	SourceDigest  string
-	Enabled       bool
-	Pinned        bool
+	SourceDigest string
+	Enabled      bool
+	Pinned       bool
+	// Implicit is the entry's install reason: Mortar brought it in for another mod.
+	Implicit      bool
 	SkipVersion   string
 	SkipSources   []string
 	IgnoreUpdates bool
