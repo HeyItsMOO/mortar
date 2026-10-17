@@ -152,4 +152,15 @@ function GroupHeaderRow({
   )
 }
 
-export { GroupHeaderRow }
+// The open group's header pinned over the top of a scrolled list, on a solid surface so rows do not show through it.
+function StickyGroupSlot({ shift, children }: { shift: number; children: ReactNode }) {
+  return (
+    <Box sx={{ position: 'sticky', top: 0, height: 0, zIndex: 2 }}>
+      <Box sx={{ transform: `translateY(${shift}px)`, bgcolor: 'var(--mortar-menu)' }}>
+        {children}
+      </Box>
+    </Box>
+  )
+}
+
+export { GroupHeaderRow, StickyGroupSlot }

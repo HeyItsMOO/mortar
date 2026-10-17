@@ -14,7 +14,7 @@ import {
   toggleListColumn,
 } from './listColumns.ts'
 import { modId } from './lookup.ts'
-import { GroupHeaderRow } from './ModsGroupHeader.tsx'
+import { GroupHeaderRow, StickyGroupSlot } from './ModsGroupHeader.tsx'
 import { OverlayListRow } from './OverlayRow.tsx'
 import { heading } from './paper.ts'
 import {
@@ -23,6 +23,7 @@ import {
   listRowId,
   orderedModIds,
   stepId,
+  stuckHeader,
   useModReveal,
   useModTypeahead,
   useModVirtual,
@@ -43,6 +44,7 @@ function ListShell({
   menu,
   visible,
   setMenu,
+  stuck,
   children,
 }: {
   grid: string
@@ -58,6 +60,7 @@ function ListShell({
   menu: { top: number; left: number } | null
   visible: ListColumnId[]
   setMenu: (menu: { top: number; left: number } | null) => void
+  stuck: ReactNode
   children: ReactNode
 }) {
   return (
@@ -121,6 +124,7 @@ function ListShell({
           '&:focus-visible': { outlineOffset: -2 },
         }}
       >
+        {stuck}
         <Table role="presentation" sx={{ display: 'block', '& tbody': { display: 'block' } }}>
           <TableBody
             role="presentation"
@@ -272,6 +276,7 @@ export function ModListTable({
   }
   // Stable, so memoised rows keep their props across renders while still stepping through the current items.
   const onArrow = useCallback((id: string, dir: -1 | 1) => arrow.current(id, dir), [])
+  const stuck = stuckHeader(items, virtualizer.measurementsCache, virtualizer.scrollOffset ?? 0)
   return (
     <ListShell
       grid={grid}
@@ -287,6 +292,23 @@ export function ModListTable({
       menu={menu}
       visible={visible}
       setMenu={setMenu}
+      stuck={
+        stuck ? (
+          <StickyGroupSlot shift={stuck.shift}>
+            <GroupHeaderRow
+              groupKey={stuck.row.groupKey}
+              count={stuck.row.count}
+              label={headingFor(stuck.row.groupKey)}
+              collapsed={collapsed}
+              gameId={gameId}
+              setCollapsed={setCollapsed}
+              groupBy={groupBy}
+              tagHint={tagHint}
+              groups={groups}
+            />
+          </StickyGroupSlot>
+        ) : null
+      }
     >
       {virtualizer.getVirtualItems().map((vi) => {
         const item = items[vi.index]

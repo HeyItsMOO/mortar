@@ -6,6 +6,7 @@ import {
   groupKeyHolding,
   orderedModIds,
   stepId,
+  stuckHeader,
   typeaheadChar,
   typeaheadQuery,
   virtualIndexOf,
@@ -119,4 +120,23 @@ test('the cards and headers flow in one order at every column count', () => {
     expect(flow(columns)).toEqual(wide)
   }
   expect(wide).toEqual(['h:enabled', ...enabled.map(idOf), 'h:disabled', ...disabled.map(idOf)])
+})
+
+test('the header above the top stays named until the next header pushes it out', () => {
+  const header = (key: string) => ({ kind: 'header' as const, key, groupKey: key, count: 1 })
+  const row = (key: string) => ({
+    kind: 'row' as const,
+    key,
+    groupKey: 'a',
+    item: key,
+    stripe: false,
+  })
+  const a = header('a')
+  const b = header('b')
+  const items = [a, row('1'), row('2'), b, row('3')]
+  const starts = [0, 36, 72, 108, 144].map((start) => ({ start }))
+  expect(stuckHeader(items, starts, 0)).toBeNull()
+  expect(stuckHeader(items, starts, 40)).toEqual({ row: a, shift: 0 })
+  expect(stuckHeader(items, starts, 90)).toEqual({ row: a, shift: -18 })
+  expect(stuckHeader(items, starts, 120)).toEqual({ row: b, shift: 0 })
 })

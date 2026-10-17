@@ -49,6 +49,30 @@ export type VirtualRow<T> =
   | { kind: 'lane'; key: string; groupKey: string; items: readonly T[] }
   | { kind: 'overlay'; key: string; groupKey: string; overlay: OverlayRow }
 
+/**
+ * The group header scrolled above the top of the list while its group still shows, and how far up the next header
+ * pushes it, so the open group stays named. Null while no header is above the top.
+ */
+export function stuckHeader<T>(
+  items: readonly VirtualRow<T>[],
+  starts: readonly { start: number }[],
+  offset: number,
+): { row: Extract<VirtualRow<T>, { kind: 'header' }>; shift: number } | null {
+  let at = -1
+  for (let i = 0; i < items.length && (starts[i]?.start ?? offset) < offset; i++) {
+    if (items[i]?.kind === 'header') {
+      at = i
+    }
+  }
+  const row = items[at]
+  if (row?.kind !== 'header') {
+    return null
+  }
+  const next = items.findIndex((r, i) => i > at && r.kind === 'header')
+  const gap = next < 0 ? GROUP_HEADER_PX : (starts[next]?.start ?? offset) - offset
+  return { row, shift: Math.min(0, gap - GROUP_HEADER_PX) }
+}
+
 export function gridColumnCount(width: number): number {
   if (width <= 0) {
     return 1

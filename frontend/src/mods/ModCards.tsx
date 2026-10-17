@@ -22,7 +22,7 @@ import { firstTag } from './group.ts'
 import type { ListRow } from './listColumns.ts'
 import { entryOf, modId, nexusIdOf } from './lookup.ts'
 import { ModMenu } from './ModMenu.tsx'
-import { GroupHeaderRow } from './ModsGroupHeader.tsx'
+import { GroupHeaderRow, StickyGroupSlot } from './ModsGroupHeader.tsx'
 import { useMarked, useTabStop } from './marked.ts'
 import { contextMenuProps } from './menu.ts'
 import { useNexusFresh } from './nexusDetails.ts'
@@ -50,6 +50,7 @@ import {
   listRowId,
   orderedModIds,
   stepId,
+  stuckHeader,
   useModReveal,
   useModTypeahead,
   useModVirtual,
@@ -427,6 +428,7 @@ function CardsPane({
   const virtualItems = virtualizer.getVirtualItems()
   const visible = virtualItems.flatMap((vi) => items[vi.index] ?? [])
   const visibleStart = virtualItems[0]?.start ?? 0
+  const stuck = stuckHeader(items, virtualizer.measurementsCache, virtualizer.scrollOffset ?? 0)
   const detailId = useDetail((s) => s.detailId)
   // Measured before paint, so the first frame lays out the real column count rather than one column.
   useLayoutEffect(() => {
@@ -479,6 +481,21 @@ function CardsPane({
         '&:focus-visible': { outlineOffset: -2 },
       }}
     >
+      {stuck ? (
+        <StickyGroupSlot shift={stuck.shift}>
+          <GroupHeaderRow
+            groupKey={stuck.row.groupKey}
+            count={stuck.row.count}
+            label={heading(stuck.row.groupKey)}
+            collapsed={collapsed}
+            gameId={gameId}
+            setCollapsed={setCollapsed}
+            groupBy={groupBy}
+            tagHint={tagHint}
+            groups={groups}
+          />
+        </StickyGroupSlot>
+      ) : null}
       <Box sx={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
         <GridWindow
           rows={visible}
