@@ -3,6 +3,7 @@ package bepinex5
 import (
 	"archive/zip"
 	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -165,6 +166,76 @@ func TestAnIL2CPPPackStartsThroughItsRuntime(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(tgt.ProfileDir, "dotnet")); err == nil || hasCLR(tgt.ProfileDir) {
 		t.Fatal("a BepInEx 5 pack over an IL2CPP one kept its runtime")
+	}
+}
+
+// BepInEx 6 Mono (Slip & Skid, a zip written with backslash separators) and the legacy IL2CPP build on a shipped Mono
+// runtime (Crab Game) start through their own entry assembly, and their config's relative runtime folders point into
+// the profile, since Doorstop reads them from the game folder.
+func TestPacksWithTheirOwnRuntimeFolders(t *testing.T) {
+	cases := []struct {
+		name, sep, entry, config string
+		files                    []string
+		want                     []string
+	}{
+		{
+			"mono", `\`, `BepInEx\core\BepInEx.Unity.Mono.Preloader.dll`,
+			"[General]\ntarget_assembly = BepInEx\\core\\BepInEx.Unity.Mono.Preloader.dll\n[UnityMono]\ndll_search_path_override = unstripped_corlib\n",
+			[]string{`unstripped_corlib\mscorlib.dll`},
+			[]string{"dll_search_path_override=%s/unstripped_corlib", "target_assembly=%s/BepInEx/core/BepInEx.Unity.Mono.Preloader.dll"},
+		},
+		{
+			"il2cpp-on-mono", "/", "BepInEx/core/BepInEx.IL2CPP.dll",
+			"[UnityDoorstop]\ntargetAssembly=BepInEx\\core\\BepInEx.IL2CPP.dll\n[MonoBackend]\nruntimeLib=mono\\EmbedRuntime\\mono-2.0-sgen.dll\nconfigDir=mono\\etc\ncorlibDir=mono\\Managed\n",
+			[]string{"mono/EmbedRuntime/mono-2.0-sgen.dll", "mono/etc/machine.config", "mono/Managed/mscorlib.dll"},
+			[]string{"runtimeLib=%s/mono/EmbedRuntime/mono-2.0-sgen.dll", "configDir=%s/mono/etc", "corlibDir=%s/mono/Managed", "targetAssembly=%s/BepInEx/core/BepInEx.IL2CPP.dll"},
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			var buf bytes.Buffer
+			zw := zip.NewWriter(&buf)
+			add := func(name, body string) {
+				w, _ := zw.Create("BepInExPack" + c.sep + name)
+				_, _ = w.Write([]byte(body))
+			}
+			if c.sep != "/" {
+				add(`BepInEx\`, "")
+			}
+			add("winhttp.dll", "proxy")
+			add("doorstop_config.ini", c.config)
+			add(c.entry, "entry")
+			for _, f := range c.files {
+				add(f, "x")
+			}
+			m, _ := zw.Create("manifest.json")
+			_, _ = m.Write([]byte(`{"name":"BepInExPack","version_number":"6.0.1"}`))
+			if err := zw.Close(); err != nil {
+				t.Fatal(err)
+			}
+			zipPath := filepath.Join(t.TempDir(), "pack.zip")
+			if err := fsx.WriteFile(zipPath, buf.Bytes(), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			tgt := loader.Target{ProfileDir: filepath.Join(t.TempDir(), "profile")}
+			if _, err := (Loader{}).Install(t.Context(), tgt, loader.Package{Archive: zipPath}, nil); err != nil {
+				t.Fatal(err)
+			}
+			if st, _ := (Loader{}).Status(tgt); !st.Installed {
+				t.Fatal("the pack reads as not installed")
+			}
+			cfgPath, err := absoluteDoorstopConfig(tgt.ProfileDir, 4, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			cfg, _ := fsx.ReadFile(cfgPath)
+			abs := filepath.ToSlash(tgt.ProfileDir)
+			for _, line := range c.want {
+				if !strings.Contains(strings.ReplaceAll(string(cfg), `\`, "/"), fmt.Sprintf(line, abs)) {
+					t.Errorf("config lacks %q:\n%s", fmt.Sprintf(line, abs), cfg)
+				}
+			}
+		})
 	}
 }
 

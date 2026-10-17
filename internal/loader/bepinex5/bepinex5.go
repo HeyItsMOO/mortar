@@ -32,12 +32,20 @@ const (
 )
 
 // entries are the assemblies Doorstop can start BepInEx through, relative to the profile root, which BepInEx takes
-// its root from: BepInEx 5's preloader, and BepInEx 6's IL2CPP entry, which runs on the .NET runtime its pack ships in
-// dotnet/.
+// its root from: BepInEx 5's preloader, BepInEx 6's IL2CPP entry, which runs on the .NET runtime its pack ships in
+// dotnet/, BepInEx 6's Mono preloader (Slip & Skid), and the IL2CPP entry of the 6.0.0-be.577 build that Crab Game's
+// pack runs on the Mono runtime it ships in mono/.
 var entries = []string{
 	filepath.Join("BepInEx", "core", "BepInEx.Preloader.dll"),
 	filepath.Join("BepInEx", "core", "BepInEx.Unity.IL2CPP.dll"),
+	filepath.Join("BepInEx", "core", "BepInEx.Unity.Mono.Preloader.dll"),
+	filepath.Join("BepInEx", "core", "BepInEx.IL2CPP.dll"),
 }
+
+// packRuntimeDirs are the folders a pack lays out beside BepInEx for the runtime or the core libraries Doorstop loads
+// the entry assembly with: the .NET runtime of an IL2CPP pack, the Mono runtime of a legacy one, and the unstripped
+// core libraries of a Mono one.
+var packRuntimeDirs = []string{corlibDir, "mono", "unstripped_corlib"}
 
 // entry is the entry assembly of the pack installed in profileRoot, relative to it.
 func entry(profileRoot string) string {
@@ -127,7 +135,7 @@ func InstallPack(zipPath, profileRoot string) (Installed, error) {
 // pass Doorstop 4 flags to a Doorstop 3 proxy, which then never starts BepInEx. A package's own core files sit in
 // folders below core and stay.
 func clearPack(profileRoot string) error {
-	for _, name := range []string{doorstopFile, "winhttp.dll", "doorstop_config.ini", "doorstop_libs", corlibDir} {
+	for _, name := range append([]string{doorstopFile, "winhttp.dll", "doorstop_config.ini", "doorstop_libs"}, packRuntimeDirs...) {
 		if err := fsx.RemoveAll(filepath.Join(profileRoot, name)); err != nil {
 			return err
 		}
@@ -174,7 +182,11 @@ func packRoot(dir string) (string, error) {
 			}
 		}
 	}
-	return "", errors.New("the zip has no folder holding " + filepath.ToSlash(entries[0]) + " or " + filepath.ToSlash(entries[1]))
+	names := make([]string, len(entries))
+	for i, e := range entries {
+		names[i] = filepath.ToSlash(e)
+	}
+	return "", errors.New("the zip has no folder holding " + strings.Join(names, " or "))
 }
 
 func doorstopMajor(profileRoot string) int {
@@ -226,9 +238,12 @@ func absoluteDoorstopConfig(profileRoot string, doorstopMajor int, proton bool) 
 	lines := strings.Split(string(b), "\n")
 	found := false
 	for i, line := range lines {
-		key, _, ok := strings.Cut(line, "=")
+		key, val, ok := strings.Cut(line, "=")
 		k := strings.TrimSpace(key)
 		v, known := values[k]
+		if ok && !known && slices.Contains(runtimePathKeys, k) {
+			v, known = profilePath(profileRoot, strings.TrimSpace(val), proton)
+		}
 		if !ok || !known {
 			continue
 		}
@@ -247,6 +262,22 @@ func absoluteDoorstopConfig(profileRoot string, doorstopMajor int, proton bool) 
 	}
 	out := filepath.Join(profileRoot, relayConfig)
 	return out, fsx.WriteFile(out, []byte(strings.Join(lines, "\n")), 0o600)
+}
+
+// runtimePathKeys are the Doorstop settings (3 and 4) that name a pack's runtime folder or file relative to the game
+// folder.
+var runtimePathKeys = []string{"runtimeLib", "configDir", "corlibDir", "dll_search_path_override", "dllSearchPathOverride"}
+
+// profilePath is the absolute form of a setting's relative value when it names something in the profile.
+func profilePath(profileRoot, value string, proton bool) (string, bool) {
+	rel := filepath.FromSlash(strings.ReplaceAll(value, `\`, "/"))
+	if rel == "" || filepath.IsAbs(rel) {
+		return "", false
+	}
+	if _, err := os.Stat(filepath.Join(profileRoot, rel)); err != nil {
+		return "", false
+	}
+	return hostPath(profileRoot, rel, proton), true
 }
 
 func targetPath(profileRoot string, proton bool) string {

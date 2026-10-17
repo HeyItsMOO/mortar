@@ -196,7 +196,9 @@ func (x *extractor) zip(r io.ReaderAt, size int64) error {
 		if err := checkKind(f.Name, mode); err != nil {
 			return err
 		}
-		if err := x.entry(f.Name, mode.IsDir(), func() (io.ReadCloser, error) { return f.Open() }, &f.CRC32); err != nil {
+		// A writer that separates with backslashes ends a folder's name with one too, which the reader does not see as a folder.
+		isDir := mode.IsDir() || strings.HasSuffix(f.Name, `\`)
+		if err := x.entry(f.Name, isDir, func() (io.ReadCloser, error) { return f.Open() }, &f.CRC32); err != nil {
 			return err
 		}
 	}

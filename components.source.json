@@ -7400,6 +7400,208 @@
       ]
     },
     {
+      "id": "crab-game",
+      "name": "Crab Game",
+      "enabled": true,
+      "marker": "Crab Game.exe",
+      "r2modmanFolder": "CrabGame",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1782210"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_CrabGame",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "crab-game"
+        }
+      ]
+    },
+    {
+      "id": "slip-skid",
+      "name": "Slip & Skid",
+      "enabled": true,
+      "marker": "Slip & Skid.exe",
+      "r2modmanFolder": "SlipSkid",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2651350"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (Mono)",
+          "package": "SlipSkid_Modding-BepInExPack_SlipSkid",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "slip-skid"
+        }
+      ]
+    },
+    {
+      "id": "against",
+      "name": "AGAINST",
+      "enabled": true,
+      "marker": "AGAINST.exe",
+      "r2modmanFolder": "AGAINST",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1584840"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "BepInEx-BepInExPack_AGAINST"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "against"
+        }
+      ]
+    },
+    {
+      "id": "a-gentlemens-dispute",
+      "name": "A Gentlemen's Dispute",
+      "enabled": true,
+      "marker": "A Gentlemen's Dispute.exe",
+      "r2modmanFolder": "AgentlemensDispute",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2820700"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "a-gentlemens-dispute"
+        }
+      ]
+    },
+    {
+      "id": "mine-mogul",
+      "name": "MineMogul",
+      "enabled": true,
+      "marker": "MineMogul.exe",
+      "r2modmanFolder": "MineMogul",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3846120"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "mine-mogul"
+        }
+      ]
+    },
+    {
+      "id": "wildfrost",
+      "name": "Wildfrost",
+      "enabled": true,
+      "marker": "Wildfrost.exe",
+      "r2modmanFolder": "Wildfrost",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1811990"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_IL2CPP",
+          "major": 6
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "wildfrost"
+        }
+      ]
+    },
+    {
       "id": "sims4",
       "name": "The Sims 4",
       "enabled": true,
