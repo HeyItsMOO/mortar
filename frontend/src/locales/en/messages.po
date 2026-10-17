@@ -277,7 +277,7 @@ msgstr "Stop the game to change mods."
 msgid "Could not delete the template"
 msgstr "Could not delete the template"
 
-#: src/mods/typedConfig/ConfigPane.tsx:418
+#: src/mods/typedConfig/ConfigPane.tsx:419
 msgid "Every entry in {current} goes back to its default."
 msgstr "Every entry in {current} goes back to its default."
 
@@ -1653,7 +1653,7 @@ msgid "Newest lines kept in the Console"
 msgstr "Newest lines kept in the Console"
 
 #: src/mods/typedConfig/ConfigPane.tsx:165
-#: src/mods/typedConfig/ConfigPane.tsx:420
+#: src/mods/typedConfig/ConfigPane.tsx:421
 #: src/settings/sections/Shortcuts.tsx:107
 #: src/settings/sections/Shortcuts.tsx:113
 msgid "Reset all"
@@ -1901,7 +1901,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:394
 #: src/mods/ModsTab.tsx:111
-#: src/mods/typedConfig/ConfigPane.tsx:397
+#: src/mods/typedConfig/ConfigPane.tsx:398
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
 #: src/profiles/HealthDialog.tsx:245
@@ -1913,9 +1913,9 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/screenshots/ScreenshotsTab.tsx:134
 #: src/settings/sections/DataStoreReport.tsx:398
 #: src/settings/sections/Storage.tsx:87
-#: src/settings/sections/Updates.tsx:38
+#: src/settings/sections/Updates.tsx:39
 #: src/shell/ErrorBoundary.tsx:22
-#: src/shell/ErrorRetry.tsx:14
+#: src/shell/ErrorRetry.tsx:15
 #: src/shell/LoadingRow.tsx:41
 #: src/shell/OfflineBanner.tsx:73
 #: src/toasts/report.ts:66
@@ -2715,7 +2715,7 @@ msgstr "Error while loading"
 msgid "Downloading"
 msgstr "Downloading"
 
-#: src/profiles/OverrideRows.tsx:135
+#: src/profiles/OverrideRows.tsx:140
 msgid "Free Nexus accounts click each download on Nexus; those updates do not block Play."
 msgstr "Free Nexus accounts click each download on Nexus; those updates do not block Play."
 
@@ -3916,7 +3916,7 @@ msgstr "{size} in {path}"
 msgid "Skip sharing"
 msgstr "Skip sharing"
 
-#: src/mods/LockedNote.tsx:31
+#: src/mods/LockedNote.tsx:32
 msgid "The game is using this profile. Stop the game to change mods."
 msgstr "The game is using this profile. Stop the game to change mods."
 
@@ -5394,7 +5394,7 @@ msgstr "API key not set. Itch.io search is off until you add one."
 msgid "You chose not to endorse this mod."
 msgstr "You chose not to endorse this mod."
 
-#: src/profiles/OverrideRows.tsx:81
+#: src/profiles/OverrideRows.tsx:94
 msgid "These apply only to this profile."
 msgstr "These apply only to this profile."
 
@@ -5522,7 +5522,7 @@ msgid "Heart"
 msgstr "Heart"
 
 #: src/settings/sections/NexusMods.tsx:129
-#: src/settings/sections/NexusMods.tsx:146
+#: src/settings/sections/NexusMods.tsx:147
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -7580,7 +7580,7 @@ msgstr "Asset map"
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:417
+#: src/mods/typedConfig/ConfigPane.tsx:418
 msgid "Every change waiting for the next start is discarded."
 msgstr "Every change waiting for the next start is discarded."
 
@@ -7731,7 +7731,7 @@ msgstr "Updated {name} from {from} to {to}"
 #: src/launch/PlayControl.tsx:143
 #: src/launch/PlayControl.tsx:164
 #: src/launch/StopDialog.tsx:25
-#: src/mods/LockedNote.tsx:27
+#: src/mods/LockedNote.tsx:28
 msgid "Stop game"
 msgstr "Stop game"
 
@@ -8099,7 +8099,7 @@ msgstr "Not found"
 
 #: src/profiles/EditProfileDialog.tsx:123
 #: src/profiles/GameSettings.tsx:182
-#: src/profiles/OverrideRows.tsx:118
+#: src/profiles/OverrideRows.tsx:131
 #: src/settings/sections/Appearance.tsx:202
 #: src/settings/sections/GameSettings.tsx:215
 msgid "Use default"
@@ -8973,7 +8973,7 @@ msgstr "Manage templates"
 msgid "Could not track"
 msgstr "Could not track"
 
-#: src/settings/sections/NexusMods.tsx:141
+#: src/settings/sections/NexusMods.tsx:142
 msgid "Signed out of Nexus"
 msgstr "Signed out of Nexus"
 
@@ -11435,7 +11435,7 @@ msgid "{0} adds {time} to startup (through {1})"
 msgstr "{0} adds {time} to startup (through {1})"
 
 #: src/profiles/EditProfileDialog.tsx:170
-#: src/profiles/OverrideRows.tsx:79
+#: src/profiles/OverrideRows.tsx:92
 msgid "Overrides"
 msgstr "Overrides"
 
@@ -13482,7 +13482,7 @@ msgstr "Replace {name}?"
 msgid "Mods you put there show up here to add."
 msgstr "Mods you put there show up here to add."
 
-#: src/mods/typedConfig/ConfigPane.tsx:414
+#: src/mods/typedConfig/ConfigPane.tsx:415
 msgid "Reset all entries?"
 msgstr "Reset all entries?"
 
