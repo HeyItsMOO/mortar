@@ -300,15 +300,16 @@ const cases: Case[] = [
     },
     run: (p) => row(p, 10).click(),
   },
+  // One switch per case, each its own action; the second puts the mod back as the first found it.
   {
-    name: 'mods-list-toggle',
+    name: 'mods-list-toggle-off',
     setup: (p) => view(p, 'List view'),
-    run: async (p) => {
-      const sw = row(p, 8).locator('input[type=checkbox]').first()
-      await sw.click()
-      await p.waitForTimeout(SETTLE_MS)
-      await sw.click()
-    },
+    run: (p) => row(p, 8).locator('input[type=checkbox]').first().click(),
+  },
+  {
+    name: 'mods-list-toggle-on',
+    setup: (p) => view(p, 'List view'),
+    run: (p) => row(p, 8).locator('input[type=checkbox]').first().click(),
   },
   {
     name: 'mods-list-filter',
