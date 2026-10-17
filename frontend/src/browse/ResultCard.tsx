@@ -148,7 +148,10 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
           </Typography>
         </ButtonBase>
         {author === '' ? null : (
-          <Typography noWrap={true} sx={{ fontSize: 12, fontWeight: 500, color: 'primary.light' }}>
+          <Typography
+            noWrap={true}
+            sx={{ fontSize: 12, fontWeight: 500, color: 'var(--mortar-accent-ink)' }}
+          >
             {formatAuthors(author)}
           </Typography>
         )}

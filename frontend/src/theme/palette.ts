@@ -147,7 +147,7 @@ const lightSurfaces: Surfaces = {
   inkSoft: 'rgba(32,32,38,0.88)',
   inkDim: 'rgba(50,50,58,0.7)',
   inkDim92: 'rgba(50,50,58,0.78)',
-  inkDim60: 'rgba(50,50,58,0.55)',
+  inkDim60: 'rgba(50,50,58,0.7)',
   scrim: 'rgba(0,0,0,0.28)',
   titleBar: 'rgba(244,244,247,0.88)',
   // Recessed fills (inputs, toggles, chips, panels) over a light surface want a faint tint, not the dark ramp's veil.
