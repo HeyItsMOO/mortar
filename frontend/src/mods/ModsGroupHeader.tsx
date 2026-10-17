@@ -14,6 +14,7 @@ import { useMods } from './store.ts'
 import { findSources } from './storeEntries.ts'
 import { setGroupEnabled } from './storeGroups.ts'
 import { useLocked } from './useLocked.ts'
+import { GROUP_HEADER_PX } from './virtualRows.ts'
 
 function ModsGroupHeader({
   label,
@@ -43,8 +44,9 @@ function ModsGroupHeader({
         alignItems: 'center',
         gap: 0.75,
         width: '100%',
+        // The virtual list reserves one height per header, and a header's switch and menu fit inside it.
+        minHeight: GROUP_HEADER_PX,
         px: space.pad,
-        py: 0.75,
         bgcolor: 'var(--mortar-hairline-ghost)',
         borderBottom: '1px solid var(--mortar-hairline-muted)',
         '& > :not(.MuiButtonBase-root, [data-control])': { pointerEvents: 'none' },
