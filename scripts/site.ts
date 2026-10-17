@@ -16,12 +16,11 @@ const block = (name: string) =>
   new RegExp(`(<!-- ${name}:start -->)[\\s\\S]*?(<!-- ${name}:end -->)`, 'g')
 
 const PAGES: Page[] = [
-  { path: 'site/index.html', root: '', faq: true, footer: { downloads: true, agpl: true } },
+  { path: 'site/index.html', root: '', footer: { downloads: true, agpl: true } },
   {
     path: 'site/download/index.html',
     root: '../',
     current: 'download',
-    faq: true,
     footer: { agpl: true },
   },
   { path: 'site/code-signing/index.html', root: '../', footer: {} },

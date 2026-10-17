@@ -9,13 +9,12 @@ const OG_IMAGE = {
   alt: "Mortar's game select: the supported games as a grid of cover art",
 }
 
-// What differs between pages: where the site root is from the page, which nav link is the current page, whether the
-// nav links the FAQ, and which extra links the footer carries.
+// What differs between pages: where the site root is from the page, which nav link is the current page, and which
+// extra links the footer carries.
 export interface Page {
   path: string
   root: string
   current?: 'download' | 'extension' | 'guide' | 'games'
-  faq?: boolean
   footer: { downloads?: boolean; agpl?: boolean; source?: string }
 }
 
@@ -46,16 +45,17 @@ export function nav(p: Page): string {
           Mortar
         </a>
         <div class="nav-links">
-          ${link(`${home}#features`, 'Features', true)}
           ${link('/games/', 'Games', true, 'games')}
-          ${link('/guide/', 'Guide', true, 'guide')}
+          ${link(`${home}#features`, 'Features', true)}
           ${link('/extension/', 'Extension', true, 'extension')}
-          ${p.faq ? `${link(`${home}#faq`, 'FAQ', true)}\n          ` : ''}<button type="button" class="nav-search" aria-label="Search" aria-keyshortcuts="/ Control+K Meta+K">
+          ${link('/guide/', 'Guide', true, 'guide')}
+          ${link(`${home}#faq`, 'FAQ', true)}
+          <button type="button" class="nav-search" aria-label="Search" aria-keyshortcuts="/ Control+K Meta+K">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
           </button>
-          ${link('/download/', 'Download', false, 'download')}
-          <a href="${REPO}">GitHub</a>
+          <a class="optional" href="${REPO}">GitHub</a>
           <a class="optional" href="${DISCORD}">Discord</a>
+          <a class="nav-cta" href="/download/"${p.current === 'download' ? ' aria-current="page"' : ''}>Download</a>
         </div>
       </div>
       <link rel="stylesheet" href="/search.css" />
@@ -138,7 +138,6 @@ export function page(p: {
   const frame: Page = {
     path: p.path,
     root: '/',
-    faq: false,
     footer: { downloads: true },
     ...(p.current ? { current: p.current } : {}),
   }

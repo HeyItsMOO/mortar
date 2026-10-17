@@ -54,6 +54,7 @@ a {
 }
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 1.25rem;
   margin-left: auto;
   font-size: 0.95rem;
@@ -65,6 +66,10 @@ a {
 .nav-links a:hover,
 .nav-links a:focus-visible {
   color: var(--text);
+}
+.nav-links .nav-cta {
+  color: var(--sand);
+  font-weight: 600;
 }
 @media (max-width: 40rem) {
   .nav-links .optional {
