@@ -97,6 +97,7 @@ Files in the data folder:
 | `icon` | Optional: `sprout`, `leaf`, `wheat`, `fish`, `hammer`, `pickaxe`, `star`, `heart`, `mountain`, `sun`, `moon` or `sparkles` |
 | `description` | At most 280 characters |
 | `launchOptions` | Extra SMAPI arguments as typed |
+| `groups` | Optional named sets of entry keys (`name`, at most 60 characters, and `keys[]`); a group's mods enable or disable together, and an entry stays in its groups through Update and Roll back. The mods header's group menu renames or deletes one (its mods stay), and a mod's menu removes it from a group. |
 | `launchPrefix` | Shell-quoted command prefix for direct launches (Linux; ignored on Windows and on Steam `-applaunch`) |
 | `launchEnv` | One `NAME=value` environment variable per line for direct launches (ignored on Steam `-applaunch`) |
 | `launchPresets[]` | Optional named launch configurations (`id`, `name`, `launchOptions`, `launchPrefix`, `launchEnv`, `showConsole` of `true`, `false` or empty to follow the setting) beside the profile's own settings |
@@ -130,7 +131,6 @@ Each `entries[]` item:
 | `note` | At most 500 characters |
 | `tags` | At most 8, each at most 24 characters |
 | `categoryOverride` | Primary category: a custom category id or a Nexus category name |
-| `groups` | Optional named sets of entry keys (`name`, at most 60 characters, and `keys[]`); a group's mods enable or disable together. The mods header's group menu renames or deletes one (its mods stay), and a mod's menu removes it from a group. |
 | `fomod` | Optional FOMOD plugin names for that entry; Update and Roll back replay them, ask again on a missing choice or a new unanswered group, and prefill surviving picks |
 
 The store keeps every item a profile names as `key` or `previousKey` and deletes the rest 30 days after their last use. `ProfilesWithMod` lists, for a game and UniqueID, the profiles that name it, by reading those `profile.json` files (not the store); UniqueIDs compare case-insensitively.
