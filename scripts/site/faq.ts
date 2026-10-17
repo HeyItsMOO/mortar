@@ -123,9 +123,15 @@ export function whyPage(w: Why): string {
     body: `      <h1 class="ext-title">Why Mortar? (vs ${escapeHTML(w.name)})</h1>
 ${sourceIcons(render(w.md))
   .replaceAll('<td>!win ', '<td class="win">')
+  // An even row highlights both sides: every value cell after the row's label.
+  .replace(/<tr><td>(.*?)<\/td>(.*?)<\/tr>/g, (row, label: string, cells: string) =>
+    cells.includes('class="win"')
+      ? row
+      : `<tr><td>${label}</td>${cells.replaceAll('<td>', '<td class="win">')}</tr>`,
+  )
   .replace(
     '</table></div>',
-    '</table></div>\n<p class="table-note">Highlighted: the stronger of the two. A row without one is even.</p>',
+    '</table></div>\n<p class="table-note">Highlighted: the stronger of the two, or both where they are even.</p>',
   )}
       <div class="cta ext-cta">
         <a class="btn" href="/download/">Download Mortar</a>
