@@ -48,9 +48,9 @@ import {
   gridLanePx,
   listRowId,
   orderedModIds,
+  RevealOpen,
   stepId,
   stuckHeader,
-  useModReveal,
   useModTypeahead,
   useModVirtual,
   type VirtualRow,
@@ -88,7 +88,8 @@ const ARROWS: Record<string, string | undefined> = { ArrowLeft: 'left', ArrowRig
 interface ModCardProps {
   mod: Mod
   row: ListRow
-  fallback: boolean
+  // The order, for the first card only (see useTabStop).
+  first: readonly string[] | null
   // The current order for a shift-click range, read from a ref so a mod moving group re-renders only its own card.
   orderedRef: { readonly current: readonly string[] }
   profile: Profile
@@ -102,7 +103,7 @@ const sameCard = (a: ModCardProps, b: ModCardProps) =>
   a.mod === b.mod &&
   a.row.size === b.row.size &&
   a.row.details === b.row.details &&
-  a.fallback === b.fallback &&
+  a.first === b.first &&
   a.orderedRef === b.orderedRef &&
   a.onMove === b.onMove &&
   (a.profile === b.profile || ownSlice(a.profile, a.mod.key) === ownSlice(b.profile, b.mod.key))
@@ -110,7 +111,7 @@ const sameCard = (a: ModCardProps, b: ModCardProps) =>
 function ModCardView({
   mod: m,
   row,
-  fallback,
+  first,
   orderedRef,
   profile,
   columnsRef,
@@ -121,7 +122,7 @@ function ModCardView({
   const askRemove = useMods((s) => s.askRemove)
   const id = modId(m)
   const marked = useMarked(id)
-  const tabStop = useTabStop(id, fallback)
+  const tabStop = useTabStop(id, first)
   const fresh = useNexusFresh(nexusIdOf(profile, m))
   const tag = firstTag(entryOf(profile, m.key)?.tags)
   const cardSize = useSettings((s) => s.gridCardSize) || 'medium'
@@ -267,7 +268,7 @@ function GridWindow({
   tagHint,
   columns,
   columnsRef,
-  fallbackId,
+  orderedIds,
   orderedRef,
   profile,
   groups,
@@ -283,7 +284,7 @@ function GridWindow({
   tagHint: string
   columns: number
   columnsRef: { readonly current: number }
-  fallbackId: string
+  orderedIds: readonly string[]
   orderedRef: { readonly current: readonly string[] }
   profile: Profile
   groups: readonly { key: string; items: readonly ListRow[] }[]
@@ -333,7 +334,7 @@ function GridWindow({
             key={modId(r.mod)}
             mod={r.mod}
             row={r}
-            fallback={fallbackId === modId(r.mod)}
+            first={orderedIds[0] === modId(r.mod) ? orderedIds : null}
             orderedRef={orderedRef}
             profile={profile}
             columnsRef={columnsRef}
@@ -393,8 +394,7 @@ function CardsPane({
   const visible = virtualItems.flatMap((vi) => items[vi.index] ?? [])
   const visibleStart = virtualItems[0]?.start ?? 0
   const stuck = stuckHeader(items, virtualizer.measurementsCache, virtualizer.scrollOffset ?? 0)
-  const detailId = useDetail((s) => s.detailId)
-  const { fallbackId, orderedRef } = useRowFocus(orderedIds)
+  const { orderedRef } = useRowFocus(orderedIds)
   // Measured before paint, so the first frame lays out the real column count rather than one column.
   useLayoutEffect(() => {
     const el = parentRef.current
@@ -407,16 +407,6 @@ function CardsPane({
     sync()
     return () => ro.disconnect()
   }, [parentRef])
-  useModReveal({
-    detailId,
-    groups,
-    items,
-    idOf: listRowId,
-    collapsed,
-    setCollapsed,
-    gameId,
-    virtualizer,
-  })
   const navIds = useMemo(() => orderedModIds(items, (row) => modId(row.mod)), [items])
   const move = useRef<(id: string, delta: number) => void>(() => undefined)
   move.current = (id, delta) => {
@@ -446,6 +436,15 @@ function CardsPane({
         '&:focus-visible': { outlineOffset: -2 },
       }}
     >
+      <RevealOpen
+        groups={groups}
+        items={items}
+        idOf={listRowId}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        gameId={gameId}
+        virtualizer={virtualizer}
+      />
       {stuck ? (
         <StickyGroupSlot shift={stuck.shift}>
           <GroupHeaderRow
@@ -473,7 +472,7 @@ function CardsPane({
           tagHint={tagHint}
           columns={columns}
           columnsRef={columnsRef}
-          fallbackId={fallbackId}
+          orderedIds={orderedIds}
           orderedRef={orderedRef}
           profile={profile}
           groups={groups}

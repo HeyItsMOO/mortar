@@ -1,8 +1,8 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Table, TableBody, TableHead, TableRow } from '@mui/material'
-import { type MouseEvent, type ReactNode, type Ref, useCallback, useRef } from 'react'
+import { type MouseEvent, memo, type ReactNode, type Ref, useCallback, useRef } from 'react'
 import { space } from '../theme/density.ts'
-import { showModId, useDetail } from './detail.ts'
+import { showModId } from './detail.ts'
 import type { sanitizeListGroupBy } from './group.ts'
 import { HeaderCells, ListColumnMenu } from './ListColumnMenu.tsx'
 import {
@@ -22,13 +22,73 @@ import {
   LIST_ROW_PX,
   listRowId,
   orderedModIds,
+  RevealOpen,
   stepId,
   stuckHeader,
-  useModReveal,
   useModTypeahead,
   useModVirtual,
   type VirtualRow,
 } from './virtualRows.ts'
+
+interface HeaderProps {
+  grid: string
+  cols: readonly ListColumnId[]
+  sort: ReturnType<typeof sanitizeListSort>
+  onMenu: (e: MouseEvent) => void
+  onPreview: (order: ListColumnId[]) => void
+  onCommit: () => void
+  onCancel: () => void
+}
+
+function ListHeaderView({ grid, cols, sort, onMenu, onPreview, onCommit, onCancel }: HeaderProps) {
+  return (
+    <Table
+      role="presentation"
+      sx={{
+        display: 'block',
+        flex: '0 0 auto',
+        '& thead': { display: 'block' },
+      }}
+    >
+      <TableHead role="rowgroup">
+        <TableRow
+          role="row"
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: grid,
+            gap: space.gap,
+            alignItems: 'center',
+            px: space.gutter,
+            height: `calc(${space.row} - 6px)`,
+            zIndex: 1,
+            bgcolor: 'var(--mortar-console-90)',
+            ...heading,
+            borderBottom: '1px solid var(--mortar-hairline-muted)',
+          }}
+        >
+          <HeaderCells
+            cols={cols}
+            sort={sort}
+            onMenu={onMenu}
+            onPreview={onPreview}
+            onCommit={onCommit}
+            onCancel={onCancel}
+          />
+        </TableRow>
+      </TableHead>
+    </Table>
+  )
+}
+
+// The list re-renders for every answer that changes a row; the header redraws only when its columns or sort change.
+// Its handlers capture nothing beyond those, so a skipped render never leaves them stale.
+const ListHeader = memo(
+  ListHeaderView,
+  (a, b) =>
+    a.grid === b.grid &&
+    a.cols.join() === b.cols.join() &&
+    JSON.stringify(a.sort) === JSON.stringify(b.sort),
+)
 
 function ListShell({
   grid,
@@ -71,41 +131,15 @@ function ListShell({
       aria-label={label}
       sx={{ minWidth: 0, minHeight: 0, height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-      <Table
-        role="presentation"
-        sx={{
-          display: 'block',
-          flex: '0 0 auto',
-          '& thead': { display: 'block' },
-        }}
-      >
-        <TableHead role="rowgroup">
-          <TableRow
-            role="row"
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: grid,
-              gap: space.gap,
-              alignItems: 'center',
-              px: space.gutter,
-              height: `calc(${space.row} - 6px)`,
-              zIndex: 1,
-              bgcolor: 'var(--mortar-console-90)',
-              ...heading,
-              borderBottom: '1px solid var(--mortar-hairline-muted)',
-            }}
-          >
-            <HeaderCells
-              cols={cols}
-              sort={sort}
-              onMenu={onMenu}
-              onPreview={onPreview}
-              onCommit={onCommit}
-              onCancel={onCancel}
-            />
-          </TableRow>
-        </TableHead>
-      </Table>
+      <ListHeader
+        grid={grid}
+        cols={cols}
+        sort={sort}
+        onMenu={onMenu}
+        onPreview={onPreview}
+        onCommit={onCommit}
+        onCancel={onCancel}
+      />
       <Box
         ref={parentRef}
         role="rowgroup"
@@ -238,7 +272,6 @@ export function ModListTable({
   renderRow: (row: ListRow, onArrow: (id: string, dir: -1 | 1) => void) => ReactNode
 }) {
   const { t } = useLingui()
-  const detailId = useDetail((s) => s.detailId)
   const { parentRef, virtualizer } = useModVirtual(items, LIST_ROW_PX)
   const navIds = orderedModIds(items, (row) => modId(row.mod))
   useModTypeahead({
@@ -247,16 +280,6 @@ export function ModListTable({
     idOf: listRowId,
     virtualizer,
     parentRef,
-  })
-  useModReveal({
-    detailId,
-    groups,
-    items,
-    idOf: listRowId,
-    collapsed,
-    setCollapsed,
-    gameId,
-    virtualizer,
   })
   const arrow = useRef<(id: string, dir: -1 | 1) => void>(() => undefined)
   arrow.current = (id, dir) => {
@@ -270,72 +293,83 @@ export function ModListTable({
   const onArrow = useCallback((id: string, dir: -1 | 1) => arrow.current(id, dir), [])
   const stuck = stuckHeader(items, virtualizer.measurementsCache, virtualizer.scrollOffset ?? 0)
   return (
-    <ListShell
-      grid={grid}
-      cols={cols}
-      sort={sort}
-      onMenu={onMenu}
-      onPreview={onPreview}
-      onCommit={onCommit}
-      onCancel={onCancel}
-      label={t`Mods`}
-      parentRef={parentRef}
-      total={virtualizer.getTotalSize()}
-      menu={menu}
-      visible={visible}
-      setMenu={setMenu}
-      stuck={
-        stuck ? (
-          <StickyGroupSlot shift={stuck.shift}>
-            <GroupHeaderRow
-              groupKey={stuck.row.groupKey}
-              count={stuck.row.count}
-              label={headingFor(stuck.row.groupKey)}
-              collapsed={collapsed}
-              gameId={gameId}
-              setCollapsed={setCollapsed}
-              groupBy={groupBy}
-              tagHint={tagHint}
-              groups={groups}
-            />
-          </StickyGroupSlot>
-        ) : null
-      }
-    >
-      {virtualizer.getVirtualItems().map((vi) => {
-        const item = items[vi.index]
-        if (!item) {
-          return null
+    <>
+      <RevealOpen
+        groups={groups}
+        items={items}
+        idOf={listRowId}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        gameId={gameId}
+        virtualizer={virtualizer}
+      />
+      <ListShell
+        grid={grid}
+        cols={cols}
+        sort={sort}
+        onMenu={onMenu}
+        onPreview={onPreview}
+        onCommit={onCommit}
+        onCancel={onCancel}
+        label={t`Mods`}
+        parentRef={parentRef}
+        total={virtualizer.getTotalSize()}
+        menu={menu}
+        visible={visible}
+        setMenu={setMenu}
+        stuck={
+          stuck ? (
+            <StickyGroupSlot shift={stuck.shift}>
+              <GroupHeaderRow
+                groupKey={stuck.row.groupKey}
+                count={stuck.row.count}
+                label={headingFor(stuck.row.groupKey)}
+                collapsed={collapsed}
+                gameId={gameId}
+                setCollapsed={setCollapsed}
+                groupBy={groupBy}
+                tagHint={tagHint}
+                groups={groups}
+              />
+            </StickyGroupSlot>
+          ) : null
         }
-        return (
-          <Box
-            key={item.key}
-            data-index={vi.index}
-            // The stripe lives on the slot, so a mod moving group restripes the slots, not every memoised row.
-            data-striped={item.kind === 'row' && item.stripe ? '' : undefined}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              transform: `translateY(${vi.start}px)`,
-            }}
-          >
-            <ListSlot
-              item={item}
-              headingFor={headingFor}
-              collapsed={collapsed}
-              gameId={gameId}
-              setCollapsed={setCollapsed}
-              groupBy={groupBy}
-              tagHint={tagHint}
-              groups={groups}
-              renderRow={renderRow}
-              onArrow={onArrow}
-            />
-          </Box>
-        )
-      })}
-    </ListShell>
+      >
+        {virtualizer.getVirtualItems().map((vi) => {
+          const item = items[vi.index]
+          if (!item) {
+            return null
+          }
+          return (
+            <Box
+              key={item.key}
+              data-index={vi.index}
+              // The stripe lives on the slot, so a mod moving group restripes the slots, not every memoised row.
+              data-striped={item.kind === 'row' && item.stripe ? '' : undefined}
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${vi.start}px)`,
+              }}
+            >
+              <ListSlot
+                item={item}
+                headingFor={headingFor}
+                collapsed={collapsed}
+                gameId={gameId}
+                setCollapsed={setCollapsed}
+                groupBy={groupBy}
+                tagHint={tagHint}
+                groups={groups}
+                renderRow={renderRow}
+                onArrow={onArrow}
+              />
+            </Box>
+          )
+        })}
+      </ListShell>
+    </>
   )
 }

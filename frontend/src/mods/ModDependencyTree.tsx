@@ -123,18 +123,10 @@ function Mark({ icon: Icon, label, color }: { icon: LucideIcon; label: string; c
 
 // Memoised, with Branch: a framework's Used by list runs to hundreds of rows, and the trees' nodes are kept until the
 // mods or problems change, so a re-render of the panel around them skips every row.
-const NodeRow = memo(function NodeRowView({
-  node,
-  mods,
-  depth,
-}: {
-  node: DepViewNode
-  mods: Mod[]
-  depth: number
-}) {
+const NodeRow = memo(function NodeRowView({ node, depth }: { node: DepViewNode; depth: number }) {
   const { t } = useLingui()
   const show = useDetail((s) => s.show)
-  const listed = mods.find((m) => sameId(m.id, node.id))
+  const listed = useMods((s) => s.mods.find((m) => sameId(m.id, node.id)))
   const label = useRequirementName(node.id)
   const mark = node.required ? t`Required` : t`Optional`
   const already = t`already listed`
@@ -200,21 +192,13 @@ const NodeRow = memo(function NodeRowView({
         </Box>
       </Box>
       {node.children.map((c) => (
-        <NodeRow key={`${c.id}:${c.required}:${c.cycle}`} node={c} mods={mods} depth={depth + 1} />
+        <NodeRow key={`${c.id}:${c.required}:${c.cycle}`} node={c} depth={depth + 1} />
       ))}
     </Box>
   )
 })
 
-const Branch = memo(function BranchView({
-  title,
-  nodes,
-  mods,
-}: {
-  title: string
-  nodes: DepViewNode[]
-  mods: Mod[]
-}) {
+const Branch = memo(function BranchView({ title, nodes }: { title: string; nodes: DepViewNode[] }) {
   const { t } = useLingui()
   return (
     <Box>
@@ -222,9 +206,7 @@ const Branch = memo(function BranchView({
       {nodes.length === 0 ? (
         <Typography sx={{ fontSize: nameSize, color: 'text.secondary' }}>{t`None`}</Typography>
       ) : (
-        nodes.map((n) => (
-          <NodeRow key={`${n.id}:${n.required}:${n.cycle}`} node={n} mods={mods} depth={0} />
-        ))
+        nodes.map((n) => <NodeRow key={`${n.id}:${n.required}:${n.cycle}`} node={n} depth={0} />)
       )}
     </Box>
   )
@@ -262,8 +244,8 @@ function TreesView({
   return (
     <Box>
       <Typography sx={heading}>{t`Dependencies`}</Typography>
-      <Branch title={t`Needs`} nodes={needs} mods={mods} />
-      <Branch title={t`Used by`} nodes={neededBy} mods={mods} />
+      <Branch title={t`Needs`} nodes={needs} />
+      <Branch title={t`Used by`} nodes={neededBy} />
     </Box>
   )
 }

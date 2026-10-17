@@ -10,17 +10,16 @@ export function useMarked(id: string): boolean {
   return useSelection((s) => s.ids.includes(id) || (s.ids.length === 0 && open))
 }
 
-/** The list's one Tab stop is the open mod's row, or the first row while the open mod is not listed. The list asks only
- * whether it is listed and names the fallback row, so opening another listed mod re-renders the two rows that changed
- * and not the list; the current order sits behind a stable ref for shift-click ranges. */
+/** The current order behind a stable ref, for shift-click ranges. */
 export function useRowFocus(orderedIds: readonly string[]) {
   const orderedRef = useRef(orderedIds)
   orderedRef.current = orderedIds
-  const openListed = useDetail((s) => orderedIds.includes(s.detailId))
-  return { fallbackId: openListed ? '' : (orderedIds[0] ?? ''), orderedRef }
+  return { orderedRef }
 }
 
-/** Whether row id is the Tab stop; fallback is whether the list named it the fallback row. */
-export function useTabStop(id: string, fallback: boolean): boolean {
-  return useDetail((s) => s.detailId === id) || fallback
+/** Whether row id is the list's one Tab stop: the open mod's row, or the first row while the open mod is not listed.
+ * Only the first row is handed the order (null for the rest), so a new order re-renders that row and no other, and
+ * opening another mod re-renders the two rows that changed, not the list. */
+export function useTabStop(id: string, order: readonly string[] | null): boolean {
+  return useDetail((s) => s.detailId === id || (order !== null && !order.includes(s.detailId)))
 }

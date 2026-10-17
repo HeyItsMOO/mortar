@@ -305,7 +305,6 @@ function FilteredMods({ profile }: { profile: Profile }) {
 
 export function ModsTab({ profile }: { profile: Profile }) {
   const { t } = useLingui()
-  const mods = useMods((s) => s.mods)
   const load = useMods((s) => s.load)
   const loadKey = `${profile.id}:${profile.updated}`
   const gameId = useProfiles((s) => s.game?.id)
@@ -390,7 +389,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
       <UpdateBar />
       <OldFilesCallouts profile={profile} />
       <NewFoldersCallout profile={profile} />
-      <LegacyReasonsCallout profile={profile} mods={mods} />
+      <LegacyReasonsCallout profile={profile} />
       <FilteredMods profile={profile} />
       <UpdateReview profile={profile} />
       <ModContextMenu />

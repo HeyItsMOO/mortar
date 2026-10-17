@@ -2,10 +2,7 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Button } from '@mui/material'
 import { useState } from 'react'
-import type {
-  Mod,
-  Profile,
-} from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { SetIntentOffered } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { usePending } from '../toasts/usePending.ts'
@@ -23,8 +20,9 @@ const NONE: string[] = []
 
 // Once per profile from before install reasons: offers to mark the libraries and tilesheet packs its game's defaults
 // name as implicit. Either answer ends the offer.
-export function LegacyReasonsCallout({ profile, mods }: { profile: Profile; mods: Mod[] }) {
+export function LegacyReasonsCallout({ profile }: { profile: Profile }) {
   const { t } = useLingui()
+  const mods = useMods((s) => s.mods)
   const game = useProfiles((s) => s.game?.id ?? '')
   const nexusById = useNexusDetails((s) => s.byId)
   const customById = customCategoryById(useCustomCategories((s) => s.categories))

@@ -2,6 +2,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import { type RefObject, useEffect, useLayoutEffect, useRef } from 'react'
 import { isTypingTarget, type TypingTarget } from '../settings/shortcuts.ts'
 import { TYPE_RESET_MS, typedKey, typedMatch } from '../shell/typeahead.ts'
+import { useDetail } from './detail.ts'
 import { toggleCollapsed } from './group.ts'
 import type { ListRow } from './listColumns.ts'
 import { modId } from './lookup.ts'
@@ -282,6 +283,16 @@ export function useModReveal<T>(opts: {
     lastReveal.current = token
     virtualizer.scrollToIndex(idx, { align: 'auto' })
   }, [collapsed, detailId, gameId, groups, idOf, items, setCollapsed, virtualizer])
+}
+
+/** Scrolls the open mod into view. A component of its own that renders nothing, so opening another mod re-renders
+ * this and not the list or grid around it. */
+export function RevealOpen<T>(
+  props: Omit<Parameters<typeof useModReveal<T>>[0], 'detailId'>,
+): null {
+  const detailId = useDetail((s) => s.detailId)
+  useModReveal({ ...props, detailId })
+  return null
 }
 
 function modsIn<T>(items: readonly VirtualRow<T>[]): T[] {
