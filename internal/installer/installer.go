@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/fomod"
 	"github.com/Rethunk-Tech/mortar/internal/winname"
 )
@@ -57,6 +58,8 @@ func (g Game) IsShared(id string) bool {
 type Game struct {
 	Loaders []string
 	Targets []Target
+	// Routes are the BepInEx install folders the catalog adds for the game (components.GameLoader.Routes).
+	Routes []components.LoaderRoute
 }
 
 // Splits reports whether a folder-loader game takes the layout as one entry per file: the game reads the mods target

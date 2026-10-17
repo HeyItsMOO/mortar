@@ -437,6 +437,46 @@ type GameLoader struct {
 	// Major is the loader's major version the game runs, when it is not the loader's own default: BepInEx 6 for an
 	// IL2CPP game such as Cat Mail Co., whose pack is BepInEx-BepInExPack_IL2CPP.
 	Major int `json:"major,omitempty"`
+	// Routes are folders beyond BepInEx's own that the game's mods install into, from r2modman's install rules.
+	Routes []LoaderRoute `json:"routes,omitempty"`
+}
+
+// TrackSubdir is a LoaderRoute's Track for a folder that keeps each package's files in a folder named for the package.
+const TrackSubdir = "subdir"
+
+// LoaderRoute is a folder of the profile root that a mod loader's packages install into. A package folder whose name
+// is Dir's last segment, at any depth, and a package file ending in one of Extensions, go to Dir.
+type LoaderRoute struct {
+	Dir        string   `json:"dir"`
+	Extensions []string `json:"extensions,omitempty"`
+	// Track is TrackSubdir to place a package's files below a folder named for it, else they go straight into Dir.
+	Track string `json:"track,omitempty"`
+}
+
+// Validate rejects a route that could place a file outside the profile root.
+func (r LoaderRoute) Validate() error {
+	if !fs.ValidPath(r.Dir) || r.Dir == "." || strings.ContainsAny(r.Dir, `\:`) {
+		return fmt.Errorf("unsafe route folder %q", r.Dir)
+	}
+	if r.Track != "" && r.Track != TrackSubdir {
+		return fmt.Errorf("route %q has unknown track %q", r.Dir, r.Track)
+	}
+	for _, ext := range r.Extensions {
+		if len(ext) < 2 || ext[0] != '.' || strings.ContainsAny(ext, `/\*?[:`) {
+			return fmt.Errorf("route %q has unusable extension %q", r.Dir, ext)
+		}
+	}
+	return nil
+}
+
+// Routes is the extra install folders of the game's loader id.
+func (g GameInfo) Routes(id string) []LoaderRoute {
+	for _, l := range g.Loaders {
+		if l.ID == id {
+			return l.Routes
+		}
+	}
+	return nil
 }
 
 // saveFilePattern reports whether p names files in the saves folder or in one plain folder below it; an exclusion
@@ -606,6 +646,13 @@ func (g GameInfo) Validate() error {
 				if p != "" && !strings.HasPrefix(p, "{") {
 					return fmt.Errorf("game %q standalone folder %q must start with a token", g.ID, p)
 				}
+			}
+		}
+	}
+	for _, l := range g.Loaders {
+		for _, r := range l.Routes {
+			if err := r.Validate(); err != nil {
+				return fmt.Errorf("game %q: %w", g.ID, err)
 			}
 		}
 	}

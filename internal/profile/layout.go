@@ -33,6 +33,7 @@ func installerGame(gameID string) installer.Game {
 	for _, l := range info.Loaders {
 		g.Loaders = append(g.Loaders, l.ID)
 	}
+	g.Routes = info.Routes(bepinex5.ID)
 	for _, t := range info.Targets {
 		g.Targets = append(g.Targets, installer.Target{ID: t.ID, Root: t.Root, MaxDepth: t.MaxDepth, KeepWhole: t.KeepWhole, ModRoot: t.ModRoot, Extensions: t.Extensions, Shared: t.Role != ""})
 	}

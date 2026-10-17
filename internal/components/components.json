@@ -1,5 +1,5 @@
 {
-  "serial": 1792262813,
+  "serial": 1792263388,
   "components": [
     {
       "game": "stardew",
@@ -7075,6 +7075,337 @@
         {
           "id": "thunderstore",
           "key": "rogue-tower"
+        }
+      ]
+    },
+    {
+      "id": "h3vr",
+      "name": "H3VR",
+      "enabled": true,
+      "marker": "h3vr.exe",
+      "r2modmanFolder": "H3VR",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "450540"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "BepInEx-BepInExPack_H3VR",
+          "routes": [
+            {
+              "dir": "BepInEx/Sideloader",
+              "extensions": [".hotmod", ".h3mod"]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "h3vr"
+        }
+      ]
+    },
+    {
+      "id": "gtfo",
+      "name": "GTFO",
+      "enabled": true,
+      "marker": "GTFO.exe",
+      "r2modmanFolder": "GTFO",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "493520"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_GTFO",
+          "major": 6,
+          "routes": [
+            {
+              "dir": "BepInEx/GameData",
+              "track": "subdir"
+            },
+            {
+              "dir": "BepInEx/Assets"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gtfo"
+        }
+      ]
+    },
+    {
+      "id": "ultrakill",
+      "name": "ULTRAKILL",
+      "enabled": true,
+      "marker": "ULTRAKILL.exe",
+      "r2modmanFolder": "ULTRAKILL",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1229490"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "routes": [
+            {
+              "dir": "BepInEx/UMM Mods",
+              "track": "subdir"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ultrakill"
+        }
+      ]
+    },
+    {
+      "id": "nasb",
+      "name": "Nickelodeon All-Star Brawl",
+      "enabled": true,
+      "marker": "Nickelodeon All-Star Brawl.exe",
+      "r2modmanFolder": "NASB",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1414850"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "BepInEx-BepInExPack_NASB",
+          "routes": [
+            {
+              "dir": "BepInEx/CustomSongs"
+            },
+            {
+              "dir": "BepInEx/Voicepacks",
+              "extensions": [".voicepack"],
+              "track": "subdir"
+            },
+            {
+              "dir": "BepInEx/Skins",
+              "extensions": [".nasbskin"],
+              "track": "subdir"
+            },
+            {
+              "dir": "BepInEx/Movesets"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "nasb"
+        }
+      ]
+    },
+    {
+      "id": "subnautica",
+      "name": "Subnautica",
+      "enabled": true,
+      "marker": "Subnautica.exe",
+      "r2modmanFolder": "Subnautica",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "264710"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "Subnautica_Modding-BepInExPack_Subnautica",
+          "routes": [
+            {
+              "dir": "QMods"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "subnautica"
+        }
+      ]
+    },
+    {
+      "id": "subnautica-below-zero",
+      "name": "Subnautica: Below Zero",
+      "enabled": true,
+      "marker": "SubnauticaZero.exe",
+      "r2modmanFolder": "SubnauticaBZ",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "848450"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "Subnautica_Modding-BepInExPack_BelowZero",
+          "routes": [
+            {
+              "dir": "QMods"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "subnautica-below-zero"
+        }
+      ]
+    },
+    {
+      "id": "timberborn",
+      "name": "Timberborn",
+      "enabled": true,
+      "marker": "Timberborn.exe",
+      "r2modmanFolder": "Timberborn",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1062090"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "companion": "bridge",
+          "package": "BepInEx-BepInExPack_Timberborn",
+          "routes": [
+            {
+              "dir": "BepInEx/Maps",
+              "track": "subdir"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "timberborn"
+        }
+      ]
+    },
+    {
+      "id": "patapon-1-2-replay",
+      "name": "PATAPON 1+2 REPLAY",
+      "enabled": true,
+      "marker": "PATAPON12_REPLAY.exe",
+      "r2modmanFolder": "Patapon12Replay",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2383200"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 6 (IL2CPP)",
+          "package": "BepInEx-BepInExPack_Patapon",
+          "major": 6,
+          "routes": [
+            {
+              "dir": "BepInEx/hexpatches"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "patapon-1-2-replay"
         }
       ]
     },

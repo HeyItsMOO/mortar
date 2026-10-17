@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
@@ -266,13 +267,41 @@ func TestRoute(t *testing.T) {
 		"plugins/Mod.dll:stream":          "",
 	}
 	for in, want := range cases {
-		if got := Route(in, pkg); got != want {
+		if got := Route(in, pkg, nil); got != want {
 			t.Errorf("Route(%q) = %q, want %q", in, got, want)
 		}
 	}
 	for _, bad := range []string{"", "..", "../x", `a\b`, "C:x"} {
-		if got := Route("Mod.dll", bad); got != "" {
+		if got := Route("Mod.dll", bad, nil); got != "" {
 			t.Errorf("Route with package %q = %q, want none", bad, got)
+		}
+	}
+}
+
+func TestRouteCatalogRoutes(t *testing.T) {
+	routes := []components.LoaderRoute{
+		{Dir: "BepInEx/UMM Mods", Track: components.TrackSubdir},
+		{Dir: "BepInEx/Sideloader", Extensions: []string{".hotmod", ".h3mod"}},
+		{Dir: "BepInEx/Skins", Extensions: []string{".nasbskin"}, Track: components.TrackSubdir},
+		{Dir: "QMods"},
+	}
+	cases := map[string]string{
+		"UMM Mods/Cool/Cool.dll":       "BepInEx/UMM Mods/Ns-Mod/Cool/Cool.dll",
+		"x/umm mods/Cool.dll":          "BepInEx/UMM Mods/Ns-Mod/Cool.dll",
+		"BepInEx/Sideloader/a/b.h3mod": "BepInEx/Sideloader/a/b.h3mod",
+		"deep/folder/Thing.HotMod":     "BepInEx/Sideloader/Thing.HotMod",
+		"pack/Fancy.nasbskin":          "BepInEx/Skins/Ns-Mod/Fancy.nasbskin",
+		"QMods/Mod/mod.json":           "QMods/Mod/mod.json",
+		"plugins/UMM Mods/x.dll":       "BepInEx/plugins/Ns-Mod/UMM Mods/x.dll",
+		"Mod.dll":                      "BepInEx/plugins/Ns-Mod/Mod.dll",
+		"QMods/../../evil.dll":         "",
+		`QMods\..\..\evil.dll`:         "",
+		"C:/QMods/evil.dll":            "",
+		"QMods/Mod:stream":             "",
+	}
+	for in, want := range cases {
+		if got := Route(in, "Ns-Mod", routes); got != want {
+			t.Errorf("Route(%q) = %q, want %q", in, got, want)
 		}
 	}
 }

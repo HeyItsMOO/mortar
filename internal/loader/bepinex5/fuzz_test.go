@@ -45,7 +45,7 @@ func FuzzRoute(f *testing.F) {
 		f.Add(s[0], s[1])
 	}
 	f.Fuzz(func(t *testing.T, rel, pkg string) {
-		got := Route(rel, pkg)
+		got := Route(rel, pkg, nil)
 		if got == "" {
 			return
 		}

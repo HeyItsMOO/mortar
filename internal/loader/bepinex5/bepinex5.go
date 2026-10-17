@@ -365,8 +365,9 @@ func nowFiletime() int64 { return time.Now().Unix() }
 // that rule's folder and keeps the structure below it (plugins, patchers, monomod and core in a folder named for the
 // package, config flat). A file under no such folder is placed by its name alone, a .mm.dll in monomod and anything
 // else in plugins, so the folders above it are flattened away: packages such as MirageCore ship FSharp.Core/FSharp.Core.dll
-// and load it from beside their plugin.
-func Route(relPath, pkg string) string {
+// and load it from beside their plugin. The game's routes (components.LoaderRoute) add folders of the same kind, each
+// matched by its last segment at any depth, and extensions that send a file there wherever it sits.
+func Route(relPath, pkg string, routes []components.LoaderRoute) string {
 	if pkg == "" || strings.ContainsAny(pkg, `/\:`) || pkg == "." || pkg == ".." {
 		return ""
 	}
@@ -377,6 +378,9 @@ func Route(relPath, pkg string) string {
 	segs := strings.Split(p, "/")
 	for i, dir := range segs[:len(segs)-1] {
 		rest := path.Join(segs[i+1:]...)
+		if k := slices.IndexFunc(routes, func(r components.LoaderRoute) bool { return strings.EqualFold(path.Base(r.Dir), dir) }); k >= 0 {
+			return routed(routes[k], pkg, rest)
+		}
 		switch strings.ToLower(dir) {
 		case "config":
 			return path.Join("BepInEx", "config", rest)
@@ -391,10 +395,35 @@ func Route(relPath, pkg string) string {
 			return ""
 		}
 	}
+	if r, ok := routeByExtension(routes, name); ok {
+		return routed(r, pkg, name)
+	}
 	if strings.HasSuffix(strings.ToLower(name), ".mm.dll") {
 		return path.Join("BepInEx", "monomod", pkg, name)
 	}
 	return path.Join("BepInEx", "plugins", pkg, name)
+}
+
+// routed is rest placed in route r, below the package's own folder when r tracks by subdirectory.
+func routed(r components.LoaderRoute, pkg, rest string) string {
+	if r.Track == components.TrackSubdir {
+		return path.Join(r.Dir, pkg, rest)
+	}
+	return path.Join(r.Dir, rest)
+}
+
+// routeByExtension is the route whose longest extension ends name, as r2modman prefers the longer of two matches.
+func routeByExtension(routes []components.LoaderRoute, name string) (best components.LoaderRoute, ok bool) {
+	longest := 0
+	lower := strings.ToLower(name)
+	for _, r := range routes {
+		for _, ext := range r.Extensions {
+			if len(ext) > longest && strings.HasSuffix(lower, strings.ToLower(ext)) {
+				best, longest, ok = r, len(ext), true
+			}
+		}
+	}
+	return best, ok
 }
 
 // Manifest is the part of a Thunderstore package's manifest.json that Mortar reads.

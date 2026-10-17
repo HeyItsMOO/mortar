@@ -59,7 +59,7 @@ func (thunderstoreRules) Layout(a Archive, g Game, _ Choices) (Layout, error) {
 	var l Layout
 	at := map[string]int{}
 	for _, f := range all {
-		dest := bepinex5.Route(f, pkg)
+		dest := bepinex5.Route(f, pkg, g.Routes)
 		if dest == "" {
 			continue
 		}
