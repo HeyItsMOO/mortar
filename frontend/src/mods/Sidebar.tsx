@@ -14,10 +14,8 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import { formatWhen } from '../i18n/formatWhen.ts'
 import { openModInProfile } from '../profiles/findMod.ts'
-import { openProfileOf, useProfiles } from '../profiles/store.ts'
+import { useProfiles } from '../profiles/store.ts'
 import { Fold } from '../shell/Fold.tsx'
-import { OfflineGate } from '../shell/OfflineGate.tsx'
-import { updateSources, useOfflineReason } from '../shell/offlineText.ts'
 import { useLoaded } from '../shell/useLoaded.ts'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
@@ -41,11 +39,9 @@ import {
   modId,
   nexusIdOf,
   problemsOf,
-  sameId,
   siblingsOf,
   sourceKind,
   updateFor,
-  visibleUpdates,
 } from './lookup.ts'
 import { ModDependencyTree } from './ModDependencyTree.tsx'
 import { ModNoteTags } from './ModNoteTags.tsx'
@@ -56,15 +52,15 @@ import { hostOf, openPageLabel } from './modActions.ts'
 import { NexusDetails } from './NexusDetails.tsx'
 import { useLookedSnapshot, useNexusEntry, useNexusFresh } from './nexusDetails.ts'
 import { formatCount, isNewer } from './nexusFormat.ts'
-import { goneCaption, nexusPageMark, offersNexusDownload } from './nexusMark.ts'
+import { goneCaption, nexusPageMark } from './nexusMark.ts'
 import { OptionalFiles } from './OptionalFiles.tsx'
 import { OtherProfilesDialog } from './OtherProfilesDialog.tsx'
 import { usePackageChangelog } from './packageChangelog.ts'
-import { accent, heading } from './paper.ts'
+import { heading } from './paper.ts'
 import { LetterTile, ModSwitch, RemoveButton, ShowFilesButton } from './parts.tsx'
 import { useRequirementName } from './requirementName.ts'
 import { useMods } from './store.ts'
-import { EverywhereDialog } from './updateReview/EverywhereDialog.tsx'
+import { UpdateBanner } from './UpdateBanner.tsx'
 import { useUpdates } from './updates.ts'
 
 const noWrap = { whiteSpace: 'nowrap' } as const
@@ -164,95 +160,6 @@ function NexusFields({
         <Clipped label={t`Updated`} value={formatWhen(page.updated) || '—'} />
       </Box>
     </>
-  )
-}
-
-function UpdateBanner({ mod }: { mod: Mod }) {
-  const { t } = useLingui()
-  const profile = useProfiles(openProfileOf)
-  const nexusId = profile ? nexusIdOf(profile, mod) : 0
-  const details = useNexusEntry(nexusId)?.details
-  const raw = useUpdates((s) => s.updates)
-  const setReviewing = useUpdates((s) => s.setReviewing)
-  const game = useProfiles((s) => s.game?.id ?? '')
-  const [everywhere, setEverywhere] = useState(false)
-  const setSkipVersion = useMods((s) => s.setSkipVersion)
-  const mine = visibleUpdates(raw, profile).filter((u) => u.key === mod.key && sameId(u.id, mod.id))
-  const unofficial = mine.find((u) => u.unofficial)
-  const update = mine.find((u) => !u.unofficial)
-  const blocked =
-    Boolean(update) &&
-    (update?.nexusId ?? 0) > 0 &&
-    !offersNexusDownload(details?.page.status, details?.page.available)
-  const official = blocked ? undefined : update
-  const offline = useOfflineReason(update ? updateSources(update) : [])
-  if (!(official || unofficial)) {
-    return null
-  }
-  return (
-    <Box
-      sx={{
-        px: space.pad,
-        py: 0.75,
-        display: 'flex',
-        alignItems: 'center',
-        gap: space.gap,
-        borderRadius: '6px',
-        bgcolor: accent.fill,
-        border: '1px solid',
-        borderColor: accent.line,
-      }}
-    >
-      <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 0.25 }}>
-        {official ? (
-          <Typography sx={{ fontSize: 13 }}>
-            {t`Update available: ${official.installed} → ${official.version}`}
-          </Typography>
-        ) : null}
-        {unofficial ? (
-          <Typography sx={{ fontSize: 13 }}>
-            {t`Unofficial update available: ${unofficial.version}`}
-            {unofficial.url ? (
-              <>
-                {' '}
-                <Link
-                  component="button"
-                  onClick={() => openPage(unofficial.url)}
-                  sx={{ fontSize: 13 }}
-                >
-                  {t`Open page`}
-                </Link>
-              </>
-            ) : null}
-          </Typography>
-        ) : null}
-      </Box>
-      {official ? (
-        <Button
-          size="small"
-          variant="outlined"
-          onClick={() => setSkipVersion(mod, official.version).catch(reportUnexpected)}
-        >
-          {t`Skip this update`}
-        </Button>
-      ) : null}
-      <OfflineGate reason={offline}>
-        <Button size="small" variant="contained" onClick={() => setReviewing(true)}>
-          {t`Update`}
-        </Button>
-      </OfflineGate>
-      <OfflineGate reason={offline}>
-        <Button size="small" variant="outlined" onClick={() => setEverywhere(true)}>
-          {t`Update in all profiles that have it`}
-        </Button>
-      </OfflineGate>
-      <EverywhereDialog
-        open={everywhere}
-        game={game}
-        mods={[{ id: mod.id, newKey: 'latest' }]}
-        onClose={() => setEverywhere(false)}
-      />
-    </Box>
   )
 }
 
@@ -469,6 +376,7 @@ function LowerSectionsView({ mod, profile }: { mod: Mod; profile: Profile }) {
   return (
     <>
       <Field label={t`Version`} value={mod.version} />
+      <UpdateBanner mod={mod} />
       <ModUpdateControls mod={mod} entry={entry} />
       {entry?.skipVersion && !offered ? (
         <Button variant="outlined" onClick={() => setSkipVersion(mod, '').catch(reportUnexpected)}>
@@ -484,14 +392,22 @@ function LowerSectionsView({ mod, profile }: { mod: Mod; profile: Profile }) {
           {t`Stop ignoring ${ignoredSource} updates`}
         </Button>
       ))}
-      {mod.id.startsWith('smapi:') ? (
-        <Field label={t`Mod id`} value={localId(mod.id)} hint={t`SMAPI UniqueID`} />
-      ) : (
-        <Field label={t`Mod id`} value={localId(mod.id)} />
-      )}
-      {mod.endorsements > 0 ? (
-        <Field label={t`Endorsements`} value={mod.endorsements.toLocaleString(i18n.locale)} />
-      ) : null}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)',
+          gap: space.gap,
+        }}
+      >
+        {mod.id.startsWith('smapi:') ? (
+          <Field label={t`Mod id`} value={localId(mod.id)} hint={t`SMAPI UniqueID`} />
+        ) : (
+          <Field label={t`Mod id`} value={localId(mod.id)} />
+        )}
+        {mod.endorsements > 0 ? (
+          <Field label={t`Endorsements`} value={mod.endorsements.toLocaleString(i18n.locale)} />
+        ) : null}
+      </Box>
       {nexusId ? (
         <NexusFields
           key={nexusId}
@@ -500,26 +416,7 @@ function LowerSectionsView({ mod, profile }: { mod: Mod; profile: Profile }) {
           categoryOverride={entry?.categoryOverride ?? ''}
         />
       ) : null}
-      <UpdateBanner mod={mod} />
       <OptionalFiles mod={mod} profile={profile} />
-      <Button variant="outlined" onClick={() => setAlsoOpen(true)}>
-        {t`Also add to…`}
-      </Button>
-      <OtherProfilesDialog
-        open={alsoOpen}
-        onClose={() => setAlsoOpen(false)}
-        game={game}
-        currentProfileId={profile.id}
-        id={mod.id}
-        title={t`Also add ${mod.name} to…`}
-        withNeeds={true}
-        confirmLabel={t`Add`}
-        onConfirm={async (profiles) => {
-          await Promise.all(
-            profiles.map((other) => CopyModsWithNeeds(game, profile.id, other.id, [mod.id])),
-          )
-        }}
-      />
       <ProblemLine mod={mod} />
       <LastRunLine mod={mod} profile={profile} />
       <ModDependencyTree mod={mod} />
@@ -542,6 +439,24 @@ function LowerSectionsView({ mod, profile }: { mod: Mod; profile: Profile }) {
         </Fold>
       ) : null}
       <AlsoInProfiles mod={mod} profile={profile} />
+      <Button variant="outlined" onClick={() => setAlsoOpen(true)}>
+        {t`Also add to…`}
+      </Button>
+      <OtherProfilesDialog
+        open={alsoOpen}
+        onClose={() => setAlsoOpen(false)}
+        game={game}
+        currentProfileId={profile.id}
+        id={mod.id}
+        title={t`Also add ${mod.name} to…`}
+        withNeeds={true}
+        confirmLabel={t`Add`}
+        onConfirm={async (profiles) => {
+          await Promise.all(
+            profiles.map((other) => CopyModsWithNeeds(game, profile.id, other.id, [mod.id])),
+          )
+        }}
+      />
       <HiddenInside mod={mod} profile={profile} />
       <ModNoteTags profile={profile} mod={mod} />
     </>

@@ -112,8 +112,10 @@ function Settings({
   }
   return (
     <Section title={t`Settings`}>
-      <Box sx={row}>
-        <Typography sx={{ flex: 1, ...text }}>{label}</Typography>
+      <Typography sx={text}>{label}</Typography>
+      <Box
+        sx={{ display: 'flex', flexWrap: 'wrap', gap: space.gap, '&:empty': { display: 'none' } }}
+      >
         {configFiles.length > 0 ? <EditConfigButton mod={mod} /> : null}
         {file ? (
           <>

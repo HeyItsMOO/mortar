@@ -1,5 +1,14 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, Link, Typography } from '@mui/material'
+import { Box, Button, Link, Tooltip, Typography } from '@mui/material'
+import {
+  Asterisk,
+  CircleAlert,
+  CircleCheck,
+  CircleDashed,
+  CircleSlash,
+  type LucideIcon,
+  TriangleAlert,
+} from 'lucide-react'
 import { memo, useDeferredValue, useMemo } from 'react'
 import type { Broken } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/models.ts'
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
@@ -28,10 +37,9 @@ const noWrap = { whiteSpace: 'nowrap' } as const
 const indentStep = 1.5
 const rowMinHeight = 22
 const rowGap = 0.75
-const captionSize = 11
 const nameSize = 13
 const headingGap = 0.5
-const caption = { fontSize: captionSize, flexShrink: 0 } as const
+const iconSize = 13
 
 function MissingAdd({ id }: { id: string }) {
   const { t } = useLingui()
@@ -79,14 +87,36 @@ function MissingAdd({ id }: { id: string }) {
   )
 }
 
-function stateTone(state: DepViewNode['state']): string | undefined {
+function stateTone(state: DepViewNode['state']): string {
   if (state === 'missing' || state === 'broken') {
     return 'warning.main'
   }
   if (state === 'disabled') {
     return 'text.secondary'
   }
-  return undefined
+  return 'success.main'
+}
+
+const stateIcon: Record<DepViewNode['state'], LucideIcon> = {
+  enabled: CircleCheck,
+  disabled: CircleSlash,
+  missing: CircleAlert,
+  broken: TriangleAlert,
+}
+
+function Mark({ icon: Icon, label, color }: { icon: LucideIcon; label: string; color: string }) {
+  return (
+    <Tooltip title={label}>
+      <Box
+        role="img"
+        aria-label={label}
+        tabIndex={0}
+        sx={{ display: 'inline-flex', flexShrink: 0, mt: '3px', color }}
+      >
+        <Icon size={iconSize} aria-hidden={true} />
+      </Box>
+    </Tooltip>
+  )
 }
 
 function NodeRow({ node, mods, depth }: { node: DepViewNode; mods: Mod[]; depth: number }) {
@@ -108,40 +138,52 @@ function NodeRow({ node, mods, depth }: { node: DepViewNode; mods: Mod[]; depth:
   const tone = stateTone(node.state)
   return (
     <Box>
-      <Box sx={{ pl: depth * indentStep, minHeight: rowMinHeight }}>
-        {listed ? (
-          <Link
-            component="button"
-            onClick={() => show(listed)}
-            sx={{
-              fontSize: nameSize,
-              color: 'text.secondary',
-              textDecoration: 'underline dotted',
-              textAlign: 'left',
-              overflowWrap: 'anywhere',
-            }}
-          >
-            {label}
-          </Link>
-        ) : (
-          <Typography
-            title={localId(node.id)}
-            sx={{ fontSize: nameSize, overflowWrap: 'anywhere' }}
-          >
-            {label}
-          </Typography>
-        )}
+      <Box
+        sx={{
+          pl: depth * indentStep,
+          minHeight: rowMinHeight,
+          display: 'flex',
+          alignItems: 'flex-start',
+          columnGap: rowGap,
+        }}
+      >
+        <Mark
+          icon={node.required ? Asterisk : CircleDashed}
+          label={edgeNote}
+          color="text.secondary"
+        />
+        <Mark icon={stateIcon[node.state]} label={status} color={tone} />
         <Box
           sx={{
+            minWidth: 0,
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             columnGap: rowGap,
-            rowGap: 0.5,
           }}
         >
-          <Typography sx={{ ...caption, color: 'text.secondary' }}>{edgeNote}</Typography>
-          <Typography sx={{ ...caption, color: tone }}>{status}</Typography>
+          {listed ? (
+            <Link
+              component="button"
+              onClick={() => show(listed)}
+              sx={{
+                fontSize: nameSize,
+                color: 'text.secondary',
+                textDecoration: 'underline dotted',
+                textAlign: 'left',
+                overflowWrap: 'anywhere',
+              }}
+            >
+              {label}
+            </Link>
+          ) : (
+            <Typography
+              title={localId(node.id)}
+              sx={{ fontSize: nameSize, overflowWrap: 'anywhere' }}
+            >
+              {label}
+            </Typography>
+          )}
           {node.state === 'missing' ? <MissingAdd id={node.id} /> : null}
         </Box>
       </Box>
