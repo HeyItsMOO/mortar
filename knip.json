@@ -16,8 +16,7 @@
         "e2e/render-budget.ts",
         "e2e/screens.ts"
       ],
-      "vite": false,
-      "ignoreDependencies": ["@lingui/native-tools"]
+      "vite": false
     }
   }
 }

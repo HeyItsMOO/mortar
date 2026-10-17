@@ -23,7 +23,7 @@ test('every message id the build emits is in the catalog, and no macro is left u
   const problems: string[] = []
   for (const file of walk(SRC)) {
     const code = readFileSync(file, 'utf8')
-    if (!code.includes('@lingui/') || !code.includes('/macro')) {
+    if (!(code.includes('@lingui/') && code.includes('/macro'))) {
       continue
     }
     const out = (await transform(code, file, { macro: { descriptorFields: 'id-only' } })).code
