@@ -25,12 +25,14 @@ export function ModNoteTags({ profile, mod }: { profile: Profile; mod: Mod }) {
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const latest = useRef({ note: savedNote, tags: savedTags })
   const savedTagsKey = savedTags.join('\0')
+  // Keyed on the joined tags: an entry without tags gives a new empty array every render.
   useEffect(() => {
+    const saved = savedTagsKey === '' ? [] : savedTagsKey.split('\0')
     globalThis.clearTimeout(timer.current)
     setNote(savedNote)
-    setTags(savedTagsKey === '' ? [] : savedTagsKey.split('\0'))
-    latest.current = { note: savedNote, tags: savedTags }
-  }, [savedNote, savedTags, savedTagsKey])
+    setTags(saved)
+    latest.current = { note: savedNote, tags: saved }
+  }, [savedNote, savedTagsKey])
   const suggestions = profileTags(profile.entries)
   const save = useCallback(
     (nextNote: string, nextTags: string[]) => {
