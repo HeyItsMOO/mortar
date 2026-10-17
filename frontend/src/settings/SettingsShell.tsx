@@ -1,7 +1,15 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Typography } from '@mui/material'
 import { type LucideIcon, Search, SearchX } from 'lucide-react'
-import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import {
+  memo,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { EmptyState } from '../shell/EmptyState.tsx'
 import { space } from '../theme/density.ts'
 import { SEARCH_HIT } from './prefFilter.ts'
@@ -102,6 +110,9 @@ export interface ShellPage<Id extends string> {
   groupEnd?: boolean
 }
 
+// Memoised: starting or clearing a search re-renders the shell around the nav, not the nav.
+const Nav = memo(SettingsNav) as typeof SettingsNav
+
 // The layout every settings screen shares: a nav of pages with search on the left, one page (or every page's
 // matches while searching) on the right.
 export function SettingsShell<Id extends string>({
@@ -152,14 +163,18 @@ export function SettingsShell<Id extends string>({
     globalThis.addEventListener('keydown', onKey)
     return () => globalThis.removeEventListener('keydown', onKey)
   }, [onBack])
-  const pick = (id: Id) => {
-    onPage(id)
-    if (searching) {
-      document.getElementById(`settings-section-${id}`)?.scrollIntoView({ block: 'start' })
-      return
-    }
-    pane.current?.scrollTo(0, 0)
-  }
+  // Reads the search when used rather than following it, so starting a search leaves the memoised nav alone.
+  const pick = useCallback(
+    (id: Id) => {
+      onPage(id)
+      if (settingsQuery().trim() !== '') {
+        document.getElementById(`settings-section-${id}`)?.scrollIntoView({ block: 'start' })
+        return
+      }
+      pane.current?.scrollTo(0, 0)
+    },
+    [onPage],
+  )
   return (
     <Box
       sx={{
@@ -171,7 +186,7 @@ export function SettingsShell<Id extends string>({
         },
       }}
     >
-      <SettingsNav
+      <Nav
         title={title}
         backLabel={backLabel}
         onBack={onBack}

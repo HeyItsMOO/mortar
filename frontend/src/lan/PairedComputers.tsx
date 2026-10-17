@@ -27,6 +27,7 @@ import {
   Unpair,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/lan/service.ts'
 import { SettingRow } from '../settings/SettingsSection.tsx'
+import { sameValue } from '../shell/sameValue.ts'
 import { space } from '../theme/density.ts'
 import { reportUnexpected, toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
@@ -166,16 +167,18 @@ export function PairedComputers() {
   const close = useCallback(() => setDialog(null), [])
   const refresh = useCallback(() => {
     Paired()
-      .then((next) => setPaired(next ?? []))
+      .then((next) => setPaired((prev) => (sameValue(prev, next ?? []) ? prev : (next ?? []))))
       .catch(reportUnexpected)
   }, [])
-  useEffect(() => {
-    refresh()
-    return Events.On('lan:paired', () => {
-      refresh()
-      setDialog(null)
-    })
-  }, [refresh])
+  useEffect(
+    () =>
+      Events.On('lan:paired', () => {
+        refresh()
+        setDialog(null)
+      }),
+    [refresh],
+  )
+  // Reads the list on mount and again when a dialog closes.
   useEffect(() => {
     if (dialog === null) {
       refresh()

@@ -11,6 +11,7 @@ import {
 import { i18n } from '../i18n/index.ts'
 import { sameId } from '../mods/lookup.ts'
 import { useProfiles } from '../profiles/store.ts'
+import { sameValue } from '../shell/sameValue.ts'
 import { errorMessage, reportUnexpected } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { dropMissing } from './dropMissing.ts'
@@ -40,7 +41,8 @@ export const useSaves = create<State>((set, get) => ({
     try {
       const fits = (await Saves(game, profileId)) ?? []
       if (get().key === key) {
-        set({ fits, status: 'ready' })
+        // An unchanged answer keeps the rows, so a mod switched on or off does not redraw what shows them.
+        set({ fits: sameValue(get().fits, fits) ? get().fits : fits, status: 'ready' })
       }
     } catch (e) {
       if (get().key === key) {

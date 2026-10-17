@@ -131,9 +131,9 @@ export const useToasts = create<{
         const merged = { ...previous, at: now, count, ...(changes.length > 0 ? { changes } : {}) }
         set((s) => ({
           history: [merged, ...s.history.slice(1)],
-          toasts: s.toasts.map((toast) =>
-            toast.title === input.title ? { ...toast, count } : toast,
-          ),
+          toasts: s.toasts.some((toast) => toast.title === input.title)
+            ? s.toasts.map((toast) => (toast.title === input.title ? { ...toast, count } : toast))
+            : s.toasts,
         }))
         saveHistory(get().history)
         return previous.id

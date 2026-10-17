@@ -19,6 +19,8 @@ import {
 import { ExtensionContact } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/support/service.ts'
 import { When } from '../../i18n/When.tsx'
 import { openPage } from '../../mods/menu.ts'
+import { useProfiles } from '../../profiles/store.ts'
+import { sameValue } from '../../shell/sameValue.ts'
 import { reportUnexpected, toastError } from '../../toasts/report.ts'
 import { PrefSelect, PrefSwitch } from '../PrefControls.tsx'
 import { PrefByKey, PrefKeys } from '../PrefRow.tsx'
@@ -30,14 +32,27 @@ import { useNxmHandler } from './nxmHandler.tsx'
 import { WatchFolders } from './WatchFolders.tsx'
 
 // Nexus links carry no profile, so the target profile is per game: one row for each game Nexus serves.
+interface Named {
+  id: string
+  name: string
+}
+
+const namesOf = (profiles: Profile[]): Named[] => profiles.map((p) => ({ id: p.id, name: p.name }))
+
 function NxmDefaultProfile({ game, gameName }: { game: string; gameName: string }) {
   const { t, i18n } = useLingui()
-  const [profiles, setProfiles] = useState<Profile[]>([])
+  // Names only, started from the open game's profiles when this is that game, so the read below changes nothing on
+  // screen unless a profile was added, removed or renamed.
+  const [profiles, setProfiles] = useState<Named[]>(() => {
+    const s = useProfiles.getState()
+    return s.game?.id === game ? namesOf(s.profiles) : []
+  })
   const value = useSettings((s) => s.games?.[game]?.nxmDefaultProfile ?? '')
   useEffect(() => {
+    const keep = (next: Named[]) => setProfiles((prev) => (sameValue(prev, next) ? prev : next))
     ListProfiles(game)
-      .then((ps) => setProfiles(ps ?? []))
-      .catch(() => setProfiles([]))
+      .then((ps) => keep(namesOf(ps ?? [])))
+      .catch(() => keep([]))
   }, [game])
   const copy = prefCopy(i18n, 'nxmDefaultProfile')
   const options = [

@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button } from '@mui/material'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { MoveDataFolderPreview } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/datasvc/service.ts'
 import { useNav } from '../../nav/store.ts'
 import { space } from '../../theme/density.ts'
@@ -60,6 +60,21 @@ function useMove() {
   return { prepare, dialog }
 }
 
+// Memoised: the disk use arriving re-renders the usage rows above, not these.
+const Upkeep = memo(function UpkeepView() {
+  const { t } = useLingui()
+  return (
+    <>
+      <SettingsSection title={t`Integrity`}>
+        <StoreCheckRow />
+      </SettingsSection>
+      <SettingsSection title={t`Retention`}>
+        <PrefKeys keys={['storeRetentionDays', 'trashRetentionDays', 'historyEventsKept']} />
+      </SettingsSection>
+    </>
+  )
+})
+
 export function Storage() {
   const { t } = useLingui()
   const openProfiles = useNav((s) => s.openProfiles)
@@ -95,12 +110,7 @@ export function Storage() {
           onDeletedProfiles={openProfiles}
         />
       )}
-      <SettingsSection title={t`Integrity`}>
-        <StoreCheckRow />
-      </SettingsSection>
-      <SettingsSection title={t`Retention`}>
-        <PrefKeys keys={['storeRetentionDays', 'trashRetentionDays', 'historyEventsKept']} />
-      </SettingsSection>
+      <Upkeep />
       {move.dialog}
       <CleanupDialog open={cleaning} onClose={() => setCleaning(false)} onChanged={restart} />
       <CacheClearDialog open={clearing} onClose={() => setClearing(false)} onCleared={restart} />
