@@ -51,6 +51,8 @@ const ALERT_COMPACT_HEIGHT = 38
 const ALERT_COMPACT_PAD_END = '6px'
 const ALERT_COMPACT_RADIUS = '6px'
 const ALERT_COMPACT_FONT_PX = 14
+const ALERT_COMPACT_ICON_PX = 18
+const ALERT_COMPACT_ICON_GAP_PX = 10
 const ALERT_TONES = ['info', 'warning', 'success', 'error'] as const
 const BUTTON_LARGE_HEIGHT = 46
 const BUTTON_LARGE_PAD = '0 20px'
@@ -153,7 +155,12 @@ function compactAlert(): Components<Theme>['MuiAlert'] {
           borderRadius: ALERT_COMPACT_RADIUS,
           fontSize: ALERT_COMPACT_FONT_PX,
           color: th.palette.text.primary,
-          '& .MuiAlert-icon': { padding: 0, marginRight: ICON_GAP_PX, alignSelf: 'center' },
+          '& .MuiAlert-icon': {
+            padding: 0,
+            marginRight: ALERT_COMPACT_ICON_GAP_PX,
+            fontSize: ALERT_COMPACT_ICON_PX,
+            alignSelf: 'center',
+          },
           '& .MuiAlert-message': { padding: '6px 0' },
           '& .MuiAlert-action': { padding: 0, marginRight: 0, alignItems: 'center' },
           '& .MuiAlert-action .MuiButton-root': {
