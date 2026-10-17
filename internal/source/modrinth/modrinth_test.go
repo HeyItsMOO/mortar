@@ -41,7 +41,7 @@ func fake(t *testing.T) Driver {
 		}
 	}))
 	t.Cleanup(srv.Close)
-	return Driver{URL: srv.URL}
+	return Driver{URL: srv.URL, HTTP: srv.Client()}
 }
 
 func TestSearchBuildsFacetsAndMapsHits(t *testing.T) {
@@ -119,7 +119,7 @@ func TestLatestChecksEveryFileInOneBatch(t *testing.T) {
 		}
 	}))
 	t.Cleanup(srv.Close)
-	d := Driver{URL: srv.URL}
+	d := Driver{URL: srv.URL, HTTP: srv.Client()}
 	src := components.GameSource{ID: "modrinth", Loaders: []string{"fabric"}, GameVersions: []string{"1.21"}}
 	got, err := d.Latest(context.Background(), src, "", []source.InstalledFile{
 		{ID: "sodium", Version: "0.5.0", Digest: "sha512:aa11"},
@@ -149,7 +149,7 @@ func TestLatestSaysBusyWhenRateLimited(t *testing.T) {
 		w.WriteHeader(http.StatusTooManyRequests)
 	}))
 	t.Cleanup(srv.Close)
-	_, err := Driver{URL: srv.URL}.Latest(context.Background(), components.GameSource{Loaders: []string{"fabric"}}, "", []source.InstalledFile{{Digest: "sha512:aa"}})
+	_, err := Driver{URL: srv.URL, HTTP: srv.Client()}.Latest(context.Background(), components.GameSource{Loaders: []string{"fabric"}}, "", []source.InstalledFile{{Digest: "sha512:aa"}})
 	if !errors.Is(err, source.ErrBusy) {
 		t.Fatalf("err = %v, want ErrBusy", err)
 	}
@@ -161,7 +161,7 @@ func TestLatestAsksNothingWithoutLoaders(t *testing.T) {
 		t.Errorf("asked %s without loaders", r.URL.Path)
 	}))
 	t.Cleanup(srv.Close)
-	got, err := Driver{URL: srv.URL}.Latest(context.Background(), components.GameSource{ID: "modrinth"}, "", []source.InstalledFile{{Digest: "sha512:aa"}})
+	got, err := Driver{URL: srv.URL, HTTP: srv.Client()}.Latest(context.Background(), components.GameSource{ID: "modrinth"}, "", []source.InstalledFile{{Digest: "sha512:aa"}})
 	if err != nil || len(got) != 0 {
 		t.Fatalf("latest = %+v %v", got, err)
 	}
@@ -175,7 +175,7 @@ func TestResolvePassesLoadersThrough(t *testing.T) {
 		_, _ = w.Write([]byte(`[{"id":"v","project_id":"p","version_number":"1","files":[{"url":"u","filename":"f.jar","primary":true}]}]`))
 	}))
 	t.Cleanup(srv.Close)
-	if _, err := (Driver{URL: srv.URL}).Resolve(context.Background(), "p", "", "", []string{"fabric", "quilt"}); err != nil {
+	if _, err := (Driver{URL: srv.URL, HTTP: srv.Client()}).Resolve(context.Background(), "p", "", "", []string{"fabric", "quilt"}); err != nil {
 		t.Fatal(err)
 	}
 	if got != `["fabric","quilt"]` {
