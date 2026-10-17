@@ -365,7 +365,7 @@ code {
   color: rgb(220, 220, 228);
 }
 main.after-bleed {
-  padding-top: 2rem;
+  padding-top: 0;
 }
 .facts-strip {
   display: flex;
