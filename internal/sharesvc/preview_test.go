@@ -195,8 +195,8 @@ func TestResolveFilesFailureIsUnconfirmed(t *testing.T) {
 func TestResolveGitHubInstalled(t *testing.T) {
 	target := []profile.Entry{{Key: "gh", Source: profile.Source{Kind: profile.KindGitHub, Repo: "O/R", Tag: "v1", Asset: "a.zip"}}}
 	r := testResolver(nil, target)
-	mods, _ := r.resolve(t.Context(), []share.Ref{{GitHub: "o/r@v1/a.zip"}, {GitHub: "o/r@v2/a.zip"}})
-	if mods[0].State != StateInstalled || mods[1].State != StateDownload || !mods[1].Unverified || mods[1].Tag != "v2" {
+	mods, _ := r.resolve(t.Context(), []share.Ref{{GitHub: "o/r@v1/a.zip"}, {GitHub: "o/r@v2/a.zip", Implicit: true}})
+	if mods[0].State != StateInstalled || mods[1].State != StateDependency || !mods[1].Implicit || !mods[1].Unverified || mods[1].Tag != "v2" {
 		t.Errorf("mods = %+v", mods)
 	}
 }

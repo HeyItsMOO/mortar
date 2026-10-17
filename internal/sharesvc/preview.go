@@ -553,7 +553,13 @@ func (r *resolver) resolve(ctx context.Context, refs []share.Ref) ([]Mod, []Prob
 			m.Disabled, m.Fomod, m.Overlay = append([]mod.ID{}, ref.Disabled...), ref.Fomod, ref.Overlay
 			add("nexus", m)
 		}
-		mods[len(mods)-1].Implicit = ref.Implicit
+		// A mod the sender marked implicit is offered as a dependency, as one the preview adds itself is.
+		if last := &mods[len(mods)-1]; ref.Implicit {
+			last.Implicit = true
+			if last.State == StateDownload {
+				last.State = StateDependency
+			}
+		}
 	}
 	if !share.RecordsReasons(refs) {
 		r.inferReasons(mods)
