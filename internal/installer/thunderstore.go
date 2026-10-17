@@ -7,11 +7,13 @@ import (
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
+	"github.com/Rethunk-Tech/mortar/internal/loader/melonloader"
 )
 
 var _ = Register(thunderstoreRules{})
 
-// thunderstoreRules places a Thunderstore package's files by BepInEx's rules, below the profile's root.
+// thunderstoreRules places a Thunderstore package's files by the rules of the game's loader (BepInEx or MelonLoader),
+// below the profile's root.
 type thunderstoreRules struct{}
 
 func (thunderstoreRules) ID() string { return "thunderstore-rules" }
@@ -28,10 +30,17 @@ func manifestOf(a Archive) (name string, ok bool) {
 	return m.Name, true
 }
 
-// Detect takes a Thunderstore package, and for a BepInEx game also an archive from another site that holds no
-// manifest but plainly is a BepInEx mod: a DLL or a BepInEx folder. r2modman installs those by the same rules.
+// Detect takes a Thunderstore package, and for a BepInEx or MelonLoader game also an archive from another site that
+// holds no manifest but plainly is a mod of the loader: a DLL or the loader's folder. r2modman installs those by the
+// same rules.
 func (thunderstoreRules) Detect(a Archive, g Game) bool {
-	if !slices.Contains(g.Loaders, bepinex5.ID) {
+	loaderFolder := ""
+	switch {
+	case slices.Contains(g.Loaders, bepinex5.ID):
+		loaderFolder = "BepInEx"
+	case slices.Contains(g.Loaders, melonloader.ID):
+		loaderFolder = "MelonLoader"
+	default:
 		return false
 	}
 	if _, ok := manifestOf(a); ok {
@@ -40,8 +49,16 @@ func (thunderstoreRules) Detect(a Archive, g Game) bool {
 	all, err := files(a, ".")
 	return err == nil && slices.ContainsFunc(all, func(f string) bool {
 		first, _, _ := strings.Cut(f, "/")
-		return !skip(f) && (strings.EqualFold(path.Ext(f), ".dll") || strings.EqualFold(first, "BepInEx"))
+		return !skip(f) && (strings.EqualFold(path.Ext(f), ".dll") || strings.EqualFold(first, loaderFolder))
 	})
+}
+
+// route is where the game's loader puts file f of package pkg, "" for a file it drops.
+func route(g Game, f, pkg string) string {
+	if slices.Contains(g.Loaders, melonloader.ID) {
+		return melonloader.Route(f, pkg, g.Routes)
+	}
+	return bepinex5.Route(f, pkg, g.Routes)
 }
 
 func (thunderstoreRules) Layout(a Archive, g Game, _ Choices) (Layout, error) {
@@ -59,7 +76,7 @@ func (thunderstoreRules) Layout(a Archive, g Game, _ Choices) (Layout, error) {
 	var l Layout
 	at := map[string]int{}
 	for _, f := range all {
-		dest := bepinex5.Route(f, pkg, g.Routes)
+		dest := route(g, f, pkg)
 		if dest == "" {
 			continue
 		}

@@ -111,7 +111,7 @@ func TestPrefsExportImportRoundTrip(t *testing.T) {
 		"density":           "compact", "theme": "light", "gridCardSize": "large", "showAuthorOnCards": "false", "browseCardStats": "size,updated",
 		"reduceMotion": "always", "growGameRows": "false", "profileHero": "hidden", "enableRequirements": "never",
 		"missingRequirements": "autodownload", "reuseFomodChoices": "false", "driftChecks": "false",
-		"smapiBuilds": "include", "smapiPin": "4.0.0", "bepinex5Pin": "5.4.2100", "autoInstallMortarUpdates": "false", "autoTrackNexus": "true",
+		"smapiBuilds": "include", "smapiPin": "4.0.0", "bepinex5Pin": "5.4.2100", "melonloaderPin": "0.7.2", "autoInstallMortarUpdates": "false", "autoTrackNexus": "true",
 		"defaultLaunchMethod": "direct", "showSmapiConsole": "false", "skipPlayCheck": "true", "skipIntro": "true", "graphicsApi": "dx12", "protonVersion": "Proton 9.0", "consoleLevel": "debug",
 		"consoleTimestamps": "false", "consoleFollow": "false", "lanSharing": "true", "lanPort": "47641", "lanAllowAnyAddress": "true", "lanName": "Workshop",
 		"lanAutoAcceptPaired": "true", "downloadFolder": "/var/tmp/mortar-dl",

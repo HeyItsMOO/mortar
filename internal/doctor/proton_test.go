@@ -10,9 +10,9 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/game"
 )
 
-type bepinex struct{ need bool }
+type bepinex struct{ dll string }
 
-func (b bepinex) NeedsWinHTTPOverride() bool { return b.need }
+func (b bepinex) OverrideDLL() string { return b.dll }
 
 func TestProtonChecks(t *testing.T) {
 	t.Setenv("HOME", t.TempDir())
@@ -40,7 +40,7 @@ func TestProtonChecks(t *testing.T) {
 	if got := status(); len(got) != 1 || got["flatpakCompatdata:lc"] != Warn {
 		t.Fatalf("no loader: %v", got)
 	}
-	RegisterLoader("lc", bepinex{need: true})
+	RegisterLoader("lc", bepinex{dll: "winhttp"})
 	for _, c := range protonChecks(g) {
 		if c.ID == "winhttp:lc" && !strings.Contains(c.Detail, "has not created its prefix") {
 			t.Fatalf("no registry yet: %+v", c)

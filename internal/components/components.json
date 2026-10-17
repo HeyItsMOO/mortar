@@ -1,6 +1,20 @@
 {
-  "serial": 1792263742,
+  "serial": 1792264767,
   "components": [
+    {
+      "game": "melonloader",
+      "name": "loader",
+      "kind": "loader",
+      "source": {
+        "host": "github.com",
+        "owner": "LavaGang",
+        "repo": "MelonLoader"
+      },
+      "tag": "v0.7.3",
+      "asset": "MelonLoader.x64.zip",
+      "version": "0.7.3",
+      "sha256": "5b2b2f3d1cd42b59ec886c5bdc2663edae87a0097a4f4a8f58c0965a99dda416"
+    },
     {
       "game": "stardew",
       "name": "smapi",
@@ -7608,6 +7622,1537 @@
         {
           "id": "thunderstore",
           "key": "wildfrost"
+        }
+      ]
+    },
+    {
+      "id": "backpack-hero",
+      "name": "Backpack Hero",
+      "enabled": true,
+      "marker": "Backpack Hero.exe",
+      "r2modmanFolder": "BackpackHero",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1970580"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader",
+          "routes": [
+            {
+              "dir": "Mods",
+              "extensions": [".dll"]
+            },
+            {
+              "dir": "UserData/ModManager",
+              "track": "subdir-no-flatten",
+              "default": true
+            },
+            {
+              "dir": "UserLibs",
+              "extensions": [".lib.dll"]
+            },
+            {
+              "dir": "MelonLoader"
+            },
+            {
+              "dir": "Managed",
+              "extensions": [".managed.dll"]
+            },
+            {
+              "dir": "Libs"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "backpack-hero"
+        }
+      ]
+    },
+    {
+      "id": "bonelab",
+      "name": "BONELAB",
+      "enabled": true,
+      "marker": "BONELAB_Steam_Windows64.exe",
+      "r2modmanFolder": "BONELAB",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1592190"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader",
+          "routes": [
+            {
+              "dir": "Mods",
+              "extensions": [".dll"],
+              "default": true
+            },
+            {
+              "dir": "Plugins",
+              "extensions": [".plugin.dll"]
+            },
+            {
+              "dir": "UserLibs",
+              "extensions": [".lib.dll"]
+            },
+            {
+              "dir": "MelonLoader"
+            },
+            {
+              "dir": "Managed",
+              "extensions": [".managed.dll"]
+            },
+            {
+              "dir": "Libs"
+            },
+            {
+              "dir": "UserData"
+            },
+            {
+              "dir": "CustomItems",
+              "extensions": [".melon"]
+            },
+            {
+              "dir": "CustomMaps",
+              "extensions": [".bcm", ".cma"]
+            },
+            {
+              "dir": "PlayerModels",
+              "extensions": [".body"]
+            },
+            {
+              "dir": "CustomLoadScreens",
+              "extensions": [".load"]
+            },
+            {
+              "dir": "Music",
+              "extensions": [".wav"]
+            },
+            {
+              "dir": "Food",
+              "extensions": [".food"]
+            },
+            {
+              "dir": "Scoreworks",
+              "extensions": [".sw"]
+            },
+            {
+              "dir": "CustomSkins",
+              "extensions": [".png"]
+            },
+            {
+              "dir": "Grenades",
+              "extensions": [".grenade"]
+            },
+            {
+              "dir": "Not Enough Photons"
+            },
+            {
+              "dir": "Hitmarkers"
+            },
+            {
+              "dir": "Skins"
+            },
+            {
+              "dir": "ScoreLab"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "bonelab"
+        }
+      ]
+    },
+    {
+      "id": "boneworks",
+      "name": "BONEWORKS",
+      "enabled": true,
+      "marker": "BONEWORKS.exe",
+      "r2modmanFolder": "BONEWORKS",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "823500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader",
+          "routes": [
+            {
+              "dir": "Mods",
+              "extensions": [".dll"],
+              "default": true
+            },
+            {
+              "dir": "Plugins",
+              "extensions": [".plugin.dll"]
+            },
+            {
+              "dir": "UserLibs",
+              "extensions": [".lib.dll"]
+            },
+            {
+              "dir": "MelonLoader"
+            },
+            {
+              "dir": "Managed",
+              "extensions": [".managed.dll"]
+            },
+            {
+              "dir": "Libs"
+            },
+            {
+              "dir": "UserData"
+            },
+            {
+              "dir": "CustomItems",
+              "extensions": [".melon"]
+            },
+            {
+              "dir": "CustomMaps",
+              "extensions": [".bcm", ".cma"]
+            },
+            {
+              "dir": "PlayerModels",
+              "extensions": [".body"]
+            },
+            {
+              "dir": "CustomLoadScreens",
+              "extensions": [".load"]
+            },
+            {
+              "dir": "Music",
+              "extensions": [".wav"]
+            },
+            {
+              "dir": "Food",
+              "extensions": [".food"]
+            },
+            {
+              "dir": "Scoreworks",
+              "extensions": [".sw"]
+            },
+            {
+              "dir": "CustomSkins",
+              "extensions": [".png"]
+            },
+            {
+              "dir": "Grenades",
+              "extensions": [".grenade"]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "boneworks"
+        }
+      ]
+    },
+    {
+      "id": "dale-dawson-stationery-supplies",
+      "name": "Dale & Dawson Stationery Supplies",
+      "enabled": true,
+      "marker": "DDSS.exe",
+      "r2modmanFolder": "DaleAndDawson",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2920570"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "dale-dawson-stationery-supplies"
+        }
+      ]
+    },
+    {
+      "id": "gang-beasts",
+      "name": "Gang Beasts",
+      "enabled": true,
+      "marker": "Gang Beasts.exe",
+      "r2modmanFolder": "GangBeasts",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "285900"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gang-beasts"
+        }
+      ]
+    },
+    {
+      "id": "hard-bullet",
+      "name": "Hard Bullet",
+      "enabled": true,
+      "marker": "Hard Bullet.exe",
+      "r2modmanFolder": "HardBullet",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1294760"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader",
+          "routes": [
+            {
+              "dir": "Mods",
+              "extensions": [".dll"]
+            },
+            {
+              "dir": "UserData/ModManager",
+              "track": "subdir-no-flatten",
+              "default": true
+            },
+            {
+              "dir": "UserLibs",
+              "extensions": [".lib.dll"]
+            },
+            {
+              "dir": "MelonLoader"
+            },
+            {
+              "dir": "Managed",
+              "extensions": [".managed.dll"]
+            },
+            {
+              "dir": "Libs"
+            },
+            {
+              "dir": "UserData/CustomNPCs",
+              "extensions": [".npc"]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "hard-bullet"
+        }
+      ]
+    },
+    {
+      "id": "labyrinthine",
+      "name": "Labyrinthine",
+      "enabled": true,
+      "marker": "Labyrinthine.exe",
+      "r2modmanFolder": "Labyrinthine",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1302240"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "labyrinthine"
+        }
+      ]
+    },
+    {
+      "id": "painting-vr",
+      "name": "Painting VR",
+      "enabled": true,
+      "marker": "PaintingVr.exe",
+      "r2modmanFolder": "PaintingVr",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1905940"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "painting-vr"
+        }
+      ]
+    },
+    {
+      "id": "patch-quest",
+      "name": "Patch Quest",
+      "enabled": true,
+      "marker": "Patch Quest.exe",
+      "r2modmanFolder": "PatchQuest",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1347970"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader",
+          "routes": [
+            {
+              "dir": "Mods",
+              "extensions": [".dll"]
+            },
+            {
+              "dir": "UserData/ModManager",
+              "track": "subdir-no-flatten",
+              "default": true
+            },
+            {
+              "dir": "UserLibs",
+              "extensions": [".lib.dll"]
+            },
+            {
+              "dir": "MelonLoader"
+            },
+            {
+              "dir": "Managed",
+              "extensions": [".managed.dll"]
+            },
+            {
+              "dir": "Libs"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "patch-quest"
+        }
+      ]
+    },
+    {
+      "id": "rumble",
+      "name": "RUMBLE",
+      "enabled": true,
+      "marker": "RUMBLE.exe",
+      "r2modmanFolder": "RUMBLE",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "890550"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader",
+          "routes": [
+            {
+              "dir": "Mods",
+              "extensions": [".dll"]
+            },
+            {
+              "dir": "UserData/ModManager",
+              "track": "subdir-no-flatten",
+              "default": true
+            },
+            {
+              "dir": "UserLibs",
+              "extensions": [".lib.dll"]
+            },
+            {
+              "dir": "MelonLoader"
+            },
+            {
+              "dir": "Managed",
+              "extensions": [".managed.dll"]
+            },
+            {
+              "dir": "Libs"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "rumble"
+        }
+      ]
+    },
+    {
+      "id": "schedule-i",
+      "name": "Schedule I",
+      "enabled": true,
+      "marker": "Schedule I.exe",
+      "r2modmanFolder": "ScheduleI",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3164500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "schedule-i"
+        }
+      ]
+    },
+    {
+      "id": "an-unfinished-game",
+      "name": "An Unfinished Game",
+      "enabled": true,
+      "marker": "UnfinishedGame.exe",
+      "r2modmanFolder": "AnUnfinishedGame",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2919990"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "an-unfinished-game"
+        }
+      ]
+    },
+    {
+      "id": "angry-birds-vr-isle-of-pigs",
+      "name": "Angry Birds VR: Isle of Pigs",
+      "enabled": true,
+      "marker": "angry-birds-vr-isle-of-pigs.exe",
+      "r2modmanFolder": "AngryBirdsVrIsleOfPigs",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1001140"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "angry-birds-vr-isle-of-pigs"
+        }
+      ]
+    },
+    {
+      "id": "baby-steps",
+      "name": "Baby Steps",
+      "enabled": true,
+      "marker": "BabySteps.exe",
+      "r2modmanFolder": "BabySteps",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1281040"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "baby-steps"
+        }
+      ]
+    },
+    {
+      "id": "beton-brutal",
+      "name": "BETON BRUTAL",
+      "enabled": true,
+      "marker": "BetonBrutal.exe",
+      "r2modmanFolder": "BetonBrutal",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2330500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "beton-brutal"
+        }
+      ]
+    },
+    {
+      "id": "big-ambitions",
+      "name": "Big Ambitions",
+      "enabled": true,
+      "marker": "Big Ambitions.exe",
+      "r2modmanFolder": "BigAmbitions",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1331550"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "big-ambitions"
+        }
+      ]
+    },
+    {
+      "id": "bloons-td-6",
+      "name": "BloonsTD6",
+      "enabled": true,
+      "marker": "BloonsTD6.exe",
+      "r2modmanFolder": "BloonsTD6",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "960090"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "bloons-td-6"
+        }
+      ]
+    },
+    {
+      "id": "brutalistick-vr",
+      "name": "BRUTALISTICK VR",
+      "enabled": true,
+      "marker": "BrutalistickVR.exe",
+      "r2modmanFolder": "BrutalistickVr",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2669380"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "brutalistick-vr"
+        }
+      ]
+    },
+    {
+      "id": "cairn",
+      "name": "Cairn",
+      "enabled": true,
+      "marker": "Cairn.exe",
+      "r2modmanFolder": "Cairn",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1588550"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cairn"
+        }
+      ]
+    },
+    {
+      "id": "cast-n-chill",
+      "name": "Cast n Chill",
+      "enabled": true,
+      "marker": "castnchill.exe",
+      "r2modmanFolder": "CastNChill",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3483740"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cast-n-chill"
+        }
+      ]
+    },
+    {
+      "id": "cryo",
+      "name": "CRYO",
+      "enabled": true,
+      "marker": "Cryo.exe",
+      "r2modmanFolder": "Cryo",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2564910"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cryo"
+        }
+      ]
+    },
+    {
+      "id": "cursed-words",
+      "name": "Cursed Words",
+      "enabled": true,
+      "marker": "Cursed Words.exe",
+      "r2modmanFolder": "CursedWords",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3856460"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "cursed-words"
+        }
+      ]
+    },
+    {
+      "id": "ducks-can-drive",
+      "name": "Ducks Can Drive",
+      "enabled": true,
+      "marker": "Ducks Can Drive.exe",
+      "r2modmanFolder": "DucksCanDrive",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2472840"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "ducks-can-drive"
+        }
+      ]
+    },
+    {
+      "id": "forsaken-frontiers",
+      "name": "Forsaken Frontiers",
+      "enabled": true,
+      "marker": "Forsaken Frontiers.exe",
+      "r2modmanFolder": "ForsakenFrontiers",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2810780"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "forsaken-frontiers"
+        }
+      ]
+    },
+    {
+      "id": "frukt",
+      "name": "FRUKT",
+      "enabled": true,
+      "marker": "FRUKT.exe",
+      "r2modmanFolder": "Frukt",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3880400"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "frukt"
+        }
+      ]
+    },
+    {
+      "id": "gorilla-tag",
+      "name": "Gorilla Tag",
+      "enabled": true,
+      "marker": "Gorilla Tag.exe",
+      "r2modmanFolder": "GorillaTag",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1533390"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "gorilla-tag"
+        }
+      ]
+    },
+    {
+      "id": "home-safety-hotline",
+      "name": "Home Safety Hotline",
+      "enabled": true,
+      "marker": "Home Safety Hotline.exe",
+      "r2modmanFolder": "HomeSafetyHotline",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2357910"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "home-safety-hotline"
+        }
+      ]
+    },
+    {
+      "id": "inside-the-backrooms",
+      "name": "Inside The Backrooms",
+      "enabled": true,
+      "marker": "Inside the Backrooms.exe",
+      "r2modmanFolder": "InsideTheBackrooms",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1987080"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "inside-the-backrooms"
+        }
+      ]
+    },
+    {
+      "id": "iron-nest",
+      "name": "IRON NEST: Heavy Turret Simulator",
+      "enabled": true,
+      "marker": "Iron Nest Heavy Turret Simulator.exe",
+      "r2modmanFolder": "IronNestHeavyTurretSimulator",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2950790"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "iron-nest"
+        }
+      ]
+    },
+    {
+      "id": "jump-space",
+      "name": "Jump Space",
+      "enabled": true,
+      "marker": "Jump Space.exe",
+      "r2modmanFolder": "JumpSpace",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1757300"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "jump-space"
+        }
+      ]
+    },
+    {
+      "id": "mimesis",
+      "name": "Mimesis",
+      "enabled": true,
+      "marker": "MIMESIS.exe",
+      "r2modmanFolder": "Mimesis",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "2827200"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "mimesis"
+        }
+      ]
+    },
+    {
+      "id": "offscreen",
+      "name": "Offscreen",
+      "enabled": true,
+      "marker": "Offscreen.exe",
+      "r2modmanFolder": "Offscreen",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3702990"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "offscreen"
+        }
+      ]
+    },
+    {
+      "id": "pit-of-goblin",
+      "name": "Pit of Goblin",
+      "enabled": true,
+      "marker": "Pit of Goblin.exe",
+      "r2modmanFolder": "PitOfGoblin",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3253530"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "pit-of-goblin"
+        }
+      ]
+    },
+    {
+      "id": "puttler",
+      "name": "Puttler",
+      "enabled": true,
+      "marker": "Puttler.exe",
+      "r2modmanFolder": "Puttler",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3198680"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "puttler"
+        }
+      ]
+    },
+    {
+      "id": "sledding-game",
+      "name": "Sledding Game",
+      "enabled": true,
+      "marker": "Sledding Game.exe",
+      "r2modmanFolder": "SleddingGame",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3438850"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "sledding-game"
+        }
+      ]
+    },
+    {
+      "id": "superhot-mind-control-delete",
+      "name": "SUPERHOT: MIND CONTROL DELETE",
+      "enabled": true,
+      "marker": "SHMCD.exe",
+      "r2modmanFolder": "SuperhotMindControlDelete",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "690040"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "superhot-mind-control-delete"
+        }
+      ]
+    },
+    {
+      "id": "superhot",
+      "name": "SUPERHOT",
+      "enabled": true,
+      "marker": "SH.exe",
+      "r2modmanFolder": "Superhot",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "322500"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "superhot"
+        }
+      ]
+    },
+    {
+      "id": "vellum",
+      "name": "Vellum",
+      "enabled": true,
+      "marker": "Vellum.exe",
+      "r2modmanFolder": "Vellum",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "917950"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "vellum"
+        }
+      ]
+    },
+    {
+      "id": "vigil",
+      "name": "Vigil",
+      "enabled": true,
+      "marker": "Vigil.exe",
+      "r2modmanFolder": "Vigil",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "3817090"
+        }
+      },
+      "loaders": [
+        {
+          "id": "melonloader",
+          "name": "MelonLoader",
+          "package": "LavaGang-MelonLoader"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "vigil"
         }
       ]
     },

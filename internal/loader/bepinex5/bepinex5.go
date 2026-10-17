@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/fs"
 	"os"
 	"path"
@@ -15,15 +14,14 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/archive"
 	"github.com/Rethunk-Tech/mortar/internal/components"
-	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/deps"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/manifest"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
+	"github.com/Rethunk-Tech/mortar/internal/wineoverride"
 )
 
 const (
@@ -292,7 +290,7 @@ func hostPath(profileRoot, rel string, proton bool) string {
 	}
 	if proton {
 		// Wine maps the host's root to Z:.
-		return `Z:` + strings.ReplaceAll(filepath.ToSlash(p), "/", `\`)
+		return wineoverride.ZPath(p)
 	}
 	return p
 }
@@ -320,75 +318,6 @@ func VanillaArgs() []string {
 	return []string{"--doorstop-enable", "false", "--doorstop-enabled", "false"}
 }
 
-const (
-	dllOverridesHeader = `[Software\\Wine\\DllOverrides]`
-	winhttpLine        = `"winhttp"="native,builtin"`
-	backupSuffix       = ".mortar-backup"
-	// filetimeEpoch is the seconds between 1601 and 1970, for Wine's #time= lines.
-	filetimeEpoch = 11644473600
-)
-
-// EnsureWinHTTPOverride makes the Proton prefix's user.reg load winhttp natively, as Doorstop needs. It is idempotent,
-// keeps the file's line endings and other sections, and copies the file to user.reg.mortar-backup once before the
-// first change. Run it while Wine is not running, or wineserver writes its own copy back over it.
-func EnsureWinHTTPOverride(userReg string) error {
-	raw, err := fsx.ReadFile(userReg)
-	if err != nil {
-		return err
-	}
-	text := string(raw)
-	eol := "\n"
-	if strings.Contains(text, "\r\n") {
-		eol = "\r\n"
-	}
-	lines := strings.Split(text, eol)
-	updated, changed := withWinHTTP(lines, nowFiletime)
-	if !changed {
-		return nil
-	}
-	backup := userReg + backupSuffix
-	if _, err := os.Stat(backup); errors.Is(err, fs.ErrNotExist) {
-		if err := fsx.WriteFile(backup, raw, 0o600); err != nil {
-			return err
-		}
-	}
-	return datadir.WriteFile(userReg, []byte(strings.Join(updated, eol)), 0o600)
-}
-
-// withWinHTTP returns lines with the winhttp override in the DllOverrides section, adding the section when it is missing.
-func withWinHTTP(lines []string, now func() (unix int64)) ([]string, bool) {
-	start := slices.IndexFunc(lines, func(l string) bool { return strings.HasPrefix(strings.ToLower(l), strings.ToLower(dllOverridesHeader)) })
-	if start < 0 {
-		unix := now()
-		filetime := (unix + filetimeEpoch) * 10_000_000
-		out := slices.Clone(lines)
-		// A file ends with a newline, so its last element is empty and the blank line before a section already exists.
-		if n := len(out); n > 0 && out[n-1] == "" {
-			out = out[:n-1]
-		}
-		return append(out, "", fmt.Sprintf("%s %d", dllOverridesHeader, unix), fmt.Sprintf("#time=%x", filetime), winhttpLine, ""), true
-	}
-	end := start + 1
-	for end < len(lines) && !strings.HasPrefix(lines[end], "[") && lines[end] != "" {
-		end++
-	}
-	for i := start + 1; i < end; i++ {
-		if strings.HasPrefix(strings.ToLower(lines[i]), `"winhttp"=`) {
-			if lines[i] == winhttpLine {
-				return lines, false
-			}
-			out := slices.Clone(lines)
-			out[i] = winhttpLine
-			return out, true
-		}
-	}
-	out := slices.Clone(lines[:end])
-	out = append(out, winhttpLine)
-	return append(out, lines[end:]...), true
-}
-
-func nowFiletime() int64 { return time.Now().Unix() }
-
 // Route is where a file of Thunderstore package pkg (Namespace-Name) goes in the profile root, from its path relPath
 // inside the package zip, or "" when the file is package metadata or unsafe. It follows r2modman's BepInEx rules
 // (r2modmanPlus src/installers/InstallRulePluginInstaller.ts, buildInstallForRuleSubtype), which mod authors build
@@ -409,8 +338,8 @@ func Route(relPath, pkg string, routes []components.LoaderRoute) string {
 	segs := strings.Split(p, "/")
 	for i, dir := range segs[:len(segs)-1] {
 		rest := path.Join(segs[i+1:]...)
-		if k := slices.IndexFunc(routes, func(r components.LoaderRoute) bool { return strings.EqualFold(path.Base(r.Dir), dir) }); k >= 0 {
-			return routed(routes[k], pkg, rest)
+		if r, ok := components.RouteByFolder(routes, dir); ok {
+			return r.Place(pkg, rest, p)
 		}
 		switch strings.ToLower(dir) {
 		case "config":
@@ -426,35 +355,13 @@ func Route(relPath, pkg string, routes []components.LoaderRoute) string {
 			return ""
 		}
 	}
-	if r, ok := routeByExtension(routes, name); ok {
-		return routed(r, pkg, name)
+	if r, ok := components.RouteByExtension(routes, name); ok {
+		return r.Place(pkg, name, p)
 	}
 	if strings.HasSuffix(strings.ToLower(name), ".mm.dll") {
 		return path.Join("BepInEx", "monomod", pkg, name)
 	}
 	return path.Join("BepInEx", "plugins", pkg, name)
-}
-
-// routed is rest placed in route r, below the package's own folder when r tracks by subdirectory.
-func routed(r components.LoaderRoute, pkg, rest string) string {
-	if r.Track == components.TrackSubdir {
-		return path.Join(r.Dir, pkg, rest)
-	}
-	return path.Join(r.Dir, rest)
-}
-
-// routeByExtension is the route whose longest extension ends name, as r2modman prefers the longer of two matches.
-func routeByExtension(routes []components.LoaderRoute, name string) (best components.LoaderRoute, ok bool) {
-	longest := 0
-	lower := strings.ToLower(name)
-	for _, r := range routes {
-		for _, ext := range r.Extensions {
-			if len(ext) > longest && strings.HasSuffix(lower, strings.ToLower(ext)) {
-				best, longest, ok = r, len(ext), true
-			}
-		}
-	}
-	return best, ok
 }
 
 // Manifest is the part of a Thunderstore package's manifest.json that Mortar reads.

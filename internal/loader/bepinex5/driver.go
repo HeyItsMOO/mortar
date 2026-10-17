@@ -197,8 +197,8 @@ func (Loader) Prelaunch(p loader.ProfileView) error {
 	return applyConsole(p.Dir, readMarker(p.Dir).Console)
 }
 
-// NeedsWinHTTPOverride is true: Doorstop injects through winhttp.dll, which Wine only loads when the prefix overrides it.
-func (Loader) NeedsWinHTTPOverride() bool { return true }
+// OverrideDLL is winhttp: Doorstop injects through winhttp.dll, which Wine only loads when the prefix overrides it.
+func (Loader) OverrideDLL() string { return "winhttp" }
 
 func (Loader) Path(p loader.ProfileView) (string, error) {
 	return filepath.Join(p.Dir, "BepInEx", "LogOutput.log"), nil

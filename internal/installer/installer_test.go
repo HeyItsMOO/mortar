@@ -6,6 +6,8 @@ import (
 	"slices"
 	"strings"
 	"testing"
+
+	"github.com/Rethunk-Tech/mortar/internal/components"
 )
 
 func extracted(t *testing.T, key string, files map[string]string) Archive {
@@ -39,6 +41,12 @@ func TestLayoutGoldens(t *testing.T) {
 	}
 	bep := Game{Loaders: []string{"bepinex5"}, Targets: []Target{{ID: TargetProfile}, {ID: TargetMods}}}
 	smapi := Game{Loaders: []string{"smapi"}, Targets: []Target{{ID: TargetMods}}}
+	mel := Game{Loaders: []string{"melonloader"}, Targets: []Target{{ID: TargetProfile}}}
+	melClassic := mel
+	melClassic.Routes = []components.LoaderRoute{
+		{Dir: "Mods", Extensions: []string{".dll"}, Default: true},
+		{Dir: "Plugins", Extensions: []string{".plugin.dll"}},
+	}
 	cases := []struct {
 		name    string
 		game    Game
@@ -132,6 +140,20 @@ func TestLayoutGoldens(t *testing.T) {
 			map[string]string{"lbtokg.dll": "d", "readme.txt": "r"},
 			nil, "thunderstore-rules",
 			"profile:BepInEx/plugins/nexus-17-1/lbtokg.dll<-lbtokg.dll profile:BepInEx/plugins/nexus-17-1/readme.txt<-readme.txt",
+		},
+		{
+			"MelonLoader package under the recursive layout", mel, "Ns-Mel",
+			map[string]string{
+				"manifest.json": `{"name":"Mel","version_number":"1.0.0"}`, "icon.png": "i", "Mods/Mel.dll": "m", "Plugins/Lib.dll": "p", "UserData/Mel/cfg.toml": "c",
+			},
+			nil, "thunderstore-rules",
+			"profile:Mods/Ns-Mel/Mods/Mel.dll<-Mods/Mel.dll profile:Mods/Ns-Mel/Plugins/Lib.dll<-Plugins/Lib.dll profile:UserData/Ns-Mel/Mel/cfg.toml<-UserData/Mel/cfg.toml",
+		},
+		{
+			"MelonLoader package under the classic layout", melClassic, "Ns-Old",
+			map[string]string{"manifest.json": `{"name":"Old","version_number":"1.0.0"}`, "Old.dll": "m", "Helper.plugin.dll": "p", "notes.txt": "n"},
+			nil, "thunderstore-rules",
+			"profile:Mods/Old.dll<-Old.dll profile:Mods/notes.txt<-notes.txt profile:Plugins/Helper.plugin.dll<-Helper.plugin.dll",
 		},
 		{
 			"no manifest and no BepInEx content stays plain", bep, "k",

@@ -441,16 +441,25 @@ type GameLoader struct {
 	Routes []LoaderRoute `json:"routes,omitempty"`
 }
 
-// TrackSubdir is a LoaderRoute's Track for a folder that keeps each package's files in a folder named for the package.
-const TrackSubdir = "subdir"
+// A LoaderRoute's Track says where a package's files go below its folder.
+const (
+	// TrackSubdir places them in a folder named for the package.
+	TrackSubdir = "subdir"
+	// TrackKeep does so too and keeps the file's whole path from the package's top, as r2modman's subdir-no-flatten.
+	TrackKeep = "subdir-no-flatten"
+)
 
-// LoaderRoute is a folder of the profile root that a mod loader's packages install into. A package folder whose name
-// is Dir's last segment, at any depth, and a package file ending in one of Extensions, go to Dir.
+// LoaderRoute is a folder of the profile root that a mod loader's packages install into, from r2modman's install
+// rules. A package folder whose name is Dir's last segment, at any depth, and a package file ending in one of
+// Extensions, go to Dir.
 type LoaderRoute struct {
 	Dir        string   `json:"dir"`
 	Extensions []string `json:"extensions,omitempty"`
-	// Track is TrackSubdir to place a package's files below a folder named for it, else they go straight into Dir.
+	// Track is TrackSubdir or TrackKeep to place a package's files below a folder named for it, else they go straight
+	// into Dir.
 	Track string `json:"track,omitempty"`
+	// Default marks the route that takes a file no folder or extension claims.
+	Default bool `json:"default,omitempty"`
 }
 
 // Validate rejects a route that could place a file outside the profile root.
@@ -458,7 +467,7 @@ func (r LoaderRoute) Validate() error {
 	if !fs.ValidPath(r.Dir) || r.Dir == "." || strings.ContainsAny(r.Dir, `\:`) {
 		return fmt.Errorf("unsafe route folder %q", r.Dir)
 	}
-	if r.Track != "" && r.Track != TrackSubdir {
+	if r.Track != "" && r.Track != TrackSubdir && r.Track != TrackKeep {
 		return fmt.Errorf("route %q has unknown track %q", r.Dir, r.Track)
 	}
 	for _, ext := range r.Extensions {
@@ -469,14 +478,41 @@ func (r LoaderRoute) Validate() error {
 	return nil
 }
 
-// Routes is the extra install folders of the game's loader id.
-func (g GameInfo) Routes(id string) []LoaderRoute {
-	for _, l := range g.Loaders {
-		if l.ID == id {
-			return l.Routes
+// Place is where a file of package pkg goes in the route: rest is its path below the matched folder (its name for an
+// extension match) and full its path from the package's top.
+func (r LoaderRoute) Place(pkg, rest, full string) string {
+	switch r.Track {
+	case TrackSubdir:
+		return path.Join(r.Dir, pkg, rest)
+	case TrackKeep:
+		return path.Join(r.Dir, pkg, full)
+	}
+	return path.Join(r.Dir, rest)
+}
+
+// RouteByFolder is the first route whose folder is named dir (compared without case) in its last segment.
+func RouteByFolder(routes []LoaderRoute, dir string) (LoaderRoute, bool) {
+	for _, r := range routes {
+		if strings.EqualFold(path.Base(r.Dir), dir) {
+			return r, true
 		}
 	}
-	return nil
+	return LoaderRoute{}, false
+}
+
+// RouteByExtension is the route with the longest extension that ends name, as r2modman prefers the longer of two
+// matches (.plugin.dll over .dll).
+func RouteByExtension(routes []LoaderRoute, name string) (best LoaderRoute, ok bool) {
+	longest := 0
+	lower := strings.ToLower(name)
+	for _, r := range routes {
+		for _, ext := range r.Extensions {
+			if len(ext) > longest && strings.HasSuffix(lower, strings.ToLower(ext)) {
+				best, longest, ok = r, len(ext), true
+			}
+		}
+	}
+	return best, ok
 }
 
 // saveFilePattern reports whether p names files in the saves folder or in one plain folder below it; an exclusion

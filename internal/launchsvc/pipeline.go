@@ -19,11 +19,11 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/iniedit"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
-	"github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	gameruntime "github.com/Rethunk-Tech/mortar/internal/runtime"
 	"github.com/Rethunk-Tech/mortar/internal/savesiso"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
+	"github.com/Rethunk-Tech/mortar/internal/wineoverride"
 )
 
 // loaderID is the id of the game's first loader, "" when it has none.
@@ -571,7 +571,7 @@ var errNoPrefix = errors.New("the Proton prefix does not exist yet")
 // idempotent, so they are not journaled.
 func (s *Service) ensureRuntime(inst game.Install, reqs []launchplan.RuntimeReq, direct bool) error {
 	for _, r := range reqs {
-		if r.Kind != "dll-override" || r.Key != "winhttp" {
+		if r.Kind != "dll-override" {
 			continue
 		}
 		compat, ok := inst.CompatData(s.home)
@@ -585,8 +585,8 @@ func (s *Service) ensureRuntime(inst game.Install, reqs []launchplan.RuntimeReq,
 			}
 			return errNoPrefix
 		}
-		if err := bepinex5.EnsureWinHTTPOverride(reg); err != nil {
-			return fmt.Errorf("make the Proton prefix load winhttp: %w", err)
+		if err := wineoverride.Ensure(reg, r.Key); err != nil {
+			return fmt.Errorf("make the Proton prefix load %s: %w", r.Key, err)
 		}
 	}
 	return nil

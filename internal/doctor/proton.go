@@ -12,15 +12,16 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/steam"
 )
 
-// WinHTTPLoader is implemented by a loader that injects through winhttp.dll (BepInEx), which Wine only loads when the
-// prefix overrides winhttp to native.
-type WinHTTPLoader interface{ NeedsWinHTTPOverride() bool }
+// OverrideLoader is implemented by a loader that injects through a proxy library next to the game (winhttp for BepInEx,
+// version for MelonLoader), which Wine only loads when the prefix overrides it to native. OverrideDLL names the library
+// without its extension.
+type OverrideLoader interface{ OverrideDLL() string }
 
 // loaders are the loaders that contribute checks, by game id; a game without one skips those checks.
-var loaders = map[string]WinHTTPLoader{}
+var loaders = map[string]OverrideLoader{}
 
 // RegisterLoader makes a game's loader contribute its checks to the Proton install checks.
-func RegisterLoader(gameID string, l WinHTTPLoader) { loaders[gameID] = l }
+func RegisterLoader(gameID string, l OverrideLoader) { loaders[gameID] = l }
 
 // Replaced by tests.
 var (
@@ -39,10 +40,13 @@ var (
 	}
 )
 
-// overrideOption is the Steam launch option that loads winhttp natively.
-const overrideOption = `WINEDLLOVERRIDES="winhttp=n,b" %command%`
+// overrideOption is the Steam launch option that loads the library natively.
+func overrideOption(dll string) string { return `WINEDLLOVERRIDES="` + dll + `=n,b" %command%` }
 
-var winhttpOverride = regexp.MustCompile(`(?i)"?winhttp"?\s*=\s*"?(n|native)\b`)
+// nativeOverride matches the library set to native in a registry file or a launch option.
+func nativeOverride(dll string) *regexp.Regexp {
+	return regexp.MustCompile(`(?i)"?` + regexp.QuoteMeta(dll) + `"?\s*=\s*"?(n|native)\b`)
+}
 
 func protonChecks(g game.GameInfo) []Check {
 	var checks []Check
@@ -55,8 +59,8 @@ func protonChecks(g game.GameInfo) []Check {
 		if !ok {
 			continue
 		}
-		if l, has := loaders[g.ID]; has && l.NeedsWinHTTPOverride() {
-			checks = append(checks, winhttpCheck(g, compat))
+		if l, has := loaders[g.ID]; has && l.OverrideDLL() != "" {
+			checks = append(checks, overrideCheck(g, compat, l.OverrideDLL()))
 		}
 		if in.Store == "flatpak-steam" {
 			checks = append(checks, flatpakCheck(g, compat))
@@ -65,21 +69,21 @@ func protonChecks(g game.GameInfo) []Check {
 	return checks
 }
 
-func winhttpCheck(g game.GameInfo, compat string) Check {
-	c := Check{ID: "winhttp:" + g.ID, Status: Pass, Detail: g.Name + ": winhttp is overridden to native in the Proton prefix"}
+func overrideCheck(g game.GameInfo, compat, dll string) Check {
+	c := Check{ID: dll + ":" + g.ID, Status: Pass, Detail: g.Name + ": " + dll + " is overridden to native in the Proton prefix"}
 	reg, err := fsx.ReadFile(filepath.Join(compat, "pfx", "user.reg"))
-	if winhttpOverride.Match(reg) || winhttpOverride.MatchString(launchOptions(g.AppID)) {
+	if re := nativeOverride(dll); re.Match(reg) || re.MatchString(launchOptions(g.AppID)) {
 		return c
 	}
 	c.Status = Warn
 	if err != nil {
 		// A direct launch passes the override itself; a launch Steam relays needs a prefix to carry it.
 		c.Detail = g.Name + ": Proton has not created its prefix yet, so a Steam launch cannot load the loader"
-		c.Fix = "start " + g.Name + " once from Steam and quit it, or set Default launch to Direct, or set the Steam launch options to " + overrideOption
+		c.Fix = "start " + g.Name + " once from Steam and quit it, or set Default launch to Direct, or set the Steam launch options to " + overrideOption(dll)
 		return c
 	}
-	c.Detail = g.Name + ": the Proton prefix does not load winhttp natively, so its loader will not start"
-	c.Fix = "set the Steam launch options to " + overrideOption
+	c.Detail = g.Name + ": the Proton prefix does not load " + dll + " natively, so its loader will not start"
+	c.Fix = "set the Steam launch options to " + overrideOption(dll)
 	return c
 }
 

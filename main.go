@@ -182,7 +182,7 @@ func runShowingFailures() error {
 func registerDoctorLoaders() {
 	for _, g := range game.Catalog() {
 		for _, l := range game.Loaders(g.ID) {
-			if w, ok := l.(doctor.WinHTTPLoader); ok {
+			if w, ok := l.(doctor.OverrideLoader); ok {
 				doctor.RegisterLoader(g.ID, w)
 			}
 		}
