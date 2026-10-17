@@ -33,6 +33,9 @@ const INSTALL_PATH = 'M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h
 // Windows has no simple-icons mark; this is the four-pane window the site's icon sprite draws.
 const WINDOWS_PATH =
   'M3 5.1 10.4 4v7.2H3V5.1Zm8.4-1.2L21 2.5v8.7h-9.6V3.9ZM3 12.4h7.4v7.2L3 18.5v-6.1Zm8.4 0H21v8.7l-9.6-1.4v-7.3Z'
+// Material Design's "extension" (Apache-2.0) stands for the browser extension.
+const EXTENSION_PATH =
+  'M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z'
 const X_PATH = 'M4 3h4.5L12 8.6 15.5 3H20l-5.7 9L20 21h-4.5L12 15.4 8.5 21H4l5.7-9z'
 
 // Marks whose brand colour is black or near it take the text colour, as the app does for GitHub and Patreon.
@@ -60,6 +63,7 @@ const MARKS: Record<string, { path: string; colour: string }> = {
   fedora: { path: siFedora.path, colour: `#${siFedora.hex}` },
   archlinux: { path: siArchlinux.path, colour: `#${siArchlinux.hex}` },
   homebrew: { path: siHomebrew.path, colour: `#${siHomebrew.hex}` },
+  extension: { path: EXTENSION_PATH, colour: 'currentColor' },
 }
 
 // Artwork rather than vector marks, copied from the app into site/img/vendor (vendored files the linter skips).

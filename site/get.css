@@ -38,11 +38,6 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.mk {
-  width: 1.1rem;
-  height: 1.1rem;
-  flex-shrink: 0;
-}
 .dl-tile {
   display: grid;
   flex-shrink: 0;
@@ -56,36 +51,6 @@
 .dl-tile .mk {
   width: 1.75rem;
   height: 1.75rem;
-}
-.mk-windows {
-  color: rgb(76, 194, 255);
-}
-.mk-linux {
-  color: rgb(252, 198, 36);
-}
-.mk-steamdeck {
-  color: rgb(26, 159, 255);
-}
-.mk-appimage {
-  color: rgb(115, 159, 185);
-}
-.mk-flatpak {
-  color: rgb(74, 144, 217);
-}
-.mk-debian {
-  color: rgb(215, 10, 83);
-}
-.mk-fedora {
-  color: rgb(81, 162, 218);
-}
-.mk-archlinux {
-  color: rgb(23, 147, 209);
-}
-.mk-homebrew {
-  color: rgb(251, 176, 64);
-}
-.mk-standalone {
-  color: var(--muted);
 }
 .dl-others {
   display: flex;

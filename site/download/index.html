@@ -89,20 +89,15 @@
           role="tab"
           id="tab-windows"
           aria-controls="windows"
-        >
-          Windows
-        </button>
-        <button type="button" role="tab" id="tab-linux" aria-controls="linux">
-          Linux
-        </button>
+        ><svg class="mk mk-windows" aria-hidden="true"><use href="/img/brands.svg#windows" /></svg>Windows</button>
+        <button type="button" role="tab" id="tab-linux" aria-controls="linux"><svg class="mk mk-linux" aria-hidden="true"><use href="/img/brands.svg#linux" /></svg>Linux</button>
+        <button type="button" role="tab" id="tab-deck" aria-controls="deck"><svg class="mk mk-steamdeck" aria-hidden="true"><use href="/img/brands.svg#steamdeck" /></svg>Steam Deck</button>
         <button
           type="button"
           role="tab"
           id="tab-extension"
           aria-controls="extension"
-        >
-          Browser extension
-        </button>
+        ><svg class="mk mk-extension" aria-hidden="true"><use href="/img/brands.svg#extension" /></svg>Browser extension</button>
       </div>
 
       <section
@@ -111,7 +106,6 @@
         role="tabpanel"
         aria-labelledby="tab-windows"
       >
-        <h2>Windows</h2>
         <p class="muted">
           Windows 10 and 11. Mortar installs for your user, so it needs no
           administrator rights.
@@ -177,43 +171,32 @@ scoop install mortar/mortar</code></pre>
         role="tabpanel"
         aria-labelledby="tab-linux"
       >
-        <h2>Linux</h2>
         <p class="muted">
           Install from the package repository and Mortar updates with the rest
           of your system. Pick your distribution:
         </p>
         <div class="tabs sub" role="tablist" aria-label="Distribution">
-          <button type="button" role="tab" id="tab-deb" aria-controls="deb">
-            Ubuntu and Debian
-          </button>
+          <button type="button" role="tab" id="tab-deb" aria-controls="deb"><svg class="mk mk-debian" aria-hidden="true"><use href="/img/brands.svg#debian" /></svg>Ubuntu and Debian</button>
           <button
             type="button"
             role="tab"
             id="tab-fedora"
             aria-controls="fedora"
-          >
-            Fedora
-          </button>
-          <button type="button" role="tab" id="tab-arch" aria-controls="arch">
-            Arch
-          </button>
+          ><svg class="mk mk-fedora" aria-hidden="true"><use href="/img/brands.svg#fedora" /></svg>Fedora</button>
+          <button type="button" role="tab" id="tab-arch" aria-controls="arch"><svg class="mk mk-archlinux" aria-hidden="true"><use href="/img/brands.svg#archlinux" /></svg>Arch</button>
           <button
             type="button"
             role="tab"
             id="tab-flatpak"
             aria-controls="flatpak"
-          >
-            Flatpak
-          </button>
+          ><svg class="mk mk-flatpak" aria-hidden="true"><use href="/img/brands.svg#flatpak" /></svg>Flatpak</button>
           <button
             type="button"
             role="tab"
             id="tab-appimage"
             aria-controls="appimage"
-          >
-            AppImage
-          </button>
-          <button type="button" role="tab" id="tab-brew" aria-controls="brew">Homebrew</button>
+          ><svg class="mk mk-appimage" aria-hidden="true"><use href="/img/brands.svg#appimage" /></svg>AppImage</button>
+          <button type="button" role="tab" id="tab-brew" aria-controls="brew"><svg class="mk mk-homebrew" aria-hidden="true"><use href="/img/brands.svg#homebrew" /></svg>Homebrew</button>
         </div>
 
         <div
@@ -222,7 +205,6 @@ scoop install mortar/mortar</code></pre>
           role="tabpanel"
           aria-labelledby="tab-deb"
         >
-          <h3>Ubuntu and Debian</h3>
           <p class="muted">
             Ubuntu 24.04, Debian 13 or newer, on amd64 and arm64.
           </p>
@@ -246,7 +228,6 @@ sudo apt update &amp;&amp; sudo apt install mortar</code></pre>
           role="tabpanel"
           aria-labelledby="tab-fedora"
         >
-          <h3>Fedora</h3>
           <p class="muted">
             Fedora 39 or newer, on x86_64 and aarch64. dnf asks once to import
             the key; check its fingerprint against the one below.
@@ -270,7 +251,6 @@ sudo dnf install mortar</code></pre>
           role="tabpanel"
           aria-labelledby="tab-arch"
         >
-          <h3>Arch Linux</h3>
           <p class="muted">
             x86_64 and aarch64. These commands trust the Mortar key, add the
             repository to <code>/etc/pacman.conf</code> and install.
@@ -296,7 +276,6 @@ sudo pacman -Sy mortar</code></pre>
           role="tabpanel"
           aria-labelledby="tab-flatpak"
         >
-          <h3>Flatpak</h3>
           <p class="muted">
             Any distribution with Flatpak, x86_64 or aarch64. It brings its own libraries, so it also runs on older
             systems. This adds Mortar's signed Flatpak repository, so <code>flatpak update</code> keeps it
@@ -362,19 +341,9 @@ sudo pacman -Sy mortar</code></pre>
             The first run adds Mortar to your applications menu and takes
             <code>nxm://</code> links and <code>.mortar</code> files.
           </p>
-          <h3>Steam Deck</h3>
-          <p class="muted">
-            Use the x86_64 AppImage. In Desktop Mode, download it, mark it
-            executable (Properties, Permissions, or the <code>chmod</code> line
-            above) and run it. Then open a profile's menu and choose
-            <strong>Add to Steam</strong>: the profile appears in Game Mode, and
-            playing it there starts the game with that profile's mods. The
-            Flatpak cannot add itself to Steam.
-          </p>
         </div>
 
         <div class="panel sub" id="brew" role="tabpanel" aria-labelledby="tab-brew">
-          <h3>Homebrew on Linux</h3>
           <p class="muted">
             From Mortar's own tap, pinned by SHA-256. It installs the AppImage, which needs FUSE 2
             (<code>libfuse2</code>). Homebrew then handles updates.
@@ -390,13 +359,42 @@ sudo pacman -Sy mortar</code></pre>
         </p>
       </section>
 
+      <section class="panel" id="deck" role="tabpanel" aria-labelledby="tab-deck">
+        <p class="muted">
+          The Steam Deck runs the x86_64 AppImage. Mortar sets up in Desktop Mode, then each profile can be played from
+          Game Mode.
+        </p>
+        <div class="files">
+          <a
+            class="file primary"
+            data-asset="mortar-linux-x86_64.AppImage"
+            href="https://github.com/Rethunk-Tech/mortar/releases/latest/download/mortar-linux-x86_64.AppImage"
+          >
+            <strong>AppImage, x86_64</strong><span>For the Steam Deck</span>
+          </a>
+        </div>
+        <ol class="steps">
+          <li>Switch to Desktop Mode and download the AppImage.</li>
+          <li>
+            Mark it executable: right-click it, <strong>Properties</strong>, <strong>Permissions</strong>, then
+            <strong>Is executable</strong>. Run it.
+          </li>
+          <li>
+            Set up your game, then open a profile's menu and choose <strong>Add to Steam</strong>. The profile appears
+            in Game Mode, and playing it there starts the game with that profile's mods.
+          </li>
+        </ol>
+        <p class="muted">
+          The Flatpak cannot add itself to Steam, so use the AppImage on the Deck. Mortar updates itself in place.
+        </p>
+      </section>
+
       <section
         class="panel"
         id="extension"
         role="tabpanel"
         aria-labelledby="tab-extension"
       >
-        <h2>Browser extension</h2>
         <p class="muted">
           Optional. It marks Nexus Mods pages with what your profile already has
           and hands Mod Manager Download clicks to Mortar. Mortar's Settings ›

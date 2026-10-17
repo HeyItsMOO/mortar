@@ -102,7 +102,7 @@ function mortarRelease(rel) {
   let platform = 'windows'
   if (distroIds.includes(hash) || hash === 'linux') {
     platform = 'linux'
-  } else if (hash === 'windows' || hash === 'extension') {
+  } else if (hash === 'windows' || hash === 'deck' || hash === 'extension') {
     platform = hash
   } else if (linuxRe.test(ua) && !androidRe.test(ua) && !windowsRe.test(ua)) {
     platform = 'linux'

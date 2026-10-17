@@ -16,6 +16,9 @@ main.dl {
   border-bottom: 1px solid var(--line);
 }
 .tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   padding: 0.7rem 1.1rem;
   border: 0;
   border-bottom: 2px solid transparent;
