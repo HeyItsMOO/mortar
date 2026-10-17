@@ -9914,6 +9914,44 @@
       "stores": { "steam": { "appId": "1643320" } },
       "loaders": [{ "id": "folder" }],
       "sources": [{ "id": "nexus", "key": "stalker2heartofchornobyl", "gameId": 6944 }]
+    },
+    {
+      "id": "broforce",
+      "name": "Broforce",
+      "enabled": true,
+      "marker": "Broforce_beta.exe",
+      "r2modmanFolder": "Broforce",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [{ "id": "profile", "root": "{profile}" }],
+      "stores": { "steam": { "appId": "274190" } },
+      "loaders": [
+        {
+          "id": "umm",
+          "name": "Unity Mod Manager",
+          "package": "UMM-UMM",
+          "routes": [
+            { "dir": "UMM/Mods", "extensions": [".dll"], "track": "subdir", "default": true },
+            { "dir": "UMM/BroMaker_Storage", "track": "subdir" },
+            { "dir": "UMM/DM_Wardrobes", "track": "subdir" }
+          ]
+        }
+      ],
+      "sources": [{ "id": "thunderstore", "key": "broforce" }]
+    },
+    {
+      "id": "scrap-mechanic",
+      "name": "Scrap Mechanic",
+      "enabled": true,
+      "marker": "ScrapMechanic.exe",
+      "markerDir": "Release",
+      "r2modmanFolder": "ScrapMechanic",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [{ "id": "profile", "root": "{profile}" }],
+      "stores": { "steam": { "appId": "387990" } },
+      "loaders": [{ "id": "rivet", "name": "Rivet", "package": "ReDoIngMods-Rivet" }],
+      "sources": [{ "id": "thunderstore", "key": "scrap-mechanic" }]
     }
   ]
 }

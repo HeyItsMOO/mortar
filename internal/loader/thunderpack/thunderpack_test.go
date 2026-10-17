@@ -14,6 +14,10 @@ import (
 
 func TestLayout(t *testing.T) {
 	northstar := []components.LoaderRoute{{Dir: "R2Northstar/mods"}}
+	umm := []components.LoaderRoute{
+		{Dir: "UMM/Mods", Extensions: []string{".dll"}, Track: components.TrackSubdir, Default: true},
+		{Dir: "UMM/BroMaker_Storage", Track: components.TrackSubdir},
+	}
 	cases := []struct {
 		loader string
 		files  []string
@@ -37,6 +41,15 @@ func TestLayout(t *testing.T) {
 		{"lovely", []string{"icon.png", "lovely.toml", "src/main.lua"}, nil, map[string]string{
 			"lovely.toml":  "mods/Ns-Mod/lovely.toml",
 			"src/main.lua": "mods/Ns-Mod/src/main.lua",
+		}},
+		{"rivet", []string{"manifest.json", "Mod.dll", "data/a.txt"}, nil, map[string]string{
+			"Mod.dll":    "Rivet/Mods/Ns-Mod/Mod.dll",
+			"data/a.txt": "Rivet/Mods/Ns-Mod/data/a.txt",
+		}},
+		{"umm", []string{"manifest.json", "Mod.dll", "Info.json", "BroMaker_Storage/x/y.json"}, umm, map[string]string{
+			"Mod.dll":                   "UMM/Mods/Ns-Mod/Mod.dll",
+			"Info.json":                 "UMM/Mods/Ns-Mod/Info.json",
+			"BroMaker_Storage/x/y.json": "UMM/BroMaker_Storage/Ns-Mod/x/y.json",
 		}},
 		{"northstar", []string{"manifest.json", "mods/Skin/mod.json", "mods/Skin/a/b.txt", "readme.txt"}, northstar, map[string]string{
 			"mods/Skin/mod.json": "R2Northstar/mods/Skin/mod.json",
@@ -66,6 +79,10 @@ func packOf(id string) (zip map[string]string, version string) {
 		return map[string]string{"manifest.json": "{}", "winmm.dll": "w", "GDWeave/core/GDWeave.dll": "core", "GDWeave/core/Iced.dll": "iced"}, "2.0.14"
 	case "lovely":
 		return map[string]string{"manifest.json": "{}", "winmm.dll": "l", "lovely/config.toml": "default"}, "0.10.0"
+	case "rivet":
+		return map[string]string{"manifest.json": "{}", "RivetPack/version.dll": "v", "RivetPack/Rivet.ini": "ini", "RivetPack/Rivet/Loader.dll": "loader"}, "0.1.17"
+	case "umm":
+		return map[string]string{"manifest.json": "{}", "winhttp.dll": "w", "doorstop_config.ini": "c", ".doorstop_version": "4.4.0", "doorstop_libs/libdoorstop_x64.so": "so", "run_umm.sh": "sh", "UMM/Core/UnityModManager.dll": "umm"}, "1.1.0"
 	}
 	return map[string]string{
 		"manifest.json": "{}", "Northstar/NorthstarLauncher.exe": "exe", "Northstar/NorthstarLauncher.pdb": "pdb",
@@ -86,6 +103,13 @@ func TestInstallAndLaunch(t *testing.T) {
 		{"gdweave", "webfishing", "proton", func(p string) []string {
 			return []string{"--gdweave-folder-override=Z:" + backslash(filepath.Join(p, "GDWeave"))}
 		}, []string{"winmm.dll"}, []string{"winmm"}},
+		{"rivet", "scrap-mechanic", "proton", func(p string) []string {
+			return []string{"-rivetEnable", "true", "-rivetTarget", "Z:" + backslash(filepath.Join(p, "Rivet", "Loader.dll")), "-rivetDirectory", "Z:" + backslash(filepath.Join(p, "Rivet", "Mods"))}
+		}, []string{"Release/version.dll"}, []string{"version"}},
+		{"umm", "broforce", "", func(p string) []string {
+			target := filepath.Join(p, "UMM", "Core", "UnityModManager.dll")
+			return []string{"--doorstop-enabled", "true", "--doorstop-target-assembly", target, "--doorstop-enable", "true", "--doorstop-target", target}
+		}, []string{"doorstop_config.ini", "winhttp.dll"}, nil},
 		{"lovely", "balatro", "", func(p string) []string { return []string{"--mod-dir", filepath.Join(p, "mods")} }, []string{"winmm.dll"}, nil},
 		{
 			"northstar", "titanfall-2", "mortar-proton", func(p string) []string {

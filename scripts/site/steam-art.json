@@ -47,6 +47,12 @@
     "capsule": "https://shared.steamstatic.com/store_item_assets/steam/apps/268910/library_600x900.jpg?t=1709068852",
     "capsule2x": "https://shared.steamstatic.com/store_item_assets/steam/apps/268910/library_600x900_2x.jpg?t=1709068852"
   },
+  "274190": {
+    "header": "https://shared.steamstatic.com/store_item_assets/steam/apps/274190/header.jpg?t=1764247760",
+    "hero": "https://shared.steamstatic.com/store_item_assets/steam/apps/274190/library_hero.jpg?t=1764247760",
+    "capsule": "https://shared.steamstatic.com/store_item_assets/steam/apps/274190/library_600x900.jpg?t=1764247760",
+    "capsule2x": "https://shared.steamstatic.com/store_item_assets/steam/apps/274190/library_600x900_2x.jpg?t=1764247760"
+  },
   "283160": {
     "header": "https://shared.steamstatic.com/store_item_assets/steam/apps/283160/header.jpg?t=1751197973",
     "hero": "https://shared.steamstatic.com/store_item_assets/steam/apps/283160/library_hero.jpg?t=1751197973",
@@ -110,6 +116,12 @@
     "hero": "https://shared.steamstatic.com/store_item_assets/steam/apps/386940/library_hero.jpg?t=1765298731",
     "capsule": "https://shared.steamstatic.com/store_item_assets/steam/apps/386940/library_600x900.jpg?t=1765298731",
     "capsule2x": "https://shared.steamstatic.com/store_item_assets/steam/apps/386940/library_600x900_2x.jpg?t=1765298731"
+  },
+  "387990": {
+    "header": "https://shared.steamstatic.com/store_item_assets/steam/apps/387990/5c31bde0a901d9459a8d8c556c5a44262b5f57e4/header.jpg?t=1784914037",
+    "hero": "https://shared.steamstatic.com/store_item_assets/steam/apps/387990/4c0ca5b02f2ba6269f6f187a69e7d4e773d9444f/library_hero.jpg?t=1784914037",
+    "capsule": "https://shared.steamstatic.com/store_item_assets/steam/apps/387990/bd0ac4b33c60831d13599514f222992e5c1ade9d/library_capsule.jpg?t=1784914037",
+    "capsule2x": "https://shared.steamstatic.com/store_item_assets/steam/apps/387990/bd0ac4b33c60831d13599514f222992e5c1ade9d/library_capsule_2x.jpg?t=1784914037"
   },
   "392160": {
     "header": "https://shared.steamstatic.com/store_item_assets/steam/apps/392160/header.jpg?t=1783002135",

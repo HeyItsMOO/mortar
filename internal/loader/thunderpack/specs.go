@@ -68,6 +68,40 @@ var specs = []Spec{
 		Route:      perFile(func(p, pkg string) string { return path.Join("mods", pkg, p) }),
 	},
 	{
+		// Rivet's whole release is laid out in the profile; only its version.dll proxy sits beside the executable. The
+		// loader and its mods folder are named on the command line.
+		LoaderID: "rivet", Name: "Rivet", Root: "RivetPack",
+		Placed: topLevelDLL,
+		Seed:   []string{"Rivet.ini"},
+		Files:  []string{"version.dll", "Rivet.ini", "Rivet"},
+		Args: func(dir string, proton bool) []string {
+			return []string{
+				"-rivetEnable", "true",
+				"-rivetTarget", hostPath(filepath.Join(dir, "Rivet", "Loader.dll"), proton),
+				"-rivetDirectory", hostPath(filepath.Join(dir, "Rivet", "Mods"), proton),
+			}
+		},
+		VanillaArgs: []string{"-rivetEnable", "false"},
+		Overrides:   topDLLs, ProxyDLL: "version",
+		ImportDirs: []string{"Rivet"},
+		Route:      perFile(func(p, pkg string) string { return path.Join("Rivet", "Mods", pkg, p) }),
+	},
+	{
+		// Unity Mod Manager rides on a Doorstop proxy; the pack's Doorstop is 3 or 4, whose flags differ and each of which
+		// ignores the other's, so both are passed. Where a mod's files go is the game's install rules in the catalog.
+		LoaderID: "umm", Name: "Unity Mod Manager",
+		Placed:  func(rel string) bool { return rel == "winhttp.dll" || rel == "doorstop_config.ini" },
+		Replace: []string{"UMM/Core"},
+		Files:   []string{"UMM/Core", "winhttp.dll", "doorstop_config.ini", ".doorstop_version", "doorstop_libs"},
+		Args: func(dir string, proton bool) []string {
+			target := hostPath(filepath.Join(dir, "UMM", "Core", "UnityModManager.dll"), proton)
+			return []string{"--doorstop-enabled", "true", "--doorstop-target-assembly", target, "--doorstop-enable", "true", "--doorstop-target", target}
+		},
+		VanillaArgs: []string{"--doorstop-enabled", "false", "--doorstop-enable", "false"},
+		Overrides:   topDLLs, ProxyDLL: "winhttp",
+		ImportDirs: []string{"UMM"},
+	},
+	{
 		// Northstar's whole release is laid out in the profile, which it is told is its R2Northstar folder; the launcher
 		// and the libraries around it are placed beside the game's executable.
 		LoaderID: "northstar", Name: "Northstar", Root: "Northstar",
