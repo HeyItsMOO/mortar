@@ -11,6 +11,7 @@ export const OVERRIDE_KEYS = [
   'skipPlayCheck',
   'skipIntro',
   'graphicsApi',
+  'protonVersion',
   'gameSettingsMode',
   'cacheClearing',
   'saveBackupHours',
@@ -38,6 +39,8 @@ export const OVERRIDE_VALUES: Record<OverrideKey, string[]> = {
   skipIntro: ['true', 'false'],
   // The game's catalog entry supplies the choices.
   graphicsApi: [],
+  // This computer's Proton builds supply the choices.
+  protonVersion: [],
   gameSettingsMode: ['edit', 'warn'],
   cacheClearing: ['auto', 'off'],
   saveBackupHours: ['0', '1', '2', '3', '4', '6', '8', '12', '24', '48', '72', '168'],

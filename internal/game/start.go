@@ -36,6 +36,8 @@ type StartEnv struct {
 	Ready func() bool
 	// OnExit reports how the started process ended once the game has started. Not used for relays.
 	OnExit func(launch.Exit)
+	// Proton is the Proton build (its folder name) a Windows copy outside Steam runs through; empty takes the best.
+	Proton string
 }
 
 // Starter starts launch plans the way the install's store requires: Steam installs through `steam -applaunch`, which
@@ -163,7 +165,9 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 		var protonEnv []string
 		if goos != "windows" && inst.Runtime == gameruntime.MortarProton {
 			info, _ := catalogGame(inst.Game)
-			argv, penv, err := gameruntime.ProtonCommand(inst.runtime(info, ""), exe, args...)
+			rt := inst.runtime(info, "")
+			rt.Proton = env.Proton
+			argv, penv, err := gameruntime.ProtonCommand(rt, exe, args...)
 			if err != nil {
 				return launch.Command{}, err
 			}

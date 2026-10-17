@@ -47,6 +47,14 @@ func TestMortarProtonRunsAFolderCopyThroughSteamsBestProtonInMortarsPrefix(t *te
 	if want := []string{"STEAM_COMPAT_DATA_PATH=" + prefix, "STEAM_COMPAT_CLIENT_INSTALL_PATH=" + root}; !slices.Equal(env, want) {
 		t.Fatalf("env = %v, want %v", env, want)
 	}
+	inst.Proton = "GE-Proton10-34"
+	if argv, _, err := ProtonCommand(inst, "/games/X/X.exe"); err != nil || argv[0] != filepath.Join(root, "compatibilitytools.d", "GE-Proton10-34", "proton") {
+		t.Fatalf("a chosen build: %v %v", argv, err)
+	}
+	inst.Proton = "Proton 1.0"
+	if argv, _, err := ProtonCommand(inst, "/games/X/X.exe"); err != nil || filepath.Base(filepath.Dir(argv[0])) != "Proton 9.0" {
+		t.Fatalf("a build Steam no longer has falls back to the best: %v %v", argv, err)
+	}
 	got, err := Resolve(inst, components.PathTemplate{Windows: "{documents}/My Games/X"})
 	if want := filepath.Join(prefix, "pfx", "drive_c", "users", "steamuser", "Documents", "My Games", "X"); err != nil || got != want {
 		t.Fatalf("path = %q %v, want %q", got, err, want)

@@ -9,6 +9,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/framework"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/runtime"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/shots"
 	"github.com/Rethunk-Tech/mortar/internal/steam"
@@ -294,6 +295,20 @@ func ValidateFolder(id, dir string) error {
 		return fmt.Errorf("%q is not an absolute path", dir)
 	}
 	return g.ValidInstall(dir)
+}
+
+// ProtonBuilds names the Proton builds Steam has that the game could run through, best first, when its install is a
+// Windows build outside Steam on Linux; otherwise none, since Steam or a bottle chooses.
+func (s *Service) ProtonBuilds(gameID string) []string {
+	inst, err := ResolveInstall(s.home, s.store.Get(), gameID, "")
+	if err != nil || inst.Runtime != runtime.MortarProton {
+		return []string{}
+	}
+	out := []string{}
+	for _, b := range runtime.ProtonBuilds(s.home) {
+		out = append(out, filepath.Base(b.Dir))
+	}
+	return out
 }
 
 // ScreenshotFile is the file of one of the game's screenshots, named as Screenshots lists it, to copy as a cover.

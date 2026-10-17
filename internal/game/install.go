@@ -228,7 +228,7 @@ func (in Install) RunError(name string) error {
 	}
 	switch in.Runtime {
 	case runtime.MortarProton:
-		if _, ok := runtime.FindProton(""); !ok {
+		if _, ok := runtime.FindProton("", ""); !ok {
 			return usererr.Wrap(usererr.Invalid, fmt.Errorf("%s in %s is the Windows build, and Mortar runs it through Proton: install any Proton version in Steam (Library, Tools), then press Play again", name, in.Dir))
 		}
 		return nil

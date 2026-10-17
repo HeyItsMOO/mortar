@@ -38,7 +38,10 @@ type GameSettings struct {
 	SkipIntro                   bool   `json:"skipIntro"`
 	// GraphicsAPI is the id of the graphics API choice the game's catalog entry offers; empty until the player has
 	// answered, which is when Play asks.
-	GraphicsAPI       string `json:"graphicsApi,omitempty"`
+	GraphicsAPI string `json:"graphicsApi,omitempty"`
+	// ProtonVersion is the folder name of the Proton build a Windows copy outside Steam runs through; empty takes the
+	// newest Steam has.
+	ProtonVersion     string `json:"protonVersion,omitempty"`
 	ConsoleLevel      string `json:"consoleLevel"`
 	ConsoleTimestamps *bool  `json:"consoleTimestamps"`
 	ConsoleFollow     *bool  `json:"consoleFollow"`
@@ -202,6 +205,7 @@ var registry = withDefaults([]pref{
 		putGame(s, g, gp)
 	})),
 	overridable(strPref("graphicsApi", ScopeGame, func(s Settings, g string) string { return s.GamePrefs(g).GraphicsAPI }, func(s *Settings, g, v string) { gp := s.GamePrefs(g); gp.GraphicsAPI = v; putGame(s, g, gp) })),
+	overridable(strPref("protonVersion", ScopeGame, func(s Settings, g string) string { return s.GamePrefs(g).ProtonVersion }, func(s *Settings, g, v string) { gp := s.GamePrefs(g); gp.ProtonVersion = v; putGame(s, g, gp) })),
 	overridable(enumPref("consoleLevel", ScopeGame, consoleLevelValues, func(s Settings, g string) string { return s.GamePrefs(g).ConsoleLevel }, func(s *Settings, g, v string) { gp := s.GamePrefs(g); gp.ConsoleLevel = v; putGame(s, g, gp) })),
 	overridable(ptrPref("consoleTimestamps", ScopeGame, func(s Settings, g string) *bool { return s.GamePrefs(g).ConsoleTimestamps }, func(s *Settings, g string, on bool) {
 		gp := s.GamePrefs(g)

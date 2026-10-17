@@ -45,6 +45,8 @@ type Install struct {
 	Home string
 	// GOOS is the host OS; empty means this process's.
 	GOOS string
+	// Proton is the folder name of the Proton build Mortar's own Proton runs the install with; empty takes the best.
+	Proton string
 }
 
 func (i Install) host() string {

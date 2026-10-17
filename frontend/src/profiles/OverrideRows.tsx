@@ -5,6 +5,7 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui
 import { useGameInfo } from '../games/info.ts'
 import { useNexus } from '../settings/nexus.ts'
 import { prefCopy } from '../settings/prefCopy.ts'
+import { useProtonBuilds } from '../settings/protonBuilds.ts'
 import {
   applyRow,
   choiceFromOverride,
@@ -49,6 +50,8 @@ function overrideLabel(key: OverrideKey, i18n: I18n): string {
       return i18n._(msg`Skip the intro`)
     case 'graphicsApi':
       return i18n._(msg`Graphics API`)
+    case 'protonVersion':
+      return i18n._(msg`Proton version`)
     case 'gameSettingsMode':
       return i18n._(msg`Game settings file`)
     default:
@@ -69,6 +72,7 @@ export function OverridesSection({
   const smapi = info?.loaderId === 'smapi'
   const introSkip = info?.loaders?.[0]?.introSkip === true
   const graphics = info?.graphics ?? undefined
+  const proton = useProtonBuilds(info?.id ?? '')
   const nexus = (info?.sources ?? []).includes('nexus')
   return (
     <Box sx={{ mt: 2, mb: 2 }}>
@@ -81,6 +85,7 @@ export function OverridesSection({
           (smapi || key !== 'showSmapiConsole') &&
           (introSkip || key !== 'skipIntro') &&
           (graphics || key !== 'graphicsApi') &&
+          (proton.length > 0 || key !== 'protonVersion') &&
           (info?.hasOptions || key !== 'gameSettingsMode') &&
           (info?.hasCaches || key !== 'cacheClearing') &&
           applies(key, info?.loaders?.[0]),
@@ -113,10 +118,12 @@ export function OverridesSection({
               <MenuItem value="">{t`Use default`}</MenuItem>
               {(key === 'graphicsApi'
                 ? (graphics?.choices ?? []).map((c) => ({ value: c.id, label: c.label }))
-                : OVERRIDE_VALUES[key].map((value) => ({
-                    value,
-                    label: overrideChoiceLabel(key, value, i18n),
-                  }))
+                : key === 'protonVersion'
+                  ? proton.map((b) => ({ value: b, label: b }))
+                  : OVERRIDE_VALUES[key].map((value) => ({
+                      value,
+                      label: overrideChoiceLabel(key, value, i18n),
+                    }))
               ).map((o) => (
                 <MenuItem key={o.value} value={o.value}>
                   {o.label}

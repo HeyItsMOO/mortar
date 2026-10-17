@@ -98,10 +98,9 @@ func protonRank(a, b string) int {
 	return strings.Compare(b, a)
 }
 
-// FindProton is the best Proton build a native Steam on this computer has, in its libraries' steamapps/common or its
-// compatibilitytools.d. Flatpak Steam's builds need Flatpak's runtime, so they are left out.
-// ponytail: picks one build for every game; a per-game choice is a setting when someone needs it.
-func FindProton(home string) (ProtonBuild, bool) {
+// ProtonBuilds are the Proton builds a native Steam on this computer has, in its libraries' steamapps/common or its
+// compatibilitytools.d, best first. Flatpak Steam's builds need Flatpak's runtime, so they are left out.
+func ProtonBuilds(home string) []ProtonBuild {
 	if home == "" {
 		home, _ = os.UserHomeDir()
 	}
@@ -125,10 +124,19 @@ func FindProton(home string) (ProtonBuild, bool) {
 			}
 		}
 	}
+	slices.SortStableFunc(found, func(a, b ProtonBuild) int { return protonRank(filepath.Base(a.Dir), filepath.Base(b.Dir)) })
+	return found
+}
+
+// FindProton is the build named want (its folder name) when Steam has it, else the best one.
+func FindProton(home, want string) (ProtonBuild, bool) {
+	found := ProtonBuilds(home)
+	if i := slices.IndexFunc(found, func(b ProtonBuild) bool { return filepath.Base(b.Dir) == want }); i >= 0 {
+		return found[i], true
+	}
 	if len(found) == 0 {
 		return ProtonBuild{}, false
 	}
-	slices.SortStableFunc(found, func(a, b ProtonBuild) int { return protonRank(filepath.Base(a.Dir), filepath.Base(b.Dir)) })
 	return found[0], true
 }
 
@@ -138,7 +146,7 @@ func ProtonCommand(inst Install, exe string, args ...string) (argv, env []string
 	if !(mortarProton{}).Detect(inst) {
 		return nil, nil, errors.New("install does not run under Mortar's Proton")
 	}
-	build, ok := FindProton(inst.Home)
+	build, ok := FindProton(inst.Home, inst.Proton)
 	if !ok {
 		return nil, nil, ErrNoProton
 	}

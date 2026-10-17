@@ -36,7 +36,7 @@ msgstr "Mod: {mod}"
 msgid "Switched {name} to the {detail} update channel"
 msgstr "Switched {name} to the {detail} update channel"
 
-#: src/profiles/OverrideRows.tsx:37
+#: src/profiles/OverrideRows.tsx:38
 msgid "Launch method"
 msgstr "Launch method"
 
@@ -159,7 +159,7 @@ msgstr "Show failed"
 msgid "This profile matches that list."
 msgstr "This profile matches that list."
 
-#: src/settings/GameSettingsPage.tsx:102
+#: src/settings/GameSettingsPage.tsx:103
 msgid "Streaming"
 msgstr "Streaming"
 
@@ -2268,7 +2268,7 @@ msgstr "More actions for {0}"
 msgid "Game Mods folder vs {0}"
 msgstr "Game Mods folder vs {0}"
 
-#: src/profiles/OverrideRows.tsx:45
+#: src/profiles/OverrideRows.tsx:46
 msgid "Update mods before Play"
 msgstr "Update mods before Play"
 
@@ -2330,6 +2330,10 @@ msgstr "{0} (optional file)"
 #: src/mods/LoadOrderTab.tsx:214
 msgid "The game loader chooses this order. Mortar does not change it."
 msgstr "The game loader chooses this order. Mortar does not change it."
+
+#: src/settings/ProtonRow.tsx:21
+msgid "The Proton build from Steam that runs this copy, which Steam does not start"
+msgstr "The Proton build from Steam that runs this copy, which Steam does not start"
 
 #: src/mods/updateReview/Row.tsx:90
 msgid "Changes dependencies"
@@ -2711,7 +2715,7 @@ msgstr "Error while loading"
 msgid "Downloading"
 msgstr "Downloading"
 
-#: src/profiles/OverrideRows.tsx:128
+#: src/profiles/OverrideRows.tsx:135
 msgid "Free Nexus accounts click each download on Nexus; those updates do not block Play."
 msgstr "Free Nexus accounts click each download on Nexus; those updates do not block Play."
 
@@ -3249,7 +3253,7 @@ msgid "Sound volume"
 msgstr "Sound volume"
 
 #: src/browse/BrowseShow.tsx:49
-#: src/profiles/overrideValue.ts:117
+#: src/profiles/overrideValue.ts:120
 #: src/settings/prefCopy.ts:333
 #: src/settings/prefCopy.ts:400
 #: src/settings/prefCopy.ts:415
@@ -3967,8 +3971,8 @@ msgid "Stopped at the API limit; {0} left"
 msgstr "Stopped at the API limit; {0} left"
 
 #: src/game/Sidebar.tsx:206
-#: src/settings/GameSettingsPage.tsx:99
-#: src/settings/GameSettingsPage.tsx:155
+#: src/settings/GameSettingsPage.tsx:100
+#: src/settings/GameSettingsPage.tsx:157
 msgid "Console"
 msgstr "Console"
 
@@ -4629,7 +4633,7 @@ msgid "Biome"
 msgstr "Biome"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/settings/GameSettingsPage.tsx:176
+#: src/settings/GameSettingsPage.tsx:178
 msgid "Back to {name}"
 msgstr "Back to {name}"
 
@@ -5159,6 +5163,7 @@ msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 #: src/settings/PrefControls.tsx:190
 #: src/settings/PrefControls.tsx:241
 #: src/settings/PrefRow.tsx:39
+#: src/settings/ProtonRow.tsx:31
 #: src/settings/sections/Appearance.tsx:66
 #: src/settings/sections/Appearance.tsx:83
 #: src/settings/sections/Downloads.tsx:52
@@ -5312,7 +5317,7 @@ msgid "Changed outside Mortar"
 msgstr "Changed outside Mortar"
 
 #. placeholder {0}: g.version
-#: src/settings/GameSettingsPage.tsx:114
+#: src/settings/GameSettingsPage.tsx:115
 msgid " · {name} {0}"
 msgstr " · {name} {0}"
 
@@ -5389,7 +5394,7 @@ msgstr "API key not set. Itch.io search is off until you add one."
 msgid "You chose not to endorse this mod."
 msgstr "You chose not to endorse this mod."
 
-#: src/profiles/OverrideRows.tsx:77
+#: src/profiles/OverrideRows.tsx:81
 msgid "These apply only to this profile."
 msgstr "These apply only to this profile."
 
@@ -5863,7 +5868,7 @@ msgstr "Needs"
 msgid "Files set aside"
 msgstr "Files set aside"
 
-#: src/settings/GameSettingsPage.tsx:146
+#: src/settings/GameSettingsPage.tsx:148
 msgid "{name} profile history"
 msgstr "{name} profile history"
 
@@ -6120,6 +6125,10 @@ msgstr "{0, plural, one {# change} other {# changes}}"
 #: src/nxm/store.ts:180
 msgid "You started this download on Nexus. Show Mortar to choose the profile it goes into."
 msgstr "You started this download on Nexus. Show Mortar to choose the profile it goes into."
+
+#: src/settings/ProtonRow.tsx:26
+msgid "The newest Steam has"
+msgstr "The newest Steam has"
 
 #: src/mods/parts.tsx:345
 msgid "Pinned at this version"
@@ -6731,7 +6740,7 @@ msgid "Edit profile…"
 msgstr "Edit profile…"
 
 #: src/game/Home.tsx:189
-#: src/settings/GameSettingsPage.tsx:175
+#: src/settings/GameSettingsPage.tsx:177
 msgid "{name} settings"
 msgstr "{name} settings"
 
@@ -7538,8 +7547,8 @@ msgstr "Send"
 #: src/firstrunTour/TourPopover.tsx:46
 #: src/game/Sidebar.tsx:198
 #: src/mods/ModListVirtual.tsx:284
-#: src/settings/GameSettingsPage.tsx:96
-#: src/settings/GameSettingsPage.tsx:140
+#: src/settings/GameSettingsPage.tsx:97
+#: src/settings/GameSettingsPage.tsx:142
 #: src/settings/sections/Updates.tsx:174
 msgid "Mods"
 msgstr "Mods"
@@ -8047,6 +8056,11 @@ msgstr "Pinned"
 msgid "Could not dismiss the overlap"
 msgstr "Could not dismiss the overlap"
 
+#: src/profiles/OverrideRows.tsx:54
+#: src/settings/ProtonRow.tsx:17
+msgid "Proton version"
+msgstr "Proton version"
+
 #: src/profiles/ImportWizard.tsx:136
 msgid "Use a code or file…"
 msgstr "Use a code or file…"
@@ -8085,7 +8099,7 @@ msgstr "Not found"
 
 #: src/profiles/EditProfileDialog.tsx:123
 #: src/profiles/GameSettings.tsx:182
-#: src/profiles/OverrideRows.tsx:113
+#: src/profiles/OverrideRows.tsx:118
 #: src/settings/sections/Appearance.tsx:202
 #: src/settings/sections/GameSettings.tsx:215
 msgid "Use default"
@@ -8363,7 +8377,7 @@ msgstr "This mod wrote errors to the game's log the last time you played. It may
 msgid "Share…"
 msgstr "Share…"
 
-#: src/profiles/OverrideRows.tsx:49
+#: src/profiles/OverrideRows.tsx:50
 #: src/settings/prefCopy.ts:57
 msgid "Skip the intro"
 msgstr "Skip the intro"
@@ -8733,7 +8747,7 @@ msgstr "Search in Browse"
 msgid "Results of installs, updates and launches appear here."
 msgstr "Results of installs, updates and launches appear here."
 
-#: src/profiles/OverrideRows.tsx:53
+#: src/profiles/OverrideRows.tsx:56
 #: src/settings/prefCopyGame.ts:8
 msgid "Game settings file"
 msgstr "Game settings file"
@@ -10044,7 +10058,7 @@ msgstr "Paste a share link, a collection link, a Patreon post link, an itch.io p
 msgid "Not now"
 msgstr "Not now"
 
-#: src/profiles/OverrideRows.tsx:51
+#: src/profiles/OverrideRows.tsx:52
 #: src/settings/GraphicsApiRow.tsx:17
 msgid "Graphics API"
 msgstr "Graphics API"
@@ -10468,7 +10482,7 @@ msgid "Open {gameName} ({more, plural, one {# more profile} other {# more profil
 msgstr "Open {gameName} ({more, plural, one {# more profile} other {# more profiles}})"
 
 #: src/profiles/LaunchPresetDialog.tsx:78
-#: src/profiles/OverrideRows.tsx:39
+#: src/profiles/OverrideRows.tsx:40
 #: src/settings/prefCopy.ts:63
 msgid "SMAPI console window"
 msgstr "SMAPI console window"
@@ -10935,7 +10949,7 @@ msgstr "Show conflicts"
 msgid "Not set up"
 msgstr "Not set up"
 
-#: src/profiles/OverrideRows.tsx:43
+#: src/profiles/OverrideRows.tsx:44
 #: src/settings/prefCopy.ts:242
 msgid "Save backups kept"
 msgstr "Save backups kept"
@@ -11044,7 +11058,7 @@ msgstr "No other profile to add them to."
 msgid "Slowest event"
 msgstr "Slowest event"
 
-#: src/profiles/OverrideRows.tsx:47
+#: src/profiles/OverrideRows.tsx:48
 msgid "Skip pre-Play check"
 msgstr "Skip pre-Play check"
 
@@ -11421,7 +11435,7 @@ msgid "{0} adds {time} to startup (through {1})"
 msgstr "{0} adds {time} to startup (through {1})"
 
 #: src/profiles/EditProfileDialog.tsx:170
-#: src/profiles/OverrideRows.tsx:75
+#: src/profiles/OverrideRows.tsx:79
 msgid "Overrides"
 msgstr "Overrides"
 
@@ -11609,7 +11623,7 @@ msgid "Show file"
 msgstr "Show file"
 
 #: src/saves/BackupsDialog.tsx:153
-#: src/settings/GameSettingsPage.tsx:97
+#: src/settings/GameSettingsPage.tsx:98
 #: src/settings/sections/DataUsage.tsx:210
 #: src/settings/sections/GameSettings.tsx:385
 msgid "Save backups"
@@ -11737,8 +11751,8 @@ msgstr "Stop the game to test a launch."
 #: src/games/GameSelect.tsx:260
 #: src/launch/PlayControl.tsx:175
 #: src/mods/typedConfig/ConfigTab.tsx:299
-#: src/settings/GameSettingsPage.tsx:95
-#: src/settings/GameSettingsPage.tsx:123
+#: src/settings/GameSettingsPage.tsx:96
+#: src/settings/GameSettingsPage.tsx:124
 msgid "Play"
 msgstr "Play"
 
@@ -11936,7 +11950,7 @@ msgstr "{dependentName}'s Nexus page lists {dep} as a requirement."
 
 #: src/fomod/Dialog.tsx:266
 #: src/loader/Banner.tsx:30
-#: src/settings/GameSettingsPage.tsx:91
+#: src/settings/GameSettingsPage.tsx:92
 #: src/settings/sections/LoaderRow.tsx:92
 #: src/settings/sections/LoaderRow.tsx:147
 msgid "Install"
@@ -13338,7 +13352,7 @@ msgstr "More setting values"
 msgid "Installing"
 msgstr "Installing"
 
-#: src/profiles/OverrideRows.tsx:41
+#: src/profiles/OverrideRows.tsx:42
 #: src/settings/prefCopy.ts:221
 msgid "Back up saves before Play"
 msgstr "Back up saves before Play"
@@ -14420,7 +14434,7 @@ msgid "Remove {0} from this profile?"
 msgstr "Remove {0} from this profile?"
 
 #: src/mods/columnLabel.ts:6
-#: src/profiles/overrideValue.ts:114
+#: src/profiles/overrideValue.ts:117
 msgid "On"
 msgstr "On"
 

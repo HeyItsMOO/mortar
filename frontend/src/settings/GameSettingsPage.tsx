@@ -18,6 +18,7 @@ import { useProfiles } from '../profiles/store.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { GraphicsApiRow } from './GraphicsApiRow.tsx'
 import { PrefKeys } from './PrefRow.tsx'
+import { ProtonRow } from './ProtonRow.tsx'
 import { SettingsSection } from './SettingsSection.tsx'
 import { SettingsShell, type ShellPage } from './SettingsShell.tsx'
 import { HistoryUsageRows } from './sections/DataHistory.tsx'
@@ -132,6 +133,7 @@ function GamePages({
               game={game}
             />
             <GraphicsApiRow game={game} />
+            <ProtonRow game={game} />
           </SettingsSection>
         )
       case 'mods':
