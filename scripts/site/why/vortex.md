@@ -6,9 +6,9 @@ Vortex is the Nexus Mods manager, with the widest game list here. Mortar works w
 |---|---|---|
 | Platforms | !win Windows, Linux, Steam Deck | Windows ([v2.8.2 assets](https://github.com/Nexus-Mods/Vortex/releases/tag/v2.8.2)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
 | Games | 188 | !win Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
-| Mod sites | !win Nexus Mods, Thunderstore, CurseForge, Modrinth, GitHub, Vintage Story Mod DB | Nexus Mods ([README](https://github.com/Nexus-Mods/Vortex)) |
+| Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :nexus: ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Account | !win None needed; Nexus sign-in only for Nexus downloads | Nexus login to download from Nexus |
-| Sharing | A link or a `.mortar` file | Nexus Collections ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/mod-management/collections.md)) |
+| Sharing | A link or a `.mortar` file; opens Nexus Collections and drafts one from a profile | Nexus Collections ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/mod-management/collections.md)) |
 | Usage analytics | !win None | Mixpanel, keyed to the Nexus user id ([docs](https://github.com/Nexus-Mods/Vortex/blob/master/docs/analytics.md)) |
 | Licence | AGPL-3.0 | GPL-3.0 |
 
@@ -25,6 +25,6 @@ Vortex is the Nexus Mods manager, with the widest game list here. Mortar works w
 
 ## Moving from Vortex
 
-On the Profiles page choose **Import…**: Mortar lists the Vortex profiles it finds for the game, with a preview. Mods Vortex linked into the game folder are copied, not moved, so Vortex keeps working.
+On the Profiles page choose **Import…**: Mortar lists the Vortex profiles it finds for the game, with a preview. Mods Vortex linked into the game folder are copied, not moved, so Vortex keeps working. A Nexus Collection link opens in Mortar like a shared profile.
 
 Facts about Vortex were checked against its source and release v2.8.2 on 17 October 2026.

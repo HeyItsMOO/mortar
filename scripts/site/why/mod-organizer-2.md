@@ -6,7 +6,7 @@ Mod Organizer 2 is the manager of choice for heavily modded Bethesda games, and 
 |---|---|---|
 | Platforms | !win Windows, Linux, Steam Deck | Windows ([v2.5.2](https://github.com/ModOrganizer2/modorganizer/releases/tag/v2.5.2)); Linux through a [third-party Wine installer](https://github.com/rockerbacon/modorganizer2-linux-installer) |
 | Games | !win 188, each with its loader installed | 10 fully supported Bethesda games, about 17 with basic support ([Game Support](https://github.com/ModOrganizer2/modorganizer/wiki/Game-Support)) |
-| Mod sites | !win Nexus Mods, Thunderstore, CurseForge, Modrinth, GitHub, Vintage Story Mod DB | Nexus Mods and local archives ([source](https://github.com/ModOrganizer2/modorganizer/blob/master/src/nexusinterface.h)) |
+| Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :nexus: and local archives ([source](https://github.com/ModOrganizer2/modorganizer/blob/master/src/nexusinterface.h)) |
 | Loader install | !win SMAPI, BepInEx and each game's loader | Set up by hand ([wiki](https://github.com/ModOrganizer2/modorganizer/wiki/Running-Oblivion-OBSE-with-MO2)) |
 | Sharing | !win A link or a `.mortar` file | None documented |
 | Latest stable release | !win 0.3.4, October 2026 ([changelog](/changelog/)) | 2.5.2, August 2024 |

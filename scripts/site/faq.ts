@@ -1,7 +1,9 @@
 // /faq/ from scripts/site/faq.md, the "Why Mortar?" pages from scripts/site/why/<manager>.md, and the landing page's
 // short list of questions that links into the FAQ.
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { brandIcon } from './brands.ts'
 import { escapeHTML, page } from './chrome.ts'
+import { SOURCE_NAMES } from './games.ts'
 
 const FAQ = 'scripts/site/faq.md'
 const WHY = 'scripts/site/why'
@@ -102,13 +104,24 @@ export function landingFaq(gameCount: number, whys: Why[]): string {
           `
 }
 
+/** A run of `:source:` tokens (`:nexus: :github:`) as one row of mod-site icons. */
+const sourceIcons = (html: string) =>
+  html.replace(/(?::[a-z]+:\s*)+/g, (run) => {
+    const ids = run.match(/[a-z]+/g) ?? []
+    if (!ids.every((id) => id in SOURCE_NAMES || id === 'hexium')) {
+      return run
+    }
+    const icons = ids.map((id) => brandIcon(id, SOURCE_NAMES[id] ?? 'Hexium')).join('')
+    return `<span class="icon-row">${icons}</span>${run.endsWith(' ') ? ' ' : ''}`
+  })
+
 export function whyPage(w: Why): string {
   return page({
     path: `site/why/${w.id}/index.html`,
     title: `Why Mortar? (vs ${w.name})`,
     description: `How Mortar compares with ${w.name}, with sources for every claim about ${w.name}.`,
     body: `      <h1 class="ext-title">Why Mortar? (vs ${escapeHTML(w.name)})</h1>
-${render(w.md)
+${sourceIcons(render(w.md))
   .replaceAll('<td>!win ', '<td class="win">')
   .replace(
     '</table></div>',

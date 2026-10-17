@@ -27,7 +27,7 @@ const STORE_NAMES: Record<string, string> = {
   standalone: 'Its own installer',
 }
 
-const SOURCE_NAMES: Record<string, string> = {
+export const SOURCE_NAMES: Record<string, string> = {
   nexus: 'Nexus Mods',
   thunderstore: 'Thunderstore',
   curseforge: 'CurseForge',

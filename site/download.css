@@ -407,3 +407,9 @@ td.win {
   color: var(--muted);
   font-size: 0.85rem;
 }
+.icon-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  vertical-align: middle;
+}
