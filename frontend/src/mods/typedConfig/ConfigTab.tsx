@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material'
 import { Check, ChevronDown, Filter, Play, SlidersHorizontal } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import type { ModConfig } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/configsvc/models.ts'
 import type { Profile } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { playOpenProfile } from '../../launch/playOpen.ts'
@@ -27,7 +27,7 @@ import { LetterTile } from '../parts.tsx'
 import { useMods } from '../store.ts'
 import { useListHeading } from '../useListHeading.ts'
 import { useModGroups } from '../useModGroups.ts'
-import { flattenModGroups, type VirtualRow } from '../virtualRows.ts'
+import { flattenModGroups, useModVirtual, type VirtualRow } from '../virtualRows.ts'
 import { ConfigPane } from './ConfigPane.tsx'
 import {
   type ConfigChip,
@@ -52,21 +52,22 @@ function ChipLabel({ chip }: { chip: NonNullable<ConfigChip> }) {
   return <>{chip.kind === 'changed' ? t`Changed` : t`In-game menu`}</>
 }
 
-function ModRow({
+const ModRow = memo(function ConfigModRow({
   config,
+  picture,
   selected,
-  onSelect,
+  onChoose,
 }: {
   config: ModConfig
+  picture: string | undefined
   selected: boolean
-  onSelect: () => void
+  onChoose: (selection: string) => void
 }) {
-  const picture = useMods((s) => s.mods.find((m) => m.id === config.id)?.picture)
   const chip = chipOf(config)
   return (
     <ListItemButton
       selected={selected}
-      onClick={onSelect}
+      onClick={() => onChoose(modSelection(config.id))}
       sx={{ minHeight: space.row, gap: 1, opacity: config.enabled ? 1 : DIMMED }}
     >
       <LetterTile
@@ -87,7 +88,7 @@ function ModRow({
       ) : null}
     </ListItemButton>
   )
-}
+})
 
 function ShowMenu({ show, onChange }: { show: ConfigShow; onChange: (show: ConfigShow) => void }) {
   const { t } = useLingui()
@@ -143,6 +144,7 @@ function ListEntry({
   heading,
   headerGroups,
   selection,
+  pictures,
   onChoose,
 }: {
   item: Listed
@@ -150,6 +152,7 @@ function ListEntry({
   heading: ReturnType<typeof useListHeading>
   headerGroups: { key: string; items: GroupsView['groups'][number]['items'] }[]
   selection: string | undefined
+  pictures: ReadonlyMap<string, string | undefined>
   onChoose: (selection: string) => void
 }) {
   const { t } = useLingui()
@@ -174,8 +177,9 @@ function ListEntry({
   return (
     <ModRow
       config={item.item}
+      picture={pictures.get(item.item.id)}
       selected={modSelection(item.item.id) === selection}
-      onSelect={() => onChoose(modSelection(item.item.id))}
+      onChoose={onChoose}
     />
   )
 }
@@ -344,7 +348,11 @@ function ModsColumn({
   const choose = useConfigList((s) => s.select)
   const heading = useListHeading(view.groupBy)
   const { listed, headerGroups } = useListed(view, shown)
-  const onChoose = (sel: string) => choose(profileId, sel)
+  const onChoose = useCallback((sel: string) => choose(profileId, sel), [choose, profileId])
+  const mods = useMods((s) => s.mods)
+  const pictures = useMemo(() => new Map(mods.map((m) => [m.id, m.picture])), [mods])
+  // Hundreds of mods can have settings; only the rows in view are mounted.
+  const { parentRef, virtualizer } = useModVirtual(listed, 0)
   return (
     <Box
       sx={{
@@ -356,22 +364,36 @@ function ModsColumn({
       }}
     >
       <List
+        ref={parentRef}
         component="div"
         role="group"
         aria-label={t`Mods with settings`}
         sx={{ flex: 1, overflowY: 'auto', py: 0 }}
       >
-        {listed.map((item) => (
-          <ListEntry
-            key={item.key}
-            item={item}
-            view={view}
-            heading={heading}
-            headerGroups={headerGroups}
-            selection={selection}
-            onChoose={onChoose}
-          />
-        ))}
+        <Box sx={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
+          {virtualizer.getVirtualItems().map((vi) => {
+            const item = listed[vi.index]
+            return item ? (
+              <Box
+                key={item.key}
+                ref={virtualizer.measureElement}
+                data-index={vi.index}
+                sx={{ position: 'absolute', top: 0, left: 0, width: '100%' }}
+                style={{ transform: `translateY(${vi.start}px)` }}
+              >
+                <ListEntry
+                  item={item}
+                  view={view}
+                  heading={heading}
+                  headerGroups={headerGroups}
+                  selection={selection}
+                  pictures={pictures}
+                  onChoose={onChoose}
+                />
+              </Box>
+            ) : null
+          })}
+        </Box>
         {shown.length === 0 && all.length > 0 ? (
           <Typography sx={{ px: space.pad, py: space.gap, color: 'text.secondary' }}>
             {t`No mods match`}
