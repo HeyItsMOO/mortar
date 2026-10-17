@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useLingui } from '@lingui/react/macro'
 import { alpha, Box, Button, IconButton, Menu, Typography } from '@mui/material'
 import { GripVertical, MoreHorizontal, Palette, Pencil, Share2 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { memo, useRef, useState } from 'react'
 import type { ProfileBudget } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/datasvc/models.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { NameField } from '../game/NameField.tsx'
@@ -130,7 +130,7 @@ function BudgetLine({ budget }: { budget: ProfileBudget | undefined }) {
   )
 }
 
-export function ProfileRow({
+export const ProfileRow = memo(function ProfileRowView({
   profile,
   budget,
 }: {
@@ -265,4 +265,4 @@ export function ProfileRow({
       />
     </Box>
   )
-}
+})

@@ -31,7 +31,7 @@ test('find-mod hits drop UniqueID from the visible label and keep it in the tool
   expect(page).toContain('title={`')
   expect(page).toContain('h.id')
   expect(page).toContain('minWidth: 0')
-  const kids = page.split('FindModSearch')[1] ?? ''
+  const kids = page.split('function FindModSearch')[1] ?? ''
   expect(/title=\{`\$\{h\.name\} · \$\{localId\(h\.id\)\}/.test(kids)).toBe(true)
   expect(/\{`\$\{h\.name\} · \$\{h\.profileName\}/.test(kids)).toBe(true)
 })

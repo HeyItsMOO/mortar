@@ -26,7 +26,7 @@ import {
   Trash2,
   Wrench,
 } from 'lucide-react'
-import { useEffect, useId, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useId, useRef, useState } from 'react'
 import type {
   Profile,
   TrashItem,
@@ -112,7 +112,8 @@ function TrashRow({ item }: { item: TrashItem }) {
   )
 }
 
-function Damaged() {
+// Memoised, like the page's other parts: profile sizes and badges arriving re-render the rows, not these.
+const Damaged = memo(function DamagedView() {
   const { t } = useLingui()
   const damaged = useProfiles((s) => s.damaged)
   const openFolder = useProfiles((s) => s.openFolder)
@@ -180,9 +181,9 @@ function Damaged() {
       ))}
     </Box>
   )
-}
+})
 
-function Trash() {
+const Trash = memo(function TrashView() {
   const { t } = useLingui()
   const trash = useProfiles((s) => s.trash)
   const purgeTrash = useProfiles((s) => s.purgeTrash)
@@ -237,9 +238,9 @@ function Trash() {
       />
     </Box>
   )
-}
+})
 
-function FindModSearch({ profiles }: { profiles: Profile[] }) {
+const FindModSearch = memo(function FindModSearchView({ profiles }: { profiles: Profile[] }) {
   const { t } = useLingui()
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -281,9 +282,9 @@ function FindModSearch({ profiles }: { profiles: Profile[] }) {
       ) : null}
     </Box>
   )
-}
+})
 
-function ProfilesHeader({
+const ProfilesHeader = memo(function ProfilesHeaderView({
   game,
   onBack,
   onCreate,
@@ -365,7 +366,7 @@ function ProfilesHeader({
       </Button>
     </Box>
   )
-}
+})
 
 export function ProfilesPage() {
   const { t } = useLingui()
@@ -381,6 +382,7 @@ export function ProfilesPage() {
   const reorder = useProfiles((s) => s.reorder)
   const loadTrash = useProfiles((s) => s.loadTrash)
   const [creating, setCreating] = useState(false)
+  const openCreate = useCallback(() => setCreating(true), [])
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -412,7 +414,7 @@ export function ProfilesPage() {
   }
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <ProfilesHeader game={game} onBack={closeProfiles} onCreate={() => setCreating(true)} />
+      <ProfilesHeader game={game} onBack={closeProfiles} onCreate={openCreate} />
       <FindModSearch profiles={profiles} />
       <Box
         sx={{

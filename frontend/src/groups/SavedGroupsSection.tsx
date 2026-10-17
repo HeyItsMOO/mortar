@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Typography } from '@mui/material'
 import { PackagePlus } from 'lucide-react'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import type { SavedGroup } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/savedgroups/models.ts'
 import {
@@ -46,7 +46,13 @@ function NoSavedGroups() {
   )
 }
 
-export function SavedGroupsSection({ game, profiles }: { game: string; profiles: Profile[] }) {
+export const SavedGroupsSection = memo(function SavedGroupsSectionView({
+  game,
+  profiles,
+}: {
+  game: string
+  profiles: Profile[]
+}) {
   const { t } = useLingui()
   const { savedGroups, setSavedGroups, loading } = useSavedGroups(game)
   const [renaming, setRenaming] = useState<SavedGroup | null>(null)
@@ -135,4 +141,4 @@ export function SavedGroupsSection({ game, profiles }: { game: string; profiles:
       />
     </>
   )
-}
+})
