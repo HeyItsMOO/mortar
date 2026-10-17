@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Skeleton, Typography } from '@mui/material'
 import { SearchX } from 'lucide-react'
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type {
   Entry,
   Mod,
@@ -202,6 +202,24 @@ function passesShow(
   }
 }
 
+// A pause in typing before the list filters, so typing a word redraws an 800-row list once rather than per key; the
+// field itself follows every key, and clearing it shows every mod at once.
+const FILTER_PAUSE_MS = 150
+
+function useSettledQuery(query: string): string {
+  const typed = query.trim().toLowerCase()
+  const [settled, setSettled] = useState(typed)
+  useEffect(() => {
+    if (typed === '') {
+      setSettled('')
+      return
+    }
+    const timer = setTimeout(() => setSettled(typed), FILTER_PAUSE_MS)
+    return () => clearTimeout(timer)
+  }, [typed])
+  return typed === '' ? '' : settled
+}
+
 const NO_DETAILS: ReturnType<typeof useNexusDetails.getState>['byId'] = {}
 const NO_CATEGORIES: ReturnType<typeof useCustomCategories.getState>['categories'] = []
 
@@ -217,7 +235,7 @@ function FilteredMods({ profile }: { profile: Profile }) {
   const implicitView = useSettings((s) => s.implicitModsView)
   const selectedTags = useSelectedTags(profile.id)
   const setTagFilter = useMods((s) => s.setTagFilter)
-  const q = query.trim().toLowerCase()
+  const q = useSettledQuery(query)
   // Read only while the search or the Show choice uses them, so their answers arriving re-render nothing here.
   const problems = useMods((s) => (filter === 'problem' ? s.problems : null))
   const updates = useUpdates((s) => (filter === 'update' ? s.updates : null))
