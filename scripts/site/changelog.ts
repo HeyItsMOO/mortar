@@ -39,7 +39,7 @@ function release(md: string): string {
         out.push('<ul>')
         open = true
       }
-      out.push(`<li>${escapeHTML(line.slice(2))}</li>`)
+      out.push(`<li>${escapeHTML(line.slice(2)).replace(/`([^`]+)`/g, '<code>$1</code>')}</li>`)
     }
   }
   close()

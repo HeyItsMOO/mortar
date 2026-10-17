@@ -19,8 +19,8 @@
         &#60;li&#62;24 Nexus Mods games whose mods go in a folder the game reads itself: The Witcher 3, Cyberpunk 2077, 7 Days to Die, Blade &#38;#38; Sorcery, Monster Hunter: World, both Kingdom Come games, Hogwarts Legacy, Stellar Blade, S.T.A.L.K.E.R. 2 and more&#60;/li&#62;
         &#60;li&#62;New loaders for Titanfall 2 (Northstar), Hades II and Risk of Rain Returns (ReturnOfModding), WEBFISHING (GDWeave), Balatro (Lovely), Broforce (Unity Mod Manager) and Scrap Mechanic (Rivet)&#60;/li&#62;
         &#60;li&#62;25 more BepInEx games, among them Among Us, V Rising, Core Keeper, Lost Skies, H3VR, GTFO, ULTRAKILL, both Subnautica games, Timberborn and Crab Game&#60;/li&#62;
-        &#60;li&#62;BepInEx mods that install beyond `BepInEx/plugins` (H3VR&#38;#39;s Sideloader, ULTRAKILL&#38;#39;s UMM Mods, Subnautica&#38;#39;s QMods) land where the game reads them&#60;/li&#62;
-        &#60;li&#62;BepInEx 6 Mono packs, legacy IL2CPP packs, packs laid out at the zip&#38;#39;s top and packs that load through `version.dll` all install&#60;/li&#62;
+        &#60;li&#62;BepInEx mods that install beyond BepInEx/plugins (H3VR&#38;#39;s Sideloader, ULTRAKILL&#38;#39;s UMM Mods, Subnautica&#38;#39;s QMods) land where the game reads them&#60;/li&#62;
+        &#60;li&#62;BepInEx 6 Mono packs, legacy IL2CPP packs, packs laid out at the zip&#38;#39;s top and packs that load through version.dll all install&#60;/li&#62;
         &#60;/ul&#62;
         &#60;h4&#62;Mods and browsing&#60;/h4&#62;
         &#60;ul&#62;
@@ -33,8 +33,8 @@
         &#60;/ul&#62;
         &#60;h3&#62;Fixed&#60;/h3&#62;
         &#60;ul&#62;
-        &#60;li&#62;LethalModDataLib&#38;#39;s `.moddata` files belong to their Lethal Company save slot instead of showing as extra saves&#60;/li&#62;
-        &#60;li&#62;Zips written with Windows `\` folder names extract&#60;/li&#62;
+        &#60;li&#62;LethalModDataLib&#38;#39;s .moddata files belong to their Lethal Company save slot instead of showing as extra saves&#60;/li&#62;
+        &#60;li&#62;Zips whose folder names use Windows backslashes extract&#60;/li&#62;
         &#60;li&#62;Browse card authors and stats are readable in light mode&#60;/li&#62;
         &#60;li&#62;Searching Settings for &#38;#34;Personal API key&#38;#34; finds the Nexus key&#60;/li&#62;
         &#60;/ul&#62;</content>

@@ -70,7 +70,7 @@
         <p>Fixed</p>
         <ul>
           <li>LethalModDataLib's .moddata files belong to their Lethal Company save slot instead of showing as extra saves</li>
-          <li>Zips written with Windows \ folder names extract</li>
+          <li>Zips whose folder names use Windows backslashes extract</li>
           <li>Browse card authors and stats are readable in light mode</li>
           <li>Searching Settings for "Personal API key" finds the Nexus key</li>
         </ul>
