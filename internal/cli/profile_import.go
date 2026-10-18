@@ -55,32 +55,41 @@ func (c *cmd) profileImport() error {
 	})
 }
 
-// profileExport writes the profile as a Thunderstore modpack zip.
+// profileExport writes the profile as a Thunderstore modpack zip or an r2modman .r2z file.
 func (c *cmd) profileExport() error {
-	a, err := c.need(2, "a game", "a profile", "the modpack zip to write")
+	a, err := c.need(2, "a game", "a profile", "the file to write")
 	if err != nil {
 		return err
-	}
-	if c.format != "modpack" {
-		return usageError{"profile export needs --format modpack"}
 	}
 	dest, err := filepath.Abs(a[2])
 	if err != nil {
 		return err
 	}
-	var res packsvc.ModpackResult
-	if err := c.call("pack.exportModpack", control.Params{Game: a[0], Profile: a[1], Path: dest, All: !c.noConfigs}, &res, readTimeout); err != nil {
-		return err
+	p := control.Params{Game: a[0], Profile: a[1], Path: dest, All: !c.noConfigs}
+	switch c.format {
+	case "modpack":
+		var res packsvc.ModpackResult
+		if err := c.call("pack.exportModpack", p, &res, readTimeout); err != nil {
+			return err
+		}
+		return c.emit(res, func() {
+			fmt.Fprintf(c.out, "Wrote %s: %d packages, %d config files.\n", res.Path, len(res.Dependencies), res.Configs)
+			if len(res.LeftOut) > 0 {
+				fmt.Fprintf(c.out, "Left out (not on Thunderstore): %s\n", strings.Join(res.LeftOut, ", "))
+			}
+			if len(res.Disabled) > 0 {
+				fmt.Fprintf(c.out, "Left out (switched off): %s\n", strings.Join(res.Disabled, ", "))
+			}
+		})
+	case "r2z":
+		var res map[string]string
+		if err := c.call("pack.exportR2z", p, &res, readTimeout); err != nil {
+			return err
+		}
+		return c.emit(res, func() { fmt.Fprintf(c.out, "Wrote %s.\n", res["path"]) })
+	default:
+		return usageError{"profile export needs --format modpack or r2z"}
 	}
-	return c.emit(res, func() {
-		fmt.Fprintf(c.out, "Wrote %s: %d packages, %d config files.\n", res.Path, len(res.Dependencies), res.Configs)
-		if len(res.LeftOut) > 0 {
-			fmt.Fprintf(c.out, "Left out (not on Thunderstore): %s\n", strings.Join(res.LeftOut, ", "))
-		}
-		if len(res.Disabled) > 0 {
-			fmt.Fprintf(c.out, "Left out (switched off): %s\n", strings.Join(res.Disabled, ", "))
-		}
-	})
 }
 
 // profileBackup writes the profile to one file, with its mod files unless --no-mods.

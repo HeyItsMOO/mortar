@@ -52,6 +52,22 @@ func (s *Services) packExportModpack(p Params) (any, error) {
 	return s.Packs.ExportModpack(p.Game, prof.ID, p.Path, p.All)
 }
 
+// packExportR2z writes the profile as an r2modman .r2z file at Path.
+func (s *Services) packExportR2z(p Params) (any, error) {
+	if s.Packs == nil {
+		return nil, errors.New("pack export is unavailable")
+	}
+	if strings.TrimSpace(p.Path) == "" {
+		return nil, errors.New("name the .r2z file to write")
+	}
+	prof, err := s.resolve(p.Game, p.Profile)
+	if err != nil {
+		return nil, err
+	}
+	path, err := s.Packs.ExportR2z(p.Game, prof.ID, p.Path)
+	return map[string]string{"path": path}, err
+}
+
 // profileBackup writes the profile to the backup file at Path; All carries the mod files, otherwise only the ones no
 // source can download again.
 func (s *Services) profileBackup(p Params) (any, error) {

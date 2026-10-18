@@ -56,3 +56,36 @@ func TestExportModpackReimportsAsTheSamePackages(t *testing.T) {
 		t.Fatalf("re-imported %+v, want %v", pv, res.Dependencies)
 	}
 }
+
+func TestExportR2zReimportsAsTheSameModList(t *testing.T) {
+	off := profile.Entry{
+		Source: profile.Source{Kind: profile.KindThunderstore, Name: "Alice-Quiet", Version: "0.1.0"},
+		Mods:   []profile.Component{{ID: mod.NewID(mod.FormatThunderstore, "Alice-Quiet")}},
+	}
+	off.Disabled = []mod.ID{off.Mods[0].ID}
+	ps := &fakeProfiles{list: []profile.Profile{{ID: "p1", Name: "Friends", Entries: []profile.Entry{
+		{Source: profile.Source{Kind: profile.KindThunderstore, Name: "AinaVT-LethalConfig", Version: "1.4.6"}},
+		off,
+	}}}}
+	s := &Service{Profiles: ps}
+	dest := filepath.Join(t.TempDir(), "friends.r2z")
+	if _, err := s.ExportR2z("lethal-company", "p1", dest); err != nil {
+		t.Fatal(err)
+	}
+	pv, err := s.Preview(context.Background(), Source{Path: dest})
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := make([]string, 0, len(pv.Packages))
+	for _, p := range pv.Packages {
+		mark := ""
+		if p.Disabled {
+			mark = " off"
+		}
+		got = append(got, p.Native+"-"+p.Version+mark)
+	}
+	want := []string{"AinaVT-LethalConfig-1.4.6", "Alice-Quiet-0.1.0 off"}
+	if pv.Name != "Friends" || !slices.Equal(got, want) {
+		t.Fatalf("re-imported %+v", pv)
+	}
+}

@@ -657,6 +657,8 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 		return s.packImport(ctx, p)
 	case "pack.exportModpack":
 		return s.packExportModpack(p)
+	case "pack.exportR2z":
+		return s.packExportR2z(p)
 	case "pack.farmExport", "pack.farmCheck", "pack.farmFix":
 		return s.farmCall(ctx, method, p)
 	case "profile.backup":

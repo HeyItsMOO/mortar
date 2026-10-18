@@ -1,5 +1,5 @@
 // Package packsvc imports other managers' mod lists (r2modman codes and profiles, Thunderstore modpacks) into a
-// Mortar profile, and exports a profile's Thunderstore packages as an r2modman code once the player confirms.
+// Mortar profile, and exports a profile's Thunderstore packages as an r2modman code or .r2z file.
 package packsvc
 
 import (
@@ -295,9 +295,43 @@ func (s *Service) ExportCode(ctx context.Context, gameID, profileID string, conf
 	if !confirmed {
 		return "", errors.New("exporting a code publishes this profile's mod list to Thunderstore: confirm first")
 	}
+	d, err := s.r2zDraft(gameID, profileID)
+	if err != nil {
+		return "", err
+	}
+	return s.Code.ExportCode(ctx, d)
+}
+
+// ExportR2zDialog asks where to save, then writes the profile as an .r2z file. An empty path means the player cancelled.
+func (s *Service) ExportR2zDialog(ctx context.Context, gameID, profileID string) (string, error) {
+	if s.App == nil {
+		return "", errors.New("no window to ask where to save")
+	}
 	p, err := s.find(gameID, profileID)
 	if err != nil {
 		return "", err
+	}
+	dest, err := s.App.SaveFile(winhost.Dialog{Filename: packageName(p.Name) + ".r2z", Filters: []winhost.Filter{{Name: "r2modman or Gale export (.r2z)", Pattern: "*.r2z"}}})
+	if err != nil || dest == "" {
+		return dest, err
+	}
+	return s.ExportR2z(gameID, profileID, dest)
+}
+
+// ExportR2z writes the profile's Thunderstore packages as an r2modman .r2z file at dest. It does not post a public code.
+func (s *Service) ExportR2z(gameID, profileID, dest string) (string, error) {
+	d, err := s.r2zDraft(gameID, profileID)
+	if err != nil {
+		return "", err
+	}
+	return dest, pack.WriteR2z(dest, d)
+}
+
+// r2zDraft is the profile as an r2modman export: Thunderstore packages plus the BepInEx config folder.
+func (s *Service) r2zDraft(gameID, profileID string) (pack.Draft, error) {
+	p, err := s.find(gameID, profileID)
+	if err != nil {
+		return pack.Draft{}, err
 	}
 	d := pack.Draft{Name: p.Name}
 	for _, e := range p.Entries {
@@ -306,15 +340,15 @@ func (s *Service) ExportCode(ctx context.Context, gameID, profileID string, conf
 		}
 	}
 	if len(d.Packages) == 0 {
-		return "", errors.New("the profile holds no Thunderstore packages")
+		return pack.Draft{}, errors.New("the profile holds no Thunderstore packages")
 	}
 	if ref, ok := s.loaderPack(gameID, p.ID); ok {
 		d.Packages = append([]pack.Ref{ref}, d.Packages...)
 	}
 	if d.Configs, err = s.configFiles(gameID, p.ID); err != nil {
-		return "", err
+		return pack.Draft{}, err
 	}
-	return s.Code.ExportCode(ctx, d)
+	return d, nil
 }
 
 // loaderPack is the profile's loader as the Thunderstore package r2modman lists it among a profile's mods: r2modman

@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/source"
 	"gopkg.in/yaml.v3"
 )
@@ -30,8 +31,8 @@ type exportDoc struct {
 	Mods []exportMod `yaml:"mods"`
 }
 
-// exportZip is the .r2z body: export.r2x plus the draft's config files.
-func exportZip(d Draft) ([]byte, error) {
+// ExportZip is the .r2z body: export.r2x plus the draft's config files.
+func ExportZip(d Draft) ([]byte, error) {
 	doc := exportDoc{Name: d.Name, Mods: make([]exportMod, 0, len(d.Packages))}
 	for _, p := range d.Packages {
 		if p.Source != thunderstore {
@@ -77,7 +78,7 @@ func exportZip(d Draft) ([]byte, error) {
 // ExportCode stores d on Thunderstore as an r2modman profile code and returns its key. It publishes the profile's
 // mod list and config files to a public service, so the caller must have the player's confirmation first.
 func (c Code) ExportCode(ctx context.Context, d Draft) (string, error) {
-	z, err := exportZip(d)
+	z, err := ExportZip(d)
 	if err != nil {
 		return "", err
 	}
@@ -110,4 +111,13 @@ func (c Code) ExportCode(ctx context.Context, d Draft) (string, error) {
 		return "", errors.New("thunderstore returned no profile key")
 	}
 	return out.Key, nil
+}
+
+// WriteR2z writes d as an r2modman .r2z file at dest. It does not post a public code.
+func WriteR2z(dest string, d Draft) error {
+	z, err := ExportZip(d)
+	if err != nil {
+		return err
+	}
+	return fsx.WriteFile(dest, z, 0o600)
 }
