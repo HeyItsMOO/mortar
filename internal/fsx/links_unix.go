@@ -8,8 +8,7 @@ import (
 	"syscall"
 )
 
-// LinkCount is the number of hard links to path itself (a symlink is not followed).
-func LinkCount(path string) (uint64, error) {
+func linkCount(path string) (uint64, error) {
 	fi, err := os.Lstat(path)
 	if err != nil {
 		return 0, err

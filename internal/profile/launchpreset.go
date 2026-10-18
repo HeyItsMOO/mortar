@@ -161,21 +161,12 @@ func (s *Store) AddLaunchPreset(game, id string, preset LaunchPreset) (Profile, 
 // SetDefaultLaunchPreset marks one preset as the one Play uses; "" selects the profile's own settings.
 func (s *Store) SetDefaultLaunchPreset(game, id, presetID string) (Profile, error) {
 	return s.update(game, id, func(p *Profile, _ string) error {
-		if presetID != "" && !containsPreset(p.LaunchPresets, presetID) {
+		if presetID != "" && !slices.ContainsFunc(p.LaunchPresets, func(preset LaunchPreset) bool { return preset.ID == presetID }) {
 			return errors.New("the default launch preset does not exist")
 		}
 		p.DefaultLaunchPreset = presetID
 		return nil
 	})
-}
-
-func containsPreset(presets []LaunchPreset, id string) bool {
-	for _, preset := range presets {
-		if preset.ID == id {
-			return true
-		}
-	}
-	return false
 }
 
 // LaunchSpec returns the settings a launch of the profile uses for the named preset.

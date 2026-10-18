@@ -16,7 +16,7 @@ func Shared(path string) bool {
 	if fi.Mode()&os.ModeSymlink != 0 {
 		return true
 	}
-	n, err := LinkCount(path)
+	n, err := linkCount(path)
 	return err == nil && fi.Mode().IsRegular() && n > 1
 }
 

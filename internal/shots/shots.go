@@ -6,6 +6,7 @@ import (
 	"cmp"
 	"errors"
 	"io/fs"
+	"maps"
 	"os"
 	"path/filepath"
 	"slices"
@@ -46,13 +47,7 @@ func IsPicture(name string) bool {
 func List(dirs map[string]string) (Gallery, error) {
 	out := Gallery{Shots: []Shot{}, Sources: []string{}}
 	var errs []error
-	for _, source := range slices.Sorted(func(yield func(string) bool) {
-		for k := range dirs {
-			if !yield(k) {
-				return
-			}
-		}
-	}) {
+	for _, source := range slices.Sorted(maps.Keys(dirs)) {
 		ents, err := os.ReadDir(dirs[source])
 		if errors.Is(err, fs.ErrNotExist) {
 			continue
