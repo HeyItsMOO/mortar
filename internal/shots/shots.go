@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+
+	"github.com/Rethunk-Tech/mortar/internal/winname"
 )
 
 // Screenshot sources.
@@ -36,7 +38,7 @@ var pictureExts = []string{".png", ".jpg", ".jpeg", ".webp", ".bmp"}
 
 // IsPicture reports whether name is a bare file name in a picture format the app's webview shows.
 func IsPicture(name string) bool {
-	return name != "" && name == filepath.Base(name) && !strings.HasPrefix(name, ".") &&
+	return winname.Valid(name) && !strings.HasPrefix(name, ".") &&
 		slices.Contains(pictureExts, strings.ToLower(filepath.Ext(name)))
 }
 

@@ -31,7 +31,7 @@ func TestListReadsPicturesNewestFirstAndSkipsTheRest(t *testing.T) {
 	if len(g.Sources) != 2 {
 		t.Fatalf("sources = %v, want the two folders that exist", g.Sources)
 	}
-	if IsPicture("../a.png") || IsPicture("a.exe") || !IsPicture("A.JPG") {
+	if IsPicture("../a.png") || IsPicture(`..\a.png`) || IsPicture("CON.png") || IsPicture("a.exe") || !IsPicture("A.JPG") {
 		t.Fatal("IsPicture accepts only bare picture file names")
 	}
 }
