@@ -295,8 +295,11 @@ jobs:
       - name: Setup Bun
         uses: Rethunk-Tech/gh-actions/setup-bun@bc5fa5b1004205c9c9399fc941d79d5ada53c59b # v1.16
 
-      - name: uv
-        run: pipx install uv==0.12.23
+      - name: Setup Python
+        uses: Rethunk-Tech/gh-actions/setup-python@bc5fa5b1004205c9c9399fc941d79d5ada53c59b # v1.16
+        with:
+          uv-version: "0.12.23"
+          skip-install: "true"
 
       - name: Package manager sources
         env:
