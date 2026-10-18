@@ -15,6 +15,7 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/archive"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
+	"github.com/Rethunk-Tech/mortar/internal/winname"
 )
 
 // DownloadFunc is a resumable download of url into dest, capped at limit bytes, that reports progress.
@@ -38,7 +39,10 @@ func fileName(u *url.URL) string {
 	if n == "." || n == ".." || n == "/" || n == "" {
 		return "download"
 	}
-	return filepath.Base(n)
+	if clean := winname.Clean(n); clean != "" {
+		return clean
+	}
+	return "download"
 }
 
 func parseHTTPS(raw string) (*url.URL, bool) {

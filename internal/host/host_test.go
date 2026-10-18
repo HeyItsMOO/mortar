@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -82,5 +83,17 @@ func TestDirectRefusesPlainHTTPRedirectsAndDotNames(t *testing.T) {
 	p, err := d.Fetch(t.Context(), srv.URL+"/a/..", dir)
 	if err != nil || filepath.Base(p) != "download" || filepath.Dir(p) != dir {
 		t.Fatalf("a .. path must not name the file: %q %v", p, err)
+	}
+}
+
+func TestFileNameStaysOneSegment(t *testing.T) {
+	u, err := url.Parse("https://example.com/files/..\\..\\evil.exe")
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := fileName(u)
+	dir := t.TempDir()
+	if strings.ContainsAny(got, `/\`) || filepath.Dir(filepath.Join(dir, got)) != dir {
+		t.Fatalf("hostile URL path became %q", got)
 	}
 }
