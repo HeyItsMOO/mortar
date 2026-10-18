@@ -6,12 +6,11 @@ How Mortar works: storage, profile semantics, the game catalog and its registrie
 
 Mortar finds a game, installs its mod loader, keeps each set of mods in its own profile, and launches the game with the chosen profile.
 
-- **What matters:** working for personal use with a personal Nexus API key. Registering the app with Nexus is not a v1 goal.
+- **What matters:** working for personal use with a personal Nexus API key. Registering Mortar as a Nexus application (SSO/PKCE) is implemented and waits on a slug (`internal/nexussso`).
 - **Licence:** AGPL-3.0 (GPL-3.0 for the desktop app, and it also covers a hosted share service).
-- **Games:** the signed catalog lists every game ([Games and the catalog](#games-and-the-catalog)); a game's `enabled` flag makes it selectable. Windows and Linux only: macOS is out (fleet CI has no macOS runners, and Wails does not cross-compile to it). Installs are found from Steam (including Flatpak Steam), GOG Galaxy and the GOG offline installer, and on Linux Heroic's GOG library, Minigalaxy, Lutris and Bottles.
+- **Games:** the signed catalog lists every game ([Games and the catalog](#games-and-the-catalog)); a game's `enabled` flag makes it selectable. Windows and Linux only: macOS is out (fleet CI has no macOS runners, and Wails does not cross-compile to it). Installs are found from Steam (including Flatpak Steam), GOG Galaxy and the GOG offline installer, the EA App, Epic Games Store, Xbox, standalone folders and Flatpak, and on Linux Heroic's GOG library, Minigalaxy, Lutris and Bottles.
 
 **External profile import** reads r2modman, Gale, Stardrop (Stardew Valley only), Vortex and Mod Organizer 2 when their default data is present, through the Profiles page's **Import…** wizard: `packsvc.LocalProfiles` reads r2modman profile folders and Gale's `data.sqlite3` (read-only, pure-Go `modernc.org/sqlite`, only profiles whose game slug is the game's Thunderstore community); `migrate.Detect` reads Vortex (`state.v2`), MO2 and Stardrop (`Stardrop/Data/Profiles`; `PreservedModConfigs` are written under the same caps as a `.mortar` file's configs). Vortex and MO2 take the game's names from its catalog entry (`importIds`: `vortex` is the game extension's `GAME_ID`, `mo2` the game plugin's `GameName`); a game without `importIds` (Lethal Company) has neither. Present folders are copied into the store; missing Nexus mods enter the share-import resolver and download queue. Tests: `internal/migrate`, `internal/packsvc/service_test.go`.
-
 
 ## Stack
 
@@ -258,7 +257,6 @@ Steam app `413150`, through `libraryfolders.vdf`. A machine can hold several Ste
 Lutris, GOG, Heroic and Minigalaxy launches start SMAPI directly with `--mods-path`. With several installs found the choice is `gameStores` in `settings.json`; a user-chosen folder in `gameFolders` wins.
 
 **Reset game install** (Stardew settings): after confirm, deletes the validated install folder (SMAPI and leftover mods included); saves and profiles are kept. Refused while the game runs and when the path is the filesystem root or the user's home. Steam then opens `steam://validate/413150`; other stores toast that the game should be reinstalled from its launcher. **Steam Deck:** Mortar installs in Desktop Mode (Flatpak `tech.rethunk.Mortar` or the AppImage); in Game Mode add it as a non-Steam game, and grant Flatpak Steam read access to Mortar's data folder.
-
 
 ### SMAPI
 

@@ -25,7 +25,7 @@ Measurements (2026-10-09, 32 cores):
 | Share and sync | `internal/share`, `internal/sharesvc`, `internal/syncsvc`, `internal/lan` | A loopback LAN pair, golden share links, a 7z collection in `sharesvc/testdata` |
 | Catalog and sources | `internal/components`, `internal/source/...` | `go test ./internal/source/all ./internal/components ./internal/gamestore ./internal/runtime` is the check for a catalog edit ([HUMANS.md](../HUMANS.md#adding-a-game)) |
 | Updater | `internal/updatesvc` | `testdata/fixture`, two server-mode builds behind a signed manifest |
-| Frontend unit | `frontend/src/**/*.test.ts`, run by `bun test` | Pure logic only; components are not rendered under jsdom |
+| Frontend unit | `frontend/src/**/*.test.ts`, run by `bun test` (`bunfig.toml` preloads happy-dom) | Logic in `*.test.ts`. The five `*.test.tsx` files render through `@testing-library/react` or `renderToStaticMarkup`; keep DOM cases in those files |
 | Browser e2e | `frontend/e2e/*.pw.ts` | Playwright on Chromium against its own sandbox (`frontend/e2e/sandbox.ts`); named `.pw.ts` so `bun test` skips it |
 
 Threat-model guards and the test that proves each: [security.md](security.md).
@@ -37,6 +37,8 @@ bun run gate       # everything CI runs except e2e
 bun run test       # go test -race ./... && bun test
 go test -race ./internal/<pkg>
 ```
+
+No `turbo.json`: the default suite is `scripts/gate.sh`, which starts the Go race tests, lints and bun steps in one bash process so they share one `GOTMPDIR` and one bindings build. Turbo's task graph would wrap those same scripts without that shared compile cache, and would add a JS orchestrator to a repo whose gate is already one shell script.
 
 ## Opt-in runs
 
