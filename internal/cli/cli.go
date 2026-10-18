@@ -457,6 +457,14 @@ func (c *cmd) parse(args []string) error {
 			default:
 				c.moveFlag = append(c.moveFlag, args[i])
 			}
+		case strings.HasPrefix(a, "--keep="):
+			c.keepFlag = strings.TrimPrefix(a, "--keep=")
+		case strings.HasPrefix(a, "--delete="):
+			c.deleteFlag = strings.TrimPrefix(a, "--delete=")
+		case strings.HasPrefix(a, "--dismiss="):
+			c.dismissFlag = strings.TrimPrefix(a, "--dismiss=")
+		case strings.HasPrefix(a, "--move="):
+			c.moveFlag = append(c.moveFlag, strings.TrimPrefix(a, "--move="))
 		case a == "--help" || a == "-h":
 			c.args = append(c.args, "help")
 		case strings.HasPrefix(a, "--"):
