@@ -2,30 +2,30 @@
 
 Effective 18 October 2026.
 
-The Mortar bot is the Discord app Rethunk.Tech uses to run the Mortar Mod Manager Discord server. It is a private app: it is installed in that one server and nobody else can add it anywhere. This policy covers the bot only. [Mortar's privacy policy](/privacy/) covers the Mortar app, and [Discord's privacy policy](https://discord.com/privacy) covers Discord itself.
+The Mortar bot is the Discord app Rethunk.Tech uses on the Mortar Mod Manager Discord server. It is installed in that one server; nobody else can add it. This policy covers the bot only. [Mortar's privacy policy](/privacy/) covers the app; [Discord's](https://discord.com/privacy) covers Discord.
 
 ## What the bot reads, and why
 
 | What | Why |
 | --- | --- |
-| The server's settings, channels, categories, roles, permissions, onboarding, welcome screen, AutoMod rules and events | To keep the server set up the way its maintainers decided |
-| Who is in the server: user IDs, names, roles and when members join or leave | To welcome new members, give and remove roles, and carry out moderators' actions |
-| Messages in the channels the bot can see | To answer requests made to it and help moderators enforce the server's rules |
-| Members' online status | Discord sends it along with the member list; the bot does not use or keep it |
+| The server's settings, channels, categories, roles, permissions, onboarding, welcome screen, AutoMod rules and events | To keep the server as its maintainers decided |
+| Who is in the server: user IDs, names, roles and when members join or leave | Welcome, roles, moderator actions |
+| Messages in channels the bot can see | Requests to the bot, and helping moderators enforce rules |
+| Members' online status | Discord sends it with the member list; the bot does not use or keep it |
 
-Discord sends the bot this as the server is used. The bot acts on it as it arrives and does not keep it, except as described below.
+Discord sends this as the server is used. The bot acts on it as it arrives and does not keep it, except as below.
 
 ## What the bot keeps
 
-The bot has no database of members or messages. The server's layout (the names and IDs of its channels, roles and rules, and the text of the bot's own posts) is kept in a private Rethunk.Tech repository so every change can be reviewed. A moderation action records the member's user ID and the reason in the server's audit log or its moderators' channel, which Discord keeps.
+No database of members or messages. Server layout (channel, role and rule names and IDs, and the bot's own posts) lives in a private Rethunk.Tech repository for review. A moderation action records the member's user ID and reason in Discord's audit log or the moderators' channel.
 
 ## Sharing
 
-Nothing the bot reads is sold, shared, used for advertising or used to train AI models. Discord processes it as the platform the server runs on.
+Nothing the bot reads is sold, shared, used for advertising or used to train AI models. Discord processes it as the platform.
 
 ## Your choices
 
-Leaving the server ends the bot's access to anything about you. To ask what the bot holds about you or to have it removed, write to [legal@rethunk.tech](mailto:legal@rethunk.tech). Audit log entries are Discord's records and follow Discord's retention.
+Leaving the server ends the bot's access to anything about you. To ask what it holds or to have it removed: [legal@rethunk.tech](mailto:legal@rethunk.tech). Audit log entries follow Discord's retention.
 
 ## Changes
 
