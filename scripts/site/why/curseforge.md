@@ -1,21 +1,15 @@
 # Why Mortar? (vs the CurseForge app)
 
-The CurseForge app is Overwolf's client for the CurseForge catalog, built around Minecraft and World of Warcraft. Mortar searches CurseForge too. Choose Mortar for its other games, for mods from more than one site, or for an open source app without ads.
+The CurseForge app is Overwolf's client for the CurseForge catalog (Minecraft, World of Warcraft). Mortar searches CurseForge too. Use Mortar for its other games, several sites, or an open-source app with no ads.
 
 | | Mortar | CurseForge app |
-|---|---|---|
+| --- | --- | --- |
 | Platforms | Windows, Linux, Steam Deck | Windows, macOS, Ubuntu ([support](https://support.curseforge.com/support/solutions/articles/9000193488-getting-started)) |
 | Games | GAME_COUNT | 15 with Overwolf, 8 standalone, 3 on Linux ([support](https://support.curseforge.com/support/solutions/articles/9000193488-getting-started)) |
 | Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :curseforge: |
 | Sharing | !win A link or a `.mortar` file, for every game | Minecraft only: a zip or a code that expires in 7 days ([support](https://support.curseforge.com/support/solutions/articles/9000197912-sharing-modpacks-custom-profiles)) |
 | Ads | !win None | Shown, removable with a paid subscription ([Flathub](https://flathub.org/apps/com.overwolf.curseforge)) |
 | Licence | !win AGPL-3.0 | Proprietary |
-
-## Where Mortar differs
-
-- GAME_COUNT games on Windows and Linux, against 3 on Linux for the CurseForge app.
-- One Browse searches CurseForge beside Nexus Mods, Thunderstore, Modrinth and GitHub.
-- Free and open source, with no ads and no account.
 
 ## Where the CurseForge app is stronger
 
@@ -24,6 +18,4 @@ The CurseForge app is Overwolf's client for the CurseForge catalog, built around
 
 ## Moving from the CurseForge app
 
-For Stardew Valley and The Sims 4, add your mods with **Import from the game's Mods folder** on the Profiles page. Mortar copies them into a profile and leaves the game folder unchanged.
-
-Facts about the CurseForge app were checked against its support pages and Flathub listing on 17 October 2026.
+For Stardew Valley and The Sims 4, **Import from the game's Mods folder** on Profiles. Mortar copies them into a profile and leaves the game folder unchanged.

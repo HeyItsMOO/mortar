@@ -1,9 +1,9 @@
 # Why Mortar? (vs Stardrop)
 
-Stardrop is a polished Stardew Valley manager, and Mortar reads its profiles. Choose Mortar to search for mods in the app, to have SMAPI installed for you, or to manage more games than Stardew.
+Stardrop is a Stardew Valley manager; Mortar reads its profiles. Use Mortar to search for mods in-app, have SMAPI installed, or manage more than Stardew.
 
 | | Mortar | Stardrop |
-|---|---|---|
+| --- | --- | --- |
 | Platforms | Windows, Linux, Steam Deck | !win Windows, Linux, macOS ([v1.10.4](https://github.com/Floogen/Stardrop/releases/tag/v1.10.4)) |
 | Games | GAME_COUNT | 1, Stardew Valley ([docs](https://floogen.gitbook.io/stardrop/what-is-stardrop)) |
 | SMAPI | !win Installed for you; updates offered | Must be installed first; updates offered ([docs](https://floogen.gitbook.io/stardrop/getting-started/installing-stardrop/linux)) |
@@ -12,12 +12,6 @@ Stardrop is a polished Stardew Valley manager, and Mortar reads its profiles. Ch
 | Conflicts | !win Content Patcher conflicts explained in Problems | Duplicate mods skipped, missing dependencies reported |
 | Licence | AGPL-3.0 | GPL-3.0 |
 
-## Where Mortar differs
-
-- Search, install and update mods without leaving the app, from Nexus Mods, CurseForge, Modrinth and GitHub.
-- Problems names the Content Patcher mods that edit the same thing, and each mod's startup cost is measured.
-- A shared profile opens from a link, with every mod fetched from its own page.
-
 ## Where Stardrop is stronger
 
 - Native macOS builds.
@@ -25,6 +19,4 @@ Stardrop is a polished Stardew Valley manager, and Mortar reads its profiles. Ch
 
 ## Moving from Stardrop
 
-On the Profiles page choose **Import…**: Mortar lists the Stardrop profiles it finds, with a preview. Stardrop and your game's Mods folder are left as they were.
-
-Facts about Stardrop were checked against its source, docs and release v1.10.4 on 17 October 2026.
+Profiles → **Import…**: Mortar lists Stardrop profiles, with a preview. Stardrop and the game's Mods folder are left as they were.
