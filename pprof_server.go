@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/http/pprof"
 	"os"
+	"strings"
+	"time"
 )
 
 // MORTAR_PPROF=<addr> serves Go's profiling endpoints (/debug/pprof/) in server mode, for the memory harness and for
@@ -22,5 +24,17 @@ func servePprof() {
 	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
 	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
-	go func() { log.Printf("pprof: %v", http.ListenAndServe(addr, mux)) }()
+	if !strings.Contains(addr, ":") {
+		addr = "127.0.0.1:" + addr
+	} else if strings.HasPrefix(addr, ":") {
+		addr = "127.0.0.1" + addr
+	}
+	srv := &http.Server{
+		Addr:              addr,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      60 * time.Second,
+	}
+	go func() { log.Printf("pprof: %v", srv.ListenAndServe()) }()
 }
