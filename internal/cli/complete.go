@@ -41,12 +41,12 @@ func completion(w io.Writer, shell string) error {
 
 // subverbs are the second words of the verbs that take one.
 var subverbs = map[string][]string{
-	"profile":    {"create", "from-save", "rename", "copy", "delete", "compare", "match", "collection", "history", "health", "revert", "load-order", "repair", "list", "shortcut", "steam", "changes", "good", "import", "export", "backup", "restore"},
+	"profile":    {"create", "from-save", "rename", "copy", "delete", "compare", "match", "collection", "history", "health", "revert", "load-order", "repair", "list", "shortcut", "steam", "changes", "good", "import", "export", "backup", "restore", "farm"},
 	"history":    {"diff", "revert", "usage", "trim"},
 	"mods":       {"enable", "disable", "pin", "unpin", "remove", "tag", "untag", "category", "channel", "note", "skip-version", "split", "combine", "files", "config", "preset", "menu", "compat", "report", "by-author", "win", "group"},
 	"game":       {"steam-launch-option", "launch-preset-templates", "reset-install", "steam-status"},
 	"groups":     {"apply", "create", "delete", "rename", "add", "remove"},
-	"lan":        {"peers", "send", "inbox", "accept", "decline"},
+	"lan":        {"peers", "send", "inbox", "accept", "decline", "pair", "paired", "unpair"},
 	"app":        {"update"},
 	"support":    {"diagnostics"},
 	"links":      {"register", "enable", "disable"},
@@ -66,6 +66,7 @@ var subverbs = map[string][]string{
 	"store":      {"report", "remove", "check", "repair"},
 	"bisect":     {"start", "status", "stop"},
 	"antivirus":  {"status"},
+	"problems":   {"dismissed", "dismiss", "restore", "check-updates"},
 	"settings":   {"get", "set", "export", "import", "reset"},
 	"loader":     {"versions", "install", "pin"},
 	"logs":       {"search", "share", "fixes"},
@@ -75,7 +76,7 @@ var subverbs = map[string][]string{
 // gameAt and profileAt give the positions (1-based after the verb) where a verb takes a game and a profile.
 func positions(words []string) (gameAt, profileAt, modAt int) {
 	switch words[0] {
-	case "games", "doctor", "queue", "backups", "cache", "data", "settings", "antivirus", "version", "help", "open", "completion", "launchers":
+	case "games", "doctor", "queue", "backups", "cache", "data", "settings", "antivirus", "version", "help", "open", "completion", "launchers", "app", "support", "links":
 		return 0, 0, 0
 	case "browse":
 		return 1, 0, 0
@@ -129,6 +130,9 @@ func positions(words []string) (gameAt, profileAt, modAt int) {
 		}
 		return 1, 0, 0
 	case "profile":
+		if len(words) > 1 && words[1] == "farm" {
+			return 3, 4, 0
+		}
 		if len(words) > 1 && (words[1] == "create" || words[1] == "from-save") {
 			return 2, 0, 0
 		}
@@ -194,7 +198,7 @@ func (c *cmd) complete(words []string) error {
 				cands = append(cands, v)
 			}
 		}
-	} else if subs, ok := subverbs[words[0]]; ok && pos == 1 && words[0] != "mods" && words[0] != "problems" && words[0] != "logs" {
+	} else if subs, ok := subverbs[words[0]]; ok && pos == 1 && words[0] != "mods" && words[0] != "problems" && words[0] != "logs" && words[0] != "groups" && words[0] != "tools" {
 		cands = subs
 	} else if words[0] == "problems" && pos == 1 {
 		cands = append(cands, subverbs["problems"]...)
@@ -219,8 +223,28 @@ func (c *cmd) complete(words []string) error {
 		if words[0] == "logs" && pos == 1 {
 			cands = append(cands, subverbs["logs"]...)
 		}
+		if (words[0] == "groups" || words[0] == "tools") && pos == 1 {
+			cands = append(cands, subverbs[words[0]]...)
+		}
 		if words[0] == "conflicts" && pos == 1 {
 			cands = append(cands, "map")
+		}
+		if words[0] == "profile" && pos == 2 && words[1] == "farm" {
+			cands = append(cands, "export", "check", "fix")
+		}
+		if words[0] == "app" && pos == 2 && words[1] == "update" {
+			cands = append(cands, "check", "install")
+		}
+		if words[0] == "support" && pos == 2 && words[1] == "diagnostics" {
+			cands = append(cands, "save")
+		}
+		if words[0] == "settings" && pos == 2 && (words[1] == "get" || words[1] == "set" || words[1] == "reset") {
+			var rows [][2]string
+			if c.call("settings.get", control.Params{Game: c.game}, &rows, readTimeout) == nil {
+				for _, r := range rows {
+					cands = append(cands, r[0])
+				}
+			}
 		}
 		gameAt, profileAt, modAt := positions(words)
 		switch pos {

@@ -354,8 +354,9 @@ func TestToolsCommands(t *testing.T) {
 
 func TestCompleteOffersVerbsGamesAndProfiles(t *testing.T) {
 	results := map[string]any{
-		"games":    []control.GameRow{{ID: "stardew"}},
-		"profiles": []profile.Profile{{ID: "1", Name: "Spring"}, {ID: "2", Name: "Winter"}},
+		"games":        []control.GameRow{{ID: "stardew"}},
+		"profiles":     []profile.Profile{{ID: "1", Name: "Spring"}, {ID: "2", Name: "Winter"}},
+		"settings.get": [][2]string{{"onPlay", "stay"}, {"theme", "dark"}},
 	}
 	if r := invoke(t, results, "__complete", "con"); strings.TrimSpace(r.out) != "conflicts" {
 		t.Errorf("verb: %q", r.out)
@@ -365,6 +366,36 @@ func TestCompleteOffersVerbsGamesAndProfiles(t *testing.T) {
 	}
 	if r := invoke(t, results, "__complete", "conflicts", "stardew", "w"); strings.TrimSpace(r.out) != "Winter" {
 		t.Errorf("profile: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "problems", "di"); !strings.Contains(r.out, "dismiss") || !strings.Contains(r.out, "dismissed") {
+		t.Errorf("problems subverbs: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "lan", "pa"); !strings.Contains(r.out, "pair") || !strings.Contains(r.out, "paired") {
+		t.Errorf("lan pair: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "profile", "fa"); strings.TrimSpace(r.out) != "farm" {
+		t.Errorf("profile farm: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "profile", "farm", ""); !strings.Contains(r.out, "export") || !strings.Contains(r.out, "check") || strings.Contains(r.out, "stardew") {
+		t.Errorf("profile farm verbs: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "profile", "farm", "export", ""); strings.TrimSpace(r.out) != "stardew" {
+		t.Errorf("profile farm game: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "groups", ""); !strings.Contains(r.out, "apply") || !strings.Contains(r.out, "stardew") {
+		t.Errorf("groups position 1 should offer subverbs and games: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "tools", ""); !strings.Contains(r.out, "run") || !strings.Contains(r.out, "stardew") {
+		t.Errorf("tools position 1 should offer subverbs and games: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "app", "update", ""); !strings.Contains(r.out, "check") || !strings.Contains(r.out, "install") {
+		t.Errorf("app update: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "support", "diagnostics", ""); strings.TrimSpace(r.out) != "save" {
+		t.Errorf("support diagnostics: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "settings", "set", "th"); strings.TrimSpace(r.out) != "theme" {
+		t.Errorf("settings keys: %q", r.out)
 	}
 }
 
