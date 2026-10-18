@@ -317,11 +317,50 @@ func (d Driver) Versions(ctx context.Context, project, mortarVersion string) ([]
 	return out, nil
 }
 
-// listed holds the required dependencies of every version an update check read, keyed by project id and version
-// number, so Dependencies answers without another request.
-// ponytail: never evicted, one entry per version read for the life of the process; cap it if a session's checks ever
-// make that large.
-var listed sync.Map
+// listedCap is how many version dependency lists Latest may remember.
+const listedCap = 4096
+
+// listed holds the required dependencies of versions an update check read, keyed by project id and version
+// number, so Dependencies answers without another request. Oldest keys drop once the cap is hit.
+var listed listedStore
+
+type listedStore struct {
+	mu    sync.Mutex
+	m     map[source.VersionRef][]string
+	order []source.VersionRef
+}
+
+func (s *listedStore) put(k source.VersionRef, v []string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.m == nil {
+		s.m = map[source.VersionRef][]string{}
+	}
+	if _, ok := s.m[k]; ok {
+		s.m[k] = v
+		return
+	}
+	for len(s.m) >= listedCap {
+		old := s.order[0]
+		s.order = s.order[1:]
+		delete(s.m, old)
+	}
+	s.m[k] = v
+	s.order = append(s.order, k)
+}
+
+func (s *listedStore) get(k source.VersionRef) ([]string, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	v, ok := s.m[k]
+	return v, ok
+}
+
+func (s *listedStore) len() int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return len(s.m)
+}
 
 func remember(v versionResp) {
 	var ids []string
@@ -330,7 +369,7 @@ func remember(v versionResp) {
 			ids = append(ids, dep.ProjectID)
 		}
 	}
-	listed.Store(source.VersionRef{ID: v.ProjectID, Version: v.VersionNumber}, ids)
+	listed.put(source.VersionRef{ID: v.ProjectID, Version: v.VersionNumber}, ids)
 }
 
 func (v versionResp) hasFile(sha512 string) bool {
@@ -411,8 +450,8 @@ func (d Driver) rememberInstalled(ctx context.Context, hashes []string, mortarVe
 func (Driver) Dependencies(_ context.Context, _, _ string, refs []source.VersionRef) (map[source.VersionRef][]string, error) {
 	out := map[source.VersionRef][]string{}
 	for _, r := range refs {
-		if ids, ok := listed.Load(r); ok {
-			out[r], _ = ids.([]string)
+		if ids, ok := listed.get(r); ok {
+			out[r] = ids
 		}
 	}
 	return out, nil
