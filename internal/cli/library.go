@@ -283,7 +283,7 @@ func (c *cmd) queueAdd() error {
 		return err
 	}
 	if c.sourceFlag == "" {
-		return usageError{"queue add needs --source nexus, github, thunderstore, modrinth, curseforge or itch"}
+		return usageError{"queue add needs --source nexus, github, thunderstore, modrinth, curseforge, itch or vsmoddb"}
 	}
 	p := control.Params{Game: a[0], Profile: a[1], ID: a[2], Source: c.sourceFlag, File: c.fileFlag, Version: c.versionFlag}
 	var st queue.State

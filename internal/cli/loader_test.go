@@ -37,7 +37,7 @@ func TestAutomationVerbs(t *testing.T) {
 	if p := r.calls[0].params; r.code != 0 || r.calls[0].method != "queue.add" || p.Source != "nexus" || p.ID != "1915" || p.File != "7" || p.Version != "2.0" {
 		t.Fatalf("queue add: %+v", r)
 	}
-	if r = invoke(t, results, "queue", "add", "stardew", "Farm", "1915"); r.code != 2 || len(r.calls) != 0 {
+	if r = invoke(t, results, "queue", "add", "stardew", "Farm", "1915"); r.code != 2 || len(r.calls) != 0 || !strings.Contains(r.errOut, "vsmoddb") {
 		t.Fatalf("queue add without a source: %+v", r)
 	}
 	if r = invoke(t, results, "bisect", "start", "stardew", "Farm"); r.code != 0 || r.calls[0].method != "bisect.start" || r.calls[0].params.Profile != "Farm" {
