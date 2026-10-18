@@ -6,10 +6,17 @@ const html = (source: string) => renderToStaticMarkup(<MarkdownView source={sour
 
 test('a badge inside a link renders as a linked picture, not raw brackets', () => {
   const out = html(
-    '[![Thunderstore](https://img.shields.io/badge/a.svg)](https://thunderstore.io/c/x/p/a/b)',
+    '[![icon](https://cdn.modrinth.com/data/x/icon.png)](https://thunderstore.io/c/x/p/a/b)',
   )
-  expect(out).toMatch(/<img[^>]*src="https:\/\/img.shields.io\/badge\/a.svg"/)
+  expect(out).toContain('/mod-picture/?u=https%3A%2F%2Fcdn.modrinth.com%2Fdata%2Fx%2Ficon.png')
   expect(out).not.toContain('](')
+})
+
+test('a picture on a host that is not a mod CDN never reaches the page', () => {
+  const out = html('![x](https://evil.example/a.png) ![y](https://img.shields.io/badge/a.svg)')
+  expect(out).not.toContain('evil.example')
+  expect(out).not.toContain('img.shields.io')
+  expect(out).not.toContain('<img')
 })
 
 test('raw HTML and non-web links never reach the page as markup', () => {

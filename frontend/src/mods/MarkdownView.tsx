@@ -2,6 +2,7 @@ import { Box, Link } from '@mui/material'
 import type { ReactNode } from 'react'
 import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { cachedPictureSrc } from '../browse/pictureSrc.ts'
 import { space } from '../theme/density.ts'
 import { openPage } from './menu.ts'
 
@@ -24,14 +25,14 @@ function MdLink({ href, children }: { href?: string | undefined; children?: Reac
   )
 }
 
-// Only https pictures load; a badge or screenshot over plain http or a data URL is dropped.
+// Pictures load through the on-disk cache and only from the same CDNs Browse thumbnails use.
 function MdImage({ src, alt }: { src?: string | undefined; alt?: string | undefined }) {
-  if (!src?.startsWith('https://')) {
+  const cached = src ? cachedPictureSrc(src) : undefined
+  if (!cached) {
     return null
   }
-  // A README picture's size is unknown until it loads, like the Browse card pictures drawn the same way.
   return (
-    <Box component="img" src={src} alt={alt ?? ''} loading="lazy" referrerPolicy="no-referrer" />
+    <Box component="img" src={cached} alt={alt ?? ''} loading="lazy" referrerPolicy="no-referrer" />
   )
 }
 
