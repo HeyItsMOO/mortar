@@ -51,7 +51,7 @@ func closeWine(ctx context.Context, p Process, timeout time.Duration) bool {
 	}
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, wine, "taskkill", "/im", image)
+	cmd := exec.CommandContext(ctx, wine, "taskkill", "/im", image) //nolint:gosec // G204: wine is the prefix's wine; image is the game exe name
 	// WINESERVERSOCKET names a descriptor the game inherited, which taskkill does not have.
 	for kv := range strings.SplitSeq(strings.TrimRight(string(raw), "\x00"), "\x00") {
 		if !strings.HasPrefix(kv, "WINESERVERSOCKET=") {

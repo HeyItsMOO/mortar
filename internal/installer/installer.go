@@ -118,7 +118,7 @@ func Register(i Installer) bool {
 }
 
 // Get returns the registered driver with this id.
-func Get(id string) (Installer, bool) {
+func Get(id string) (Installer, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
 	mu.RLock()
 	defer mu.RUnlock()
 	i, ok := registry[id]
@@ -126,7 +126,7 @@ func Get(id string) (Installer, bool) {
 }
 
 // Pick returns the first driver, in detection order, that takes the archive.
-func Pick(a Archive, g Game) (Installer, bool) {
+func Pick(a Archive, g Game) (Installer, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
 	for _, id := range detectionOrder {
 		if i, ok := Get(id); ok && i.Detect(a, g) {
 			return i, true

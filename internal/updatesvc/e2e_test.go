@@ -35,7 +35,7 @@ var (
 
 func goBuild(t *testing.T, version, out string) {
 	t.Helper()
-	cmd := exec.CommandContext(t.Context(), "go", "build", "-tags", "server production updatetest", "-ldflags", "-X main.version="+version, "-o", out, "./testdata/fixture")
+	cmd := exec.CommandContext(t.Context(), "go", "build", "-tags", "server production updatetest", "-ldflags", "-X main.version="+version, "-o", out, "./testdata/fixture") //nolint:gosec // G204: go build of the fixture with a version ldflag
 	if b, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("build %s: %v\n%s", version, err, b)
 	}
@@ -57,7 +57,7 @@ func binaries(t *testing.T) (string, string) {
 
 func run(t *testing.T, name string, args ...string) {
 	t.Helper()
-	if b, err := exec.CommandContext(t.Context(), name, args...).CombinedOutput(); err != nil {
+	if b, err := exec.CommandContext(t.Context(), name, args...).CombinedOutput(); err != nil { //nolint:gosec // G204: name is go or the fixture binary this test built
 		t.Fatalf("%s %v: %v\n%s", name, args, err, b)
 	}
 }

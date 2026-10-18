@@ -110,7 +110,7 @@ func baseDir(env, fallback string) string {
 }
 
 func execRun(name string, args ...string) (string, error) {
-	out, err := exec.CommandContext(context.Background(), name, args...).Output()
+	out, err := exec.CommandContext(context.Background(), name, args...).Output() //nolint:gosec // G204: name is xdg-mime or Mortar's own handler path
 	return string(out), err
 }
 

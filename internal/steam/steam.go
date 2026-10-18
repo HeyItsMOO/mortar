@@ -121,7 +121,7 @@ var runFlatpak = func(args ...string) ([]byte, error) {
 	if sandbox.InFlatpak() {
 		return sandbox.HostOutput("flatpak", args...)
 	}
-	return exec.Command("flatpak", args...).Output()
+	return exec.Command("flatpak", args...).Output() //nolint:gosec // G204: binary is flatpak; args are steam --install or --run
 }
 
 // ShowOverride is `flatpak override --user --show` for Steam. Tests replace runFlatpak.

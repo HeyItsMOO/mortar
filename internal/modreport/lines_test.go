@@ -17,7 +17,7 @@ func TestErrorLines(t *testing.T) {
 	}, "\n") + "\n"
 
 	many := new(strings.Builder)
-	for i := 0; i < maxErrorLines+3; i++ {
+	for range maxErrorLines + 3 {
 		many.WriteString("[12:00:00 ERROR Flood] line\n")
 	}
 

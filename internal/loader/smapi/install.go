@@ -297,7 +297,7 @@ func (Loader) Install(ctx context.Context, t loader.Target, pkg loader.Package, 
 			return "", fmt.Errorf("SMAPI installer failed: %w", err)
 		}
 	} else {
-		cmd := exec.CommandContext(ctx, filepath.Join(folder, exe), args...)
+		cmd := exec.CommandContext(ctx, filepath.Join(folder, exe), args...) //nolint:gosec // G204: exe is the SMAPI installer name inside the unpacked folder
 		cmd.Dir = folder
 		if out, err := runInstaller(ctx, cmd); err != nil {
 			return "", installerError(err, out)

@@ -241,7 +241,7 @@ func catalogGame(id string) components.GameInfo {
 	return components.GameInfo{}
 }
 
-func (s *Service) target(id string) (game.Game, string, error) {
+func (s *Service) target(id string) (game.Game, string, error) { //nolint:ireturn // registry lookup returns the interface implementations register
 	g, err := game.Require(id)
 	if err != nil {
 		return nil, "", err

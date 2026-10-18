@@ -14,7 +14,7 @@ import (
 type Runner func(ctx context.Context, args ...string) (string, error)
 
 func execRunner(ctx context.Context, args ...string) (string, error) {
-	out, err := exec.CommandContext(ctx, "/usr/bin/gsettings", args...).Output()
+	out, err := exec.CommandContext(ctx, "/usr/bin/gsettings", args...).Output() //nolint:gosec // G204: binary is /usr/bin/gsettings; args are schema keys Mortar writes
 	return string(out), err
 }
 

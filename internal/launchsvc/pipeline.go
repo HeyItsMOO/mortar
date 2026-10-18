@@ -43,7 +43,7 @@ func (s *Service) profileLoader(gameID, profileID string) string {
 }
 
 // loaderOf is the loader the profile runs.
-func (s *Service) loaderOf(gameID, profileID string) (loader.Loader, bool) {
+func (s *Service) loaderOf(gameID, profileID string) (loader.Loader, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
 	return game.LoaderOf(gameID, s.profileLoader(gameID, profileID))
 }
 

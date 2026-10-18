@@ -14,7 +14,9 @@ const AppID = "tech.rethunk.Mortar"
 // Getenv and Output (flatpak-spawn's arguments) are replaced in tests.
 var (
 	Getenv = os.Getenv
-	Output = func(args ...string) ([]byte, error) { return exec.Command("flatpak-spawn", args...).Output() }
+	Output = func(args ...string) ([]byte, error) {
+		return exec.Command("flatpak-spawn", args...).Output() //nolint:gosec // G204: binary is flatpak-spawn
+	}
 )
 
 // InFlatpak reports whether Mortar runs inside a Flatpak sandbox.

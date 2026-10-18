@@ -159,7 +159,7 @@ func runDialog(tool string, args []string) (int, string) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Hour)
 	defer cancel()
 	var out bytes.Buffer
-	cmd := exec.CommandContext(ctx, tool, args...)
+	cmd := exec.CommandContext(ctx, tool, args...) //nolint:gosec // G204: tool is zenity or kdialog, chosen from a fixed pair
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {

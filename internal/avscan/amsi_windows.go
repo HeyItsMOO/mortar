@@ -29,6 +29,10 @@ const amsiDetected = 32768
 // amsiChunk is how much of a file one AmsiScanBuffer call sees.
 const amsiChunk = 32 << 20
 
+func amsiPtr[T any](v *T) uintptr {
+	return uintptr(unsafe.Pointer(v)) //nolint:gosec // G103: AMSI takes pointers to Go values
+}
+
 // amsi hands each file to the antivirus registered as the AMSI provider: Defender or a third party.
 type amsi struct{}
 
@@ -41,12 +45,12 @@ func (amsi) Scan(ctx context.Context, dir string) (Detection, bool, error) {
 		return Detection{}, false, err
 	}
 	var actx uintptr
-	if hr, _, _ := amsiInitialize.Call(uintptr(unsafe.Pointer(app)), uintptr(unsafe.Pointer(&actx))); hr != 0 {
+	if hr, _, _ := amsiInitialize.Call(amsiPtr(app), amsiPtr(&actx)); hr != 0 {
 		return Detection{}, false, fmt.Errorf("%w: AmsiInitialize HRESULT 0x%x", ErrNoScanner, hr)
 	}
 	defer func() { _, _, _ = amsiUninitialize.Call(actx) }()
 	var session uintptr
-	if hr, _, _ := amsiOpenSession.Call(actx, uintptr(unsafe.Pointer(&session))); hr != 0 {
+	if hr, _, _ := amsiOpenSession.Call(actx, amsiPtr(&session)); hr != 0 {
 		return Detection{}, false, fmt.Errorf("AmsiOpenSession: HRESULT 0x%x", hr)
 	}
 	defer func() { _, _, _ = amsiCloseSession.Call(actx, session) }()
@@ -91,8 +95,8 @@ func scanFileAMSI(ctx context.Context, actx, session uintptr, path, rel string) 
 		n, readErr := io.ReadFull(in, buf)
 		if n > 0 {
 			var result uint32
-			hr, _, _ := amsiScanBuffer.Call(actx, uintptr(unsafe.Pointer(&buf[0])), uintptr(n),
-				uintptr(unsafe.Pointer(name)), session, uintptr(unsafe.Pointer(&result)))
+			hr, _, _ := amsiScanBuffer.Call(actx, amsiPtr(&buf[0]), uintptr(n),
+				amsiPtr(name), session, amsiPtr(&result))
 			if hr != 0 {
 				return false, fmt.Errorf("AmsiScanBuffer: HRESULT 0x%x", hr)
 			}

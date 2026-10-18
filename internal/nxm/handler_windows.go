@@ -242,7 +242,7 @@ func (w *System) ForwardOther(link, previous string) error {
 	if err != nil {
 		return err
 	}
-	cmd := exec.CommandContext(context.Background(), name, args...)
+	cmd := exec.CommandContext(context.Background(), name, args...) //nolint:gosec // G204: name is the previous nxm handler Mortar replaced
 	nowindow.Set(cmd)
 	// The previous handler may run until the user closes it; waiting would stall every later handoff.
 	if err := cmd.Start(); err != nil {

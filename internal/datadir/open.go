@@ -41,7 +41,7 @@ func Open(dir string) error {
 	case "windows":
 		name = "explorer"
 	}
-	cmd := exec.CommandContext(context.Background(), name, dir)
+	cmd := exec.CommandContext(context.Background(), name, dir) //nolint:gosec // G204: name is the OS file manager; dir is a validated data path
 	setArgs(cmd, dir)
 	if err := cmd.Start(); err != nil {
 		return err

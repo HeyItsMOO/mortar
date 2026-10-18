@@ -16,7 +16,7 @@ func TestCopyTreeSkipsAJunction(t *testing.T) {
 	testfs.WriteFile(t, outside, "secret", "x")
 	testfs.WriteFile(t, src, "a.txt", "a")
 	junc := filepath.Join(src, "junc")
-	if out, err := exec.CommandContext(t.Context(), "cmd", "/c", "mklink", "/J", junc, outside).CombinedOutput(); err != nil {
+	if out, err := exec.CommandContext(t.Context(), "cmd", "/c", "mklink", "/J", junc, outside).CombinedOutput(); err != nil { //nolint:gosec // G204: cmd /c mklink with temp dirs this test created
 		t.Skipf("junction not permitted: %v %s", err, out)
 	}
 	dst := t.TempDir()

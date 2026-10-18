@@ -102,7 +102,7 @@ func Register(d Deployer) bool {
 }
 
 // Get returns the registered deployer with this id.
-func Get(id string) (Deployer, bool) {
+func Get(id string) (Deployer, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
 	mu.RLock()
 	defer mu.RUnlock()
 	d, ok := registry[id]

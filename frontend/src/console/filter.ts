@@ -23,7 +23,7 @@ export const DEFAULT_FILTERS: Filters = {
 }
 
 export function levelsFromFloor(floor: string): Level[] {
-  const order = [Level.Trace, Level.Debug, Level.Info, Level.Warn, Level.Error]
+  const order: Level[] = [Level.Trace, Level.Debug, Level.Info, Level.Warn, Level.Error]
   const start = order.indexOf(
     (
       {

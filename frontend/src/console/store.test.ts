@@ -6,7 +6,7 @@ import {
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/launchsvc/models.ts'
 import { canSendTo } from './store.ts'
 
-const status = (profile: string, state = State.Running): Status => ({
+const status = (profile: string, state: State = State.Running): Status => ({
   game: 'stardew',
   state,
   profile,

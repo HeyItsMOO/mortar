@@ -22,7 +22,7 @@ func start(exe, link string) error {
 }
 
 func spawn(exe, link string, extra uint32) error {
-	cmd := exec.CommandContext(context.Background(), exe, link)
+	cmd := exec.CommandContext(context.Background(), exe, link) //nolint:gosec // G204: exe is Mortar; link is a mortar:// URL
 	cmd.SysProcAttr = &syscall.SysProcAttr{CreationFlags: windows.DETACHED_PROCESS | extra}
 	if err := cmd.Start(); err != nil {
 		return err

@@ -21,7 +21,7 @@ func RestartSelf() error {
 	}
 	// Before the new process starts, which reads the record when it sets the log aside.
 	logCleanShutdown()
-	cmd := exec.CommandContext(context.Background(), selfexe.Launchable(exe))
+	cmd := exec.CommandContext(context.Background(), selfexe.Launchable(exe)) //nolint:gosec // G204: exe is Mortar's own binary
 	cmd.Env = os.Environ()
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
 	if err := cmd.Start(); err != nil {

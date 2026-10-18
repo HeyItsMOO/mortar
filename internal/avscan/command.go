@@ -49,7 +49,7 @@ func (c command) Scan(ctx context.Context, dir string) (Detection, bool, error) 
 	for i, p := range parts {
 		parts[i] = strings.ReplaceAll(p, "{path}", dir)
 	}
-	cmd := exec.CommandContext(ctx, parts[0], parts[1:]...)
+	cmd := exec.CommandContext(ctx, parts[0], parts[1:]...) //nolint:gosec // G204: argv is the user's configured scanner command with {path} substituted
 	nowindow.Set(cmd)
 	out, err := cmd.Output()
 	if err == nil {

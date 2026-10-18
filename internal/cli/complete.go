@@ -344,7 +344,7 @@ func sourceFlagCands(words []string, cur string) []string {
 	}
 	pos := len(words) - 1
 	flagAt := words[0] == "links" && pos >= 2 || words[0] == "queue" && pos >= 5
-	if flagAt && (cur == "" || strings.HasPrefix("--source", cur)) {
+	if flagAt && (cur == "" || len(cur) <= len("--source") && "--source"[:len(cur)] == cur) {
 		return []string{"--source"}
 	}
 	return nil

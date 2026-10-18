@@ -261,7 +261,7 @@ func fixFirewall(_ context.Context, anyAddr bool) error {
 	}
 	info := shellExecuteInfo{Mask: seeMaskNoCloseProcess, Verb: verb, File: file, Parameters: args}
 	info.Size = uint32(unsafe.Sizeof(info))
-	if r, _, callErr := shellExecuteEx.Call(uintptr(unsafe.Pointer(&info))); r == 0 {
+	if r, _, callErr := shellExecuteEx.Call(uintptr(unsafe.Pointer(&info))); r == 0 { //nolint:gosec // G103: ShellExecuteEx takes a pointer to the info struct
 		return fmt.Errorf("start the elevated firewall step: %w", callErr)
 	}
 	defer func() { _ = windows.CloseHandle(info.Process) }()

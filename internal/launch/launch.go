@@ -116,7 +116,7 @@ func StartHidden(ctx context.Context, env []string, dir, name string, args ...st
 }
 
 func startCmd(ctx context.Context, env []string, dir, name string, args []string, hide bool) (<-chan error, error) {
-	cmd := exec.CommandContext(ctx, name, args...)
+	cmd := exec.CommandContext(ctx, name, args...) //nolint:gosec // G204: name is the game or loader path Mortar resolved from the install
 	cmd.Dir = dir
 	if len(env) > 0 {
 		cmd.Env = append(os.Environ(), env...)
