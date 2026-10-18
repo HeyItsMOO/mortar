@@ -78,6 +78,12 @@ linters:
         - error
         - generic
         - stdlib
+        # Registry lookups return whichever registered implementation matches: the
+        # interface is the point, so these are not hidden concrete types.
+        - loader\.Loader
+        - game\.Game
+        - installer\.(Installer|Archive|Game)
+        - deploy\.Deployer
     # canon go-golangci-lint-00011
     gomoddirectives:
       replace-local: true

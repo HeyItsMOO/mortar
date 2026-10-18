@@ -41,7 +41,7 @@ func installerGame(gameID string) installer.Game {
 }
 
 // pick is the archive of the store item key and the installer that takes it.
-func (s *Store) pick(game, key string) (installer.Archive, installer.Game, installer.Installer, error) { //nolint:ireturn // registry lookup returns the interface implementations register
+func (s *Store) pick(game, key string) (installer.Archive, installer.Game, installer.Installer, error) {
 	root, err := s.items.Path(game, key)
 	if err != nil {
 		return installer.Archive{}, installer.Game{}, nil, err

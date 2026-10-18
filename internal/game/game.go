@@ -79,7 +79,7 @@ func VersionScheme(id string) string {
 }
 
 // PrimaryLoader is the game's first loader driver.
-func PrimaryLoader(id string) (loader.Loader, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
+func PrimaryLoader(id string) (loader.Loader, bool) {
 	all := Loaders(id)
 	if len(all) == 0 {
 		return nil, false
@@ -88,7 +88,7 @@ func PrimaryLoader(id string) (loader.Loader, bool) { //nolint:ireturn // regist
 }
 
 // LoaderOf is the game's loader with this id; "" is its primary loader.
-func LoaderOf(id, loaderID string) (loader.Loader, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
+func LoaderOf(id, loaderID string) (loader.Loader, bool) {
 	if loaderID == "" {
 		return PrimaryLoader(id)
 	}
@@ -218,7 +218,7 @@ func NexusTitle(id string) (nexus.Title, error) {
 }
 
 // Find returns the game with this id: its coded implementation, else the catalog's entry; nil when unlisted.
-func Find(id string) Game { //nolint:ireturn // registry lookup returns the interface implementations register
+func Find(id string) Game {
 	for _, g := range coded {
 		if g.ID() == id {
 			return g
@@ -242,7 +242,7 @@ func Implemented() []string {
 }
 
 // Require returns the implemented game with this id, or a NotFound error.
-func Require(id string) (Game, error) { //nolint:ireturn // registry lookup returns the interface implementations register
+func Require(id string) (Game, error) {
 	g := Find(id)
 	if g == nil {
 		return nil, usererr.Wrap(usererr.NotFound, fmt.Errorf("unknown game %q", id))

@@ -23,7 +23,7 @@ func Register(l Loader) bool {
 }
 
 // Get returns the registered loader with this id.
-func Get(id string) (Loader, bool) { //nolint:ireturn // registry lookup returns the interface implementations register
+func Get(id string) (Loader, bool) {
 	mu.RLock()
 	defer mu.RUnlock()
 	l, ok := registry[strings.ToLower(strings.TrimSpace(id))]
