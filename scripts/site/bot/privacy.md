@@ -9,14 +9,15 @@ The Mortar bot is the Discord app Rethunk.Tech uses to run the Mortar Mod Manage
 | What | Why |
 | --- | --- |
 | The server's settings, channels, categories, roles, permissions, onboarding, welcome screen, AutoMod rules and events | To keep the server set up the way its maintainers decided |
-| A member's user ID, name and roles | Only when the bot gives or removes a role, or a moderator acts through it |
-| Messages the bot posted itself | To edit or replace its own posts |
+| Who is in the server: user IDs, names, roles and when members join or leave | To welcome new members, give and remove roles, and carry out moderators' actions |
+| Messages in the channels the bot can see | To answer requests made to it and help moderators enforce the server's rules |
+| Members' online status | Discord sends it along with the member list; the bot does not use or keep it |
 
-The bot does not read other people's messages, the member list or anyone's online status. It has none of Discord's privileged access to message content, members or presence.
+Discord sends the bot this as the server is used. The bot acts on it as it arrives and does not keep it, except as described below.
 
 ## What the bot keeps
 
-The bot has no database. The server's layout (the names and IDs of its channels, roles and rules, and the text of the bot's own posts) is kept in a private Rethunk.Tech repository so every change can be reviewed. It holds no information about members. Every action the bot takes shows in the server's audit log, which Discord keeps.
+The bot has no database of members or messages. The server's layout (the names and IDs of its channels, roles and rules, and the text of the bot's own posts) is kept in a private Rethunk.Tech repository so every change can be reviewed. A moderation action records the member's user ID and the reason in the server's audit log or its moderators' channel, which Discord keeps.
 
 ## Sharing
 

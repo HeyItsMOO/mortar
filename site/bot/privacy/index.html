@@ -81,13 +81,14 @@
 </thead>
 <tbody>
 <tr><td>The server's settings, channels, categories, roles, permissions, onboarding, welcome screen, AutoMod rules and events</td><td>To keep the server set up the way its maintainers decided</td></tr>
-<tr><td>A member's user ID, name and roles</td><td>Only when the bot gives or removes a role, or a moderator acts through it</td></tr>
-<tr><td>Messages the bot posted itself</td><td>To edit or replace its own posts</td></tr>
+<tr><td>Who is in the server: user IDs, names, roles and when members join or leave</td><td>To welcome new members, give and remove roles, and carry out moderators' actions</td></tr>
+<tr><td>Messages in the channels the bot can see</td><td>To answer requests made to it and help moderators enforce the server's rules</td></tr>
+<tr><td>Members' online status</td><td>Discord sends it along with the member list; the bot does not use or keep it</td></tr>
 </tbody>
 </table></div>
-<p>The bot does not read other people's messages, the member list or anyone's online status. It has none of Discord's privileged access to message content, members or presence.</p>
+<p>Discord sends the bot this as the server is used. The bot acts on it as it arrives and does not keep it, except as described below.</p>
 <h2 id="what-the-bot-keeps">What the bot keeps</h2>
-<p>The bot has no database. The server's layout (the names and IDs of its channels, roles and rules, and the text of the bot's own posts) is kept in a private Rethunk.Tech repository so every change can be reviewed. It holds no information about members. Every action the bot takes shows in the server's audit log, which Discord keeps.</p>
+<p>The bot has no database of members or messages. The server's layout (the names and IDs of its channels, roles and rules, and the text of the bot's own posts) is kept in a private Rethunk.Tech repository so every change can be reviewed. A moderation action records the member's user ID and the reason in the server's audit log or its moderators' channel, which Discord keeps.</p>
 <h2 id="sharing">Sharing</h2>
 <p>Nothing the bot reads is sold, shared, used for advertising or used to train AI models. Discord processes it as the platform the server runs on.</p>
 <h2 id="your-choices">Your choices</h2>
