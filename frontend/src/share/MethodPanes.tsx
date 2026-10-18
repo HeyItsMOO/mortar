@@ -6,6 +6,7 @@ import { type ReactNode, useState } from 'react'
 import {
   ExportCode,
   ExportModpackDialog,
+  ExportR2zDialog,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/packsvc/service.ts'
 import { SetLanSharing } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import type { Saved } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/sharesvc/models.ts'
@@ -286,10 +287,21 @@ export function ThunderstorePane({ game, profileId }: { game: string; profileId:
       body: left.length > 0 ? t`Left out: ${listNames(left)}` : r.path,
     })
   }
+  const saveR2z = async () => {
+    const path = await ExportR2zDialog(game, profileId)
+    if (!path) {
+      return
+    }
+    useToasts.getState().push({
+      kind: 'success',
+      title: t`Saved .r2z`,
+      body: path,
+    })
+  }
   return (
     <Pane>
       <Typography sx={note}>
-        {t`For r2modman and other Thunderstore managers: a code anyone can enter, or a modpack zip with your config folder.`}
+        {t`For r2modman and other Thunderstore managers: a code anyone can enter, a .r2z file, or a modpack zip with your config folder.`}
       </Typography>
       <Box sx={{ display: 'flex', gap: space.gap, flexWrap: 'wrap' }}>
         <Button
@@ -299,6 +311,17 @@ export function ThunderstorePane({ game, profileId }: { game: string; profileId:
           sx={{ height: 40 }}
         >
           {t`Share as r2modman code…`}
+        </Button>
+        <Button
+          variant="outlined"
+          color="inherit"
+          startIcon={<Save size={16} />}
+          onClick={() => {
+            saveR2z().catch(reportError(t`Could not save the .r2z file`))
+          }}
+          sx={{ height: 40 }}
+        >
+          {t`Save .r2z…`}
         </Button>
         <Button
           variant="outlined"

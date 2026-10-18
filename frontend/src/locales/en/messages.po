@@ -155,7 +155,7 @@ msgstr "Presets"
 msgid "Priority Default"
 msgstr "Priority Default"
 
-#: src/share/importCompletion.ts:132
+#: src/share/importCompletion.ts:153
 msgid "Show failed"
 msgstr "Show failed"
 
@@ -340,7 +340,7 @@ msgstr "No notes for this release."
 msgid "{name} is missing from the store"
 msgstr "{name} is missing from the store"
 
-#: src/share/MethodPanes.tsx:174
+#: src/share/MethodPanes.tsx:175
 msgid "Could not save the file"
 msgstr "Could not save the file"
 
@@ -493,7 +493,7 @@ msgstr "Nearby computer"
 msgid "Unlinked the collection"
 msgstr "Unlinked the collection"
 
-#: src/share/MethodPanes.tsx:144
+#: src/share/MethodPanes.tsx:145
 msgid "Use a file"
 msgstr "Use a file"
 
@@ -1146,7 +1146,7 @@ msgstr "Waiting for you to unlock the keyring."
 msgid "Find a mod in all profiles"
 msgstr "Find a mod in all profiles"
 
-#: src/share/MethodPanes.tsx:363
+#: src/share/MethodPanes.tsx:386
 msgid "Turn on sharing nearby?"
 msgstr "Turn on sharing nearby?"
 
@@ -1275,7 +1275,7 @@ msgstr "{a} and {b} each wait for the other, so SMAPI loads neither."
 msgid "Revert this mod"
 msgstr "Revert this mod"
 
-#: src/share/MethodPanes.tsx:250
+#: src/share/MethodPanes.tsx:251
 msgid "Could not export the collection draft"
 msgstr "Could not export the collection draft"
 
@@ -1395,7 +1395,7 @@ msgstr "Take them back for Mortar?"
 msgid "Could not add the update downloads"
 msgstr "Could not add the update downloads"
 
-#: src/share/MethodPanes.tsx:275
+#: src/share/MethodPanes.tsx:276
 msgid "Could not publish the code"
 msgstr "Could not publish the code"
 
@@ -1438,7 +1438,7 @@ msgid "All outcomes"
 msgstr "All outcomes"
 
 #: src/queue/store.ts:317
-#: src/share/importCompletion.ts:24
+#: src/share/importCompletion.ts:25
 #: src/share/ImportPreview.tsx:277
 msgid "{count, plural, one {# mod installed} other {# mods installed}}"
 msgstr "{count, plural, one {# mod installed} other {# mods installed}}"
@@ -1478,7 +1478,7 @@ msgid "+{more} more"
 msgstr "+{more} more"
 
 #. placeholder {0}: batch.pendingSettings
-#: src/share/importCompletion.ts:122
+#: src/share/importCompletion.ts:143
 msgid "{0, plural, one {# setting is still waiting for its mod to install.} other {# settings are still waiting for their mods to install.}}"
 msgstr "{0, plural, one {# setting is still waiting for its mod to install.} other {# settings are still waiting for their mods to install.}}"
 
@@ -1731,7 +1731,7 @@ msgstr "Sprout"
 msgid "{name} as of {at}"
 msgstr "{name} as of {at}"
 
-#: src/share/MethodPanes.tsx:59
+#: src/share/MethodPanes.tsx:60
 msgid "Link length"
 msgstr "Link length"
 
@@ -2227,7 +2227,7 @@ msgstr "Fullscreen resolution width"
 msgid "These come from a different site than you installed them from. Update all skips them."
 msgstr "These come from a different site than you installed them from. Update all skips them."
 
-#: src/share/MethodPanes.tsx:365
+#: src/share/MethodPanes.tsx:388
 msgid "Other Mortar users on your local network will be able to find this computer and send you profiles. You can turn it off again in Settings › General."
 msgstr "Other Mortar users on your local network will be able to find this computer and send you profiles. You can turn it off again in Settings › General."
 
@@ -2632,6 +2632,10 @@ msgstr "Try a different search."
 msgid "Installed as a dependency"
 msgstr "Installed as a dependency"
 
+#: src/share/MethodPanes.tsx:304
+msgid "For r2modman and other Thunderstore managers: a code anyone can enter, a .r2z file, or a modpack zip with your config folder."
+msgstr "For r2modman and other Thunderstore managers: a code anyone can enter, a .r2z file, or a modpack zip with your config folder."
+
 #: src/settings/sections/Accounts.tsx:30
 msgid "Not signed in"
 msgstr "Not signed in"
@@ -2908,7 +2912,7 @@ msgstr "{n, plural, one {Moved # old file to trash} other {Moved # old files to 
 msgid "% of frame"
 msgstr "% of frame"
 
-#: src/share/MethodPanes.tsx:51
+#: src/share/MethodPanes.tsx:52
 msgid "{length} of {limit} characters · fits one Discord message"
 msgstr "{length} of {limit} characters · fits one Discord message"
 
@@ -3142,7 +3146,7 @@ msgstr "Could not add the mods to {targetName}"
 msgid "Not signed in. Add your API key in Accounts."
 msgstr "Not signed in. Add your API key in Accounts."
 
-#: src/share/MethodPanes.tsx:229
+#: src/share/MethodPanes.tsx:230
 msgid "Collection draft saved"
 msgstr "Collection draft saved"
 
@@ -3551,7 +3555,7 @@ msgstr "Each mod's time in its per-frame event handlers (update, render and one-
 msgid "Set it in Steam for me"
 msgstr "Set it in Steam for me"
 
-#: src/share/MethodPanes.tsx:285
+#: src/share/MethodPanes.tsx:286
 msgid "Modpack saved"
 msgstr "Modpack saved"
 
@@ -3857,7 +3861,7 @@ msgstr "Check store files"
 
 #. placeholder {0}: batch.name
 #. placeholder {1}: importCountsLine(counts)
-#: src/share/importCompletion.ts:117
+#: src/share/importCompletion.ts:138
 msgid "Imported {0}: {1}"
 msgstr "Imported {0}: {1}"
 
@@ -4416,7 +4420,7 @@ msgstr "{name} needs game version {needs} or newer."
 msgid "Where save backups are kept. Empty uses the default."
 msgstr "Where save backups are kept. Empty uses the default."
 
-#: src/share/MethodPanes.tsx:317
+#: src/share/MethodPanes.tsx:340
 msgid "Share as r2modman code?"
 msgstr "Share as r2modman code?"
 
@@ -4719,7 +4723,7 @@ msgstr "Game setting off"
 msgid "Summary"
 msgstr "Summary"
 
-#: src/share/MethodPanes.tsx:272
+#: src/share/MethodPanes.tsx:273
 msgid "Code copied"
 msgstr "Code copied"
 
@@ -4937,7 +4941,7 @@ msgstr "None"
 
 #: src/browse/BrowseMenu.tsx:76
 #: src/console/HelpDialog.tsx:185
-#: src/share/MethodPanes.tsx:126
+#: src/share/MethodPanes.tsx:127
 msgid "Link copied"
 msgstr "Link copied"
 
@@ -5208,7 +5212,7 @@ msgstr "Freed {0}"
 msgid "Set category"
 msgstr "Set category"
 
-#: src/share/MethodPanes.tsx:171
+#: src/share/MethodPanes.tsx:172
 msgid "File saved"
 msgstr "File saved"
 
@@ -5465,7 +5469,7 @@ msgid "Homo Sapiens"
 msgstr "Homo Sapiens"
 
 #. placeholder {0}: counts.skipped
-#: src/share/importCompletion.ts:26
+#: src/share/importCompletion.ts:27
 msgid "{0} skipped"
 msgstr "{0} skipped"
 
@@ -5478,7 +5482,7 @@ msgid "Entry, event handlers and asset work the SMAPI Bridge timed before the ti
 msgstr "Entry, event handlers and asset work the SMAPI Bridge timed before the title screen"
 
 #. placeholder {0}: skipped.length
-#: src/share/MethodPanes.tsx:201
+#: src/share/MethodPanes.tsx:202
 msgid "{0, plural, one {# settings file was left out (too large or an unusual name):} other {# settings files were left out (too large or an unusual name):}}"
 msgstr "{0, plural, one {# settings file was left out (too large or an unusual name):} other {# settings files were left out (too large or an unusual name):}}"
 
@@ -5628,7 +5632,7 @@ msgstr "Filter by profile"
 msgid "· revision {0}"
 msgstr "· revision {0}"
 
-#: src/share/MethodPanes.tsx:379
+#: src/share/MethodPanes.tsx:402
 msgid "Turn on and continue"
 msgstr "Turn on and continue"
 
@@ -5686,7 +5690,7 @@ msgstr "Could not check for updates."
 msgid "No profile holds a mod by that name or id."
 msgstr "No profile holds a mod by that name or id."
 
-#: src/share/MethodPanes.tsx:308
+#: src/share/MethodPanes.tsx:331
 msgid "Could not export the modpack"
 msgstr "Could not export the modpack"
 
@@ -5777,6 +5781,10 @@ msgstr "{remaining} of {limit} left this hour; the count resets {when}."
 #: src/mods/describe.ts:225
 msgid "{dependentName} needs {dep}, which this profile lacks."
 msgstr "{dependentName} needs {dep}, which this profile lacks."
+
+#: src/share/MethodPanes.tsx:324
+msgid "Save .r2z…"
+msgstr "Save .r2z…"
 
 #: src/profiles/PackImportDialog.tsx:165
 #: src/share/ImportInput.tsx:33
@@ -6923,7 +6931,7 @@ msgstr "Console command"
 msgid "Windows removed the file as malware without saying which. If you trust it, restore it from Windows Security's protection history."
 msgstr "Windows removed the file as malware without saying which. If you trust it, restore it from Windows Security's protection history."
 
-#: src/share/MethodPanes.tsx:301
+#: src/share/MethodPanes.tsx:313
 msgid "Share as r2modman code…"
 msgstr "Share as r2modman code…"
 
@@ -7192,7 +7200,7 @@ msgstr "{0} needs this version or newer."
 msgid "Could not check this profile"
 msgstr "Could not check this profile"
 
-#: src/share/MethodPanes.tsx:53
+#: src/share/MethodPanes.tsx:54
 msgid "{length} of {limit} characters · too long for one Discord message"
 msgstr "{length} of {limit} characters · too long for one Discord message"
 
@@ -8681,6 +8689,10 @@ msgstr "Could not run diagnostics"
 msgid "·"
 msgstr "·"
 
+#: src/share/MethodPanes.tsx:297
+msgid "Saved .r2z"
+msgstr "Saved .r2z"
+
 #: src/settings/sections/StreamOverlay.tsx:108
 msgid "Bosses defeated"
 msgstr "Bosses defeated"
@@ -8771,7 +8783,7 @@ msgstr "You can change this later in {name}'s settings, under Play."
 msgid "Approve Mortar in your browser…"
 msgstr "Approve Mortar in your browser…"
 
-#: src/share/MethodPanes.tsx:52
+#: src/share/MethodPanes.tsx:53
 msgid "{length} of {limit} characters · close to the Discord message limit"
 msgstr "{length} of {limit} characters · close to the Discord message limit"
 
@@ -9375,7 +9387,7 @@ msgstr " in {0}"
 msgid "Grant the Steam sandbox read access to Mortar's data folder, or the game will not see this profile's mods."
 msgstr "Grant the Steam sandbox read access to Mortar's data folder, or the game will not see this profile's mods."
 
-#: src/share/MethodPanes.tsx:272
+#: src/share/MethodPanes.tsx:273
 msgid "Copy code"
 msgstr "Copy code"
 
@@ -9513,7 +9525,7 @@ msgstr "Regenerate token?"
 msgid "{plugin} declares itself incompatible with {dependency}, which is also enabled."
 msgstr "{plugin} declares itself incompatible with {dependency}, which is also enabled."
 
-#: src/share/MethodPanes.tsx:374
+#: src/share/MethodPanes.tsx:397
 msgid "Could not turn on sharing nearby"
 msgstr "Could not turn on sharing nearby"
 
@@ -9798,7 +9810,7 @@ msgstr "Nexus is throttling requests until the window resets."
 msgid "No Mortar computers found nearby."
 msgstr "No Mortar computers found nearby."
 
-#: src/share/MethodPanes.tsx:319
+#: src/share/MethodPanes.tsx:342
 msgid "Upload"
 msgstr "Upload"
 
@@ -9898,7 +9910,7 @@ msgstr "{0, plural, one {with # settings file, written once its mod is installed
 #. placeholder {0}: sum.failed
 #: src/mods/updateReview/updateAll.ts:42
 #: src/queue/QueueSheet.tsx:55
-#: src/share/importCompletion.ts:25
+#: src/share/importCompletion.ts:26
 msgid "{0} failed"
 msgstr "{0} failed"
 
@@ -9933,7 +9945,7 @@ msgstr "{0} was updated: mods to check"
 msgid "Click a mod to open its details: versions, what it needs and what needs it, and its update."
 msgstr "Click a mod to open its details: versions, what it needs and what needs it, and its update."
 
-#: src/share/MethodPanes.tsx:270
+#: src/share/MethodPanes.tsx:271
 msgid "Code published"
 msgstr "Code published"
 
@@ -10657,7 +10669,7 @@ msgstr "No app opens these links now."
 msgid "These profiles have the same mods."
 msgstr "These profiles have the same mods."
 
-#: src/share/MethodPanes.tsx:254
+#: src/share/MethodPanes.tsx:255
 msgid "Export as Nexus collection draft…"
 msgstr "Export as Nexus collection draft…"
 
@@ -10854,7 +10866,7 @@ msgstr "Open Console"
 msgid "Could not read the templates"
 msgstr "Could not read the templates"
 
-#: src/share/MethodPanes.tsx:312
+#: src/share/MethodPanes.tsx:335
 msgid "Export as Thunderstore modpack…"
 msgstr "Export as Thunderstore modpack…"
 
@@ -10879,7 +10891,7 @@ msgstr "Follow live log"
 msgid "The next launch will be measured"
 msgstr "The next launch will be measured"
 
-#: src/share/MethodPanes.tsx:141
+#: src/share/MethodPanes.tsx:142
 msgid "A .mortar file suits a profile this size better, and carries your mod settings too."
 msgstr "A .mortar file suits a profile this size better, and carries your mod settings too."
 
@@ -10995,7 +11007,7 @@ msgstr "Report it so it can be fixed."
 msgid "GitHub"
 msgstr "GitHub"
 
-#: src/share/MethodPanes.tsx:226
+#: src/share/MethodPanes.tsx:227
 msgid "Nexus expects a 7z. Repack collection.zip as a 7z with 7-Zip before uploading."
 msgstr "Nexus expects a 7z. Repack collection.zip as a 7z with 7-Zip before uploading."
 
@@ -11153,7 +11165,7 @@ msgstr "Enter a number from {min} to {max}"
 msgid "Close downloads"
 msgstr "Close downloads"
 
-#: src/share/MethodPanes.tsx:180
+#: src/share/MethodPanes.tsx:181
 msgid "A .mortar file holds the link's mods plus their settings files. Send it; they open it from Mortar's Import."
 msgstr "A .mortar file holds the link's mods plus their settings files. Send it; they open it from Mortar's Import."
 
@@ -11615,7 +11627,7 @@ msgid "Hourly count resets {0} · daily count resets {1}"
 msgstr "Hourly count resets {0} · daily count resets {1}"
 
 #: src/settings/store.ts:152
-#: src/share/MethodPanes.tsx:235
+#: src/share/MethodPanes.tsx:236
 #: src/shell/saveDiagnostics.ts:27
 msgid "Show file"
 msgstr "Show file"
@@ -11720,7 +11732,7 @@ msgstr "No problems"
 msgid "Add one to group your mods your own way."
 msgstr "Add one to group your mods your own way."
 
-#: src/share/MethodPanes.tsx:243
+#: src/share/MethodPanes.tsx:244
 msgid "Saves this profile as a collection draft to finish and upload on Nexus Mods."
 msgstr "Saves this profile as a collection draft to finish and upload on Nexus Mods."
 
@@ -12254,7 +12266,7 @@ msgstr "Status"
 msgid "itch.io rejected your API key"
 msgstr "itch.io rejected your API key"
 
-#: src/share/MethodPanes.tsx:134
+#: src/share/MethodPanes.tsx:135
 msgid "They see the profile name, the mod list and where each mod comes from."
 msgstr "They see the profile name, the mod list and where each mod comes from."
 
@@ -12302,7 +12314,7 @@ msgid "Checked in {0}: {parts}"
 msgstr "Checked in {0}: {parts}"
 
 #. placeholder {0}: saved.path
-#: src/share/MethodPanes.tsx:196
+#: src/share/MethodPanes.tsx:197
 msgid "Saved to {0}"
 msgstr "Saved to {0}"
 
@@ -12662,7 +12674,7 @@ msgstr "You can roll back the completed updates from the profile history."
 msgid "Its source is not known."
 msgstr "Its source is not known."
 
-#: src/share/MethodPanes.tsx:318
+#: src/share/MethodPanes.tsx:341
 msgid "This uploads the profile to Thunderstore and gives a public code."
 msgstr "This uploads the profile to Thunderstore and gives a public code."
 
@@ -13677,8 +13689,8 @@ msgstr "{gameName} profiles"
 
 #. placeholder {0}: listNames(left)
 #. placeholder {0}: listNames(skipped, skipped.length)
-#: src/share/MethodPanes.tsx:232
-#: src/share/MethodPanes.tsx:286
+#: src/share/MethodPanes.tsx:233
+#: src/share/MethodPanes.tsx:287
 msgid "Left out: {0}"
 msgstr "Left out: {0}"
 
@@ -13804,7 +13816,7 @@ msgid "Open a group's menu on the Mods tab and choose Save to library."
 msgstr "Open a group's menu on the Mods tab and choose Save to library."
 
 #: src/settings/sections/AboutDiagnostics.tsx:168
-#: src/share/MethodPanes.tsx:190
+#: src/share/MethodPanes.tsx:191
 msgid "Save…"
 msgstr "Save…"
 
@@ -13954,7 +13966,7 @@ msgid "This mod is no longer in the profile."
 msgstr "This mod is no longer in the profile."
 
 #: src/browse/BrowseMenu.tsx:74
-#: src/share/MethodPanes.tsx:129
+#: src/share/MethodPanes.tsx:130
 msgid "Copy link"
 msgstr "Copy link"
 
@@ -14179,7 +14191,7 @@ msgstr "You have not endorsed this mod. Nexus asks that you download and play it
 msgid "Restore all"
 msgstr "Restore all"
 
-#: src/share/MethodPanes.tsx:98
+#: src/share/MethodPanes.tsx:99
 msgid "This profile is too large for a link."
 msgstr "This profile is too large for a link."
 
@@ -14527,6 +14539,10 @@ msgstr "The game was updated"
 msgid "Before ms"
 msgstr "Before ms"
 
+#: src/share/MethodPanes.tsx:320
+msgid "Could not save the .r2z file"
+msgstr "Could not save the .r2z file"
+
 #: src/settings/prefCopy.ts:179
 msgid "Profile hero"
 msgstr "Profile hero"
@@ -14683,10 +14699,6 @@ msgstr "Recently deleted retention"
 #: src/saves/SaveRow.tsx:56
 msgid "Forest farm"
 msgstr "Forest farm"
-
-#: src/share/MethodPanes.tsx:292
-msgid "For r2modman and other Thunderstore managers: a code anyone can enter, or a modpack zip with your config folder."
-msgstr "For r2modman and other Thunderstore managers: a code anyone can enter, or a modpack zip with your config folder."
 
 #: src/console/PerformancePanelParts.tsx:308
 msgid "Measure while you play, then report the mods that take the most time per frame."
