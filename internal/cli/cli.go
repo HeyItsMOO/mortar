@@ -2479,10 +2479,10 @@ func offlineDoctor() error {
 	return offlineDoctorError{result: result, code: code}
 }
 
-const usage = `Usage: mortar <command> [arguments] [--json]
+const usage = `Usage: mortar <command> [arguments] [--json] [-v|--verbose]
 
 Mortar must be running; these commands ask the open app. <profile> is an id or a name. A verb without <game>
-takes --game <id>, which may be left out when exactly one game is installed.
+takes --game <id>, which may be left out when exactly one game is installed. Output flags may precede the verb.
 
   antivirus status                     the scanner in use (amsi, clamd, command, off) and whether it can scan
   settings get [--game <id>] [key]     list settings, or one key

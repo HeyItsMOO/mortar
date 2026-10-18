@@ -67,6 +67,9 @@ func TestUsageErrorsExitTwo(t *testing.T) {
 	if r := invoke(t, nil, "help"); r.code != 0 || !strings.Contains(r.out, "Usage:") {
 		t.Errorf("help: %d %q", r.code, r.out)
 	}
+	if r := invoke(t, nil, "help"); !strings.Contains(r.out, "[--json] [-v|--verbose]") {
+		t.Errorf("help omits global output flags: %q", r.out)
+	}
 }
 
 func TestCommandsSendTheirArguments(t *testing.T) {

@@ -67,7 +67,7 @@ The regress scripts need the real games and (for Lethal Company) Proton, so they
 
 Every game a self-test sandbox starts, from its browser view or `regress`, goes through `scripts/launch-guard.sh`: a server build (`-tags server`) starts each direct launch through the program in `MORTAR_LAUNCH_WRAPPER`, which only `scripts/selftest.sh` sets.
 
-- **Hidden display.** Headless mutter with a virtual monitor, its own Xwayland, D-Bus session and a private runtime dir (`<sandbox>/run`), so no desktop Wayland socket, bus, PipeWire or Pulse socket is in reach. The guard refuses a launch whose environment names anything else.
+- **Hidden display.** Headless mutter with a virtual monitor, its own Xwayland, D-Bus session and a private runtime dir (`<sandbox>/run`, exported as `MORTAR_HIDDEN_RUNTIME`), so no desktop Wayland socket, bus, PipeWire or Pulse socket is in reach. The guard refuses a launch whose environment names anything else.
 - **No network.** Each launch runs under `bwrap --unshare-net`, so it cannot reach a Steam client on loopback (`127.0.0.1:57343`).
 - **Cap.** A session gets at most 3 launches across all its sandboxes. The session is `MORTAR_LAUNCH_SESSION`, else `CLAUDE_CODE_SESSION_ID`, else the login session; the counter is `/var/tmp/mortar-launch-cap/<session>`. The fourth launch exits 3, and `regress` refuses up front a run needing more launches than are left. The e2e sandbox has a session per run (`play.pw.ts` starts a stand-in, never a game).
 - **Recorded pids.** Each game's pid and start time go to `<sandbox>/launches.pids`. `stop`, `destroy` and the end of `regress` stop exactly those, each found again by start time (the pid is the one inside the server's pid namespace), never by name.
