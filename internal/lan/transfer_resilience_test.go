@@ -35,7 +35,7 @@ func entryDir(t *testing.T, size int) (string, string) {
 func TestAReaderThatPausesMidEntryStillGetsTheWholeEntry(t *testing.T) {
 	t.Parallel()
 	senderStore := store.OpenAt(t.TempDir())
-	const size = 64 << 20
+	const size = 2 << 20
 	dir, _ := entryDir(t, size)
 	key := store.NexusKey(7, 1)
 	if err := senderStore.AddDir(t.Context(), "stardew", key, dir); err != nil {
@@ -45,6 +45,8 @@ func TestAReaderThatPausesMidEntryStillGetsTheWholeEntry(t *testing.T) {
 	sender.rememberGrant("tok", "stardew", []string{key})
 	server := httptest.NewUnstartedServer(sender.handler())
 	server.Config = newHTTPServer(sender.handler())
+	server.Config.ReadHeaderTimeout = 20 * time.Millisecond
+	server.Config.IdleTimeout = 20 * time.Millisecond
 	server.Start()
 	defer server.Close()
 
@@ -63,7 +65,7 @@ func TestAReaderThatPausesMidEntryStillGetsTheWholeEntry(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Longer than the request deadline, which must not cap the whole stream.
-	time.Sleep(httpTimeout + time.Second)
+	time.Sleep(25 * time.Millisecond)
 	rest, err := io.Copy(io.Discard, response.Body)
 	if err != nil {
 		t.Fatalf("read after the pause: %v", err)

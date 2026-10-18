@@ -194,6 +194,7 @@ func TestNotificationIconIsEmptyUntilTheDesktopEntryIsWritten(t *testing.T) {
 
 func TestAnAppImageRegistersItselfAndMovesItsEntry(t *testing.T) {
 	dir := t.TempDir()
+	t.Setenv("HOME", filepath.Join(dir, "home"))
 	t.Setenv("XDG_DATA_HOME", filepath.Join(dir, "data"))
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(dir, "config"))
 	img := filepath.Join(dir, "Mortar.AppImage")

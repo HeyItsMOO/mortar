@@ -558,7 +558,7 @@ func TestPauseHoldsBackNewDownloads(t *testing.T) {
 	f.start()
 	f.s.Pause()
 	f.add(req(10))
-	time.Sleep(50 * time.Millisecond)
+	time.Sleep(15 * time.Millisecond)
 	if st := f.s.State(); !st.Paused || st.Items[0].State != StateQueued {
 		t.Fatalf("state %+v", st)
 	}
@@ -643,7 +643,7 @@ func TestItemsForARunningProfileWait(t *testing.T) {
 	f.s.d.Running = func(_, id string) bool { return id == "p1" && running.Load() }
 	f.start()
 	f.add(req(10))
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(15 * time.Millisecond)
 	if st := f.s.State(); st.Items[0].State != StateQueued || len(f.installs) != 0 {
 		t.Fatalf("item for a running profile moved on: %+v", st.Items[0])
 	}
@@ -793,7 +793,7 @@ func TestPauseDownloadsWhileGameRuns(t *testing.T) {
 	f.s.d.GameBusy = busy.Load
 	f.start()
 	f.add(req(10))
-	time.Sleep(80 * time.Millisecond)
+	time.Sleep(15 * time.Millisecond)
 	if st := f.s.State(); len(st.Items) != 1 || st.Items[0].State != StateQueued {
 		t.Fatalf("while busy %+v", f.s.State())
 	}

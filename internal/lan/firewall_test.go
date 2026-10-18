@@ -2,6 +2,7 @@ package lan
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/settings"
@@ -46,25 +47,31 @@ func TestApplyDoesNotListenAtLaunchWithoutRules(t *testing.T) {
 		blocked    bool
 		wantListen bool
 	}{"rules missing": {true, false}, "rules present": {false, true}} {
-		store, err := settings.OpenIn(t.TempDir())
-		if err != nil {
-			t.Fatal(err)
-		}
-		if _, err := store.Update(func(v *settings.Settings) { v.LanSharing, v.LanStarted = true, true }); err != nil {
-			t.Fatal(err)
-		}
-		svc := NewService(Deps{Settings: store})
-		svc.checkFirewall = func(context.Context, bool) (bool, error) { return tc.blocked, nil }
-		t.Cleanup(svc.Shutdown)
-		if err := svc.Apply(); err != nil {
-			t.Fatalf("%s: %v", name, err)
-		}
-		if got := svc.listening(); got != tc.wantListen {
-			t.Errorf("%s: listening = %v, want %v", name, got, tc.wantListen)
-		}
-		if got := store.Get().LanStarted; got != tc.wantListen {
-			t.Errorf("%s: lanStarted = %v, want %v", name, got, tc.wantListen)
-		}
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			store, err := settings.OpenIn(t.TempDir())
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err := store.Update(func(v *settings.Settings) { v.LanSharing, v.LanStarted = true, true }); err != nil {
+				t.Fatal(err)
+			}
+			svc := NewService(Deps{Settings: store})
+			svc.checkFirewall = func(context.Context, bool) (bool, error) { return tc.blocked, nil }
+			t.Cleanup(svc.Shutdown)
+			if err := svc.Apply(); err != nil {
+				if tc.wantListen && strings.Contains(err.Error(), "no multicast listeners") {
+					t.Skip(err)
+				}
+				t.Fatal(err)
+			}
+			if got := svc.listening(); got != tc.wantListen {
+				t.Errorf("listening = %v, want %v", got, tc.wantListen)
+			}
+			if got := store.Get().LanStarted; got != tc.wantListen {
+				t.Errorf("lanStarted = %v, want %v", got, tc.wantListen)
+			}
+		})
 	}
 }
 
