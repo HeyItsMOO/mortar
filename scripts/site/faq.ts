@@ -89,6 +89,22 @@ ${render(md)}
   })
 }
 
+/** A plain Markdown document as a page, titled by its first heading. */
+export function docPage(src: string, path: string, description: string): string {
+  const md = readFileSync(src, 'utf8')
+  const title = /^# (.+)\n/.exec(md)?.[1]
+  if (!title) {
+    throw new Error(`site: ${src} must start with "# <title>"`)
+  }
+  return page({
+    path,
+    title,
+    description,
+    body: `      <h1 class="ext-title">${escapeHTML(title)}</h1>
+${render(md.replace(/^# .*\n/, ''))}`,
+  })
+}
+
 /** The landing page's FAQ teaser: the first questions, each linking to its answer, and a link to the rest. */
 export function landingFaq(gameCount: number, whys: Why[]): string {
   const qs = questions(gameCount, whys)

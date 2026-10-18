@@ -9,7 +9,7 @@ import { refreshSteamArt, steamArt } from './site/art.ts'
 import { brandArt, brandSprite } from './site/brands.ts'
 import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
-import { faqPage, landingFaq, refreshRivalCounts, whyPage, whyPages } from './site/faq.ts'
+import { docPage, faqPage, landingFaq, refreshRivalCounts, whyPage, whyPages } from './site/faq.ts'
 import { gamePage, gamesBand, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
 import { guidePage } from './site/guide.ts'
 
@@ -159,11 +159,25 @@ files.set('site/faq/index.html', faqPage(games.length, whys))
 for (const w of whys) {
   files.set(`site/why/${w.id}/index.html`, whyPage(w, counts))
 }
+const discordDocs = [
+  ['terms', 'The terms for the Mortar bot that runs the Mortar Mod Manager Discord server.'],
+  [
+    'privacy',
+    'What the Mortar bot in the Mortar Mod Manager Discord server reads and keeps, and why.',
+  ],
+]
+for (const [doc, description] of discordDocs) {
+  files.set(
+    `site/discord/${doc}/index.html`,
+    docPage(`scripts/site/discord/${doc}.md`, `site/discord/${doc}/index.html`, description),
+  )
+}
 files.set('site/404.html', notFoundPage())
 const listedPages = [
   ...PAGES.map((p) => p.path),
   'site/games/index.html',
   'site/faq/index.html',
+  ...discordDocs.map(([doc]) => `site/discord/${doc}/index.html`),
   ...whys.map((w) => `site/why/${w.id}/index.html`),
   'site/guide/index.html',
   'site/changelog/index.html',
