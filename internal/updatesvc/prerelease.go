@@ -71,7 +71,7 @@ func (p *prereleaseProvider) latestPrereleaseTag(ctx context.Context, current st
 		Prerelease bool   `json:"prerelease"`
 		Draft      bool   `json:"draft"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&releases); err != nil {
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 8<<20)).Decode(&releases); err != nil {
 		return "", err
 	}
 	for _, r := range releases {

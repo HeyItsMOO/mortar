@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -34,6 +35,7 @@ const (
 
 	keyringItem   = "nexus-oauth"
 	refreshMargin = time.Minute
+	maxTokenBody  = 64 << 10
 )
 
 // ErrPortBusy means the fixed callback port could not be opened.
@@ -178,7 +180,7 @@ func (o OAuth) exchange(ctx context.Context, form url.Values) (Tokens, error) {
 		Refresh   string `json:"refresh_token"`
 		ExpiresIn int    `json:"expires_in"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
+	if err := json.NewDecoder(io.LimitReader(resp.Body, maxTokenBody)).Decode(&raw); err != nil {
 		return Tokens{}, err
 	}
 	if raw.Access == "" {

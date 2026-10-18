@@ -1,6 +1,7 @@
 package nexussso
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
@@ -92,6 +93,22 @@ func TestOAuthTimeoutAndDeniedCallback(t *testing.T) {
 	}
 	if _, err := o.Authorize(context.Background()); err == nil {
 		t.Fatal("denied callback succeeded")
+	}
+}
+
+func TestExchangeRefusesAnOversizedTokenBody(t *testing.T) {
+	keyring.MockInit()
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"access_token":"`))
+		_, _ = w.Write(bytes.Repeat([]byte("A"), maxTokenBody))
+		_, _ = w.Write([]byte(`","refresh_token":"R","expires_in":60}`))
+	}))
+	defer srv.Close()
+	o := OAuth{ClientID: "cid", AuthBase: srv.URL}
+	_, err := o.exchange(t.Context(), url.Values{"grant_type": {"refresh_token"}, "refresh_token": {"R"}})
+	if err == nil {
+		t.Fatal("oversized token body was accepted")
 	}
 }
 
