@@ -2,7 +2,7 @@
 
 Effective 18 October 2026.
 
-The Mortar bot is the Discord app Rethunk.Tech uses to run the Mortar Mod Manager Discord server. These terms apply to everyone in that server, alongside [Discord's Terms of Service](https://discord.com/terms), [Discord's Community Guidelines](https://discord.com/guidelines) and the server's own rules. Staying in the server means you accept them. How the bot handles information is in its [privacy policy](/discord/privacy/).
+The Mortar bot is the Discord app Rethunk.Tech uses to run the Mortar Mod Manager Discord server. These terms apply to everyone in that server, alongside [Discord's Terms of Service](https://discord.com/terms), [Discord's Community Guidelines](https://discord.com/guidelines) and the server's own rules. Staying in the server means you accept them. How the bot handles information is in its [privacy policy](/bot/privacy/).
 
 ## What the bot does
 

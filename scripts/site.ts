@@ -159,17 +159,17 @@ files.set('site/faq/index.html', faqPage(games.length, whys))
 for (const w of whys) {
   files.set(`site/why/${w.id}/index.html`, whyPage(w, counts))
 }
-const discordDocs = [
+const botDocs = [
   ['terms', 'The terms for the Mortar bot that runs the Mortar Mod Manager Discord server.'],
   [
     'privacy',
     'What the Mortar bot in the Mortar Mod Manager Discord server reads and keeps, and why.',
   ],
 ]
-for (const [doc, description] of discordDocs) {
+for (const [doc, description] of botDocs) {
   files.set(
-    `site/discord/${doc}/index.html`,
-    docPage(`scripts/site/discord/${doc}.md`, `site/discord/${doc}/index.html`, description),
+    `site/bot/${doc}/index.html`,
+    docPage(`scripts/site/bot/${doc}.md`, `site/bot/${doc}/index.html`, description),
   )
 }
 files.set('site/404.html', notFoundPage())
@@ -177,7 +177,7 @@ const listedPages = [
   ...PAGES.map((p) => p.path),
   'site/games/index.html',
   'site/faq/index.html',
-  ...discordDocs.map(([doc]) => `site/discord/${doc}/index.html`),
+  ...botDocs.map(([doc]) => `site/bot/${doc}/index.html`),
   ...whys.map((w) => `site/why/${w.id}/index.html`),
   'site/guide/index.html',
   'site/changelog/index.html',
