@@ -3,6 +3,8 @@ package updatesvc
 import (
 	"context"
 	"errors"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -292,6 +294,40 @@ func TestCheckNilReleaseIsCurrentWhenTheManifestExists(t *testing.T) {
 	rel, err := s.Check(context.Background())
 	if rel != nil || err != nil {
 		t.Fatalf("current = %+v, %v", rel, err)
+	}
+}
+
+func TestProbePublished(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	ok := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	t.Cleanup(ok.Close)
+	missing := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	t.Cleanup(missing.Close)
+	fail := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusBadGateway)
+	}))
+	t.Cleanup(fail.Close)
+
+	if err := probePublished(ctx, ok.Client(), ok.URL); err != nil {
+		t.Fatalf("200: %v", err)
+	}
+	if err := probePublished(ctx, missing.Client(), missing.URL); !errors.Is(err, errNoRelease) {
+		t.Fatalf("404: %v", err)
+	}
+	if err := probePublished(ctx, fail.Client(), fail.URL); !errors.Is(err, errCheckFailed) {
+		t.Fatalf("502: %v", err)
+	}
+	if err := probePublished(ctx, ok.Client(), ":"); !errors.Is(err, errCheckFailed) {
+		t.Fatalf("bad URL: %v", err)
+	}
+	ok.Close()
+	if err := probePublished(ctx, ok.Client(), ok.URL); !errors.Is(err, errUnreachable) {
+		t.Fatalf("closed server: %v", err)
 	}
 }
 

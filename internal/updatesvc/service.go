@@ -300,17 +300,28 @@ func classifyCheckError(err error) error {
 }
 
 func checkPublished(ctx context.Context) error {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, manifestURL(), nil)
-	if err != nil {
-		return nil
+	return probePublished(ctx, http.DefaultClient, manifestURL())
+}
+
+func probePublished(ctx context.Context, client *http.Client, rawURL string) error {
+	if client == nil {
+		client = http.DefaultClient
 	}
-	resp, err := http.DefaultClient.Do(req)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 	if err != nil {
-		return nil
+		return errCheckFailed
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return classifyCheckError(err)
 	}
 	defer func() { _ = resp.Body.Close() }()
-	if resp.StatusCode == http.StatusNotFound {
+	switch {
+	case resp.StatusCode == http.StatusNotFound:
 		return errNoRelease
+	case resp.StatusCode >= 200 && resp.StatusCode < 300:
+		return nil
+	default:
+		return errCheckFailed
 	}
-	return nil
 }
