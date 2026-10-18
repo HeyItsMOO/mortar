@@ -17,6 +17,7 @@ import { useNav } from '../nav/store.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { GraphicsApiRow } from './GraphicsApiRow.tsx'
+import { gamePrefs } from './gamePrefs.ts'
 import { PrefKeys } from './PrefRow.tsx'
 import { ProtonRow } from './ProtonRow.tsx'
 import { SettingsSection } from './SettingsSection.tsx'
@@ -87,6 +88,7 @@ function GamePages({
   const g = useGameInstall(game)
   const info = useGameInfo(game)
   const loader = useProfiles((s) => s.game?.loaders?.[0])
+  const launchDirect = useSettings((s) => gamePrefs(s, game).defaultLaunchMethod === 'direct')
   const { related, dialog } = usePerProfileRelated(game)
   const pages: ShellPage<GamePage>[] = [
     { id: 'install', label: t`Install`, icon: FolderOpen },
@@ -125,6 +127,7 @@ function GamePages({
             <PrefKeys
               keys={[
                 'defaultLaunchMethod',
+                ...(launchDirect ? ['instances', 'delaySeconds'] : []),
                 ...(loader?.id === 'smapi' ? ['showSmapiConsole'] : []),
                 ...(loader?.introSkip ? ['skipIntro'] : []),
                 'updateModsBeforePlayDefault',

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"context"
 	"errors"
 	"os"
 	"path/filepath"
@@ -501,5 +502,87 @@ func TestDirectCommandStartsAFlatpakCopyThroughFlatpakAndALinuxBuildThroughItsSt
 	c, err = Starter{}.Command("linux", Install{Game: "vintage-story", Store: gamestore.StoreStandalone, Dir: dir, Platform: "linux"}, plan)
 	if err != nil || c.Name != filepath.Join(dir, "run.sh") {
 		t.Fatalf("native = %+v, %v", c, err)
+	}
+}
+
+func TestStartSchedulesDirectInstances(t *testing.T) {
+	dir := t.TempDir()
+	plan := vanillaPlan("linux", dir)
+	for _, tc := range []struct {
+		name         string
+		direct       bool
+		instances    int
+		delay        int
+		cancelSleep  bool
+		wantStarts   int
+		wantDelays   []time.Duration
+		wantCanceled bool
+	}{
+		{
+			name:       "direct three with delay",
+			direct:     true,
+			instances:  3,
+			delay:      5,
+			wantStarts: 3,
+			wantDelays: []time.Duration{5 * time.Second, 5 * time.Second},
+		},
+		{
+			name:       "steam url starts one",
+			direct:     false,
+			instances:  3,
+			delay:      5,
+			wantStarts: 1,
+		},
+		{
+			name:         "cancel between instances",
+			direct:       true,
+			instances:    3,
+			delay:        5,
+			cancelSleep:  true,
+			wantStarts:   1,
+			wantDelays:   []time.Duration{5 * time.Second},
+			wantCanceled: true,
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var starts int
+			var delays []time.Duration
+			ctx, cancel := context.WithCancel(t.Context())
+			defer cancel()
+			st := Starter{
+				LookPath: func(string) (string, error) { return "/usr/bin/steam", nil },
+				Timing:   launch.Timing{Timeout: 300 * time.Millisecond, Poll: time.Millisecond},
+				Runner: func(string, string, ...string) (<-chan error, error) {
+					starts++
+					return make(chan error), nil
+				},
+				Sleep: func(_ context.Context, d time.Duration) error {
+					delays = append(delays, d)
+					if tc.cancelSleep {
+						cancel()
+						return context.Canceled
+					}
+					return nil
+				},
+			}
+			env := StartEnv{
+				Steam:        &steam.Steam{Root: t.TempDir()},
+				Direct:       tc.direct,
+				Instances:    tc.instances,
+				DelaySeconds: tc.delay,
+				Ready:        func() bool { return true },
+			}
+			err := st.Start(ctx, Install{Game: "stardew", Dir: dir}, plan, env, nil)
+			if tc.wantCanceled {
+				if !errors.Is(err, context.Canceled) {
+					t.Fatalf("err = %v, want canceled", err)
+				}
+			} else if err != nil {
+				t.Fatal(err)
+			}
+			if starts != tc.wantStarts || !slices.Equal(delays, tc.wantDelays) {
+				t.Fatalf("starts %d delays %v, want %d %v", starts, delays, tc.wantStarts, tc.wantDelays)
+			}
+		})
 	}
 }

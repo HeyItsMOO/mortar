@@ -69,5 +69,15 @@ export function gamePrefs(i18n: I18n): Record<string, PrefCopy> {
       label: i18n._(msg`Skip the pre-Play check`),
       description: i18n._(msg`Start the game without the Before you play dialog`),
     },
+    instances: {
+      label: i18n._(msg`Instances`),
+      description: i18n._(
+        msg`How many game processes a direct Play starts. Hidden for Steam and store URL launches.`,
+      ),
+    },
+    delaySeconds: {
+      label: i18n._(msg`Delay seconds`),
+      description: i18n._(msg`Seconds to wait between those processes`),
+    },
   }
 }

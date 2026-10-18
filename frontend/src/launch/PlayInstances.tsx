@@ -1,0 +1,48 @@
+import { useLingui } from '@lingui/react/macro'
+import { Box, Typography } from '@mui/material'
+import { SetByKey } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
+import { PrefNumber } from '../settings/PrefControls.tsx'
+import { specByKey, usePrefSpecs } from '../settings/prefSpecs.ts'
+import { prefAsNumber, prefRaw } from '../settings/prefValue.ts'
+import { useSettings } from '../settings/store.ts'
+import { space } from '../theme/density.ts'
+
+export function PlayInstances({ game }: { game: string }) {
+  const { t } = useLingui()
+  const specs = usePrefSpecs()
+  const instances = specByKey(specs, 'instances')
+  const delay = specByKey(specs, 'delaySeconds')
+  const instancesRaw = useSettings((s) => (instances ? prefRaw(s, instances, game) : undefined))
+  const delayRaw = useSettings((s) => (delay ? prefRaw(s, delay, game) : undefined))
+  if (!instances || !delay) {
+    return null
+  }
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: space.gap,
+        px: space.pad,
+        py: space.gap,
+      }}
+    >
+      <Typography sx={{ fontSize: 12, color: 'var(--mortar-ink-soft)' }}>{t`Instances`}</Typography>
+      <PrefNumber
+        value={prefAsNumber(instancesRaw, instances, game)}
+        min={instances.min ?? 1}
+        max={instances.max || 8}
+        label={t`Instances`}
+        onCommit={(n) => SetByKey('instances', String(n), game)}
+      />
+      <Typography sx={{ fontSize: 12, color: 'var(--mortar-ink-soft)' }}>{t`Delay s`}</Typography>
+      <PrefNumber
+        value={prefAsNumber(delayRaw, delay, game)}
+        min={delay.min ?? 1}
+        max={delay.max || 60}
+        label={t`Delay seconds`}
+        onCommit={(n) => SetByKey('delaySeconds', String(n), game)}
+      />
+    </Box>
+  )
+}

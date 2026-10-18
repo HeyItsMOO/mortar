@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
@@ -38,6 +39,10 @@ type StartEnv struct {
 	OnExit func(launch.Exit)
 	// Proton is the Proton build (its folder name) a Windows copy outside Steam runs through; empty takes the best.
 	Proton string
+	// Instances is how many processes a direct Play starts (1–8). Steam and store URL launches always start one.
+	Instances int
+	// DelaySeconds is the pause between those processes.
+	DelaySeconds int
 }
 
 // Starter starts launch plans the way the install's store requires: Steam installs through `steam -applaunch`, which
@@ -52,11 +57,50 @@ type Starter struct {
 	DataDir string
 	// FlatpakShow is `flatpak override --user --show` for Steam; nil means the real command.
 	FlatpakShow func() (string, error)
+	// Sleep waits d or until ctx is done. Tests replace it so scheduling does not wait on a real clock.
+	Sleep func(ctx context.Context, d time.Duration) error
 }
 
 // Start runs plan for inst and returns once the game has started, sending the loader's log lines to onLines in
 // batches until ctx is done. It returns launch.ErrNoSteam when there is no Steam and env.Direct is false.
 func (st Starter) Start(ctx context.Context, inst Install, plan *launchplan.Plan, env StartEnv, onLines func([]string)) error {
+	n := 1
+	if env.Direct {
+		n = min(max(env.Instances, 1), 8)
+	}
+	sleep := st.Sleep
+	if sleep == nil {
+		sleep = waitDelay
+	}
+	for i := 0; i < n; i++ {
+		if i > 0 {
+			d := max(env.DelaySeconds, 0)
+			if err := sleep(ctx, time.Duration(d)*time.Second); err != nil {
+				return err
+			}
+		}
+		if err := st.startOne(ctx, inst, plan, env, onLines); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func waitDelay(ctx context.Context, d time.Duration) error {
+	if d <= 0 {
+		return ctx.Err()
+	}
+	timer := time.NewTimer(d)
+	defer timer.Stop()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-timer.C:
+		return nil
+	}
+}
+
+func (st Starter) startOne(ctx context.Context, inst Install, plan *launchplan.Plan, env StartEnv, onLines func([]string)) error {
 	lookPath := st.LookPath
 	if lookPath == nil {
 		lookPath = exec.LookPath

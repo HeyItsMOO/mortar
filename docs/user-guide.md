@@ -167,7 +167,7 @@ A profile is one set of mods. Switching profiles never touches the game folder's
 
 ## Play
 
-**Play** applies the profile's mod list and starts the game through SMAPI.
+**Play** applies the profile's mod list and starts the game through SMAPI. Direct Play (not a Steam or store URL launch) can start more than one instance, spaced by a delay, for local multiplayer.
 
 After a crash, a card on the profile's Home names the likely cause from the loader's log (for Lethal Company also Unity's player log, where a crash prints `Crash!!!` or `Fatal error`), and when the logs name no mod, from the game's crash dump (Unity's crash folder, a Windows error report or `coredumpctl`).
 

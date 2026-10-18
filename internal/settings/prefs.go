@@ -114,6 +114,13 @@ const (
 	DefaultHistoryEventsKept          = 200
 	DefaultSaveBackupsKept            = 5
 	DefaultSaveBackupKeep             = 5
+	DefaultInstances                  = 1
+	DefaultDelaySeconds               = 5
+
+	MinInstances    = 1
+	MaxInstances    = 8
+	MinDelaySeconds = 1
+	MaxDelaySeconds = 60
 
 	MinRunsKept                   = 1
 	MaxRunsKept                   = 100

@@ -904,6 +904,12 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 	if store == game.StoreGOG || store == game.StoreGOGHeroic || store == game.StoreMinigalaxy || store == game.StoreLutris || store == game.StoreBottles || store == game.StoreEA {
 		env.Direct = true
 	}
+	if env.Direct {
+		scope := settings.Scope{Game: g.ID(), Install: installOf(g), Profile: profileID}
+		ov := launchOverrides(s.profiles, g.ID(), profileID)
+		env.Instances, _ = strconv.Atoi(settings.ResolveAt(s.settings.Get(), "instances", scope, ov))
+		env.DelaySeconds, _ = strconv.Atoi(settings.ResolveAt(s.settings.Get(), "delaySeconds", scope, ov))
+	}
 	if st, status := steam.Locate(s.home); status == steam.Found {
 		env.Steam = &st
 	}

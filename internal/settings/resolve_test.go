@@ -37,7 +37,7 @@ func TestResolveSkipPlayCheck(t *testing.T) {
 func TestProfileOverridableKeys(t *testing.T) {
 	t.Parallel()
 	for _, key := range []string{
-		"defaultLaunchMethod", "showSmapiConsole", "backupBeforePlay",
+		"defaultLaunchMethod", "instances", "delaySeconds", "showSmapiConsole", "backupBeforePlay",
 		"saveBackupsKept", "updateModsBeforePlayDefault", "skipPlayCheck", "skipIntro",
 		"saveBackupHours", "saveBackupKeep", "runsKept", "consoleLogCap", "consoleLevel", "consoleTimestamps",
 		"consoleFollow", "cosmeticConflicts", "conflictScanDepth", "enableRequirements", "missingRequirements",

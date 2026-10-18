@@ -3,9 +3,11 @@ import { msg } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 import { useGameInfo } from '../games/info.ts'
+import { gamePrefs } from '../settings/gamePrefs.ts'
 import { useNexus } from '../settings/nexus.ts'
 import { prefCopy } from '../settings/prefCopy.ts'
 import { useProtonBuilds } from '../settings/protonBuilds.ts'
+import { useSettings } from '../settings/store.ts'
 import {
   applyRow,
   choiceFromOverride,
@@ -13,6 +15,7 @@ import {
   OVERRIDE_VALUES,
   type OverrideKey,
   overrideChoiceLabel,
+  resolveOverride,
 } from './overrideValue.ts'
 
 const CONSOLE_KEYS = ['consoleLogCap', 'consoleLevel', 'consoleTimestamps', 'consoleFollow']
@@ -69,6 +72,8 @@ export function OverridesSection({
   const { t, i18n } = useLingui()
   const premium = useNexus((s) => s.premium)
   const info = useGameInfo()
+  const launch = useSettings((s) => gamePrefs(s, info?.id).defaultLaunchMethod)
+  const directPlay = resolveOverride('defaultLaunchMethod', launch, overrides) === 'direct'
   const smapi = info?.loaderId === 'smapi'
   const introSkip = info?.loaders?.[0]?.introSkip === true
   const graphics = info?.graphics ?? undefined
@@ -101,6 +106,7 @@ export function OverridesSection({
           (proton.length > 0 || key !== 'protonVersion') &&
           (info?.hasOptions || key !== 'gameSettingsMode') &&
           (info?.hasCaches || key !== 'cacheClearing') &&
+          (directPlay || (key !== 'instances' && key !== 'delaySeconds')) &&
           applies(key, info?.loaders?.[0]),
       ).map((key) => {
         const stored = overrides[key]

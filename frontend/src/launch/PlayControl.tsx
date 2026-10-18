@@ -17,6 +17,7 @@ import { space } from '../theme/density.ts'
 import { reportError } from '../toasts/report.ts'
 import { playDirect } from './directPref.ts'
 import { useLive } from './live.ts'
+import { PlayInstances } from './PlayInstances.tsx'
 import { PLAY_HEIGHT_PX } from './playHeight.ts'
 import { StopDialog } from './StopDialog.tsx'
 import { useLaunch } from './store.ts'
@@ -187,21 +188,25 @@ export function PlayControl({ game, rail }: { game: string; rail: boolean }) {
   if (updating > 0) {
     label = t`${plural(updating, { one: 'Updating # mod…', other: 'Updating # mods…' })}`
   }
+  const direct = playDirect()
   return (
-    <VanillaPlay
-      game={game}
-      playDisabled={openId === '' || launching || busy}
-      vanillaDisabled={launching || busy}
-      label={label}
-      rail={rail}
-      play={() => start(game, openId, playDirect(), '')}
-      presets={presets}
-      playWith={(key) => start(game, openId, playDirect(), key)}
-      setDefault={(key) =>
-        SetDefaultLaunchPreset(game, openId, key === BASE_PRESET ? '' : key)
-          .then(replaceProfile)
-          .catch(reportError(t`Could not set the default launch preset`))
-      }
-    />
+    <>
+      {direct && !rail ? <PlayInstances game={game} /> : null}
+      <VanillaPlay
+        game={game}
+        playDisabled={openId === '' || launching || busy}
+        vanillaDisabled={launching || busy}
+        label={label}
+        rail={rail}
+        play={() => start(game, openId, direct, '')}
+        presets={presets}
+        playWith={(key) => start(game, openId, direct, key)}
+        setDefault={(key) =>
+          SetDefaultLaunchPreset(game, openId, key === BASE_PRESET ? '' : key)
+            .then(replaceProfile)
+            .catch(reportError(t`Could not set the default launch preset`))
+        }
+      />
+    </>
   )
 }

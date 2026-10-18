@@ -34,8 +34,12 @@ type GameSettings struct {
 	EnableRequirements          string `json:"enableRequirements"`
 	MissingRequirements         string `json:"missingRequirements"`
 	DefaultLaunchMethod         string `json:"defaultLaunchMethod"`
-	SkipPlayCheck               bool   `json:"skipPlayCheck"`
-	SkipIntro                   bool   `json:"skipIntro"`
+	// Instances is how many processes a direct Play starts (1–8). Steam and store URL launches ignore it.
+	Instances int `json:"instances"`
+	// DelaySeconds is the pause between those processes.
+	DelaySeconds  int  `json:"delaySeconds"`
+	SkipPlayCheck bool `json:"skipPlayCheck"`
+	SkipIntro     bool `json:"skipIntro"`
 	// GraphicsAPI is the id of the graphics API choice the game's catalog entry offers; empty until the player has
 	// answered, which is when Play asks.
 	GraphicsAPI string `json:"graphicsApi,omitempty"`
@@ -202,6 +206,8 @@ var registry = withDefaults([]pref{
 	loaderPref("rivet", pinPref("rivetPin", "rivet")),
 	loaderPref("umm", pinPref("ummPin", "umm")),
 	overridable(enumPref("defaultLaunchMethod", ScopeGame, launchMethodValues, func(s Settings, g string) string { return s.GamePrefs(g).DefaultLaunchMethod }, func(s *Settings, g, v string) { gp := s.GamePrefs(g); gp.DefaultLaunchMethod = v; putGame(s, g, gp) })),
+	overridable(intPref("instances", ScopeGame, MinInstances, MaxInstances, func(s Settings, g string) int { return s.GamePrefs(g).Instances }, func(s *Settings, g string, n int) { gp := s.GamePrefs(g); gp.Instances = n; putGame(s, g, gp) })),
+	overridable(intPref("delaySeconds", ScopeGame, MinDelaySeconds, MaxDelaySeconds, func(s Settings, g string) int { return s.GamePrefs(g).DelaySeconds }, func(s *Settings, g string, n int) { gp := s.GamePrefs(g); gp.DelaySeconds = n; putGame(s, g, gp) })),
 	overridable(loaderPref("smapi", ptrPref("showSmapiConsole", ScopeLoader, func(s Settings, _ string) *bool { return s.ShowSmapiConsole }, func(s *Settings, _ string, on bool) { s.ShowSmapiConsole = &on }))),
 	overridable(boolPref("skipPlayCheck", ScopeGame, func(s Settings, g string) bool { return s.GamePrefs(g).SkipPlayCheck }, func(s *Settings, g string, on bool) {
 		gp := s.GamePrefs(g)
@@ -288,6 +294,8 @@ func defaultGameSettings() GameSettings {
 		EnableRequirements:          EnableReqAlways,
 		MissingRequirements:         MissingReqAsk,
 		DefaultLaunchMethod:         LaunchSteam,
+		Instances:                   DefaultInstances,
+		DelaySeconds:                DefaultDelaySeconds,
 		ConsoleLevel:                ConsoleLevelWarn,
 		ConsoleTimestamps:           off(),
 		ConsoleFollow:               on(),
@@ -362,6 +370,12 @@ func mergeGame(dst *GameSettings, src GameSettings) {
 	if src.DefaultLaunchMethod != "" {
 		dst.DefaultLaunchMethod = src.DefaultLaunchMethod
 	}
+	if src.Instances != 0 {
+		dst.Instances = src.Instances
+	}
+	if src.DelaySeconds != 0 {
+		dst.DelaySeconds = src.DelaySeconds
+	}
 	if src.ConsoleLevel != "" {
 		dst.ConsoleLevel = src.ConsoleLevel
 	}
@@ -434,6 +448,12 @@ func normalizeGame(id string, g *GameSettings) {
 	if !slices.Contains(launchMethodValues, g.DefaultLaunchMethod) {
 		g.DefaultLaunchMethod = d.DefaultLaunchMethod
 	}
+	if g.Instances < MinInstances || g.Instances > MaxInstances {
+		g.Instances = d.Instances
+	}
+	if g.DelaySeconds < MinDelaySeconds || g.DelaySeconds > MaxDelaySeconds {
+		g.DelaySeconds = d.DelaySeconds
+	}
 	if !slices.Contains(consoleLevelValues, g.ConsoleLevel) {
 		g.ConsoleLevel = d.ConsoleLevel
 	}
@@ -490,6 +510,12 @@ func validateGame(g GameSettings) error {
 	}
 	if !slices.Contains(launchMethodValues, g.DefaultLaunchMethod) {
 		return fmt.Errorf("default launch method must be steam or direct, got %q", g.DefaultLaunchMethod)
+	}
+	if g.Instances < MinInstances || g.Instances > MaxInstances {
+		return fmt.Errorf("instances must be %d to %d, got %d", MinInstances, MaxInstances, g.Instances)
+	}
+	if g.DelaySeconds < MinDelaySeconds || g.DelaySeconds > MaxDelaySeconds {
+		return fmt.Errorf("delay seconds must be %d to %d, got %d", MinDelaySeconds, MaxDelaySeconds, g.DelaySeconds)
 	}
 	if !slices.Contains(consoleLevelValues, g.ConsoleLevel) {
 		return fmt.Errorf("console level must be trace, debug, info, warn or error, got %q", g.ConsoleLevel)
