@@ -25,9 +25,7 @@ func servePprof() {
 	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
 	if !strings.Contains(addr, ":") {
-		addr = "127.0.0.1:" + addr
-	} else if strings.HasPrefix(addr, ":") {
-		addr = "127.0.0.1" + addr
+		addr = ":" + addr
 	}
 	srv := &http.Server{
 		Addr:              addr,
