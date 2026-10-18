@@ -12,9 +12,10 @@ interface ImportBatch {
 }
 
 const batches = new Map<string, ImportBatch>()
-// Batches whose result one summary toast reports, so their items get no toast of their own. Ids stay after the batch
-// settles: the queue announces the last item after the summary went out. ponytail: grows by one id per batch per run.
+// Batches whose result one summary toast reports, so their items get no toast of their own. Ids stay until the
+// queue has listed the batch and then dropped it, so the last item after the summary went out is still quiet.
 const summarized = new Set<string>()
+const seenBatches = new Set<string>()
 const settled = new Set(['done', 'failed', 'skipped', 'cancelled'])
 
 function importCountsLine(counts: SettledImportCounts) {
@@ -37,7 +38,7 @@ interface SettledImportCounts {
   changes: string[]
 }
 
-type Row = Pick<Item, 'id' | 'state'> & Partial<Pick<Item, 'change'>>
+type Row = Pick<Item, 'id' | 'state' | 'batchId'> & Partial<Pick<Item, 'change'>>
 
 /** Reads a batch's queue snapshots and returns its counts once every item has settled. */
 type BatchWatch = (items: readonly Row[]) => SettledImportCounts | undefined
@@ -108,6 +109,26 @@ export function isSummarizedBatch(batchId: string): boolean {
   return batchId !== '' && summarized.has(batchId)
 }
 
+function dropSummarized(items: readonly Row[]) {
+  const live = new Set<string>()
+  for (const item of items) {
+    if (item.batchId) {
+      live.add(item.batchId)
+      seenBatches.add(item.batchId)
+    }
+  }
+  for (const id of batches.keys()) {
+    live.add(id)
+  }
+  for (const id of [...summarized]) {
+    if (live.has(id) || !seenBatches.has(id)) {
+      continue
+    }
+    summarized.delete(id)
+    seenBatches.delete(id)
+  }
+}
+
 export function observeImportState(items: readonly Row[]) {
   for (const [batchId, batch] of batches) {
     const counts = batch.watch(items)
@@ -138,4 +159,5 @@ export function observeImportState(items: readonly Row[]) {
       batches.delete(batchId)
     }
   }
+  dropSummarized(items)
 }

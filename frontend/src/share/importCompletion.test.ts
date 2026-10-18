@@ -1,5 +1,10 @@
 import { expect, test } from 'bun:test'
-import { isSummarizedBatch, summarizeBatch, watchBatch } from './importCompletion.ts'
+import {
+  isSummarizedBatch,
+  observeImportState,
+  summarizeBatch,
+  watchBatch,
+} from './importCompletion.ts'
 
 test('counts a settled batch by queue outcome', () => {
   const watch = watchBatch(['a', 'b', 'c'])
@@ -62,4 +67,12 @@ test('a summarized batch keeps its items out of the per-item toasts', () => {
   summarizeBatch('update-1')
   expect(isSummarizedBatch('update-1')).toBe(true)
   expect(isSummarizedBatch('')).toBe(false)
+})
+
+test('a summarized id drops once the queue no longer lists that batch', () => {
+  summarizeBatch('gone-batch')
+  observeImportState([{ id: 'a', state: 'downloading', batchId: 'gone-batch' }])
+  expect(isSummarizedBatch('gone-batch')).toBe(true)
+  observeImportState([])
+  expect(isSummarizedBatch('gone-batch')).toBe(false)
 })
