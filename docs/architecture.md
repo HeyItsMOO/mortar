@@ -159,7 +159,7 @@ Go's soft memory limit is 512 MiB (`memlimit.go`, `debug.SetMemoryLimit`; `GOMEM
 | Archive preview (`archive.PreviewArchive`), solid 7z: 200 MB, 961 entries, 40 manifests | listing is header-only (under 1 ms CPU); each manifest is opened, decoding the solid stream up to it: 205 ms CPU and the whole 200 MB read when manifests are spread through incompressible data, 5 ms when early. Solid RAR not measured | bounded by archive size |
 | Settings › Storage (`datasvc.Usage`, 105,001 files, 2.16 GB) | 1.3 s CPU for one walk with a per-file extent query; reused for a minute | cached |
 | Data folder move (3.3 GB, warm cache) | hashing the source while copying so verify reads only the target: 22.3 s to 14.1 s wall. On btrfs (105,001 files) cloning every file: 15.6 s to 7.4 s CPU | one source read; clones kept |
-| Not worth optimising | `DotHiddenMods` 676 entries 57-66 ms CPU; `NewGameModsFolders` 819 folders 62-68 ms per call (key on the folder's mtime if a user reports lag); `StoreKeys` with history 0.97 s CPU once, then 20-23 ms; `MigrateHistory` 2.56 s CPU once; `RefreshDependencies` 62 ms per launch; Bridge Content Patcher timing patches: nanoseconds per call | none |
+| Not worth optimising | `DotHiddenMods` 676 entries 57-66 ms CPU; `NewGameModsFolders` 819 folders 62-68 ms per call (key on the folder's mtime if a user reports lag); `StoreKeys` with history 0.97 s CPU once, then 20-23 ms; `RefreshDependencies` 62 ms per launch; Bridge Content Patcher timing patches: nanoseconds per call | none |
 
 ## Tests
 

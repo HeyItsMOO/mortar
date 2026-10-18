@@ -1150,12 +1150,6 @@ func run() error {
 			log.Printf("repaired %d mod folder records", n)
 			tidied.Add("Repaired mod folder records", "profiles", n)
 		}
-		if n, c, err := profiles.MigrateHistory(); err != nil {
-			log.Printf("history migration: %v", err)
-		} else if n > 0 || c > 0 {
-			log.Printf("history migration: gzipped %d snapshots, counted %d histories", n, c)
-			tidied.Add("Compressed profile history snapshots", "profiles", n)
-		}
 		// An unreadable profile.json stops collection: its keys are unknown, and their items must not be deleted.
 		retention := store.Get().StoreUnusedFor()
 		if keys, err := datasvc.KeepSet(profiles, retention != 0, keepSources); err != nil {

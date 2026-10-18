@@ -930,8 +930,8 @@ func decodeSnapshot(dir string, raw []byte) ([]Entry, bool) {
 	return entries, true
 }
 
-// migratePlainSnapshot reads an uncompressed snapshot and replaces it with the gzipped form; reads and prunes both
-// call it, so old snapshots shrink whether or not they are ever opened.
+// migratePlainSnapshot reads an uncompressed snapshot and replaces it with the gzipped form when a read or prune
+// opens it. Writes are gzipped already.
 func migratePlainSnapshot(dir, id, path string) ([]Entry, bool) {
 	b, err := fsx.ReadFile(path)
 	if err != nil {

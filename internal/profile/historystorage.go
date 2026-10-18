@@ -2,12 +2,9 @@ package profile
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
-	"github.com/Rethunk-Tech/mortar/internal/game"
 )
 
 const historyTrimmed = "trimmed"
@@ -80,69 +77,4 @@ func (s *Store) TrimHistory(gameID, id string, keepLast int) (HistoryUsage, erro
 		}
 	}
 	return historyUsageAt(dir, p, len(data.Events)), nil
-}
-
-// MigrateHistory gzips every remaining plain snapshot and fills in missing event counts for all live profiles, so
-// space is reclaimed without opening each history. It returns how many snapshots and histories it converted.
-func (s *Store) MigrateHistory() (snapshots, counted int, err error) {
-	gameDirs, err := os.ReadDir(s.root)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return 0, 0, nil
-		}
-		return 0, 0, err
-	}
-	for _, g := range gameDirs {
-		if !g.IsDir() || !game.Valid(g.Name()) {
-			continue
-		}
-		profiles, err := os.ReadDir(filepath.Join(s.root, g.Name()))
-		if err != nil {
-			return snapshots, counted, err
-		}
-		for _, d := range profiles {
-			if !d.IsDir() || !idPattern.MatchString(d.Name()) {
-				continue
-			}
-			n, c, err := s.migrateHistoryOf(filepath.Join(s.root, g.Name(), d.Name()))
-			if err != nil {
-				return snapshots, counted, err
-			}
-			snapshots += n
-			if c {
-				counted++
-			}
-		}
-	}
-	return snapshots, counted, nil
-}
-
-func (s *Store) migrateHistoryOf(dir string) (snapshots int, counted bool, err error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if _, err := os.Stat(filepath.Join(dir, fileName)); err != nil {
-		return 0, false, nil
-	}
-	data, err := readHistory(dir)
-	if err != nil {
-		return 0, false, err
-	}
-	ents, _ := os.ReadDir(filepath.Join(dir, snapshotsDir))
-	for _, ent := range ents {
-		name, plain := strings.CutSuffix(ent.Name(), ".json")
-		if !plain || ent.IsDir() {
-			continue
-		}
-		if _, ok := migratePlainSnapshot(dir, name, filepath.Join(dir, snapshotsDir, ent.Name())); ok {
-			snapshots++
-		}
-	}
-	if !data.Counted {
-		countAllEvents(&data)
-		if err := writeHistory(dir, data, 0); err != nil {
-			return snapshots, false, err
-		}
-		counted = true
-	}
-	return snapshots, counted, nil
 }
