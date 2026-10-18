@@ -1,23 +1,13 @@
 # Flathub submission for Mortar @VERSION@
 
-The owner opens this PR; nothing here is automated. Flathub's Generative AI policy forbids AI agents opening, writing or
-replying to submission PRs and forbids AI-assisted content in the manifest, so the owner writes the manifest that is
-submitted, records the required video of the Flatpak running, and completes the template checklist, including the
-disclosure of AI-generated code in Mortar. Flathub also expects a meaningful public development history, so this
-submission waits until the public repository has one. The release workflow renders the submission with
-`build/linux/flathub/render.sh` and attaches its files with a `flathub-` prefix: `tech.rethunk.Mortar.yml`
-(builds the v@VERSION@ tag from source), `go-sources.json` and `node-sources.json` (every Go module and npm
-package the build reads, with sha256 or sha512) and `yarn.lock`. Those rendered files, finish-args included (they are
-copied from the sideload manifest, `build/linux/flatpak/tech.rethunk.Mortar.yml`), were written with AI help: they are the
-owner's reference, never what is submitted.
+Owner-only PR. Flathub forbids AI agents on submission PRs and AI-assisted content in the submitted manifest; the owner writes that manifest, records the video, completes the checklist (including AI-generated code in Mortar), and waits for a meaningful public history. `build/linux/flathub/render.sh` attaches `flathub-` prefixed files as reference, never as the submission: `tech.rethunk.Mortar.yml` (v@VERSION@ from source), `go-sources.json`, `node-sources.json`, `yarn.lock`. finish-args come from `build/linux/flatpak/tech.rethunk.Mortar.yml`.
 
 ## Steps
 
 1. Fork https://github.com/flathub/flathub and branch from `new-pr` (not `master`).
-2. Add the four files to the branch under their names without the `flathub-` prefix, nothing else.
-3. Open the PR against `flathub/flathub`'s `new-pr` branch with the title and body below.
-4. Answer the review bot's lint output; once merged, Flathub creates `flathub/tech.rethunk.Mortar`, which the
-   owner maintains from then on (per release, replace the four files with the new release's).
+2. Add the four files under their names without the `flathub-` prefix, nothing else.
+3. Open the PR against `flathub/flathub`'s `new-pr` with the title and body below.
+4. Answer the review bot. After merge, Flathub creates `flathub/tech.rethunk.Mortar`; per release, replace the four files.
 
 ## PR title
 
