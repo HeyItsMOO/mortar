@@ -157,16 +157,44 @@ var moreVerbs = map[string]moreVerb{
 
 func nameParam(a []string, _ *cmd) (control.Params, error) { return control.Params{Name: a[0]}, nil }
 
+type linkOwner struct {
+	Scheme string `json:"scheme"`
+	Name   string `json:"name"`
+	ID     string `json:"id"`
+	Mine   bool   `json:"mine"`
+}
+
+func (c *cmd) linksList() error {
+	var rows []linkOwner
+	if err := c.call("links", control.Params{}, &rows, readTimeout); err != nil {
+		return err
+	}
+	return c.emit(rows, func() {
+		out := make([][]string, 0, len(rows))
+		for _, row := range rows {
+			mine := ""
+			if row.Mine {
+				mine = "yes"
+			}
+			out = append(out, []string{row.Scheme, row.Name, row.ID, mine})
+		}
+		c.table("SCHEME\tNAME\tID\tMINE", out)
+	})
+}
+
 // linkParams: links are toggled per source that has a link scheme.
 func linkParams(_ []string, c *cmd) (control.Params, error) {
-	if !slices.Contains([]string{"nexus", "thunderstore", "curseforge"}, c.sourceFlag) {
-		return control.Params{}, usageError{"links " + c.args[1] + " needs --source nexus, thunderstore or curseforge"}
+	if !slices.Contains([]string{"nexus", "thunderstore", "curseforge", "vsmoddb"}, c.sourceFlag) {
+		return control.Params{}, usageError{"links " + c.args[1] + " needs --source nexus, thunderstore, curseforge or vsmoddb"}
 	}
 	return control.Params{Source: c.sourceFlag}, nil
 }
 
 // more runs the verb when it is one of moreVerbs; handled is false otherwise.
 func (c *cmd) more() (handled bool, err error) {
+	if len(c.args) >= 1 && c.args[0] == "links" && (len(c.args) == 1 || c.args[1] == "list") {
+		return true, c.linksList()
+	}
 	if len(c.args) >= 2 && c.args[0] == "lan" && c.args[1] == "pair" {
 		return true, c.lanPair()
 	}

@@ -19,12 +19,22 @@ import (
 )
 
 type fakeHandler struct {
-	owner    nxm.Owner
-	registry []string
-	failNext bool
+	owner     nxm.Owner
+	owners    map[string]nxm.Owner
+	ownerErrs map[string]error
+	registry  []string
+	failNext  bool
 }
 
-func (f *fakeHandler) Owner(string) (nxm.Owner, error) { return f.owner, nil }
+func (f *fakeHandler) Owner(scheme string) (nxm.Owner, error) {
+	if err, ok := f.ownerErrs[scheme]; ok {
+		return nxm.Owner{}, err
+	}
+	if o, ok := f.owners[scheme]; ok {
+		return o, nil
+	}
+	return f.owner, nil
+}
 
 func (f *fakeHandler) RegisterSchemes([]string) error { return f.Register() }
 
@@ -71,6 +81,34 @@ func newService(t *testing.T, h *fakeHandler) *Service {
 	s := NewService(store, h)
 	s.now = func() time.Time { return time.Unix(1_000_000, 0) }
 	return s
+}
+
+func TestListOwnersMarksMortarAndLeavesAFailedSchemeAsARow(t *testing.T) {
+	h := &fakeHandler{
+		owners: map[string]nxm.Owner{
+			"nxm":    {ID: "tech.rethunk.Mortar.desktop", Name: "Mortar", Mine: true},
+			"ror2mm": {ID: "r2modman.desktop", Name: "r2modman"},
+		},
+		ownerErrs: map[string]error{"mortar": errors.New("no desktop database")},
+	}
+	s := newService(t, h)
+	got := s.ListOwners()
+	byScheme := map[string]LinkOwner{}
+	for _, row := range got {
+		byScheme[row.Scheme] = row
+	}
+	if row := byScheme["nxm"]; !row.Mine || row.Name != "Mortar" {
+		t.Fatalf("nxm: %+v", row)
+	}
+	if row := byScheme["ror2mm"]; row.Mine || row.Name != "r2modman" {
+		t.Fatalf("ror2mm: %+v", row)
+	}
+	if row := byScheme["mortar"]; row.Name != "no desktop database" || row.Mine {
+		t.Fatalf("mortar error row: %+v", row)
+	}
+	if _, ok := byScheme["vintagestorymodinstall"]; !ok {
+		t.Fatalf("missing vsmoddb scheme in %+v", got)
+	}
 }
 
 func TestEnableRecordsPreviousOwnerAndDisableRestoresIt(t *testing.T) {

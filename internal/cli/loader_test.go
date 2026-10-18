@@ -63,6 +63,19 @@ func TestMoreVerbsMapOntoControlMethods(t *testing.T) {
 	if r = invoke(t, results, "links", "enable"); r.code != 2 || len(r.calls) != 0 {
 		t.Fatalf("links enable without a source: %+v", r)
 	}
+	if r = invoke(t, results, "links", "enable", "--source", "vsmoddb"); r.code != 0 || r.calls[0].method != "links.enable" || r.calls[0].params.Source != "vsmoddb" {
+		t.Fatalf("links enable vsmoddb: %+v", r)
+	}
+	results["links"] = []linkOwner{
+		{Scheme: "nxm", Name: "Mortar", ID: "mortar", Mine: true},
+		{Scheme: "ror2mm", Name: "r2modman", ID: "r2", Mine: false},
+	}
+	if r = invoke(t, results, "links"); r.code != 0 || r.calls[len(r.calls)-1].method != "links" || !strings.Contains(r.out, "nxm") || !strings.Contains(r.out, "r2modman") {
+		t.Fatalf("links list: %+v %q", r, r.out)
+	}
+	if r = invoke(t, results, "links", "list"); r.code != 0 || r.calls[len(r.calls)-1].method != "links" {
+		t.Fatalf("links list subverb: %+v", r)
+	}
 	if r = invoke(t, results, "lan", "send", "stardew", "Farm", "peer-1"); r.calls[0].params.Name != "peer-1" {
 		t.Fatalf("lan send: %+v", r)
 	}

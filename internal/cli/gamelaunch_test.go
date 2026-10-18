@@ -20,4 +20,8 @@ func TestGameSteamLaunchOption(t *testing.T) {
 	if r.code != 0 || !r.calls[0].params.Set || !strings.Contains(r.out, "new") {
 		t.Fatalf("set: %+v %q", r, r.out)
 	}
+	r = invoke(t, nil, "game", "steam-launch-option", "stardew", "--set=1")
+	if r.code != 2 || len(r.calls) != 0 || !strings.Contains(r.errOut, "takes no value") {
+		t.Fatalf("--set=: %+v %q", r, r.errOut)
+	}
 }

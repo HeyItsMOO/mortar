@@ -113,6 +113,8 @@ type cmd struct {
 	everywhere     bool
 	removeFlag     bool
 	setFlag        bool
+	setEquals      bool
+	setSpec        string
 	clearFlag      bool
 	testFlag       bool
 	filter         string
@@ -234,8 +236,13 @@ func (c *cmd) fail(err error) int {
 }
 
 func (c *cmd) parse(args []string) error {
+	complete := false
 	for i := 0; i < len(args); i++ {
 		a := args[i]
+		if complete {
+			c.args = append(c.args, a)
+			continue
+		}
 		switch {
 		case a == "--json":
 			c.json = true
@@ -311,6 +318,10 @@ func (c *cmd) parse(args []string) error {
 			c.removeFlag = true
 		case a == "--set":
 			c.setFlag = true
+		case strings.HasPrefix(a, "--set="):
+			c.setFlag = true
+			c.setEquals = true
+			c.setSpec = strings.TrimPrefix(a, "--set=")
 		case a == "--clear":
 			c.clearFlag = true
 		case a == "--test":
@@ -471,6 +482,7 @@ func (c *cmd) parse(args []string) error {
 			return usageError{"unknown flag " + a}
 		default:
 			c.args = append(c.args, a)
+			complete = a == "__complete"
 		}
 	}
 	return nil
@@ -587,6 +599,8 @@ func (c *cmd) dispatch() error {
 		return c.antivirus()
 	case "groups":
 		return c.savedGroups()
+	case "links":
+		return usageError{"links supports list, register, enable and disable"}
 	case "source":
 		return c.source()
 	case "bisect":
@@ -2556,7 +2570,7 @@ takes --game <id>, which may be left out when exactly one game is installed. Out
   mods files <game> <profile> <mod>       linked extra files (keys for mods split)
   mods config <game> <profile> <mod> [<field> <value>]  print or set one config field
   mods preset <game> <profile> <mod> list|save|apply|delete [name]  config.json presets
-  mods menu <game> <profile> <mod> [--set <page>/<index>=<value>]  captured GMCM menu
+  mods menu <game> <profile> <mod> [--set <page>/<index>=<value>|--set=<page>/<index>=<value>]  captured GMCM menu
   sweep <game> [--install <id>] [--json]                   patch-day check after a game or SMAPI change
   mods compat <game> <profile>            non-ok SMAPI compatibility-list rows
   mods report <game> <profile> <mod> [--run ID]  report text and author URL for a mod's log errors
@@ -2646,8 +2660,9 @@ takes --game <id>, which may be left out when exactly one game is installed. Out
   data cleanup [--preview]                remove unused store items and caches
   support diagnostics save <path.zip> [--game id] [--profile name]  write a redacted diagnostics zip
   app update check|install                Mortar's own updates
+  links [list]                            who the system opens each source's links with
   links register                          claim mortar:// links and .mortar files
-  links enable|disable --source nexus|thunderstore|curseforge  take over or hand back a source's links
+  links enable|disable --source nexus|thunderstore|curseforge|vsmoddb  take over or hand back a source's links
   game reset-install <game> --yes         delete the game's install folder
   game steam-status                       whether a usable Steam was found
   problems check-updates <game> <profile>  look for mod updates now

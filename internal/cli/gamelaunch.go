@@ -11,6 +11,9 @@ func (c *cmd) gameSteamLaunchOption() error {
 	if err != nil {
 		return err
 	}
+	if c.setEquals {
+		return usageError{"game steam-launch-option --set takes no value"}
+	}
 	if c.setFlag && c.clearFlag {
 		return usageError{"use either --set or --clear, not both"}
 	}

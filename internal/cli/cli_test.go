@@ -400,6 +400,24 @@ func TestCompleteOffersVerbsGamesAndProfiles(t *testing.T) {
 	if r := invoke(t, results, "__complete", "settings", "set", "th"); strings.TrimSpace(r.out) != "theme" {
 		t.Errorf("settings keys: %q", r.out)
 	}
+	if r := invoke(t, results, "__complete", "groups", "apply", ""); !strings.Contains(r.out, "stardew") {
+		t.Errorf("groups apply game: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "tools", "add", ""); !strings.Contains(r.out, "stardew") {
+		t.Errorf("tools add game: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "lan", "send", ""); !strings.Contains(r.out, "stardew") || strings.Contains(r.out, "Spring") {
+		t.Errorf("lan send game: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "queue", "add", ""); !strings.Contains(r.out, "stardew") {
+		t.Errorf("queue add game: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "queue", "add", "stardew", "Spring", "1915", "--source", ""); !strings.Contains(r.out, "nexus") || !strings.Contains(r.out, "vsmoddb") {
+		t.Errorf("queue add --source: %q", r.out)
+	}
+	if r := invoke(t, results, "__complete", "links", "enable", "--source", ""); !strings.Contains(r.out, "vsmoddb") || strings.Contains(r.out, "github") {
+		t.Errorf("links enable --source: %q", r.out)
+	}
 }
 
 func TestTrashListRestoreAndYes(t *testing.T) {

@@ -49,7 +49,7 @@ var subverbs = map[string][]string{
 	"lan":        {"peers", "send", "inbox", "accept", "decline", "pair", "paired", "unpair"},
 	"app":        {"update"},
 	"support":    {"diagnostics"},
-	"links":      {"register", "enable", "disable"},
+	"links":      {"register", "enable", "disable", "list"},
 	"source":     {"untrack", "tracked"},
 	"trash":      {"list", "restore", "delete", "empty"},
 	"completion": {"bash", "zsh", "fish"},
@@ -76,7 +76,12 @@ var subverbs = map[string][]string{
 // gameAt and profileAt give the positions (1-based after the verb) where a verb takes a game and a profile.
 func positions(words []string) (gameAt, profileAt, modAt int) {
 	switch words[0] {
-	case "games", "doctor", "queue", "backups", "cache", "data", "settings", "antivirus", "version", "help", "open", "completion", "launchers", "app", "support", "links":
+	case "games", "doctor", "backups", "cache", "data", "settings", "antivirus", "version", "help", "open", "completion", "launchers", "app", "support", "links":
+		return 0, 0, 0
+	case "queue":
+		if len(words) > 1 && words[1] == "add" {
+			return 2, 3, 0
+		}
 		return 0, 0, 0
 	case "browse":
 		return 1, 0, 0
@@ -104,6 +109,13 @@ func positions(words []string) (gameAt, profileAt, modAt int) {
 	case "game":
 		return 2, 0, 0
 	case "groups":
+		if len(words) > 1 && slices.Contains(subverbs["groups"], words[1]) {
+			switch words[1] {
+			case "apply", "create", "add":
+				return 2, 4, 0
+			}
+			return 2, 0, 0
+		}
 		return 1, 0, 0
 	case "source":
 		if len(words) > 1 && words[1] == "tracked" {
@@ -116,7 +128,15 @@ func positions(words []string) (gameAt, profileAt, modAt int) {
 		if len(words) > 1 && words[1] == "run" {
 			return 2, 3, 4
 		}
+		if len(words) > 1 && slices.Contains(subverbs["tools"], words[1]) {
+			return 2, 0, 0
+		}
 		return 1, 0, 0
+	case "lan":
+		if len(words) > 1 && words[1] == "send" {
+			return 2, 3, 0
+		}
+		return 0, 0, 0
 	case "profiles", "status", "stop", "sweep":
 		return 1, 0, 0
 	case "loader":
@@ -246,38 +266,45 @@ func (c *cmd) complete(words []string) error {
 				}
 			}
 		}
-		gameAt, profileAt, modAt := positions(words)
-		switch pos {
-		case gameAt:
-			var rows []control.GameRow
-			if c.call("games", control.Params{}, &rows, readTimeout) == nil {
-				for _, g := range rows {
-					cands = append(cands, g.ID)
-				}
-			}
-		case profileAt:
-			var list []profile.Profile
-			if c.call("profiles", control.Params{Game: words[gameAt]}, &list, readTimeout) == nil {
-				for _, p := range list {
-					if p.Error == "" && p.Name != "" {
-						cands = append(cands, p.Name)
+		cands = append(cands, sourceFlagCands(words, cur)...)
+		prev := ""
+		if len(words) >= 2 {
+			prev = words[len(words)-2]
+		}
+		if prev != "--source" && !strings.HasPrefix(cur, "-") {
+			gameAt, profileAt, modAt := positions(words)
+			switch pos {
+			case gameAt:
+				var rows []control.GameRow
+				if c.call("games", control.Params{}, &rows, readTimeout) == nil {
+					for _, g := range rows {
+						cands = append(cands, g.ID)
 					}
 				}
-			}
-		case modAt:
-			var rows []control.ModRow
-			if c.call("mods", control.Params{Game: words[gameAt], Profile: words[profileAt]}, &rows, readTimeout) == nil {
-				for _, m := range rows {
-					cands = append(cands, m.ID.Local())
+			case profileAt:
+				var list []profile.Profile
+				if c.call("profiles", control.Params{Game: words[gameAt]}, &list, readTimeout) == nil {
+					for _, p := range list {
+						if p.Error == "" && p.Name != "" {
+							cands = append(cands, p.Name)
+						}
+					}
 				}
-			}
-		case 4:
-			var rows []struct {
-				ID string `json:"id"`
-			}
-			if c.call("tools", control.Params{Game: words[gameAt]}, &rows, readTimeout) == nil {
-				for _, tool := range rows {
-					cands = append(cands, tool.ID)
+			case modAt:
+				var rows []control.ModRow
+				if c.call("mods", control.Params{Game: words[gameAt], Profile: words[profileAt]}, &rows, readTimeout) == nil {
+					for _, m := range rows {
+						cands = append(cands, m.ID.Local())
+					}
+				}
+			case 4:
+				var rows []struct {
+					ID string `json:"id"`
+				}
+				if c.call("tools", control.Params{Game: words[gameAt]}, &rows, readTimeout) == nil {
+					for _, tool := range rows {
+						cands = append(cands, tool.ID)
+					}
 				}
 			}
 		}
@@ -287,6 +314,38 @@ func (c *cmd) complete(words []string) error {
 		if strings.HasPrefix(strings.ToLower(s), strings.ToLower(cur)) {
 			fmt.Fprintln(c.out, s)
 		}
+	}
+	return nil
+}
+
+func sourceFlagCands(words []string, cur string) []string {
+	var ids []string
+	switch {
+	case words[0] == "queue" && len(words) > 1 && words[1] == "add":
+		ids = []string{"nexus", "github", "thunderstore", "modrinth", "curseforge", "itch", "vsmoddb"}
+	case words[0] == "links" && len(words) > 1 && (words[1] == "enable" || words[1] == "disable"):
+		ids = []string{"nexus", "thunderstore", "curseforge", "vsmoddb"}
+	default:
+		return nil
+	}
+	prev := ""
+	if len(words) >= 2 {
+		prev = words[len(words)-2]
+	}
+	if prev == "--source" {
+		return ids
+	}
+	if strings.HasPrefix(cur, "--source=") {
+		out := make([]string, 0, len(ids))
+		for _, id := range ids {
+			out = append(out, "--source="+id)
+		}
+		return out
+	}
+	pos := len(words) - 1
+	flagAt := words[0] == "links" && pos >= 2 || words[0] == "queue" && pos >= 5
+	if flagAt && (cur == "" || strings.HasPrefix("--source", cur)) {
+		return []string{"--source"}
 	}
 	return nil
 }

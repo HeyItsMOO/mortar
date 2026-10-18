@@ -14,13 +14,17 @@ func (c *cmd) modsMenu() error {
 	}
 	p := control.Params{Game: a[0], Profile: a[1], IDs: a[2:3]}
 	if c.setFlag {
-		if len(a) < 4 {
-			return usageError{"mods menu --set needs page/index=value"}
+		spec := c.setSpec
+		if !c.setEquals {
+			if len(a) < 4 {
+				return usageError{"mods menu --set needs page/index=value"}
+			}
+			spec = a[3]
 		}
-		if _, _, _, err := gmcm.ParseSetFlag(a[3]); err != nil {
+		if _, _, _, err := gmcm.ParseSetFlag(spec); err != nil {
 			return usageError{err.Error()}
 		}
-		p.Value = a[3]
+		p.Value = spec
 		return show(c, "mods.menu", p, func(edits []gmcm.Edit) {
 			for _, e := range edits {
 				fmt.Fprintf(c.out, "%s/%d %s %v\n", e.Page, e.Index, e.Name, e.Value)

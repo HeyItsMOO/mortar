@@ -463,6 +463,46 @@ func (s *Service) Enable() error {
 	})
 }
 
+// LinkOwner is who the system opens one URL scheme with.
+type LinkOwner struct {
+	Scheme string `json:"scheme"`
+	Name   string `json:"name"`
+	ID     string `json:"id"`
+	Mine   bool   `json:"mine"`
+}
+
+// ListOwners reports the current handler of every source scheme and of mortar://. One scheme's error is a row, not a
+// failed list, so a desktop without a MIME database still names the rest.
+func (s *Service) ListOwners() []LinkOwner {
+	seen := map[string]bool{}
+	var schemes []string
+	add := func(scheme string) {
+		if scheme == "" || seen[scheme] {
+			return
+		}
+		seen[scheme] = true
+		schemes = append(schemes, scheme)
+	}
+	for _, src := range source.All() {
+		for _, scheme := range source.SchemesOf(src.ID()) {
+			add(scheme)
+		}
+	}
+	add("mortar")
+	out := make([]LinkOwner, 0, len(schemes))
+	for _, scheme := range schemes {
+		row := LinkOwner{Scheme: scheme}
+		o, err := s.handler.Owner(scheme)
+		if err != nil {
+			row.Name = err.Error()
+		} else {
+			row.Name, row.ID, row.Mine = o.Name, o.ID, o.Mine
+		}
+		out = append(out, row)
+	}
+	return out
+}
+
 // LinkSource is a source whose links Mortar handles only when the user chooses, with its scheme.
 type LinkSource struct {
 	ID      string `json:"id"`
