@@ -18,6 +18,17 @@ Remaining ([architecture.md](architecture.md#release)):
 
 Decided 2026-10-09 (NOMAD).
 
+### Discord routes for Report a bug and help
+
+Decided 2026-10-18 (NOMAD). Ships after the Discord remake in Rethunk-Tech/mortar-discord (`docs/remake.md`) creates the channels.
+
+- **Report a bug** (`frontend/src/shell/BugReportDialog.tsx`) asks "Post on Discord or GitHub?", and preselects the last choice.
+  - **Discord:** copies the report to the clipboard, trimmed to Discord's 2000-character limit. It saves the full diagnostics as a `.txt` to attach, then opens `https://mortar.rethunk.tech/go/bug-reports/`.
+  - **GitHub:** keeps today's prefilled issue URL (`internal/support/service.go` `BugURL`).
+- **Help menu** gains "Ask on Discord", which opens `/go/help/`.
+- **Site:** `/go/bug-reports/` and `/go/help/` redirect to the forum channels. A moved channel then needs only a site change.
+- **Done when:** both routes open the right target from the installed build, and the trimmed clipboard text pastes into a forum post without hitting the limit.
+
 ### The Sims 4: what is left to check
 
 The folder path and the `sims4` catalog entry are built ([architecture.md](architecture.md#games-and-the-catalog), [HUMANS.md](../HUMANS.md#adding-a-game), [sims4.md](sims4.md)). The entry is `enabled: true`; a release or published catalog carrying The Sims 4 waits on these.
