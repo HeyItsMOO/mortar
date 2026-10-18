@@ -17,7 +17,6 @@ linters:
     - exhaustive
     - exptostd
     - fatcontext
-    - forbidigo
     - forcetypeassert
     - gocheckcompilerdirectives
     - gochecknoinits
@@ -56,26 +55,10 @@ linters:
     - usetesting
     - wastedassign
     - zerologlint
-  # Mortar only. It launches Steam, the SMAPI installer, a Wine prefix's own taskkill, the OS file manager, gsettings, xdg-mime, the nxm handler it replaced and itself (for the browser extension's links), so a subprocess
-  # named by a variable is the product (the updater e2e test runs go and wails3 the same way, and the performance budget restarts its own test binary); gosec has no per-call option for that.
+  # canon go-golangci-lint-00014
   exclusions:
-    rules:
-      - path: ^(datadir_recover_other|internal/(avscan/command|launch/launch|launch/term_unix|loader/smapi/install|datadir/open|datadir/copy_windows_test|backdrop/desktop|nxm/handler_linux|nxm/handler_windows|steam/steam|sandbox/sandbox|nativehost/spawn_other|nativehost/spawn_windows|datasvc/restart|updatesvc/e2e_test|problems/perf_test))\.go$
-        linters: [gosec]
-        text: G204
-      # AMSI is a COM-style DLL, and ShellExecuteEx takes a struct, whose calls take pointers to Go values, and Windows has no safer way to pass them.
-      - path: ^internal/(avscan/amsi|lan/firewall)_windows\.go$
-        linters: [gosec]
-        text: G103
-      # A crafted 7z panics the reader, and an unrecovered panic exits Mortar; outside the archive package every open
-      # goes through archive.OpenSevenZip, which recovers it into ErrMalformed.
-      - path: ^internal/archive/
-        linters: [forbidigo]
+    generated: lax
   settings:
-    forbidigo:
-      forbid:
-        - pattern: ^sevenzip\.(NewReader|OpenReader)(WithPassword)?$
-          msg: use archive.OpenSevenZip, which turns a reader panic into ErrMalformed
     # canon go-golangci-lint-00008
     govet:
       enable-all: true
@@ -95,11 +78,6 @@ linters:
         - error
         - generic
         - stdlib
-        - github.com/Rethunk-Tech/mortar/internal/game.Game
-        - github.com/Rethunk-Tech/mortar/internal/host.Host
-        - github.com/Rethunk-Tech/mortar/internal/loader.Loader
-        - github.com/Rethunk-Tech/mortar/internal/installer.Installer
-        - github.com/Rethunk-Tech/mortar/internal/deploy.Deployer
     # canon go-golangci-lint-00011
     gomoddirectives:
       replace-local: true

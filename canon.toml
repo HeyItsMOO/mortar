@@ -1,22 +1,7 @@
 reconciled = "canon v0.1.0-poc"
 
 [deviations]
-# wails3 generate bindings emits `export enum` for every Go named-string type with constants
-# (launch.Hint, launchsvc.State, loader.Step, steam.Status), and erasableSyntaxOnly rejects enums.
-# The fork's models.ts.tmpl has no const-object option, and generated files are overwritten on every build.
-"ts-typescript-00006" = "wails-generated bindings contain TS enums; fix belongs in the Rethunk-AI/wails generator template"
 # go.mod replaces github.com/wailsapp/wails/v3 with the Rethunk-AI fork (fixes offered upstream as wailsapp/wails#6200,
-# #6201, #6202 and #6239; docs/design.md); gomoddirectives.replace-allow-list names it.
+# #6201, #6202 and #6239; docs/design.md); gomoddirectives.replace-allow-list names it. A non-local replace is the only
+# way to consume that fork until those PRs ship in a tagged v3 beta; a local replace would mean vendoring Wails.
 "go-golangci-lint-00011" = "go.mod replaces wails/v3 with the Rethunk-AI fork until upstream PRs wailsapp/wails#6200, #6201, #6202 and #6239 ship in a tagged v3 beta"
-# ireturn allows five registry interfaces that implementations return by design: internal/game.Game, internal/host.Host,
-# internal/loader.Loader, internal/installer.Installer and internal/deploy.Deployer.
-"go-golangci-lint-00013" = "ireturn allows five registry interfaces (game.Game, host.Host, loader.Loader, installer.Installer, deploy.Deployer)"
-# Three exclusion rules. gosec G204 is excluded in 17 files whose subprocess is a fixed command, Mortar's own executable or
-# a path built from validated install and profile dirs, never a user string: datadir_recover_other, avscan/command,
-# launch/launch, launch/term_unix, loader/smapi/install, datadir/open, datadir/copy_windows_test, backdrop/desktop,
-# nxm/handler_linux, nxm/handler_windows, steam/steam, sandbox/sandbox, nativehost/spawn_other, nativehost/spawn_windows,
-# datasvc/restart, updatesvc/e2e_test and problems/perf_test. gosec G103 is excluded in avscan/amsi_windows.go, whose AMSI
-# calls take pointers to Go values. forbidigo is excluded under internal/archive/, the one package allowed to open a 7z directly.
-"go-golangci-lint-00014" = "exclusions: gosec G204 in 17 files, gosec G103 in avscan/amsi_windows.go, forbidigo in internal/archive"
-# site/index.html is a single static marketing page (673 lines); its length tracks copy and markup, not logic, and Biome's line ceiling is relaxed to 3000 for **/*.html only.
-"ts-biome-00007 style/noExcessiveLinesPerFile" = "static HTML pages are mostly markup; length tracks content, not complexity"

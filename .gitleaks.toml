@@ -10,5 +10,4 @@ paths = [
   '''(^|/)(node_modules|\.next|\.venv|\.turbo|dist|target|coverage|test-results|playwright-report)/''',
   '''^[^/]+/(.+/)?build/''',
   '''^tmp/''',
-  '''^bin/''',
 ]

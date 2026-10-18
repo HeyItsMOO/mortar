@@ -1,11 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
+
+  // canon ts-biome-00001
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+
   "files": {
+    // canon ts-biome-00002 — only what the ignore file cannot reach: committed,
+    // machine-written trees. Anything a repo builds is gitignored and arrives via vcs.
     "includes": [
       "**",
       "!**/*.dc.html",
@@ -14,17 +15,22 @@
       "!**/design/doc-page.js",
       "!**/design/support.js",
       "!**/generated",
+      "!**/locales/*/messages.ts",
       "!**/vendor",
       "!.claude",
-      "!**/locales/*/messages.ts"
+      "!site/games"
     ]
   },
+
+  // canon ts-biome-00003
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
     "lineWidth": 100
   },
+
+  // canon ts-biome-00024; canon ts-bun-biome-00002
   "javascript": {
     "globals": ["Bun"],
     "formatter": {
@@ -33,31 +39,44 @@
       "trailingCommas": "all"
     }
   },
+
+  // canon ts-biome-00004
   "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
+    "actions": { "source": { "organizeImports": "on" } }
   },
+
   "linter": {
     "rules": {
+      // canon ts-biome-00006
       "preset": "all",
+
       "style": {
+        // canon ts-biome-00023
         "noNonNullAssertion": "error",
+        // canon ts-biome-00022
         "useImportType": "error",
+        // canon ts-biome-00035
+        "noContinue": "off",
+        // canon ts-biome-00035
+        "noTernary": "off",
+        // canon ts-biome-00035
+        "useExportsLast": "off",
+
+        // canon ts-biome-00007
         "noExcessiveLinesPerFile": {
           "level": "error",
           "options": {
             "maxLines": 500
           }
         },
+        // canon ts-biome-00008
         "noIncrementDecrement": {
           "level": "on",
           "options": {
             "allowForLoopAfterthoughts": true
           }
         },
+        // canon ts-biome-00009
         "useFilenamingConvention": {
           "level": "on",
           "options": {
@@ -65,33 +84,30 @@
             "filenameCases": ["camelCase", "PascalCase", "kebab-case", "export"]
           }
         },
+        // canon ts-biome-00010 — wire-shaped data keeps the casing the wire uses.
         "useNamingConvention": {
           "level": "on",
           "options": {
+            // canon ts-biome-00025
             "strictCase": false,
             "conventions": [
               {
-                "selector": {
-                  "kind": "objectLiteralProperty"
-                },
+                "selector": { "kind": "objectLiteralProperty" },
                 "match": "_?\\$?(.+)",
                 "formats": ["camelCase", "snake_case", "CONSTANT_CASE", "PascalCase"]
               },
               {
-                "selector": {
-                  "kind": "typeProperty"
-                },
+                "selector": { "kind": "typeProperty" },
                 "match": "_?\\$?(.+)",
                 "formats": ["camelCase", "snake_case", "CONSTANT_CASE"]
               }
             ]
           }
-        },
-        "noTernary": "off",
-        "noContinue": "off",
-        "useExportsLast": "off"
+        }
       },
+
       "complexity": {
+        // canon ts-biome-00011
         "noExcessiveLinesPerFunction": {
           "level": "error",
           "options": {
@@ -100,7 +116,9 @@
             "skipIifes": true
           }
         },
+        // canon ts-biome-00026
         "noUselessReturn": "off",
+        // canon ts-biome-00012
         "noExcessiveCognitiveComplexity": {
           "level": "error",
           "options": {
@@ -108,42 +126,57 @@
           }
         }
       },
+
+      // canon ts-biome-00019 — the rule's type inference does not model RegExp.exec().
       "correctness": {
+        // canon ts-biome-00031
         "useImportExtensions": "on",
+        // canon ts-biome-00020 — biomejs/biome#10283, open: the resolver cannot see
+        // members of an `export =` namespace, nor packages that ship only a `main` field.
         "noUnresolvedImports": "off",
+        // canon ts-biome-00005 — rules for frameworks this repository does not use.
         "noSolidDestructuredProps": "off",
         "useQwikValidLexicalScope": "off"
       },
+
       "suspicious": {
+        // canon ts-biome-00021
         "noExplicitAny": "error",
+        // canon ts-biome-00005
         "noReactSpecificProps": "off",
         "noUnnecessaryConditions": "off"
       },
+
+      // canon ts-biome-00013 — an unhandled promise is a silent failure, not a style issue.
+      // canon ts-biome-00030
       "security": {
-        "noSecrets": {
-          "level": "on",
-          "options": {
-            "entropyThreshold": 55
-          }
-        }
+        "noSecrets": { "level": "on", "options": { "entropyThreshold": 55 } }
       },
+
       "nursery": {
         "noFloatingPromises": "error",
         "noMisusedPromises": "error"
       },
+
+      // canon ts-biome-00014 — sequencing is the point when a loop awaits.
       "performance": {
         "noAwaitInLoops": "off",
+        // canon ts-biome-00029
         "noImgElement": "off",
+        // canon ts-biome-00005
         "noJsxPropsBind": "off",
         "useSolidForComponent": "off"
       }
     }
   },
+
   "overrides": [
+    // canon ts-biome-00015 — test files
     {
       "includes": [
         "**/*.spec.ts",
         "**/*.spec.tsx",
+        "**/*.pw.ts",
         "**/*.test.ts",
         "**/*.test.tsx",
         "**/__tests__/**",
@@ -227,14 +260,13 @@
         }
       }
     },
+    // canon ts-biome-00017 — build scripts, tooling and config files
     {
       "includes": [
         "**/*.config.js",
         "**/*.config.mjs",
         "**/*.config.ts",
         "**/scripts/**",
-        "**/e2e/global-*.ts",
-        "**/e2e/sandbox.ts",
         "tools/**"
       ],
       "linter": {
@@ -257,31 +289,40 @@
         }
       }
     },
+    // canon ts-biome-00018 — server-only code
     {
-      // A page is mostly markup; its length tracks content, not complexity.
-      "includes": ["**/*.html"],
+      "includes": [
+        "**/app/**/route.ts",
+        "**/apps/server/**",
+        "**/apps/worker/**",
+        "**/lib/server/**",
+        "**/pages/api/**",
+        "**/src/app/api/**",
+        "**/src/server/**"
+      ],
       "linter": {
         "rules": {
-          "style": {
-            "noExcessiveLinesPerFile": {
-              "level": "error",
-              "options": {
-                "maxLines": 3000
-              }
-            }
+          "correctness": {
+            "noNodejsModules": "off",
+            "noProcessGlobal": "off"
           }
         }
       }
     },
+    // canon ts-biome-00027 — ambient declarations
     {
       "includes": ["**/*.d.ts"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noDefaultExport": "off"
-          }
-        }
-      }
+      "linter": { "rules": { "style": { "noDefaultExport": "off" } } }
+    },
+    // canon ts-biome-00028 — program entry points and loggers
+    {
+      "includes": ["**/cli.ts", "**/logger.ts", "**/log.ts", "**/main.ts"],
+      "linter": { "rules": { "suspicious": { "noConsole": "off" } } }
+    },
+    // canon ts-biome-00032 — the one component that puts a scroll container in the tab order
+    {
+      "includes": ["**/scroll-region.tsx"],
+      "linter": { "rules": { "a11y": { "noNoninteractiveTabindex": "off" } } }
     }
   ]
 }
