@@ -289,3 +289,24 @@ func TestHiddenHitsAreDroppedAndNotCounted(t *testing.T) {
 		t.Fatalf("page %+v", page)
 	}
 }
+
+func TestNoiseCategoriesAreExcludedUnlessIncluded(t *testing.T) {
+	names := []string{"Mods", "Modpacks", "Translations", "Language", "Cheats and God items", "Hacks", "Tools", "Modding Tools"}
+	got := withoutNoise(names, nil, []string{"Tools"})
+	if want := []string{"Tools", "Modpacks", "Translations", "Language", "Cheats and God items", "Hacks"}; fmt.Sprint(got) != fmt.Sprint(want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if got := withoutNoise(names, []string{"modpacks"}, nil); fmt.Sprint(got) != fmt.Sprint([]string{"Translations", "Language", "Cheats and God items", "Hacks"}) {
+		t.Fatalf("an included category was excluded: %v", got)
+	}
+}
+
+func TestSearchExcludesNoiseOnlyWhenAsked(t *testing.T) {
+	c := &Client{HideNoise: true}
+	if _, err := c.search(context.Background(), catalog, "fake", "", 1, Filter{}); err != nil {
+		t.Fatal(err)
+	}
+	if len(fake.got.ExcludeCategories) != 0 {
+		t.Fatalf("a source with no categories was given excludes: %v", fake.got.ExcludeCategories)
+	}
+}

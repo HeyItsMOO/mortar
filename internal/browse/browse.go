@@ -63,6 +63,9 @@ type Client struct {
 	Bundled InstalledFunc
 	// ShowAdult keeps hits their source flags as adult content; by default they are dropped.
 	ShowAdult bool
+	// HideNoise leaves out modpacks, translations and cheats, by each source's own category names, unless the
+	// filter includes the category on purpose.
+	HideNoise bool
 	// Hidden reports a hit the player hid from Browse; those are dropped from every page.
 	Hidden func(Item) bool
 	// Prefer lists source ids that rank ahead of the rest of the game's sources, which keep catalog order.
@@ -260,9 +263,13 @@ func (c *Client) search(ctx context.Context, info components.GameInfo, sourceID,
 	if !listed || !registered || !canSearch {
 		return Page{}, fmt.Errorf("%w: %s", ErrUnknownSource, sourceID)
 	}
+	exclude := f.Exclude
+	if c.HideNoise {
+		exclude = withoutNoise(categoriesCached(ctx, info.ID, entry.Source, gs.Key), f.Include, f.Exclude)
+	}
 	q := source.Query{
 		Game: info.ID, Key: gs.Key, Text: text, Version: c.Version,
-		Categories: f.Include, ExcludeCategories: f.Exclude, Sort: f.Sort,
+		Categories: f.Include, ExcludeCategories: exclude, Sort: f.Sort,
 	}
 	first := max(page, source.FirstPage)
 	if f.Installed != ModeHide && f.Obsolete != ModeHide && f.Broken != ModeHide {
@@ -367,26 +374,8 @@ func (c *Client) Categories(ctx context.Context, game, sourceID string) ([]strin
 	}
 	var all []string
 	for _, s := range sources {
-		cat, ok := s.(source.Categorizer)
-		if !ok {
-			continue
-		}
-		key := info.ID + "|" + s.ID()
 		gs, _ := info.Source(s.ID())
-		catMu.Lock()
-		e, hit := catCache[key]
-		catMu.Unlock()
-		if !hit || !time.Now().Before(e.until) {
-			names, err := cat.Categories(ctx, gs.Key)
-			if err != nil {
-				continue
-			}
-			e.names, e.until = names, time.Now().Add(categoryTTL)
-			catMu.Lock()
-			catCache[key] = e
-			catMu.Unlock()
-		}
-		all = append(all, e.names...)
+		all = append(all, categoriesCached(ctx, info.ID, s, gs.Key)...)
 	}
 	return source.UniqueNames(all), nil
 }

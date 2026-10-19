@@ -104,6 +104,9 @@ const (
 	DependencyNewest = "newest"
 	DependencyExact  = "exact"
 
+	BrowseNoiseHide = "hide"
+	BrowseNoiseShow = "show"
+
 	OldFilesAsk    = "ask"
 	OldFilesDelete = "delete"
 	OldFilesKeep   = "keep"
@@ -450,6 +453,7 @@ var (
 	oldFilesValues            = []string{OldFilesAsk, OldFilesDelete, OldFilesKeep}
 	gameSettingsModeValues    = []string{GameSettingsEdit, GameSettingsWarn}
 	cacheClearingValues       = []string{CacheClearingAuto, CacheClearingOff}
+	browseNoiseValues         = []string{BrowseNoiseHide, BrowseNoiseShow}
 	dependencyVersionValues   = []string{DependencyNewest, DependencyExact}
 )
 
