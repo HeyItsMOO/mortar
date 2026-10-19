@@ -2823,6 +2823,11 @@
       "marker": "DRG Survivor.exe",
       "r2modmanFolder": "DeepRockGalacticSurvivor",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Funday Games/DRG Survivor/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -3183,6 +3188,11 @@
       "marker": "MiSideFull.exe",
       "r2modmanFolder": "MiSide",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/AIHASTO/MiSideFull/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -3551,6 +3561,11 @@
       "marker": "Vampire Crawlers.exe",
       "r2modmanFolder": "VampireCrawlers",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Nosebleed Interactive/Vampire Crawlers/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -3813,6 +3828,11 @@
       "marker": "Atomicrops.exe",
       "r2modmanFolder": "Atomicrops",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Bird Bath Games/Atomicrops/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -3878,6 +3898,11 @@
       "marker": "BadNorth.exe",
       "r2modmanFolder": "BadNorth",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Plausible Concept/Bad North/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4014,6 +4039,11 @@
       "marker": "BookOfTravels.exe",
       "r2modmanFolder": "BookOfTravels",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/MightAndDelight/BookOfTravels/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4083,6 +4113,11 @@
       "marker": "Cities2.exe",
       "r2modmanFolder": "CitiesSkylines2",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Colossal Order/Cities Skylines II/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4163,6 +4198,11 @@
       "marker": "CrashoutCrew.exe",
       "r2modmanFolder": "CrashoutCrew",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Aggro Crab/Crashout Crew/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4368,6 +4408,11 @@
       "marker": "DEPO.exe",
       "r2modmanFolder": "DEPO",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/6 Faces Team/DEPO/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4624,6 +4669,11 @@
       "marker": "FTK.exe",
       "r2modmanFolder": "ForTheKing",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/IronOak Games/FTK/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4665,6 +4715,11 @@
       "marker": "Garfield Kart Furious Racing.exe",
       "r2modmanFolder": "GarfieldKartFuriousRacing",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Microids/Garfield Kart Furious Racing/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -4900,6 +4955,11 @@
       "marker": "GraveyardKeeper2.exe",
       "r2modmanFolder": "GraveyardKeeper2",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Lazy Bear Games/Graveyard Keeper 2/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5066,6 +5126,11 @@
       "marker": "Holdfast NaW.exe",
       "r2modmanFolder": "HoldfastNationsAtWar",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Anvil Game Studio/Holdfast NaW/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5109,6 +5174,9 @@
         "saves": {
           "windows": "{localLow}/Team Cherry/Hollow Knight Silksong",
           "linux": "{xdgConfig}/unity3d/Team Cherry/Hollow Knight Silksong"
+        },
+        "unityLog": {
+          "windows": "{localLow}/Team Cherry/Hollow Knight Silksong/Player.log"
         }
       },
       "deploy": "profile",
@@ -5411,6 +5479,11 @@
       "marker": "Len's Island.exe",
       "r2modmanFolder": "LensIsland",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Flow Studio/Len's Island/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5642,6 +5715,11 @@
       "marker": "Moonlighter.exe",
       "r2modmanFolder": "Moonlighter",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/11BitStudios/Moonlighter/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5711,6 +5789,11 @@
       "marker": "Necropolis.exe",
       "r2modmanFolder": "Necropolis",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Harebrained Schemes/Necropolis/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5813,6 +5896,11 @@
       "marker": "Ostranauts.exe",
       "r2modmanFolder": "Ostranauts",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Blue Bottle Games/Ostranauts/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5920,6 +6008,11 @@
       "marker": "Peaks of Yore.exe",
       "r2modmanFolder": "PeaksOfYore",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/TraipseWare/Peaks of Yore/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5957,6 +6050,11 @@
       "marker": "Peglin.exe",
       "r2modmanFolder": "Peglin",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Red Nexus Games Inc/Peglin/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6027,6 +6125,11 @@
       "marker": "Pikuniku.exe",
       "r2modmanFolder": "Pikuniku",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Sectordub/Pikuniku/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6062,6 +6165,11 @@
       "marker": "Plasma.exe",
       "r2modmanFolder": "Plasma",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/DryLicorice/Plasma/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6163,6 +6271,11 @@
       "marker": "ravenfield.exe",
       "r2modmanFolder": "Ravenfield",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/SteelRaven7/RavenfieldSteam/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6201,6 +6314,11 @@
       "marker": "ReLegend.exe",
       "r2modmanFolder": "ReLegend",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Magnus Games Studio/ReLegend/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6233,6 +6351,11 @@
       "marker": "ObraDinn.exe",
       "r2modmanFolder": "ObraDinn",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/3909/ObraDinn/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6337,6 +6460,11 @@
       "marker": "shapez 2.exe",
       "r2modmanFolder": "Shapez2",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/tobspr Games/shapez 2/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6820,6 +6948,11 @@
       "marker": "TheLab.exe",
       "r2modmanFolder": "TheLab",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Valve/TheLab/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -6884,6 +7017,11 @@
       "marker": "Planet Crafter.exe",
       "r2modmanFolder": "ThePlanetCrafter",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/MijuGames/Planet Crafter/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7028,6 +7166,11 @@
       "marker": "West of Loathing.exe",
       "r2modmanFolder": "WestofLoathing",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Asymmetric Software/West of Loathing/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7093,6 +7236,11 @@
       "marker": "WizardOfLegend.exe",
       "r2modmanFolder": "WizardOfLegend",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Contingent99/Wizard of Legend/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7198,6 +7346,11 @@
       "marker": "Word Play.exe",
       "r2modmanFolder": "WordPlay",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Game Maker's Toolkit/Word Play/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7683,6 +7836,11 @@
       "marker": "GTFO.exe",
       "r2modmanFolder": "GTFO",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/10 Chambers Collective/GTFO/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7781,6 +7939,11 @@
       "marker": "Nickelodeon All-Star Brawl.exe",
       "r2modmanFolder": "NASB",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/GameMill Entertainment/Nickelodeon All-Star Brawl/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7893,6 +8056,9 @@
       "paths": {
         "saves": {
           "windows": "{install}/SNAppData/SavedGames"
+        },
+        "unityLog": {
+          "windows": "{localLow}/Unknown Worlds/Subnautica Below Zero/Player.log"
         }
       },
       "deploy": "profile",
@@ -8288,6 +8454,11 @@
       "marker": "BONELAB_Steam_Windows64.exe",
       "r2modmanFolder": "BONELAB",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Stress Level Zero/BONELAB/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -8402,6 +8573,11 @@
       "marker": "BONEWORKS.exe",
       "r2modmanFolder": "BONEWORKS",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Stress Level Zero/BONEWORKS/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -8708,6 +8884,11 @@
       "marker": "Patch Quest.exe",
       "r2modmanFolder": "PatchQuest",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/Lychee Game Labs/Patch Quest/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -8835,6 +9016,9 @@
       "paths": {
         "saves": {
           "windows": "{localLow}/TVGS/Schedule I/Saves"
+        },
+        "unityLog": {
+          "windows": "{localLow}/TVGS/Schedule I/Player.log"
         }
       },
       "deploy": "profile",
@@ -9717,6 +9901,11 @@
       "marker": "SHMCD.exe",
       "r2modmanFolder": "SuperhotMindControlDelete",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/SUPERHOT_Team/SHMCD/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -9755,6 +9944,11 @@
       "marker": "SH.exe",
       "r2modmanFolder": "Superhot",
       "metadata": [],
+      "paths": {
+        "unityLog": {
+          "windows": "{localLow}/SUPERHOT_Team/SUPERHOT/Player.log"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
