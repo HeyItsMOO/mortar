@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func ser(s string) []byte { return append([]byte{byte(len(s))}, s...) }
+func ser(s string) []byte { return append([]byte{byte(min(len(s), 255))}, s...) }
 
 func TestMelonAttributesReadFromTheirBlobs(t *testing.T) {
 	var m Melon

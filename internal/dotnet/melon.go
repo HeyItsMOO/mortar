@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"encoding/binary"
 	"fmt"
+	"math"
 	"slices"
 	"strings"
 
@@ -82,7 +83,9 @@ func (mel *Melon) readAttribute(name string, blob []byte) {
 		mel.Name, mel.Version, mel.Author, mel.HasInfo = args[0], args[1], args[2], true
 	case "MelonPriority":
 		if len(blob) >= 4 {
-			mel.Priority = int(int32(binary.LittleEndian.Uint32(blob)))
+			// The blob is a signed 32-bit integer.
+			u := binary.LittleEndian.Uint32(blob)
+			mel.Priority = int(u&math.MaxInt32) - int(u>>31)<<31
 		}
 	case "MelonAdditionalDependencies":
 		mel.Additional = append(mel.Additional, stringArray(blob)...)
