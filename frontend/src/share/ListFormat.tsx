@@ -1,10 +1,11 @@
 import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
-import { Check, Copy, FileText, MessageSquare, Save, Type } from 'lucide-react'
+import { Check, Copy, FileText, MessageSquare, Package, Save, Type } from 'lucide-react'
 import { useState } from 'react'
 import { SaveFile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/picker/service.ts'
 import { safeFileName } from '../console/save.ts'
+import { listNames } from '../i18n/list.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { TipIconButton } from '../shell/TipIconButton.tsx'
 import { space } from '../theme/density.ts'
@@ -12,7 +13,7 @@ import { MONO } from '../theme/theme.ts'
 import { toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { copyText } from './copyText.ts'
-import { formatModList, listItems, type ModListFormat } from './modList.ts'
+import { formatModList, listItems, type ModListFormat, skippedForDependencies } from './modList.ts'
 import { useShareDialog } from './store.ts'
 
 const text = {
@@ -40,12 +41,15 @@ export function ListFormat() {
   const labels = { enabled: t`Enabled`, disabled: t`Disabled` }
   const parts = formatModList(format, items, labels)
   const total = parts.length
+  const skipped = format === 'thunderstore' ? skippedForDependencies(items) : []
+  const skippedNames = listNames(skipped)
   const next = copied >= total ? 0 : copied
   const off = items.filter((item) => !item.enabled).length
   const options: { id: ModListFormat; label: string; icon: typeof FileText }[] = [
     { id: 'markdown', label: t`Markdown`, icon: FileText },
     { id: 'plain', label: t`Plain text`, icon: Type },
     { id: 'discord', label: t`Discord`, icon: MessageSquare },
+    { id: 'thunderstore', label: t`Thunderstore`, icon: Package },
   ]
   const count = items.length
   const summary = [
@@ -157,9 +161,11 @@ export function ListFormat() {
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
         <Typography sx={{ flex: 1, fontSize: 13, color: 'text.secondary' }}>
-          {total > 1
-            ? t`Discord takes 2,000 characters a message: paste each one in turn.`
-            : t`Paste it into a chat or a forum post, or send the file.`}
+          {skipped.length > 0
+            ? t`Left out (not on Thunderstore, or switched off): ${skippedNames}`
+            : total > 1
+              ? t`Discord takes 2,000 characters a message: paste each one in turn.`
+              : t`Paste it into a chat or a forum post, or send the file.`}
         </Typography>
         <Button
           variant="outlined"

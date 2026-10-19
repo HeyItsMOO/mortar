@@ -10,6 +10,7 @@ import {
   formatPlain,
   listItems,
   type ModListItem,
+  skippedForDependencies,
   splitDiscord,
 } from './modList.ts'
 
@@ -225,4 +226,15 @@ test('a single overlong line is sliced at the Discord limit', () => {
   const line = 'a'.repeat(DISCORD_LIMIT + 50)
   const parts = splitDiscord(line)
   expect(parts).toEqual(['a'.repeat(DISCORD_LIMIT), 'a'.repeat(50)])
+})
+
+test('the Thunderstore format lists switched-on Thunderstore mods as dependency strings and names the rest', () => {
+  const items: ModListItem[] = [
+    { ...item('A', '1.2.3', ''), dependency: 'Me-A-1.2.3' },
+    { ...item('A part', '1.2.3', ''), dependency: 'Me-A-1.2.3' },
+    { ...item('Off', '1.0.0', '', false), dependency: 'Me-Off-1.0.0' },
+    item('Nexus mod', '2.0'),
+  ]
+  expect(formatModList('thunderstore', items)[0]?.text).toBe('Me-A-1.2.3')
+  expect(skippedForDependencies(items)).toEqual(['Off', 'Nexus mod'])
 })

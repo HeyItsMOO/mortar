@@ -10,13 +10,15 @@ import { nexusModUrl } from '../mods/nexusUrl.ts'
 const DISCORD_LIMIT = 2000
 const BUNDLED = new Set(['smapi', 'mortar'])
 
-type ModListFormat = 'markdown' | 'plain' | 'discord'
+type ModListFormat = 'markdown' | 'plain' | 'discord' | 'thunderstore'
 
 interface ModListItem {
   name: string
   version: string
   url: string
   enabled: boolean
+  /** The Thunderstore dependency string (Namespace-Name-1.2.3), when the mod came from Thunderstore. */
+  dependency?: string
 }
 
 interface GroupLabels {
@@ -34,6 +36,13 @@ function pageUrl(source: Source): string {
     return `https://github.com/${source.repo}`
   }
   return ''
+}
+
+// Thunderstore names a package Namespace-Name and a dependency Namespace-Name-Version.
+function dependencyOf(source: Source): string | undefined {
+  return source.kind === 'thunderstore' && source.name && source.version
+    ? `${source.name}-${source.version}`
+    : undefined
 }
 
 function isOn(entry: Entry, id: string): boolean {
@@ -119,6 +128,11 @@ function distinct(items: readonly ModListItem[]): ModListItem[] {
   })
 }
 
+function withDependency(source: Source): { dependency?: string } {
+  const dependency = dependencyOf(source)
+  return dependency ? { dependency } : {}
+}
+
 // Bundled SMAPI mods and the Mortar bridge are left out, matching what a share carries.
 function listItems(profile: Profile | undefined, keys: readonly string[] = []): ModListItem[] {
   if (!profile) {
@@ -136,6 +150,7 @@ function listItems(profile: Profile | undefined, keys: readonly string[] = []): 
           version: entry.source.version ?? '',
           url: pageUrl(entry.source),
           enabled: true,
+          ...withDependency(entry.source),
         })
       } else {
         for (const mod of mods) {
@@ -144,6 +159,7 @@ function listItems(profile: Profile | undefined, keys: readonly string[] = []): 
             version: mod.version,
             url: pageUrl(entry.source),
             enabled: isOn(entry, mod.id),
+            ...withDependency(entry.source),
           })
         }
       }
@@ -175,6 +191,18 @@ function asDiscord(
   return numbered(splitDiscord(formatMarkdown(items, labels)))
 }
 
+/** The switched-on Thunderstore mods as dependency strings, one a line, as a package manifest lists them. */
+function formatDependencies(items: readonly ModListItem[]): string {
+  return [...new Set(items.filter((i) => i.enabled && i.dependency).map((i) => i.dependency))].join(
+    '\n',
+  )
+}
+
+/** The mods a dependency list leaves out: those not on Thunderstore and those switched off. */
+function skippedForDependencies(items: readonly ModListItem[]): string[] {
+  return items.filter((i) => !(i.enabled && i.dependency)).map((i) => i.name)
+}
+
 function formatModList(
   format: ModListFormat,
   items: readonly ModListItem[],
@@ -182,6 +210,9 @@ function formatModList(
 ): DiscordPart[] {
   if (format === 'plain') {
     return numbered([formatPlain(items, labels)])
+  }
+  if (format === 'thunderstore') {
+    return numbered([formatDependencies(items)])
   }
   if (format === 'discord') {
     return asDiscord(items, labels)
@@ -199,9 +230,11 @@ export type { ModListFormat, ModListItem }
 export {
   DISCORD_LIMIT,
   escapeMarkdown,
+  formatDependencies,
   formatMarkdown,
   formatModList,
   formatPlain,
   listItems,
+  skippedForDependencies,
   splitDiscord,
 }
