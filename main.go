@@ -1323,7 +1323,7 @@ func run() error {
 		applyTrayMenu(tray, trayMenu)
 	}
 	syncTray := func() {
-		if !store.Get().KeepInTray && !store.Get().StartMinimised {
+		if !trayWanted(store.Get()) {
 			if tray != nil {
 				tray.Destroy()
 				tray = nil
@@ -1353,8 +1353,13 @@ func run() error {
 		refreshTrayMenu()
 	}
 	syncTray()
+	trayShown := trayWanted(store.Get())
 	app.Event.On(settings.ChangedEvent, func(*application.CustomEvent) {
-		gate.run(syncTray)
+		// Only the tray settings change what the tray is; a rebuild reads every game's launches.
+		if want := trayWanted(store.Get()); want != trayShown {
+			trayShown = want
+			gate.run(syncTray)
+		}
 		applyLinkChoices(store.Get())
 		if err := lanSvc.Apply(); err != nil {
 			log.Printf("LAN sharing: %v", err)
