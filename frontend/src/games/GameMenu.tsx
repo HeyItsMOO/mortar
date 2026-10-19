@@ -10,6 +10,7 @@ import { MenuHeading, MenuRule, TitleMenu, TitleMenuItem } from '../shell/TitleM
 import { useTitleMenu } from '../shell/titleMenus.ts'
 import { space } from '../theme/density.ts'
 import { gameArt, HERO_ASPECT } from './art.ts'
+import { listedGames } from './hidden.ts'
 import { useGameInfo, useGames } from './info.ts'
 import { gameOrder } from './order.ts'
 import { useOpenGame } from './useOpenGame.ts'
@@ -48,9 +49,14 @@ export const GameMenu = memo(function GameMenuView() {
   const games = useGames()
   const lastGame = useSettings((s) => s.lastGame)
   const played = useSettings((s) => s.lastPlayed)
+  const hidden = useSettings((s) => s.hiddenGames)
   const { anchor, close, trigger } = useTitleMenu('game')
   const { recent, rest } = gameOrder(
-    games.filter((g) => g.available),
+    listedGames(
+      games.filter((g) => g.available),
+      hidden,
+      false,
+    ),
     lastGame,
     played,
   )

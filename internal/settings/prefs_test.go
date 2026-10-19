@@ -406,3 +406,19 @@ func TestHidingAnAuthorMatchesWithoutCaseAndUndoes(t *testing.T) {
 		t.Fatal("still hidden")
 	}
 }
+
+func TestHidingAGameIsUndoable(t *testing.T) {
+	st, _ := open(t)
+	svc := NewService(st)
+	for _, hide := range []bool{true, true, false} {
+		if err := svc.SetGameHidden("a", hide); err != nil {
+			t.Fatal(err)
+		}
+		if err := svc.SetGameHidden("b", true); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got := st.Get().HiddenGames; len(got) != 1 || got[0] != "b" {
+		t.Fatalf("hidden games = %v", got)
+	}
+}

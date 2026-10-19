@@ -20,6 +20,7 @@ const defaults: Settings = {
   background: 'image',
   backgroundImage: '',
   lastGame: '',
+  hiddenGames: [],
   lastProfile: {},
   lastPlayed: {},
   gameFolders: {},

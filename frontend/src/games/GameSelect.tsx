@@ -1,12 +1,13 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Link, Typography } from '@mui/material'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Play, Settings } from 'lucide-react'
+import { Eye, EyeOff, Play, Settings } from 'lucide-react'
 import { type MouseEvent, memo, useRef, useState } from 'react'
 import type { GameInfo } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import type { Played } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/models.ts'
 import {
+  SetGameHidden,
   SetLastGame,
   SetLastProfile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
@@ -25,7 +26,8 @@ import { LoadErrorRow, LoadingRow } from '../shell/LoadingRow.tsx'
 import { Tooltip } from '../shell/Tooltip.tsx'
 import { reportError } from '../toasts/report.ts'
 import { gameArt } from './art.ts'
-import { listItems, useTypeToScroll } from './gameList.ts'
+import { listItems, useFindGame, useTypeToScroll } from './gameList.ts'
+import { listedGames } from './hidden.ts'
 import { LetterRail } from './LetterRail.tsx'
 import { gameOrder, initialOf } from './order.ts'
 import { ProfileCards } from './ProfileCards.tsx'
@@ -186,6 +188,7 @@ interface RowProps {
   lastPlayedAt: string
   lastPlayedId: string
   playtimeMs: number
+  hidden: boolean
   cards: { gameId: GameId; profiles: Profile[]; lastPlayed: Played | undefined } | undefined
 }
 
@@ -199,6 +202,7 @@ function RowView({
   lastPlayedAt,
   lastPlayedId,
   playtimeMs,
+  hidden,
   cards,
 }: RowProps) {
   const { t } = useLingui()
@@ -256,6 +260,19 @@ function RowView({
         }}
       >
         <SourceBadges sources={game.sources ?? []} />
+        <Button
+          type="button"
+          size="small"
+          color="inherit"
+          startIcon={hidden ? <Eye size={14} /> : <EyeOff size={14} />}
+          onClick={() =>
+            SetGameHidden(game.id, !hidden).catch((err: unknown) =>
+              fail(t`Could not save that setting`, err),
+            )
+          }
+        >
+          {hidden ? t`Unhide` : t`Hide this game`}
+        </Button>
         {openable && playId ? (
           <Button
             type="button"
@@ -341,6 +358,7 @@ const Row = memo(
     a.lastPlayedAt === b.lastPlayedAt &&
     a.lastPlayedId === b.lastPlayedId &&
     a.playtimeMs === b.playtimeMs &&
+    a.hidden === b.hidden &&
     sameCards(a.cards, b.cards),
 )
 
@@ -384,7 +402,13 @@ function GameSelect() {
   const growRows = useSettings((s) => s.growGameRows) !== false
   const scroller = useRef<HTMLElement | null>(null)
   const [current, setCurrent] = useState('')
-  const ordered = gameOrder(status?.games ?? [], lastGame, played)
+  const hiddenIds = useSettings((s) => s.hiddenGames)
+  const [showHidden, setShowHidden] = useState(false)
+  const ordered = gameOrder(
+    listedGames(status?.games ?? [], hiddenIds, showHidden),
+    lastGame,
+    played,
+  )
   const { recent } = ordered
   // Games found on this computer come before the rest of the catalog, most of which is not set up here.
   const found = ordered.rest.filter((g) => g.available && g.installed)
@@ -416,7 +440,14 @@ function GameSelect() {
       })
     })
   }
-  useTypeToScroll([...recent, ...found, ...rest], reveal)
+  const findGame = useFindGame({
+    hidden: hiddenIds,
+    showHidden,
+    setShowHidden,
+    listed: (id) => items.some((it) => it.kind === 'game' && it.game.id === id),
+    reveal,
+  })
+  useTypeToScroll(status?.games.filter((g) => g.available) ?? [], findGame)
   if (loadError) {
     return <LoadErrorRow error={loadError} onRetry={refresh} />
   }
@@ -488,6 +519,13 @@ function GameSelect() {
         </Box>
         {rail ? <LetterRail letters={letters} current={current} onJump={jump} /> : null}
       </Box>
+      {hiddenIds && hiddenIds.length > 0 ? (
+        <Box sx={{ px: 2, py: 0.75 }}>
+          <Link component="button" onClick={() => setShowHidden(!showHidden)} sx={{ fontSize: 14 }}>
+            {showHidden ? t`Hide hidden games` : t`Show hidden games`}
+          </Link>
+        </Box>
+      ) : null}
       {!status.games.some((g) => g.available && g.installed) && (
         <Box sx={{ px: 2, py: 0.75, display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>

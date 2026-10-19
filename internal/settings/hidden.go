@@ -76,3 +76,14 @@ func (s *Service) UnhideBrowseAuthor(game, author string) error {
 		putGame(v, game, gp)
 	})
 }
+
+// SetGameHidden hides a game from the game list, or shows it again.
+func (s *Service) SetGameHidden(game string, hidden bool) error {
+	return s.set(func(v *Settings) {
+		kept := slices.DeleteFunc(slices.Clone(v.HiddenGames), func(g string) bool { return g == game })
+		if hidden {
+			kept = append(kept, game)
+		}
+		v.HiddenGames = kept
+	})
+}

@@ -53,6 +53,8 @@ type Settings struct {
 	// BackgroundImage is the absolute path of the user's wallpaper; empty means the default one.
 	BackgroundImage string `json:"backgroundImage"`
 	LastGame        string `json:"lastGame"`
+	// HiddenGames are the games the player hid from the game list; typing a name still finds them.
+	HiddenGames []string `json:"hiddenGames"`
 	// LastProfile maps a game id to the id of the profile last open in it.
 	LastProfile map[string]string `json:"lastProfile"`
 	// LastPlayed maps a game id to the profile last launched to Running and when (RFC3339).
@@ -258,6 +260,7 @@ func Defaults() Settings {
 	s.LastProfile = map[string]string{}
 	s.LastPlayed = map[string]Played{}
 	s.GameFolders = map[string]string{}
+	s.HiddenGames = []string{}
 	s.GameStores = map[string]string{}
 	s.LauncherRoots = map[string][]string{}
 	s.Loaders = map[string]string{}

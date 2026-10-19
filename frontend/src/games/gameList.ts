@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { GameInfo } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
 import { isTypingTarget } from '../settings/shortcuts.ts'
 import { TYPE_RESET_MS, typedKey, typedMatch } from '../shell/typeahead.ts'
@@ -21,6 +21,33 @@ export function listItems(groups: { label: string; games: Game[] }[]): Item[] {
     }
   }
   return out
+}
+
+// Typing a hidden game's name shows the hidden games first, then scrolls to the game once the list holds it.
+export function useFindGame(args: {
+  hidden: readonly string[] | null | undefined
+  showHidden: boolean
+  setShowHidden: (show: boolean) => void
+  listed: (id: string) => boolean
+  reveal: (id: string) => void
+}) {
+  const latest = useRef(args)
+  latest.current = args
+  const [want, setWant] = useState('')
+  useEffect(() => {
+    if (want !== '' && latest.current.listed(want)) {
+      latest.current.reveal(want)
+      setWant('')
+    }
+  }, [want])
+  return (id: string) => {
+    if (args.hidden?.includes(id) && !args.showHidden) {
+      args.setShowHidden(true)
+      setWant(id)
+      return
+    }
+    args.reveal(id)
+  }
 }
 
 // Typing a game's name anywhere on the page jumps to it. The listener reads the list through a ref so the letters
