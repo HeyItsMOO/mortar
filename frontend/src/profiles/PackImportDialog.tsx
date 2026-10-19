@@ -17,7 +17,6 @@ import type {
   Source,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/packsvc/models.ts'
 import {
-  Import,
   LocalProfiles,
   Preview as PreviewPack,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/packsvc/service.ts'
@@ -27,10 +26,13 @@ import { space } from '../theme/density.ts'
 import { reportUnexpected, toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { FoundProfileRow } from './FoundProfileRow.tsx'
+import { PackTarget } from './PackTarget.tsx'
 import { packageLine } from './packImport.ts'
+import { usePackTarget } from './usePackTarget.ts'
 
-// Imports an r2modman or Gale profile code, or a profile export file, into a new profile: the code or file is read and
-// listed first, and nothing is queued until Import.
+// Imports an r2modman or Gale profile code, or a profile export file, into a new profile or over an existing one: the
+// code or file is read and listed first, and nothing is queued until Import. Updating adds what the code lists and
+// offers to remove the Thunderstore mods it does not, so the profile ends up matching the code.
 export function PackImportDialog({
   open,
   game,
@@ -49,6 +51,8 @@ export function PackImportDialog({
   const [preview, setPreview] = useState<Preview | null>(null)
   const [busy, setBusy] = useState(false)
   const [local, setLocal] = useState<LocalProfile[]>([])
+  const source = (): Source => ({ path, text: text.trim() })
+  const where = usePackTarget(open, game, source)
   useEffect(() => {
     if (!open) {
       return
@@ -65,11 +69,11 @@ export function PackImportDialog({
         .finally(() => setBusy(false))
     }
   }, [open, game, initialPath, t])
-  const source = (): Source => ({ path, text: text.trim() })
   const close = () => {
     setText('')
     setPath('')
     setPreview(null)
+    where.reset()
     onClose()
   }
   const read = (from: Source = source()) => {
@@ -81,7 +85,8 @@ export function PackImportDialog({
   }
   const importPack = () => {
     setBusy(true)
-    Import(source(), game, '')
+    where
+      .importPack()
       .then((result) => {
         const unsupported = result.unsupported ?? []
         useToasts.getState().push({
@@ -120,6 +125,7 @@ export function PackImportDialog({
                 })}
               </Typography>
             ) : null}
+            <PackTarget where={where} placeholder={preview.name} />
           </Box>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: space.gap }}>

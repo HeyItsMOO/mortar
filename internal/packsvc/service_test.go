@@ -275,3 +275,41 @@ func TestExportCodeCarriesTheConfigFolder(t *testing.T) {
 		t.Errorf("r2modman installs only what a code lists, so it must list the profile's BepInEx pack: %s %v", r2x, err)
 	}
 }
+
+func TestImportAsNamesTheNewProfile(t *testing.T) {
+	ps, q := &fakeProfiles{}, &fakeQueue{}
+	s := &Service{Profiles: ps, Queue: q}
+	if _, err := s.ImportAs(context.Background(), Source{Path: writeR2z(t)}, "stardew", "  Crew night "); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.ImportAs(context.Background(), Source{Path: writeR2z(t)}, "stardew", " "); err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(ps.created, []string{"Crew night", "Friends"}) {
+		t.Errorf("created %v", ps.created)
+	}
+}
+
+func TestUpdatingAProfileQueuesIntoItAndExtrasListsWhatThePackLacks(t *testing.T) {
+	ts := func(key, name string, implicit bool) profile.Entry {
+		return profile.Entry{Key: key, Package: true, Implicit: implicit, Source: profile.Source{Kind: profile.KindThunderstore, Name: name, Version: "1.0.0"}}
+	}
+	target := profile.Profile{ID: "p9", Entries: []profile.Entry{
+		ts("k1", "alice-morecompany", false), ts("k2", "Bob-Cheaty", false), ts("k3", "Carol-Lib", true),
+		{Key: "k4", Source: profile.Source{Kind: profile.KindNexus, Name: "Nexus mod"}},
+	}}
+	ps, q := &fakeProfiles{list: []profile.Profile{target}}, &fakeQueue{}
+	s := &Service{Profiles: ps, Queue: q}
+	src := Source{Path: writeR2z(t)}
+	res, err := s.Import(context.Background(), src, "stardew", "p9")
+	if err != nil || res.Profile != "p9" || len(ps.created) != 0 || q.got[0].Profile != "p9" {
+		t.Fatalf("update %+v %v created %v queued %+v", res, err, ps.created, q.got)
+	}
+	extras, err := s.Extras(context.Background(), src, "stardew", "p9")
+	if err != nil || len(extras) != 1 || extras[0].Key != "k2" {
+		t.Fatalf("a package the pack lacks is offered, a listed one (any case), a dependency and a non-Thunderstore entry are not: %+v %v", extras, err)
+	}
+	if _, err := s.Extras(context.Background(), src, "stardew", "nope"); err == nil {
+		t.Error("extras of a missing profile")
+	}
+}

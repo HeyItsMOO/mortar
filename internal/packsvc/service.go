@@ -173,6 +173,15 @@ func (s *Service) Preview(ctx context.Context, src Source) (Preview, error) {
 // Import queues the pack's Thunderstore packages, with their dependencies, into profileID of gameID, or into a new
 // profile named after the pack when profileID is empty. gameID may be empty when the pack names its game.
 func (s *Service) Import(ctx context.Context, src Source, gameID, profileID string) (Result, error) {
+	return s.importPack(ctx, src, gameID, profileID, "")
+}
+
+// ImportAs is Import into a new profile called name (the pack's own name when name is blank).
+func (s *Service) ImportAs(ctx context.Context, src Source, gameID, name string) (Result, error) {
+	return s.importPack(ctx, src, gameID, "", name)
+}
+
+func (s *Service) importPack(ctx context.Context, src Source, gameID, profileID, name string) (Result, error) {
 	d, err := s.read(ctx, src)
 	if err != nil {
 		return Result{}, err
@@ -203,7 +212,7 @@ func (s *Service) Import(ctx context.Context, src Source, gameID, profileID stri
 		return res, errors.New("the pack holds no Thunderstore packages to install")
 	}
 	if profileID == "" {
-		p, err := s.Profiles.Create(gameID, cmpName(d.Name))
+		p, err := s.Profiles.Create(gameID, cmpName(cmp.Or(strings.TrimSpace(name), d.Name)))
 		if err != nil {
 			return res, err
 		}
@@ -219,6 +228,43 @@ func (s *Service) Import(ctx context.Context, src Source, gameID, profileID stri
 	items, err := s.Queue.Add(ctx, reqs)
 	res.Queued = len(items)
 	return res, err
+}
+
+// Extra is an installed Thunderstore package a pack does not list.
+type Extra struct {
+	Key     string `json:"key"`
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
+// Extras lists the packages profileID holds that the pack does not: what Import into that profile would leave
+// beside the pack's own, for the player to remove when the profile should match the pack. Packages Mortar brought
+// in as dependencies are left out, since a pack that names only its top-level mods still needs them.
+func (s *Service) Extras(ctx context.Context, src Source, gameID, profileID string) ([]Extra, error) {
+	d, err := s.read(ctx, src)
+	if err != nil {
+		return nil, err
+	}
+	listed := map[string]bool{}
+	for _, r := range d.Packages {
+		listed[strings.ToLower(r.Native)] = true
+	}
+	all, err := s.Profiles.List(gameID)
+	if err != nil {
+		return nil, err
+	}
+	i := slices.IndexFunc(all, func(p profile.Profile) bool { return p.ID == profileID })
+	if i < 0 {
+		return nil, errors.New("that profile does not exist")
+	}
+	out := []Extra{}
+	for _, e := range all[i].Entries {
+		if !e.Package || e.Implicit || e.Source.Kind != profile.KindThunderstore || listed[strings.ToLower(e.Source.Name)] || bridge.IsOwnListing(e.Source.Name) {
+			continue
+		}
+		out = append(out, Extra{Key: e.Key, Name: e.Source.Name, Version: e.Source.Version})
+	}
+	return out, nil
 }
 
 // blockedExtensions are the executable types r2modman refuses to extract from an imported profile
