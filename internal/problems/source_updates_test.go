@@ -59,7 +59,10 @@ func TestThunderstoreUpdatesOfferNewerVersionsAndMarkSourceSwitches(t *testing.T
 	current.Name, current.Version = "Cool", "2.0.0"
 	fromNexus := framework.Mod{Key: "d", SourceKind: profile.KindNexus}
 	fromNexus.Name, fromNexus.Version = "Nexus Mod", "1.0.0"
-	got := s.sourceUpdates(context.Background(), "lethal-company", []framework.Mod{same, viaRepo, current, fromNexus}, nil)
+	// The package's own version, not a manifest that lags it, says whether a same-source mod is current.
+	staleManifest := framework.Mod{Key: "e", SourceKind: profile.KindThunderstore, SourceName: "Alice-Cool", SourceVersion: "2.0.0"}
+	staleManifest.Name, staleManifest.Version = "Cool", "1.9.0"
+	got := s.sourceUpdates(context.Background(), "lethal-company", []framework.Mod{same, viaRepo, current, fromNexus, staleManifest}, nil)
 	if len(got) != 2 {
 		t.Fatalf("updates = %+v", got)
 	}
