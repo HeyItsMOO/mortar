@@ -35,6 +35,10 @@ type Game struct {
 type Install struct {
 	Dir   string
 	Store string
+	// Heroic is the Heroic config folder that lists a Heroic copy, whose GamesConfig holds its prefix; empty otherwise.
+	Heroic string
+	// AppName is the game's name in Heroic, its GOG product id.
+	AppName string
 }
 
 // Roots are folders the user added: Heroic config folders and folders of GOG games.
@@ -49,7 +53,7 @@ type Roots struct {
 func Locate(home string, g Game, r Roots) []Install {
 	var out []Install
 	seen := map[string]struct{}{}
-	add := func(dir, store string) {
+	add := func(dir, store string, heroic ...string) {
 		dir = GameDir(dir, g.Marker)
 		if dir == "" {
 			return
@@ -58,7 +62,11 @@ func Locate(home string, g Game, r Roots) []Install {
 			return
 		}
 		seen[dir] = struct{}{}
-		out = append(out, Install{Dir: dir, Store: store})
+		in := Install{Dir: dir, Store: store}
+		if len(heroic) > 0 {
+			in.Heroic, in.AppName = heroic[0], g.ProductID
+		}
+		out = append(out, in)
 	}
 	add(galaxyPath(g.ProductID), StoreGOG)
 	for _, dir := range MinigalaxyInstallDirs(home, r.Minigalaxy...) {
@@ -69,7 +77,7 @@ func Locate(home string, g Game, r Roots) []Install {
 	}
 	for _, cfg := range HeroicDirs(home, r.Heroic...) {
 		for _, dir := range heroicInstalls(cfg, g.ProductID) {
-			add(dir, StoreHeroic)
+			add(dir, StoreHeroic, cfg)
 		}
 	}
 	return out

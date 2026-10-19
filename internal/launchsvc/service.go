@@ -902,7 +902,7 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 		return err
 	}
 	store := inst.Store
-	if store == game.StoreGOG || store == game.StoreGOGHeroic || store == game.StoreMinigalaxy || store == game.StoreLutris || store == game.StoreBottles || store == game.StoreEA {
+	if (inst.Launcher == "" || !s.Starter.LauncherRelays(inst, plan)) && (store == game.StoreGOG || store == game.StoreGOGHeroic || store == game.StoreMinigalaxy || store == game.StoreLutris || store == game.StoreEpicHeroic || store == game.StoreBottles || store == game.StoreEA) {
 		env.Direct = true
 	}
 	if env.Direct {

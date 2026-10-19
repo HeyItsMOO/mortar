@@ -21,6 +21,8 @@ const (
 var (
 	reRunnerSteam = regexp.MustCompile(`(?m)^\s*runner:\s*steam\s*$`)
 	reExe         = regexp.MustCompile(`(?m)^\s*exe:\s*(.+)\s*$`)
+	rePrefix      = regexp.MustCompile(`(?m)^\s+prefix:\s*(.+?)\s*$`)
+	reGameSlug    = regexp.MustCompile(`(?m)^game_slug:\s*(\S+)\s*$`)
 	reWorkDir     = regexp.MustCompile(`(?m)^\s*working_dir:\s*(.+)\s*$`)
 )
 
@@ -53,6 +55,9 @@ func newMatcher(g Game) matcher {
 // Install is one Lutris-sourced game folder.
 type Install struct {
 	Dir string
+	// Slug is the game's slug in Lutris, which `lutris lutris:rungame/<slug>` starts; Prefix its Wine prefix, "" for a
+	// game with none.
+	Slug, Prefix string
 }
 
 // Locate finds g's folders from Lutris YAML configs under home and in the user's own config folders.
@@ -72,7 +77,7 @@ func Locate(home string, g Game, extra ...string) []Install {
 			if ent.IsDir() || !strings.HasSuffix(ent.Name(), ".yml") {
 				continue
 			}
-			gameDir, err := m.installFromConfig(dir, ent.Name())
+			gameDir, text, err := m.installFromConfig(dir, ent.Name())
 			if err != nil || gameDir == "" {
 				continue
 			}
@@ -80,7 +85,7 @@ func Locate(home string, g Game, extra ...string) []Install {
 				continue
 			}
 			seen[gameDir] = struct{}{}
-			out = append(out, Install{Dir: gameDir})
+			out = append(out, Install{Dir: gameDir, Slug: configValue(reGameSlug, text), Prefix: winePrefix(configValue(rePrefix, text))})
 		}
 	}
 	return out
@@ -95,12 +100,31 @@ func ConfigDirs(home string, extra ...string) []string {
 	)
 }
 
-func (m matcher) installFromConfig(gamesDir, name string) (string, error) {
+func (m matcher) installFromConfig(gamesDir, name string) (dir, text string, err error) {
 	b, err := fsx.ReadFile(filepath.Join(gamesDir, name))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return m.installFromYAML(string(b))
+	dir, err = m.installFromYAML(string(b))
+	return dir, string(b), err
+}
+
+func configValue(re *regexp.Regexp, text string) string {
+	if m := re.FindStringSubmatch(text); m != nil {
+		return strings.Trim(m[1], `"'`)
+	}
+	return ""
+}
+
+// winePrefix is the folder holding drive_c for the prefix a config names: the prefix itself, or its pfx folder when
+// the runner is Proton. "" when neither exists.
+func winePrefix(prefix string) string {
+	for _, p := range []string{filepath.Join(prefix, "pfx"), prefix} {
+		if prefix != "" && fsx.IsDir(filepath.Join(p, "drive_c")) {
+			return p
+		}
+	}
+	return ""
 }
 
 func (m matcher) installFromYAML(text string) (string, error) {

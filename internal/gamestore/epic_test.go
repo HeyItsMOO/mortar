@@ -41,7 +41,7 @@ func TestEpicFindsACopyHeroicInstalledThroughLegendary(t *testing.T) {
 	}
 	g := components.GameInfo{ID: "x", Name: "X", Marker: "X.exe", Stores: components.GameStores{Epic: &components.EpicStore{AppNames: []string{"Garlic"}}}}
 	got := Discover(t.TempDir(), map[string][]string{LauncherHeroic: {heroic}}, g)
-	if want := []Install{{Store: StoreEpicHeroic, Dir: game}}; !slices.Equal(got, want) {
+	if want := []Install{{Store: StoreEpicHeroic, Dir: game, Launcher: "heroic:legendary:Garlic"}}; !slices.Equal(got, want) {
 		t.Fatalf("got %+v, want %+v", got, want)
 	}
 	if LauncherOf(StoreEpicHeroic) != LauncherHeroic {

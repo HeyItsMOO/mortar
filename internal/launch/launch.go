@@ -35,6 +35,8 @@ const (
 	HintMissingExe Hint = "missing-exe"
 	// HintEpic: the game never wrote its log, so the Epic Games Launcher may not be running or signed in.
 	HintEpic Hint = "epic"
+	// HintLauncher: the game never wrote its log, so Heroic or Lutris may not have started it.
+	HintLauncher Hint = "launcher"
 )
 
 // ErrNoSteam means there is no Steam to launch through; the user may choose to launch directly.

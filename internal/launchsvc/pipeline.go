@@ -23,6 +23,7 @@ import (
 	gameruntime "github.com/Rethunk-Tech/mortar/internal/runtime"
 	"github.com/Rethunk-Tech/mortar/internal/savesiso"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
+	"github.com/Rethunk-Tech/mortar/internal/usererr"
 	"github.com/Rethunk-Tech/mortar/internal/wineoverride"
 )
 
@@ -99,7 +100,7 @@ func (s *Service) launchPlan(ctx context.Context, g game.Game, inst game.Install
 		k, v, _ := strings.Cut(pair, "=")
 		plan.SetEnv(k, v)
 	}
-	if inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton || inst.Runtime == gameruntime.WinePrefix {
+	if inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton || inst.Runtime == gameruntime.WinePrefix || inst.Runtime == gameruntime.LauncherPrefix {
 		plan.ApplyDLLOverrides()
 	}
 	return plan, nil
@@ -574,14 +575,22 @@ func (s *Service) ensureRuntime(inst game.Install, reqs []launchplan.RuntimeReq,
 		if r.Kind != "dll-override" {
 			continue
 		}
-		compat, ok := inst.CompatData(s.home)
-		if !ok {
-			continue
+		var reg string
+		if inst.Runtime == gameruntime.LauncherPrefix {
+			reg = filepath.Join(inst.Prefix, "user.reg")
+		} else {
+			compat, ok := inst.CompatData(s.home)
+			if !ok {
+				continue
+			}
+			reg = filepath.Join(compat, "pfx", "user.reg")
 		}
-		reg := filepath.Join(compat, "pfx", "user.reg")
 		if _, err := os.Stat(reg); err != nil {
 			if direct {
 				continue
+			}
+			if inst.Runtime == gameruntime.LauncherPrefix {
+				return usererr.New(usererr.Invalid, "Start the game once from its launcher and quit it, so the launcher creates its prefix; then Play from Mortar.")
 			}
 			return errNoPrefix
 		}

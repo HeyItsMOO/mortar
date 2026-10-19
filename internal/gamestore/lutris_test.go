@@ -30,7 +30,7 @@ func TestLutrisFindsANativeLinuxBuildByTheLinuxMarker(t *testing.T) {
 		Stores: components.GameStores{Lutris: &components.LutrisStore{Slug: "vintage-story", Keyword: "vintagestory"}},
 	}
 	got := Discover(home, nil, g)
-	if want := []Install{{Store: StoreLutris, Dir: install}}; !slices.Equal(got, want) {
+	if want := []Install{{Store: StoreLutris, Dir: install, Launcher: "lutris:vintage-story"}}; !slices.Equal(got, want) {
 		t.Fatalf("got %+v, want %+v", got, want)
 	}
 }

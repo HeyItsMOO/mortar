@@ -22,6 +22,8 @@ const (
 	Proton = "proton"
 	// WinePrefix runs a Windows build inside a Bottles bottle.
 	WinePrefix = "wine-prefix"
+	// LauncherPrefix runs a Windows build in the prefix its own launcher (Heroic, Lutris) keeps for it.
+	LauncherPrefix = "launcher-prefix"
 )
 
 // Steam store ids, the stores whose Windows builds run under Proton.
@@ -75,7 +77,7 @@ type Runtime interface {
 }
 
 // drivers are tried in order; native runs whatever no other runtime claims.
-var drivers = []Runtime{proton{}, winePrefix{}, mortarProton{}, native{}}
+var drivers = []Runtime{proton{}, winePrefix{}, launcherPrefix{}, mortarProton{}, native{}}
 
 // IDOf is the id of the runtime that runs inst.
 func IDOf(inst Install) string {

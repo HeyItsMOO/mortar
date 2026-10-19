@@ -47,6 +47,9 @@ type Install struct {
 	Store, Dir string
 	// Prefix is the Wine prefix a Windows build runs in; empty unless the store keeps one (Bottles).
 	Prefix string
+	// Launcher names how the store's own launcher starts the copy: "heroic:<runner>:<AppName>" (gog or legendary) or
+	// "lutris:<slug>"; empty for a store with none.
+	Launcher string
 }
 
 // LauncherSpec describes one launcher (a store app) a driver reads.

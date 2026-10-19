@@ -67,6 +67,11 @@ function failureBody(status: Status): string {
       msg`The Epic Games Launcher may not be running or signed in. Start it, sign in and try again.`,
     )
   }
+  if (status.hint === Hint.HintLauncher) {
+    return i18n._(
+      msg`Heroic or Lutris may not have started the game. Start it, sign in if it asks, and try again, or set the game's Default launch to Direct.`,
+    )
+  }
   if (status.hint === Hint.HintSteamClient) {
     return i18n._(
       msg`Steam must be installed and signed in for this game. Install Steam, sign in once and try again.`,

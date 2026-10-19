@@ -100,14 +100,18 @@ func waitDelay(ctx context.Context, d time.Duration) error {
 	}
 }
 
-func (st Starter) startOne(ctx context.Context, inst Install, plan *launchplan.Plan, env StartEnv, onLines func([]string)) error {
-	lookPath := st.LookPath
-	if lookPath == nil {
-		lookPath = exec.LookPath
-		if sandbox.InFlatpak() {
-			lookPath = sandbox.HostLookPath
-		}
+func (st Starter) lookPathOrDefault() func(string) (string, error) {
+	switch {
+	case st.LookPath != nil:
+		return st.LookPath
+	case sandbox.InFlatpak():
+		return sandbox.HostLookPath
 	}
+	return exec.LookPath
+}
+
+func (st Starter) startOne(ctx context.Context, inst Install, plan *launchplan.Plan, env StartEnv, onLines func([]string)) error {
+	lookPath := st.lookPathOrDefault()
 	steamPath, _ := lookPath("steam")
 	flatpakPath, _ := lookPath("flatpak")
 	cmd, err := st.command(runtime.GOOS, inst, plan, env, steamPath, flatpakPath)
@@ -180,6 +184,12 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 	if inst.Store == StoreEpic && !env.Direct && plan.Exe == "" {
 		return epicCommand(inst)
 	}
+	if inst.Launcher != "" && !env.Direct {
+		if cmd, ok, err := launcherCommand(inst, plan, st.lookPathOrDefault()); err != nil || ok {
+			return cmd, err
+		}
+		env.Direct = true
+	}
 	// A loader that replaces the executable cannot be reproduced by a store's relay.
 	if env.Direct || plan.Exe != "" || steamSkipsLoader(goos, inst, plan, env) {
 		if inst.Store == StoreFlatpak {
@@ -207,7 +217,7 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 			return launch.Command{Dir: inst.Dir, Name: argv[0], Args: argv[1:], Env: environ(plan.Env)}, nil
 		}
 		var protonEnv []string
-		if goos != "windows" && inst.Runtime == gameruntime.MortarProton {
+		if goos != "windows" && (inst.Runtime == gameruntime.MortarProton || inst.Runtime == gameruntime.LauncherPrefix) {
 			info, _ := catalogGame(inst.Game)
 			rt := inst.runtime(info, "")
 			rt.Proton = env.Proton
@@ -226,7 +236,7 @@ func (st Starter) command(goos string, inst Install, plan *launchplan.Plan, env 
 			env = append(env, dotnetRoot(plan.Env)...)
 		}
 		// Wine prints its errors only when asked; without them a launch that stalls on one says nothing.
-		if (inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton) && plan.Env["WINEDEBUG"] == "" {
+		if (inst.Runtime == gameruntime.Proton || inst.Runtime == gameruntime.MortarProton || inst.Runtime == gameruntime.LauncherPrefix) && plan.Env["WINEDEBUG"] == "" {
 			env = append(env, "WINEDEBUG=err+all")
 		}
 		return launch.Command{Dir: inst.Dir, Name: name, Args: args, Env: env}, nil

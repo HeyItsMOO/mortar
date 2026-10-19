@@ -31,15 +31,19 @@ func (w winePrefix) Resolve(inst Install, t components.PathTemplate) (string, er
 	if t.Windows == "" {
 		return "", errors.New("no path for a windows build")
 	}
+	return expand(t.Windows, prefixTokens(inst))
+}
+
+func prefixTokens(inst Install) map[string]string {
 	user := prefixUser(inst.Prefix)
-	return expand(t.Windows, map[string]string{
+	return map[string]string{
 		"home":         user,
 		"install":      inst.Dir,
 		"documents":    filepath.Join(user, "Documents"),
 		"appData":      filepath.Join(user, "AppData", "Roaming"),
 		"localAppData": filepath.Join(user, "AppData", "Local"),
 		"localLow":     filepath.Join(user, "AppData", "LocalLow"),
-	})
+	}
 }
 
 // prefixUser is the Windows profile folder inside a bottle: its one real user, else Wine's default steamuser.

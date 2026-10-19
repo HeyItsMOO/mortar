@@ -852,6 +852,10 @@ msgstr "Nexus API requests are running low"
 msgid "{name} updated to {version}: {n, plural, one {# profile needs attention} other {# profiles need attention}}"
 msgstr "{name} updated to {version}: {n, plural, one {# profile needs attention} other {# profiles need attention}}"
 
+#: src/share/ModpackDialog.tsx:140
+msgid "The website must start with http:// or https://."
+msgstr "The website must start with http:// or https://."
+
 #: src/mods/CategoryEditor.tsx:124
 msgid "Group mods by these names, or assign one as a mod's primary category."
 msgstr "Group mods by these names, or assign one as a mod's primary category."
@@ -1171,7 +1175,7 @@ msgstr "Waiting for you to unlock the keyring."
 msgid "Find a mod in all profiles"
 msgstr "Find a mod in all profiles"
 
-#: src/share/MethodPanes.tsx:386
+#: src/share/MethodPanes.tsx:376
 msgid "Turn on sharing nearby?"
 msgstr "Turn on sharing nearby?"
 
@@ -1423,7 +1427,7 @@ msgstr "Take them back for Mortar?"
 msgid "Could not add the update downloads"
 msgstr "Could not add the update downloads"
 
-#: src/share/MethodPanes.tsx:276
+#: src/share/MethodPanes.tsx:277
 msgid "Could not publish the code"
 msgstr "Could not publish the code"
 
@@ -1838,7 +1842,7 @@ msgstr "No mods to share"
 msgid "Compares every stored mod's files with what was saved when it was added. Mortar also runs it slowly in the background, about weekly."
 msgstr "Compares every stored mod's files with what was saved when it was added. Mortar also runs it slowly in the background, about weekly."
 
-#: src/launch/store.ts:136
+#: src/launch/store.ts:141
 #: src/mods/ModSections.tsx:78
 #: src/mods/ModSections.tsx:198
 msgid "Roll back"
@@ -2083,6 +2087,7 @@ msgstr "Running for {time}"
 #: src/profiles/EditProfileDialog.tsx:272
 #: src/profiles/LaunchPresetDialog.tsx:60
 #: src/settings/prefCopy.ts:361
+#: src/share/ModpackDialog.tsx:174
 #: src/tools/ToolEditorDialog.tsx:98
 msgid "Name"
 msgstr "Name"
@@ -2269,7 +2274,7 @@ msgstr "Fullscreen resolution width"
 msgid "These come from a different site than you installed them from. Update all skips them."
 msgstr "These come from a different site than you installed them from. Update all skips them."
 
-#: src/share/MethodPanes.tsx:388
+#: src/share/MethodPanes.tsx:378
 msgid "Other Mortar users on your local network will be able to find this computer and send you profiles. You can turn it off again in Settings › General."
 msgstr "Other Mortar users on your local network will be able to find this computer and send you profiles. You can turn it off again in Settings › General."
 
@@ -2683,7 +2688,7 @@ msgstr "Try a different search."
 msgid "Installed as a dependency"
 msgstr "Installed as a dependency"
 
-#: src/share/MethodPanes.tsx:304
+#: src/share/MethodPanes.tsx:293
 msgid "For r2modman and other Thunderstore managers: a code anyone can enter, a .r2z file, or a modpack zip with your config folder."
 msgstr "For r2modman and other Thunderstore managers: a code anyone can enter, a .r2z file, or a modpack zip with your config folder."
 
@@ -2997,7 +3002,7 @@ msgid "Appearance"
 msgstr "Appearance"
 
 #. placeholder {0}: status.error
-#: src/launch/store.ts:80
+#: src/launch/store.ts:85
 msgid "The program to start {name} was not found. Check that the game is still installed and the launch prefix names a real command. {0}"
 msgstr "The program to start {name} was not found. Check that the game is still installed and the launch prefix names a real command. {0}"
 
@@ -3459,6 +3464,10 @@ msgstr "Filter by level or mod, and use Share log to copy this run and paste it 
 msgid "Comfortable"
 msgstr "Comfortable"
 
+#: src/share/ModpackDialog.tsx:216
+msgid "Left empty, a README is written from what the profile holds."
+msgstr "Left empty, a README is written from what the profile holds."
+
 #: src/console/PerformancePanelParts.tsx:204
 #: src/console/PerformancePanelParts.tsx:295
 msgid "Start measuring"
@@ -3621,7 +3630,7 @@ msgstr "Each mod's time in its per-frame event handlers (update, render and one-
 msgid "Set it in Steam for me"
 msgstr "Set it in Steam for me"
 
-#: src/share/MethodPanes.tsx:286
+#: src/share/ModpackDialog.tsx:157
 msgid "Modpack saved"
 msgstr "Modpack saved"
 
@@ -4113,6 +4122,10 @@ msgstr "Delay seconds"
 msgid "This version is only on a site Mortar cannot download from yet; open the link to get it."
 msgstr "This version is only on a site Mortar cannot download from yet; open the link to get it."
 
+#: src/share/ModpackDialog.tsx:134
+msgid "The name may hold only letters, digits and underscores."
+msgstr "The name may hold only letters, digits and underscores."
+
 #: src/settings/prefCopy.ts:129
 msgid "Collapsed"
 msgstr "Collapsed"
@@ -4338,6 +4351,7 @@ msgstr "Already has {0}"
 #: src/browse/BrowseDetails.tsx:108
 #: src/mods/Sidebar.tsx:298
 #: src/mods/updateReview/Row.tsx:122
+#: src/share/ModpackDialog.tsx:226
 msgid "Changelog"
 msgstr "Changelog"
 
@@ -4518,7 +4532,7 @@ msgstr "{name} needs game version {needs} or newer."
 msgid "Where save backups are kept. Empty uses the default."
 msgstr "Where save backups are kept. Empty uses the default."
 
-#: src/share/MethodPanes.tsx:340
+#: src/share/MethodPanes.tsx:330
 msgid "Share as r2modman code?"
 msgstr "Share as r2modman code?"
 
@@ -4563,6 +4577,7 @@ msgstr "Mortar already named the likely mod for the last crash."
 #: src/profiles/PackImportDialog.tsx:177
 #: src/settings/sections/NexusSSO.tsx:68
 #: src/settings/sections/nxmHandler.tsx:65
+#: src/share/ModpackDialog.tsx:259
 #: src/share/ShareFooter.tsx:42
 #: src/shell/BugReportDialog.tsx:153
 #: src/shell/ConfirmDialog.tsx:57
@@ -4837,7 +4852,7 @@ msgstr "Game setting off"
 msgid "Summary"
 msgstr "Summary"
 
-#: src/share/MethodPanes.tsx:273
+#: src/share/MethodPanes.tsx:274
 msgid "Code copied"
 msgstr "Code copied"
 
@@ -5054,6 +5069,7 @@ msgstr "Get the extension"
 #: src/mods/ModDependencyTree.tsx:207
 #: src/mods/Toolbar.tsx:251
 #: src/settings/prefCopyModsView.ts:40
+#: src/share/ModpackDialog.tsx:91
 msgid "None"
 msgstr "None"
 
@@ -5067,6 +5083,7 @@ msgstr "Link copied"
 #: src/mods/columnLabel.ts:8
 #: src/mods/ModDisplayEdit.tsx:81
 #: src/mods/Sidebar.tsx:381
+#: src/share/ModpackDialog.tsx:181
 msgid "Version"
 msgstr "Version"
 
@@ -5392,6 +5409,10 @@ msgstr "Duplicate"
 msgid "and {count} more"
 msgstr "and {count} more"
 
+#: src/share/ModpackDialog.tsx:56
+msgid "Choose icon…"
+msgstr "Choose icon…"
+
 #: src/settings/sections/StreamOverlay.tsx:298
 msgid "The local port OBS reads the overlay from"
 msgstr "The local port OBS reads the overlay from"
@@ -5539,6 +5560,7 @@ msgid "Copy of {name}"
 msgstr "Copy of {name}"
 
 #: src/settings/sections/General.tsx:310
+#: src/share/ModpackDialog.tsx:261
 msgid "Export…"
 msgstr "Export…"
 
@@ -5704,6 +5726,10 @@ msgstr "Mortar's own SMAPI mod; it records these timings"
 msgid "How many game processes a direct Play starts. Hidden for Steam and store URL launches."
 msgstr "How many game processes a direct Play starts. Hidden for Steam and store URL launches."
 
+#: src/share/ModpackDialog.tsx:46
+msgid "A plain icon (Thunderstore needs a 256x256 PNG)"
+msgstr "A plain icon (Thunderstore needs a 256x256 PNG)"
+
 #: src/settings/prefCopy.ts:157
 #: src/settings/sections/Appearance.tsx:147
 #: src/settings/sections/Appearance.tsx:151
@@ -5775,7 +5801,7 @@ msgstr "Filter by profile"
 msgid "· revision {0}"
 msgstr "· revision {0}"
 
-#: src/share/MethodPanes.tsx:402
+#: src/share/MethodPanes.tsx:392
 msgid "Turn on and continue"
 msgstr "Turn on and continue"
 
@@ -5833,7 +5859,7 @@ msgstr "Could not check for updates."
 msgid "No profile holds a mod by that name or id."
 msgstr "No profile holds a mod by that name or id."
 
-#: src/share/MethodPanes.tsx:331
+#: src/share/ModpackDialog.tsx:162
 msgid "Could not export the modpack"
 msgstr "Could not export the modpack"
 
@@ -5925,7 +5951,7 @@ msgstr "{remaining} of {limit} left this hour; the count resets {when}."
 msgid "{dependentName} needs {dep}, which this profile lacks."
 msgstr "{dependentName} needs {dep}, which this profile lacks."
 
-#: src/share/MethodPanes.tsx:324
+#: src/share/MethodPanes.tsx:313
 msgid "Save .r2z…"
 msgstr "Save .r2z…"
 
@@ -6139,7 +6165,7 @@ msgid "Show hidden mods"
 msgstr "Show hidden mods"
 
 #. placeholder {0}: profileName(rollback)
-#: src/launch/store.ts:133
+#: src/launch/store.ts:138
 msgid "New errors after updating {0}"
 msgstr "New errors after updating {0}"
 
@@ -6895,6 +6921,10 @@ msgstr "Could not save the profile order"
 msgid "Include {name}"
 msgstr "Include {name}"
 
+#: src/share/ModpackDialog.tsx:53
+msgid "Could not choose the icon"
+msgstr "Could not choose the icon"
+
 #: src/settings/shortcutLabels.ts:30
 msgid "Rename the open profile"
 msgstr "Rename the open profile"
@@ -7091,7 +7121,7 @@ msgstr "Console command"
 msgid "Windows removed the file as malware without saying which. If you trust it, restore it from Windows Security's protection history."
 msgstr "Windows removed the file as malware without saying which. If you trust it, restore it from Windows Security's protection history."
 
-#: src/share/MethodPanes.tsx:313
+#: src/share/MethodPanes.tsx:302
 msgid "Share as r2modman code…"
 msgstr "Share as r2modman code…"
 
@@ -7553,7 +7583,7 @@ msgstr "Search {gameName} settings"
 msgid "Open author page on Nexus"
 msgstr "Open author page on Nexus"
 
-#: src/launch/store.ts:289
+#: src/launch/store.ts:294
 msgid "Could not check whether the game is running"
 msgstr "Could not check whether the game is running"
 
@@ -7717,6 +7747,10 @@ msgstr "Revert"
 msgid "Multiplayer mod list…"
 msgstr "Multiplayer mod list…"
 
+#: src/share/ModpackDialog.tsx:146
+msgid "Could not write the changelog"
+msgstr "Could not write the changelog"
+
 #. placeholder {0}: profile.name
 #: src/game/HomeNotes.tsx:86
 msgid "Notes for {0}"
@@ -7852,6 +7886,11 @@ msgstr "Undo all also reverts later changes"
 #: src/mods/ModSections.tsx:196
 msgid "config.json is deleted, and the mod writes a fresh one with its own defaults the next time the game runs."
 msgstr "config.json is deleted, and the mod writes a fresh one with its own defaults the next time the game runs."
+
+#. placeholder {0}: form.dependencies
+#: src/share/ModpackDialog.tsx:253
+msgid "Depends on {0} Thunderstore packages."
+msgstr "Depends on {0} Thunderstore packages."
 
 #: src/settings/prefCopy.ts:239
 msgid "Console log cap"
@@ -8162,6 +8201,12 @@ msgstr "{count, plural, one {# mod update available} other {# mod updates availa
 msgid "Play without Steam overlay"
 msgstr "Play without Steam overlay"
 
+#. placeholder {0}: files.size
+#. placeholder {1}: all.length
+#: src/share/ModpackDialog.tsx:84
+msgid "Config files ({0} of {1})"
+msgstr "Config files ({0} of {1})"
+
 #: src/settings/usePerProfileRelated.tsx:37
 msgid "{label} is set per profile"
 msgstr "{label} is set per profile"
@@ -8213,7 +8258,7 @@ msgstr "Each mod's Entry method, run one after another"
 msgid "All games…"
 msgstr "All games…"
 
-#: src/launch/store.ts:100
+#: src/launch/store.ts:105
 msgid "Could not roll back updates"
 msgstr "Could not roll back updates"
 
@@ -8324,6 +8369,10 @@ msgstr "Open game settings"
 msgid "Show diff"
 msgstr "Show diff"
 
+#: src/share/ModpackDialog.tsx:60
+msgid "Use the plain icon"
+msgstr "Use the plain icon"
+
 #: src/games/storeName.ts:7
 msgid "GOG"
 msgstr "GOG"
@@ -8418,7 +8467,7 @@ msgstr "Run again"
 msgid "Reset to default"
 msgstr "Reset to default"
 
-#: src/launch/store.ts:365
+#: src/launch/store.ts:370
 msgid "Could not stop the game"
 msgstr "Could not stop the game"
 
@@ -8730,6 +8779,10 @@ msgstr "Contents of {name}"
 msgid "Add folder…"
 msgstr "Add folder…"
 
+#: src/share/ModpackDialog.tsx:294
+msgid "Reading the profile…"
+msgstr "Reading the profile…"
+
 #: src/share/PreviewDialog.tsx:85
 msgid "Open in Mortar"
 msgstr "Open in Mortar"
@@ -8887,7 +8940,7 @@ msgstr "·"
 msgid "Remove from favourites"
 msgstr "Remove from favourites"
 
-#: src/share/MethodPanes.tsx:297
+#: src/share/MethodPanes.tsx:286
 msgid "Saved .r2z"
 msgstr "Saved .r2z"
 
@@ -9178,7 +9231,7 @@ msgid "No launchers found. Continue and choose each game's folder when you open 
 msgstr "No launchers found. Continue and choose each game's folder when you open it."
 
 #. placeholder {0}: status.error
-#: src/launch/store.ts:76
+#: src/launch/store.ts:81
 msgid "Wine stopped on an error before {name} started: {0}"
 msgstr "Wine stopped on an error before {name} started: {0}"
 
@@ -9398,6 +9451,7 @@ msgid "Nothing to clean up."
 msgstr "Nothing to clean up."
 
 #: src/mods/typedConfig/ConfigTab.tsx:103
+#: src/share/ModpackDialog.tsx:88
 msgid "All"
 msgstr "All"
 
@@ -9435,6 +9489,10 @@ msgstr "Hide hidden games"
 #: src/install/noModText.ts:8
 msgid "This archive has no {loader} mod where Mortar expects one. Pick the folder that holds the mod."
 msgstr "This archive has no {loader} mod where Mortar expects one. Pick the folder that holds the mod."
+
+#: src/share/ModpackDialog.tsx:51
+msgid "Choose the icon"
+msgstr "Choose the icon"
 
 #. placeholder {0}: mod.name
 #: src/mods/storeEntries.ts:316
@@ -9629,7 +9687,7 @@ msgstr " in {0}"
 msgid "Grant the Steam sandbox read access to Mortar's data folder, or the game will not see this profile's mods."
 msgstr "Grant the Steam sandbox read access to Mortar's data folder, or the game will not see this profile's mods."
 
-#: src/share/MethodPanes.tsx:273
+#: src/share/MethodPanes.tsx:274
 msgid "Copy code"
 msgstr "Copy code"
 
@@ -9673,6 +9731,10 @@ msgstr "{stars, plural, one {# star} other {# stars}}"
 #: src/saves/backups.ts:91
 msgid "Before playing"
 msgstr "Before playing"
+
+#: src/launch/store.ts:72
+msgid "Heroic or Lutris may not have started the game. Start it, sign in if it asks, and try again, or set the game's Default launch to Direct."
+msgstr "Heroic or Lutris may not have started the game. Start it, sign in if it asks, and try again, or set the game's Default launch to Direct."
 
 #: src/mods/storeEntries.ts:348
 msgid "Could not skip updates for the selected mods"
@@ -9732,6 +9794,7 @@ msgstr "That request was not valid."
 #: src/browse/BrowseDetails.tsx:101
 #: src/mods/NexusDetails.tsx:267
 #: src/profiles/EditProfileDialog.tsx:301
+#: src/share/ModpackDialog.tsx:197
 msgid "Description"
 msgstr "Description"
 
@@ -9767,7 +9830,7 @@ msgstr "Regenerate token?"
 msgid "{plugin} declares itself incompatible with {dependency}, which is also enabled."
 msgstr "{plugin} declares itself incompatible with {dependency}, which is also enabled."
 
-#: src/share/MethodPanes.tsx:397
+#: src/share/MethodPanes.tsx:387
 msgid "Could not turn on sharing nearby"
 msgstr "Could not turn on sharing nearby"
 
@@ -9946,6 +10009,12 @@ msgstr "Send to an address…"
 msgid "Settings changes {0}"
 msgstr "Settings changes {0}"
 
+#. placeholder {0}: form.dependencies
+#. placeholder {1}: listNames(left)
+#: src/share/ModpackDialog.tsx:252
+msgid "Depends on {0} Thunderstore packages. Left out: {1}."
+msgstr "Depends on {0} Thunderstore packages. Left out: {1}."
+
 #: src/settings/sections/Shortcuts.tsx:51
 msgid "Press a key"
 msgstr "Press a key"
@@ -10058,11 +10127,15 @@ msgstr "Sign in to Nexus Mods in Settings before downloading from a link."
 msgid "Nexus is throttling requests until the window resets."
 msgstr "Nexus is throttling requests until the window resets."
 
+#: src/share/ModpackDialog.tsx:205
+msgid "Website"
+msgstr "Website"
+
 #: src/lan/PairedComputers.tsx:79
 msgid "No Mortar computers found nearby."
 msgstr "No Mortar computers found nearby."
 
-#: src/share/MethodPanes.tsx:342
+#: src/share/MethodPanes.tsx:332
 msgid "Upload"
 msgstr "Upload"
 
@@ -10205,7 +10278,7 @@ msgstr "{0} was updated: mods to check"
 msgid "Click a mod to open its details: versions, what it needs and what needs it, and its update."
 msgstr "Click a mod to open its details: versions, what it needs and what needs it, and its update."
 
-#: src/share/MethodPanes.tsx:271
+#: src/share/MethodPanes.tsx:272
 msgid "Code published"
 msgstr "Code published"
 
@@ -11138,9 +11211,13 @@ msgstr "Open Console"
 msgid "Could not read the templates"
 msgstr "Could not read the templates"
 
-#: src/share/MethodPanes.tsx:335
+#: src/share/MethodPanes.tsx:322
 msgid "Export as Thunderstore modpack…"
 msgstr "Export as Thunderstore modpack…"
+
+#: src/share/ModpackDialog.tsx:286
+msgid "Export as Thunderstore modpack"
+msgstr "Export as Thunderstore modpack"
 
 #. placeholder {0}: formatBytes(preview.totalSize)
 #: src/install/ArchivePreview.tsx:103
@@ -11743,6 +11820,10 @@ msgstr "Reset the settings of {0}?"
 msgid "newer in folder"
 msgstr "newer in folder"
 
+#: src/share/ModpackDialog.tsx:215
+msgid "README"
+msgstr "README"
+
 #. placeholder {0}: row.name
 #. placeholder {1}: row.framework
 #: src/mods/SlowStartupSection.tsx:24
@@ -12044,7 +12125,7 @@ msgstr "Preview Mods folder import…"
 msgid "Could not save the graphics choice"
 msgstr "Could not save the graphics choice"
 
-#: src/launch/store.ts:85
+#: src/launch/store.ts:90
 msgid "Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › {name}) or the game will not see this profile."
 msgstr "Flatpak Steam cannot read Mortar's mods folder. Grant the sandbox access (Settings › {name}) or the game will not see this profile."
 
@@ -12525,6 +12606,11 @@ msgstr "Follow the setting"
 msgid "{0} needs {1}"
 msgstr "{0} needs {1}"
 
+#. placeholder {0}: form.lastVersion
+#: src/share/ModpackDialog.tsx:185
+msgid "Last export {0}"
+msgstr "Last export {0}"
+
 #: src/share/ListFormat.tsx:33
 msgid "Markdown"
 msgstr "Markdown"
@@ -12748,6 +12834,10 @@ msgstr "CurseForge mod {id}"
 #: src/console/PerformanceTab.tsx:60
 msgid "In game"
 msgstr "In game"
+
+#: src/share/ModpackDialog.tsx:243
+msgid "Include mods that are switched off"
+msgstr "Include mods that are switched off"
 
 #: src/settings/prefCopyGame.ts:23
 msgid "Leave the file alone and list the settings under Problems."
@@ -12997,7 +13087,7 @@ msgstr "{found, plural, one {Found a source for # mod} other {Found a source for
 msgid "Its source is not known."
 msgstr "Its source is not known."
 
-#: src/share/MethodPanes.tsx:341
+#: src/share/MethodPanes.tsx:331
 msgid "This uploads the profile to Thunderstore and gives a public code."
 msgstr "This uploads the profile to Thunderstore and gives a public code."
 
@@ -13038,6 +13128,7 @@ msgstr "Enjoying these mods? Endorse them on Nexus"
 #: src/mods/ModDisplayEdit.tsx:80
 #: src/mods/Toolbar.tsx:261
 #: src/settings/prefCopyModsView.ts:47
+#: src/share/ModpackDialog.tsx:191
 msgid "Author"
 msgstr "Author"
 
@@ -13840,6 +13931,10 @@ msgstr "Replace {name}?"
 msgid "Mods you put there show up here to add."
 msgstr "Mods you put there show up here to add."
 
+#: src/share/ModpackDialog.tsx:233
+msgid "Write the changelog against the last export"
+msgstr "Write the changelog against the last export"
+
 #: src/mods/typedConfig/ConfigPane.tsx:441
 msgid "Reset all entries?"
 msgstr "Reset all entries?"
@@ -14031,7 +14126,7 @@ msgstr "{gameName} profiles"
 #. placeholder {0}: listNames(left)
 #. placeholder {0}: listNames(skipped, skipped.length)
 #: src/share/MethodPanes.tsx:233
-#: src/share/MethodPanes.tsx:287
+#: src/share/ModpackDialog.tsx:158
 msgid "Left out: {0}"
 msgstr "Left out: {0}"
 
@@ -14606,6 +14701,10 @@ msgstr "Deleted profiles stay here, mods and settings included."
 msgid "{0, plural, one {# download needs your decision} other {# downloads need your decision}}"
 msgstr "{0, plural, one {# download needs your decision} other {# downloads need your decision}}"
 
+#: src/share/ModpackDialog.tsx:137
+msgid "The version must look like 1.0.0."
+msgstr "The version must look like 1.0.0."
+
 #: src/mods/ConfigPresets.tsx:112
 #: src/mods/ConfigPresets.tsx:132
 msgid "Save current as…"
@@ -14627,7 +14726,7 @@ msgstr "From a link or file…"
 msgid "Archives land here instead of Mortar's downloads folder. Empty uses the default."
 msgstr "Archives land here instead of Mortar's downloads folder. Empty uses the default."
 
-#: src/launch/store.ts:72
+#: src/launch/store.ts:77
 msgid "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 msgstr "Steam must be installed and signed in for this game. Install Steam, sign in once and try again."
 
@@ -14905,7 +15004,7 @@ msgstr "The game was updated"
 msgid "Before ms"
 msgstr "Before ms"
 
-#: src/share/MethodPanes.tsx:320
+#: src/share/MethodPanes.tsx:309
 msgid "Could not save the .r2z file"
 msgstr "Could not save the .r2z file"
 

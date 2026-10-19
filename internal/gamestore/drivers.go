@@ -108,7 +108,11 @@ func (gogStore) Discover(home string, roots map[string][]string, g components.Ga
 	game := gog.Game{ProductID: g.Stores.GOG.ProductID, Folder: g.Stores.GOG.Folder, Marker: g.MarkerPath()}
 	r := gog.Roots{Heroic: roots[LauncherHeroic], Games: roots[LauncherGOG], Minigalaxy: roots[LauncherMinigalaxy]}
 	for _, in := range gog.Locate(home, game, r) {
-		out = append(out, Install{Store: in.Store, Dir: in.Dir})
+		inst := Install{Store: in.Store, Dir: in.Dir}
+		if in.Heroic != "" {
+			inst.Prefix, inst.Launcher = HeroicPrefix(in.Heroic, in.AppName), "heroic:gog:"+in.AppName
+		}
+		out = append(out, inst)
 	}
 	return out
 }
@@ -139,7 +143,11 @@ func (lutrisStore) Discover(home string, roots map[string][]string, g components
 		game := lutris.Game{Slug: g.Stores.Lutris.Slug, Keyword: g.Stores.Lutris.Keyword, Marker: marker}
 		for _, in := range lutris.Locate(home, game, roots[LauncherLutris]...) {
 			if !slices.ContainsFunc(out, func(o Install) bool { return o.Dir == in.Dir }) {
-				out = append(out, Install{Store: StoreLutris, Dir: in.Dir})
+				inst := Install{Store: StoreLutris, Dir: in.Dir, Prefix: in.Prefix}
+				if components.PlainAppName(in.Slug) {
+					inst.Launcher = "lutris:" + in.Slug
+				}
+				out = append(out, inst)
 			}
 		}
 	}
@@ -277,21 +285,25 @@ func heroicEpicInstalls(heroicDir string) []epicInstall {
 
 func (epicStore) Discover(home string, roots map[string][]string, g components.GameInfo) []Install {
 	var out []Install
-	add := func(store string, installs []epicInstall) {
+	add := func(store, heroic string, installs []epicInstall) {
 		for _, in := range installs {
 			if !slices.Contains(g.Stores.Epic.AppNames, in.AppName) {
 				continue
 			}
 			if found := gog.GameDir(in.Location, g.MarkerPath()); found != "" {
-				out = append(out, Install{Store: store, Dir: found})
+				inst := Install{Store: store, Dir: found}
+				if heroic != "" {
+					inst.Prefix, inst.Launcher = HeroicPrefix(heroic, in.AppName), "heroic:legendary:"+in.AppName
+				}
+				out = append(out, inst)
 			}
 		}
 	}
 	for _, dir := range epicDirs(runtime.GOOS, os.Getenv, roots[LauncherEpic]...) {
-		add(StoreEpic, epicInstalls(dir))
+		add(StoreEpic, "", epicInstalls(dir))
 	}
 	for _, dir := range gog.HeroicDirs(home, roots[LauncherHeroic]...) {
-		add(StoreEpicHeroic, heroicEpicInstalls(dir))
+		add(StoreEpicHeroic, dir, heroicEpicInstalls(dir))
 	}
 	return out
 }

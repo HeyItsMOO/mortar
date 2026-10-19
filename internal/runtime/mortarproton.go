@@ -141,18 +141,24 @@ func FindProton(home, want string) (ProtonBuild, bool) {
 }
 
 // ProtonCommand is the argv and the environment that run exe with args through Proton in inst's prefix, which it
-// creates when missing.
+// creates when missing. A launcher's own Proton prefix is used as it is.
 func ProtonCommand(inst Install, exe string, args ...string) (argv, env []string, err error) {
-	if !(mortarProton{}).Detect(inst) {
+	root, own := CompatDataOf(inst)
+	switch {
+	case own:
+	case (launcherPrefix{}).Detect(inst):
+		return nil, nil, errors.New("the launcher's Wine prefix is not a Proton prefix: start the game from its launcher")
+	case !(mortarProton{}).Detect(inst):
 		return nil, nil, errors.New("install does not run under Mortar's Proton")
 	}
 	build, ok := FindProton(inst.Home, inst.Proton)
 	if !ok {
 		return nil, nil, ErrNoProton
 	}
-	root, err := ProtonPrefix(inst)
-	if err != nil {
-		return nil, nil, err
+	if !own {
+		if root, err = ProtonPrefix(inst); err != nil {
+			return nil, nil, err
+		}
 	}
 	if err := os.MkdirAll(root, 0o750); err != nil {
 		return nil, nil, err

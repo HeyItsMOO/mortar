@@ -29,6 +29,7 @@ const (
 	StoreBottles      = gamestore.StoreBottles
 	StoreEA           = gamestore.StoreEA
 	StoreEpic         = gamestore.StoreEpic
+	StoreEpicHeroic   = gamestore.StoreEpicHeroic
 	StoreFlatpak      = gamestore.StoreFlatpak
 )
 
@@ -48,6 +49,8 @@ type Install struct {
 	Dir   string `json:"dir"`
 	// Prefix is the Wine prefix (a Bottles bottle) a Windows build runs in; empty for other installs.
 	Prefix string `json:"prefix,omitempty"`
+	// Launcher is how the install's own launcher (Heroic, Lutris) starts it; empty when it has none.
+	Launcher string `json:"launcher,omitempty"`
 	// Runtime is the id of the runtime that runs the install: native, proton or wine-prefix.
 	Runtime string `json:"runtime"`
 	// Platform is the OS the build is for: windows, linux or darwin.
@@ -150,7 +153,9 @@ func collect(g Game, home string, s settings.Settings) []Install {
 	}
 	var all []Install
 	for _, in := range gamestore.Discover(home, s.LauncherRoots, info) {
-		all = append(all, newInstall(info, in.Store, in.Dir, in.Prefix, OriginDiscovered))
+		inst := newInstall(info, in.Store, in.Dir, in.Prefix, OriginDiscovered)
+		inst.Launcher = in.Launcher
+		all = append(all, inst)
 	}
 	return all
 }
@@ -233,9 +238,9 @@ func ResolveInstall(home string, s settings.Settings, id, pin string) (Install, 
 }
 
 // StoreStarts reports whether the store that installed this copy can start it: `steam -applaunch` and the Epic Games
-// Launcher's link run the copy their store installed, so a copy from anywhere else starts directly.
+// Launcher's link, and Heroic's and Lutris's, run the copy their store installed, so a copy from anywhere else starts directly.
 func (in Install) StoreStarts() bool {
-	return in.Store == StoreSteam || in.Store == StoreFlatpakSteam || in.Store == StoreEpic
+	return in.Store == StoreSteam || in.Store == StoreFlatpakSteam || in.Store == StoreEpic || in.Launcher != ""
 }
 
 // RunError says why the install cannot be started on this computer, or is nil. On Linux a Windows build runs through
