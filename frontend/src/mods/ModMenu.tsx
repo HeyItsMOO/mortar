@@ -35,6 +35,7 @@ import { useFomod } from '../fomod/store.ts'
 import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { IconAction } from '../shell/IconAction.tsx'
 import { MenuAction } from '../shell/MenuAction.tsx'
+import { OnlyHereMenuItem } from '../sync/pins.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
 import { AddToGroupDialog } from './AddToGroupDialog.tsx'
@@ -355,6 +356,13 @@ function ModActionMenu({
               onAdd={() => setGroupOpen(true)}
             />,
             <NexusPageMenuItem key="nexus-page" mod={mod} close={onClose} />,
+            <OnlyHereMenuItem
+              key="only-here"
+              game={game}
+              profile={currentProfileId ?? ''}
+              modId={mod.id}
+              close={onClose}
+            />,
             update ? (
               <EverywhereMenuItem key="everywhere" game={game} id={mod.id} close={onClose} />
             ) : null,

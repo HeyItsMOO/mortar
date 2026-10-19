@@ -125,6 +125,9 @@ type tracked struct {
 	// Missing names the files of that payload (share.Ref.Identity) that were not installed when it was applied. A push
 	// keeps them as entries so a download that failed is not announced as a removal.
 	Missing []string `json:"missing,omitempty"`
+	// Pins are the mods and config files this computer keeps its own way. They live in this computer's state alone:
+	// a push carries the synced value of each, and an apply keeps the local one.
+	Pins Pins `json:"pins,omitempty"`
 }
 
 type state struct {
@@ -398,6 +401,12 @@ func (s *Service) push(folder string, ref Ref, t tracked, base Vector) error {
 	if err != nil {
 		return fmt.Errorf("export %s: %w", ref.Name, err)
 	}
+	payload, same := s.unpinned(folder, ref, &t, payload)
+	if same {
+		t.Seen, t.Synced = ref.Updated, base
+		s.st.Profiles[key(ref.Game, ref.ID)] = t
+		return s.saveState()
+	}
 	payload, echo := s.keepUnfetched(folder, ref, &t, payload)
 	if echo {
 		t.Seen = ref.Updated
@@ -503,7 +512,7 @@ func (s *Service) Resolve(ctx context.Context, game, remote, revision, choice st
 				return err
 			}
 		}
-		if err := s.d.Source.Apply(ctx, game, local, payload); err != nil {
+		if err := s.d.Source.Apply(ctx, game, local, s.repinned(game, local, payload)); err != nil {
 			// Left behind, the new profile would be written out to every machine on the next scan.
 			if o.New {
 				err = errors.Join(err, s.d.Source.Delete(game, local))
@@ -514,7 +523,7 @@ func (s *Service) Resolve(ctx context.Context, game, remote, revision, choice st
 		if err != nil {
 			return err
 		}
-		nt := tracked{Remote: remote, Synced: sh.Vector, Seen: ref.Updated}
+		nt := tracked{Remote: remote, Synced: sh.Vector, Seen: ref.Updated, Pins: s.st.Profiles[key(game, local)].Pins}
 		nt.Applied, nt.Missing = s.unfetched(game, local, payload)
 		s.st.Profiles[key(game, local)] = nt
 	case Mine:

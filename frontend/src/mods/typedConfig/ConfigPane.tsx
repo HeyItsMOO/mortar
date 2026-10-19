@@ -7,9 +7,11 @@ import { openProfileOf, useProfiles } from '../../profiles/store.ts'
 import { ConfirmDialog } from '../../shell/ConfirmDialog.tsx'
 import { SearchField } from '../../shell/SearchField.tsx'
 import { Tooltip } from '../../shell/Tooltip.tsx'
+import { OnlyHereFileButton } from '../../sync/pins.tsx'
 import { space } from '../../theme/density.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 import { PresetsButton } from '../ConfigPresets.tsx'
+import { localId } from '../dependents.ts'
 import { configApi } from './api.ts'
 import { showsOneFile, useConfigList } from './configList.ts'
 import { filterFile, humanizeKey, isModified, modifiedCount } from './entries.ts'
@@ -104,6 +106,7 @@ function EntryRow({ section, entry }: { section: string; entry: ConfigEntry }) {
 type PaneFile = ReturnType<typeof useTypedConfig.getState>['files'][number]
 
 function Toolbar({
+  target,
   file,
   files,
   mod,
@@ -114,6 +117,7 @@ function Toolbar({
   onReset,
   onDelete,
 }: {
+  target: Target
   file: PaneFile | undefined
   files: PaneFile[]
   mod: Mod | null
@@ -177,6 +181,13 @@ function Toolbar({
           {file?.format === 'gmcm' || file?.format === 'json' || !mod ? null : (
             <PresetsButton mod={mod} />
           )}
+          {file && file.format !== 'gmcm' && file.format !== 'text' ? (
+            <OnlyHereFileButton
+              game={target.game}
+              profile={target.profile}
+              file={file.format === 'smapi' ? `${localId(target.id)}/${file.name}` : file.name}
+            />
+          ) : null}
           <Button
             variant="outlined"
             size="small"
@@ -385,6 +396,7 @@ export function ConfigPane({
       sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}
     >
       <Toolbar
+        target={target}
         file={file}
         files={files}
         mod={mod}

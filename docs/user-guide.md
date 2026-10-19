@@ -260,6 +260,7 @@ A sync folder shares each profile's mod list, sources, settings and mod config f
 2. Work as usual; a few seconds after a profile stops changing, Mortar writes it into the folder.
 3. On another computer a toast says **\<profile\> was changed on \<computer\>**. **Review** opens **Changes from your other machines**: **Show diff**, **Apply** (make your profile match), **Keep mine** (overwrite the other revision) or **Later**.
 4. If both computers changed the same profile, Mortar never merges: pick **Use theirs** or **Keep mine**.
+5. To keep one mod switched on or off, or one config file, different on this computer, right-click the mod and choose **Switch on or off on this computer only**, or press **Only on this computer** in the mod's config editor. That choice stays on this computer: it is never written to the sync folder, and **Apply** and **Keep mine** leave it alone. Press the same item again to let it follow the sync. A profile must have synced once before you can do this.
 
 **Disable** beside the folder stops syncing and leaves its files alone.
 
