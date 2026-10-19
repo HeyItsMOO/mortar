@@ -5,7 +5,7 @@ Mod Organizer 2 is the usual choice for heavily modded Bethesda games; Mortar re
 | | Mortar | Mod Organizer 2 |
 | --- | --- | --- |
 | Platforms | !win Windows, Linux, Steam Deck | Windows ([MO2_RELEASE](https://github.com/ModOrganizer2/modorganizer/releases/latest)); Linux through a [third-party Wine installer](https://github.com/rockerbacon/modorganizer2-linux-installer) |
-| Games | GAME_COUNT, each with its loader installed | 10 fully supported Bethesda games, about 17 with basic support ([Game Support](https://github.com/ModOrganizer2/modorganizer/wiki/Game-Support)) |
+| Games | GAME_COUNT, each with its loader installed | MO2FULL_COUNT fully supported Bethesda games, MO2BASIC_COUNT with basic support ([Game Support](https://github.com/ModOrganizer2/modorganizer/wiki/Game-Support)) |
 | Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :nexus: and local archives ([source](https://github.com/ModOrganizer2/modorganizer/blob/master/src/nexusinterface.h)) |
 | Loader install | !win SMAPI, BepInEx and each game's loader | Set up by hand ([wiki](https://github.com/ModOrganizer2/modorganizer/wiki/Running-Oblivion-OBSE-with-MO2)) |
 | Sharing | !win A link or a `.mortar` file | None documented |

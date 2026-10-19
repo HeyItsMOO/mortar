@@ -135,17 +135,69 @@ const sourceIcons = (html: string) =>
 // site publish runs too) and committed, so building the site stays offline. A page names a game count as
 // R2MODMAN_COUNT, a latest release as MO2_RELEASE and its month as MO2_RELEASED.
 const RIVALS = 'scripts/site/rival-facts.json'
-const RIVAL_COUNTS: Record<string, { url: string; count: (body: unknown) => number }> = {
+/** The number `re` captures in `body`; a source reworded past `re` fails rather than writing a wrong figure. */
+function captured(body: string, re: RegExp): number {
+  const n = Number(re.exec(body)?.[1])
+  if (!Number.isInteger(n)) {
+    throw new Error(`no match for ${re}`)
+  }
+  return n
+}
+
+/** How many items `re` finds in the part of `body` from `start` to the first `end` after it. */
+function itemsBetween(body: string, start: string, end: string, re: RegExp): number {
+  const from = body.indexOf(start)
+  const to = body.indexOf(end, from + start.length)
+  const n = from < 0 || to < 0 ? 0 : (body.slice(from, to).match(re) ?? []).length
+  if (n === 0) {
+    throw new Error(`no items between "${start}" and "${end}"`)
+  }
+  return n
+}
+
+const MO2_GAMES =
+  'https://raw.githubusercontent.com/wiki/ModOrganizer2/modorganizer/Game-Support.md'
+const CURSEFORGE_GAMES =
+  'https://support.curseforge.com/support/solutions/articles/9000193488-getting-started'
+const BULLET = /^\s*[*-] /gm
+const HTML_ITEM = /<li\b/g
+
+const RIVAL_COUNTS: Record<string, { url: string; count: (body: string) => number }> = {
   r2modman: {
     url: 'https://raw.githubusercontent.com/ebkr/r2modmanPlus/develop/src/assets/data/ecosystem.json',
     count: (body) =>
-      Object.values((body as { games: Record<string, { r2modman?: unknown }> }).games).filter(
-        (g) => g.r2modman,
-      ).length,
+      Object.values(
+        (JSON.parse(body) as { games: Record<string, { r2modman?: unknown }> }).games,
+      ).filter((g) => g.r2modman).length,
   },
   gale: {
     url: 'https://raw.githubusercontent.com/Kesomannen/gale/master/src-tauri/games.json',
-    count: (body) => (body as unknown[]).length,
+    count: (body) => (JSON.parse(body) as unknown[]).length,
+  },
+  vortex: {
+    url: 'https://raw.githubusercontent.com/Nexus-Mods/Vortex/master/README.md',
+    count: (body) => captured(body, /support for over (\d+) different games/),
+  },
+  mo2full: {
+    url: MO2_GAMES,
+    count: (body) => itemsBetween(body, 'are [fully]', 'have [basic support]', BULLET),
+  },
+  mo2basic: {
+    url: MO2_GAMES,
+    count: (body) => itemsBetween(body, 'have [basic support]', '###', BULLET),
+  },
+  cfoverwolf: {
+    url: CURSEFORGE_GAMES,
+    count: (body) =>
+      itemsBetween(body, '<strong>Overwolf CurseForge App</strong><ul>', '</ul>', HTML_ITEM),
+  },
+  cfstandalone: {
+    url: CURSEFORGE_GAMES,
+    count: (body) => itemsBetween(body, '<strong>Standalone App</strong><ul>', '</ul>', HTML_ITEM),
+  },
+  cflinux: {
+    url: CURSEFORGE_GAMES,
+    count: (body) => itemsBetween(body, 'id="Linux"', '</ul>', HTML_ITEM),
   },
 }
 const RIVAL_RELEASES: Record<string, string> = {
@@ -154,7 +206,7 @@ const RIVAL_RELEASES: Record<string, string> = {
   stardrop: 'Floogen/Stardrop',
 }
 
-async function getJSON(url: string): Promise<unknown> {
+async function getText(url: string): Promise<string> {
   const token = process.env.GITHUB_TOKEN
   const res = await fetch(
     url,
@@ -165,25 +217,43 @@ async function getJSON(url: string): Promise<unknown> {
   if (!res.ok) {
     throw new Error(`${url} answered ${res.status}`)
   }
-  return res.json()
+  return res.text()
 }
 
+// A source that cannot be read or parsed keeps its committed figure, so one site being down never blocks a release's
+// publish; the warning names it for the next refresh.
 export async function refreshRivalFacts(): Promise<void> {
+  const prev = rivalFacts()
   const out: Record<string, number | string> = {}
+  const keep = (keys: string[], url: string, err: unknown) => {
+    for (const k of keys) {
+      if (prev[k] === undefined) {
+        throw new Error(`site: ${k} from ${url}: ${String(err)}`)
+      }
+      out[k] = prev[k]
+    }
+    process.stderr.write(`site: kept ${keys.join(', ')}: ${url}: ${String(err)}\n`)
+  }
   for (const [id, src] of Object.entries(RIVAL_COUNTS)) {
-    out[`${id}_count`] = src.count(await getJSON(src.url))
+    try {
+      out[`${id}_count`] = src.count(await getText(src.url))
+    } catch (err) {
+      keep([`${id}_count`], src.url, err)
+    }
   }
   for (const [id, repo] of Object.entries(RIVAL_RELEASES)) {
-    const rel = (await getJSON(`https://api.github.com/repos/${repo}/releases/latest`)) as {
-      tag_name: string
-      published_at: string
+    const url = `https://api.github.com/repos/${repo}/releases/latest`
+    try {
+      const rel = JSON.parse(await getText(url)) as { tag_name: string; published_at: string }
+      out[`${id}_release`] = rel.tag_name
+      out[`${id}_released`] = new Date(rel.published_at).toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+    } catch (err) {
+      keep([`${id}_release`, `${id}_released`], url, err)
     }
-    out[`${id}_release`] = rel.tag_name
-    out[`${id}_released`] = new Date(rel.published_at).toLocaleDateString('en-US', {
-      month: 'long',
-      year: 'numeric',
-      timeZone: 'UTC',
-    })
   }
   writeFileSync(RIVALS, `${JSON.stringify(out, null, 2)}\n`)
 }

@@ -1,6 +1,12 @@
 {
   "r2modman_count": 307,
   "gale_count": 237,
+  "vortex_count": 250,
+  "mo2full_count": 10,
+  "mo2basic_count": 17,
+  "cfoverwolf_count": 15,
+  "cfstandalone_count": 8,
+  "cflinux_count": 3,
   "mo2_release": "v2.5.2",
   "mo2_released": "August 2024",
   "vortex_release": "v2.8.2",
