@@ -4,8 +4,27 @@
   <id>https://mortar.rethunk.tech/changelog/</id>
   <link href="https://mortar.rethunk.tech/changelog/" />
   <link rel="self" href="https://mortar.rethunk.tech/changelog/feed.xml" />
-  <updated>2026-10-18T00:00:00Z</updated>
+  <updated>2026-10-19T00:00:00Z</updated>
   <author><name>Rethunk.Tech</name></author>
+  <entry>
+    <title>Mortar 0.3.7</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.7</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.7" />
+    <updated>2026-10-19T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;h4&#62;Games&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;106 more games list mods from Nexus Mods, and Among Us, Darkest Dungeon, Hogwarts Legacy and inZOI from CurseForge&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Game Selection stays light with every catalog game: rows load as they scroll into view and game art loads at the size it is shown&#60;/li&#62;
+        &#60;li&#62;The letter rail beside Game Selection marks the last letter at the bottom of the list&#60;/li&#62;
+        &#60;li&#62;Game art no longer shows black bands while it loads&#60;/li&#62;
+        &#60;li&#62;A mod from CurseForge or another site in a folder game is named after its page, not a code&#60;/li&#62;
+        &#60;li&#62;A game&#38;#39;s Proton version setting is kept&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
   <entry>
     <title>Mortar 0.3.6</title>
     <id>https://mortar.rethunk.tech/changelog/#v0.3.6</id>
