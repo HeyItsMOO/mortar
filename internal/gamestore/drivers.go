@@ -155,6 +155,9 @@ func eaDirs(goos string, env func(string) string, custom ...string) []string {
 	return out
 }
 
+// lookupEARegistry is the registry read; tests replace it so they never touch the real registry.
+var lookupEARegistry = eaRegistryDir
+
 type eaStore struct{}
 
 func (eaStore) Key() string { return eaKey }
@@ -175,6 +178,12 @@ func (eaStore) Discover(_ string, roots map[string][]string, g components.GameIn
 	var out []Install
 	for _, dir := range eaDirs(runtime.GOOS, os.Getenv, roots[LauncherEA]...) {
 		if found := gog.GameDir(filepath.Join(dir, g.Stores.EA.Folder), g.MarkerPath()); found != "" {
+			out = append(out, Install{Store: StoreEA, Dir: found})
+		}
+	}
+	// A game on another drive is in no library folder; its installer's registry entry names it.
+	if g.Stores.EA.Registry != "" {
+		if found := gog.GameDir(lookupEARegistry(g.Stores.EA.Registry), g.MarkerPath()); found != "" && !slices.ContainsFunc(out, func(in Install) bool { return fsx.SamePath(in.Dir, found) }) {
 			out = append(out, Install{Store: StoreEA, Dir: found})
 		}
 	}

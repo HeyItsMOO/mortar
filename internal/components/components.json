@@ -9886,7 +9886,8 @@
           "appId": "1222670"
         },
         "ea": {
-          "folder": "The Sims 4"
+          "folder": "The Sims 4",
+          "registry": "SOFTWARE\\Maxis\\The Sims 4"
         }
       },
       "loaders": [

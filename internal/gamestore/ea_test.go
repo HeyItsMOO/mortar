@@ -110,3 +110,23 @@ func TestEAFindsAnInstallWhoseMarkerSitsInAFolderBelowTheRoot(t *testing.T) {
 		t.Fatalf("got %+v, want %+v", got, want)
 	}
 }
+
+func TestEAFindsAnInstallOnAnotherDriveByItsRegistryEntry(t *testing.T) {
+	away := t.TempDir()
+	touchFile(t, filepath.Join(away, "X.exe"))
+	var asked string
+	lookupEARegistry = func(key string) string { asked = key; return away }
+	t.Cleanup(func() { lookupEARegistry = eaRegistryDir })
+	g := eaGame()
+	g.Stores.EA.Registry = `SOFTWARE\X`
+	got := Discover(t.TempDir(), nil, g)
+	if want := []Install{{Store: StoreEA, Dir: away}}; !slices.Equal(got, want) || asked != `SOFTWARE\X` {
+		t.Fatalf("got %+v (asked %q), want %+v", got, asked, want)
+	}
+	lib := t.TempDir()
+	touchFile(t, filepath.Join(lib, "The X", "X.exe"))
+	lookupEARegistry = func(string) string { return filepath.Join(lib, "The X") }
+	if got := Discover(t.TempDir(), map[string][]string{LauncherEA: {lib}}, g); len(got) != 1 {
+		t.Fatalf("an install in a library folder and in the registry is listed once: %+v", got)
+	}
+}

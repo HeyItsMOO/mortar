@@ -399,9 +399,11 @@ type EpicStore struct {
 	AppNames []string `json:"appNames"`
 }
 
-// EAStore names a game to the EA App: the folder under an EA library folder (`EA Games`) its installer gives it.
+// EAStore names a game to the EA App: the folder under an EA library folder (`EA Games`) its installer gives it, and
+// the HKLM key (SOFTWARE\...) whose "Install Dir" its installer writes, which finds a game installed on another drive.
 type EAStore struct {
-	Folder string `json:"folder"`
+	Folder   string `json:"folder"`
+	Registry string `json:"registry,omitempty"`
 }
 
 // BottlesStore names a game to Bottles: the folder its Steam and GOG installs have inside a bottle.
