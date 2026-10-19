@@ -7,4 +7,5 @@ import (
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/melonloader"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/smapi"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/thunderpack"
+	_ "github.com/Rethunk-Tech/mortar/internal/loader/vslog"
 )

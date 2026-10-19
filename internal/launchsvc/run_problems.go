@@ -14,6 +14,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 	"github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
+	"github.com/Rethunk-Tech/mortar/internal/loader/gamelog"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
 
@@ -92,17 +93,23 @@ var loaderFixes = map[string]launch.SMAPIFixKind{
 func (s *Service) loaderProblems(gameID, profileID, text, player string) []launch.SMAPIProblem {
 	l, ok := s.loaderOf(gameID, profileID)
 	logs, isLogs := l.(loader.WithLogs)
-	if !ok || !isLogs || text == "" {
+	if !ok || text == "" || !isLogs && !game.HasPath(gameID, game.PathLog) {
 		return nil
 	}
 	var found []loader.Finding
-	for _, a := range logs.Analyzers() {
-		found = append(found, a.Analyze(loader.Logs{Loader: text, Player: player})...)
+	owners := map[string]profile.Installed{}
+	if isLogs {
+		for _, a := range logs.Analyzers() {
+			found = append(found, a.Analyze(loader.Logs{Loader: text, Player: player})...)
+		}
+		owners = s.pluginOwners(gameID, profileID)
+	} else {
+		// A game with no loader log: its own log names a mod by its id.
+		found, owners = gamelog.Analyze(text), s.modIDOwners(gameID, profileID)
 	}
 	if len(found) == 0 {
 		return nil
 	}
-	owners := s.pluginOwners(gameID, profileID)
 	var out []launch.SMAPIProblem
 	for _, f := range found {
 		if f.Kind == bepinex5.KindPluginError {
@@ -115,6 +122,22 @@ func (s *Service) loaderProblems(gameID, profileID, text, player string) []launc
 		out = append(out, p)
 	}
 	return out
+}
+
+// modIDOwners maps the lower-cased id and name of each enabled mod of the profile to it.
+func (s *Service) modIDOwners(gameID, profileID string) map[string]profile.Installed {
+	owners := map[string]profile.Installed{}
+	if s.profiles == nil || profileID == "" {
+		return owners
+	}
+	installed, _ := s.profiles.Installed(gameID, profileID)
+	for _, m := range installed {
+		if m.Enabled {
+			owners[strings.ToLower(m.ModID().Local())] = m
+			owners[strings.ToLower(m.Name)] = m
+		}
+	}
+	return owners
 }
 
 // pluginOwners maps every name a loader log gives a plugin (see dotnet.Owners) to the profile mod whose DLLs declare it.

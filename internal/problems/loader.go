@@ -10,6 +10,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/loader/gamelog"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 )
 
@@ -46,6 +47,11 @@ func loaderFailures(l loader.Loader, p loader.ProfileView, player string, owners
 	for _, a := range logs.Analyzers() {
 		found = append(found, a.Analyze(loader.Logs{Loader: string(raw), Player: player})...)
 	}
+	return attribute(found, owners)
+}
+
+// attribute turns findings into load failures, naming the installed package behind each plugin the owners know.
+func attribute(found []loader.Finding, owners func() map[string]framework.Mod) []LoadFailure {
 	if len(found) == 0 {
 		return nil
 	}
@@ -104,6 +110,24 @@ func pluginOwners(mods []framework.Mod) map[string]framework.Mod {
 	owners := map[string]framework.Mod{}
 	for name, i := range dotnet.Owners(dirs) {
 		owners[name] = with[i]
+	}
+	return owners
+}
+
+// gameLogFailures reads the game's own log, for a game whose mods have no loader log: Vintage Story's mod loader writes
+// its failures there under the mod's id.
+func gameLogFailures(text string, mods []framework.Mod) []LoadFailure {
+	return attribute(gamelog.Analyze(text), func() map[string]framework.Mod { return modIDOwners(mods) })
+}
+
+// modIDOwners maps the lower-cased id and name of each enabled mod to it, which is how such a log names a mod.
+func modIDOwners(mods []framework.Mod) map[string]framework.Mod {
+	owners := map[string]framework.Mod{}
+	for _, m := range mods {
+		if m.Enabled {
+			owners[strings.ToLower(m.ModID().Local())] = m
+			owners[strings.ToLower(m.Name)] = m
+		}
 	}
 	return owners
 }

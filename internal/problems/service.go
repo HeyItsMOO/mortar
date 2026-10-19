@@ -161,20 +161,8 @@ func (s *Service) playerLog(gameID, profileID string, l loader.Loader) string {
 	if !ok {
 		return ""
 	}
-	if s.Runs != nil {
-		all, err := s.profiles.List(gameID)
-		if err != nil {
-			return ""
-		}
-		others := make([]string, 0, len(all))
-		for _, p := range all {
-			if p.ID != profileID {
-				others = append(others, p.ID)
-			}
-		}
-		if !ranLast(s.Runs, gameID, profileID, others) {
-			return ""
-		}
+	if !s.ranLastHere(gameID, profileID) {
+		return ""
 	}
 	path, err := game.PathFor(s.home, s.settings.Get(), gameID, "", w.PlayerLogRole())
 	if err != nil {
@@ -182,6 +170,38 @@ func (s *Service) playerLog(gameID, profileID string, l loader.Loader) string {
 	}
 	b, _ := fsx.ReadFile(path)
 	return string(b)
+}
+
+// gameLog is the text of the game's own log, empty when it keeps none or has not written it.
+func (s *Service) gameLog(gameID, profileID string) string {
+	if !s.ranLastHere(gameID, profileID) {
+		return ""
+	}
+	path, err := game.PathFor(s.home, s.settings.Get(), gameID, "", game.PathLog)
+	if err != nil {
+		return ""
+	}
+	b, _ := fsx.ReadFile(path)
+	return string(b)
+}
+
+// ranLastHere is false when another profile of the game ran after this one, whose game-wide log is then not this
+// profile's.
+func (s *Service) ranLastHere(gameID, profileID string) bool {
+	if s.Runs == nil {
+		return true
+	}
+	all, err := s.profiles.List(gameID)
+	if err != nil {
+		return false
+	}
+	others := make([]string, 0, len(all))
+	for _, p := range all {
+		if p.ID != profileID {
+			others = append(others, p.ID)
+		}
+	}
+	return ranLast(s.Runs, gameID, profileID, others)
 }
 
 // nexusDomain is the Nexus domain of a game, empty when Nexus does not host it.
@@ -344,6 +364,11 @@ func (s *Service) ProblemsWithEvidence(ctx context.Context, gameID, id string) (
 			}
 			if f, bad := gameVersionFailure(gameID, l, env); bad {
 				r.LoadFailures = append(r.LoadFailures, f)
+			}
+		}
+		if l, _ := game.LoaderOf(gameID, s.profiles.LoaderID(gameID, id)); game.HasPath(gameID, game.PathLog) {
+			if _, own := l.(loader.WithLogs); !own {
+				r.LoadFailures = append(r.LoadFailures, gameLogFailures(s.gameLog(gameID, id), mods)...)
 			}
 		}
 		r.LoadFailures = append(r.LoadFailures, settingRows...)

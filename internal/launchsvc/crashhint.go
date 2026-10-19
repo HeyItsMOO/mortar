@@ -8,6 +8,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 	"github.com/Rethunk-Tech/mortar/internal/loader/dotnetstack"
+	"github.com/Rethunk-Tech/mortar/internal/loader/gamelog"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
@@ -77,6 +78,9 @@ func (s *Service) loaderFindings(gameID, profileID string) []loader.Finding {
 		return nil
 	}
 	logs, ok := l.(loader.WithLogs)
+	if !ok && game.HasPath(gameID, game.PathLog) {
+		return gamelog.Analyze(s.gamePathText(gameID, game.PathLog) + "\n" + s.gamePathText(gameID, game.PathCrashLog))
+	}
 	if !ok || len(logs.Analyzers()) == 0 {
 		return nil
 	}
