@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"github.com/Rethunk-Tech/mortar/internal/doctor"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
@@ -130,6 +131,34 @@ func TestBugURLCarriesTheReportAndDiagnosticsOnlyWhenAsked(t *testing.T) {
 	}
 	if !strings.Contains(parse(s.BugURL("", BugReport{Diagnostics: true})).Get("body"), "**Diagnostics**") {
 		t.Fatal("diagnostics missing when asked")
+	}
+}
+
+func TestBugTextFitsDiscordOnALineBoundaryWithoutDiagnostics(t *testing.T) {
+	t.Setenv("XDG_DATA_HOME", t.TempDir())
+	s := NewService("1.2.3", func(string) problems.Environment { return problems.Environment{} }, t.TempDir(), nil)
+	long := strings.Repeat("é line\n", 600)
+	for _, tc := range []struct {
+		name    string
+		r       BugReport
+		first   string
+		trimmed bool
+	}{
+		{"titled", BugReport{Title: " Play stuck ", Happened: "It spins", Diagnostics: true}, "**Play stuck**", false},
+		{"untitled", BugReport{Happened: "It spins"}, "**Bug report**", false},
+		{"long", BugReport{Happened: long}, "**Bug report**", true},
+	} {
+		got := s.BugText("", tc.r)
+		if !strings.HasPrefix(got, tc.first+"\n") || strings.Contains(got, "**Diagnostics**") ||
+			utf8.RuneCountInString(got) > 2000 || strings.HasSuffix(got, "…") != tc.trimmed {
+			t.Errorf("%s: %q", tc.name, got)
+		}
+		if tc.trimmed && !strings.HasSuffix(got, "line\n…") {
+			t.Errorf("%s: not cut on a line boundary: %q", tc.name, got[len(got)-20:])
+		}
+	}
+	if got := fitPost(strings.Repeat("x", 50), 10); got != "xxxxxxxx\n…" {
+		t.Errorf("no newline: %q", got)
 	}
 }
 

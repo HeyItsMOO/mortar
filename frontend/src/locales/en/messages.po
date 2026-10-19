@@ -385,7 +385,7 @@ msgstr "The downloads folder…"
 msgid "Restored {detail} of {name}"
 msgstr "Restored {detail} of {name}"
 
-#: src/shell/AppMenu.tsx:79
+#: src/shell/AppMenu.tsx:81
 msgid "Sign out of Nexus"
 msgstr "Sign out of Nexus"
 
@@ -944,7 +944,7 @@ msgid "Installed by Mortar"
 msgstr "Installed by Mortar"
 
 #: src/settings/shortcutLabels.ts:11
-#: src/shell/AppMenu.tsx:181
+#: src/shell/AppMenu.tsx:191
 msgid "Check mods and Mortar for updates"
 msgstr "Check mods and Mortar for updates"
 
@@ -1071,7 +1071,6 @@ msgid "Open on Modrinth"
 msgstr "Open on Modrinth"
 
 #: src/firstrun/FirstRun.tsx:127
-#: src/shell/AppMenu.tsx:115
 msgid "Join our Discord"
 msgstr "Join our Discord"
 
@@ -1486,7 +1485,7 @@ msgstr "{0, plural, one {# setting is still waiting for its mod to install.} oth
 msgid "Enable scheduled save backups first."
 msgstr "Enable scheduled save backups first."
 
-#: src/shell/AppMenu.tsx:170
+#: src/shell/AppMenu.tsx:180
 msgid "Mortar settings…"
 msgstr "Mortar settings…"
 
@@ -1770,7 +1769,7 @@ msgstr "Missing requirements"
 msgid "Default sort"
 msgstr "Default sort"
 
-#: src/shell/BugReportDialog.tsx:79
+#: src/shell/BugReportDialog.tsx:123
 msgid "What you expected"
 msgstr "What you expected"
 
@@ -2177,7 +2176,7 @@ msgstr "Pre-releases and unofficial SMAPI updates. Show lists them; Include lets
 msgid "{0, plural, one {# copy of {1}} other {# copies of {2}}}"
 msgstr "{0, plural, one {# copy of {1}} other {# copies of {2}}}"
 
-#: src/shell/AppMenu.tsx:138
+#: src/shell/AppMenu.tsx:148
 msgid "Could not quit Mortar"
 msgstr "Could not quit Mortar"
 
@@ -2202,7 +2201,7 @@ msgstr "Files of this stored mod went missing, changed or appeared after Mortar 
 msgid "Could not unhide the mod"
 msgstr "Could not unhide the mod"
 
-#: src/shell/BugReportDialog.tsx:65
+#: src/shell/BugReportDialog.tsx:109
 msgid "A short summary"
 msgstr "A short summary"
 
@@ -2732,7 +2731,7 @@ msgstr "{0, plural, one {# tracked mod on Nexus is not in this profile} other {#
 msgid "One step in Steam"
 msgstr "One step in Steam"
 
-#: src/shell/AppMenu.tsx:88
+#: src/shell/AppMenu.tsx:90
 msgid "Sign in to Nexus…"
 msgstr "Sign in to Nexus…"
 
@@ -3210,7 +3209,7 @@ msgid "Not loaded in the running game"
 msgstr "Not loaded in the running game"
 
 #: src/settings/shortcutLabels.ts:40
-#: src/shell/AppMenu.tsx:228
+#: src/shell/AppMenu.tsx:238
 msgid "Get help"
 msgstr "Get help"
 
@@ -3337,7 +3336,7 @@ msgstr "Switch to Mods"
 msgid "Launch prefix"
 msgstr "Launch prefix"
 
-#: src/shell/BugReportDialog.tsx:70
+#: src/shell/BugReportDialog.tsx:114
 msgid "What happened"
 msgstr "What happened"
 
@@ -3380,7 +3379,7 @@ msgstr "{who} both edit {target}.{winner}"
 msgid "{0, plural, one {# mod added} other {# mods added}}"
 msgstr "{0, plural, one {# mod added} other {# mods added}}"
 
-#: src/shell/BugReportDialog.tsx:96
+#: src/shell/BugReportDialog.tsx:143
 msgid "Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you drag it into the issue)"
 msgstr "Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you drag it into the issue)"
 
@@ -3456,6 +3455,10 @@ msgstr "Different version"
 #: src/console/PerformancePanelParts.tsx:236
 msgid "Clear comparison"
 msgstr "Clear comparison"
+
+#: src/shell/AppMenu.tsx:122
+msgid "Suggest a feature…"
+msgstr "Suggest a feature…"
 
 #. placeholder {0}: d.name
 #: src/mods/describe.ts:258
@@ -3805,7 +3808,7 @@ msgid "{0, plural, one {# mod checked} other {# mods checked}}"
 msgstr "{0, plural, one {# mod checked} other {# mods checked}}"
 
 #: src/settings/sections/General.tsx:272
-#: src/shell/AppMenu.tsx:225
+#: src/shell/AppMenu.tsx:235
 msgid "Help"
 msgstr "Help"
 
@@ -3830,6 +3833,10 @@ msgstr "{0, plural, one {# download added} other {# downloads added}}"
 #: src/firstrun/LoaderStep.tsx:95
 msgid "Launch options copied"
 msgstr "Launch options copied"
+
+#: src/shell/SuggestDialog.tsx:33
+msgid "Suggest a feature"
+msgstr "Suggest a feature"
 
 #: src/share/DestinationPanel.tsx:78
 msgid "Preview what they see"
@@ -3915,7 +3922,7 @@ msgid "Recent"
 msgstr "Recent"
 
 #: src/settings/startupChecks.ts:37
-#: src/shell/BugReportDialog.tsx:59
+#: src/shell/BugReportDialog.tsx:84
 #: src/shell/ErrorBoundary.tsx:28
 msgid "Report a bug"
 msgstr "Report a bug"
@@ -4224,6 +4231,10 @@ msgstr "Optional for ({0})"
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
+#: src/shell/SuggestDialog.tsx:36
+msgid "Post your idea where you prefer. Discord lets others vote on it; GitHub keeps it next to the code."
+msgstr "Post your idea where you prefer. Discord lets others vote on it; GitHub keeps it next to the code."
+
 #: src/settings/sections/nxmHandler.tsx:51
 msgid "Should Mortar open Nexus \"Mod Manager Download\" links, so a click on Nexus starts the download here?"
 msgstr "Should Mortar open Nexus \"Mod Manager Download\" links, so a click on Nexus starts the download here?"
@@ -4481,9 +4492,10 @@ msgstr "Mortar already named the likely mod for the last crash."
 #: src/settings/sections/NexusSSO.tsx:68
 #: src/settings/sections/nxmHandler.tsx:65
 #: src/share/ShareFooter.tsx:42
-#: src/shell/BugReportDialog.tsx:103
+#: src/shell/BugReportDialog.tsx:153
 #: src/shell/ConfirmDialog.tsx:57
 #: src/shell/PromptDialog.tsx:67
+#: src/shell/SuggestDialog.tsx:40
 #: src/templates/ApplyTemplateDialog.tsx:159
 #: src/tools/ToolEditorDialog.tsx:136
 msgid "Cancel"
@@ -4572,6 +4584,10 @@ msgstr "Choose a {0} folder"
 #: src/console/startupHooks.ts:40
 msgid "time in its patches {ms}"
 msgstr "time in its patches {ms}"
+
+#: src/shell/BugReportDialog.tsx:89
+msgid "Post on"
+msgstr "Post on"
 
 #: src/game/FarmMenuItem.tsx:52
 msgid "List copied"
@@ -4842,8 +4858,8 @@ msgstr "Show live game info in OBS. Changes apply the next time you press Play."
 #: src/settings/sections/Updates.tsx:170
 #: src/share/DestinationGrid.tsx:52
 #: src/share/ShareDialog.tsx:41
-#: src/shell/AppMenu.tsx:164
-#: src/shell/AppMenu.tsx:167
+#: src/shell/AppMenu.tsx:174
+#: src/shell/AppMenu.tsx:177
 msgid "Mortar"
 msgstr "Mortar"
 
@@ -5741,7 +5757,7 @@ msgstr "Added from an archive, so it only exists on this computer."
 #: src/queue/QueueSheet.tsx:83
 #: src/queue/QueueSheet.tsx:197
 #: src/settings/SettingsPage.tsx:42
-#: src/shell/AppMenu.tsx:201
+#: src/shell/AppMenu.tsx:211
 msgid "Downloads"
 msgstr "Downloads"
 
@@ -5854,7 +5870,7 @@ msgstr "A friend's link or file…"
 msgid "Created · updated"
 msgstr "Created · updated"
 
-#: src/shell/AppMenu.tsx:239
+#: src/shell/AppMenu.tsx:249
 msgid "Report a bug…"
 msgstr "Report a bug…"
 
@@ -6116,7 +6132,7 @@ msgstr "Another file from a mod you have"
 msgid "Could not run the command"
 msgstr "Could not run the command"
 
-#: src/shell/AppMenu.tsx:218
+#: src/shell/AppMenu.tsx:228
 msgid "About Mortar"
 msgstr "About Mortar"
 
@@ -6188,7 +6204,7 @@ msgid "Open mod"
 msgstr "Open mod"
 
 #: src/mods/modActions.ts:73
-#: src/shell/BugReportDialog.tsx:105
+#: src/shell/BugReportDialog.tsx:155
 msgid "Open on GitHub"
 msgstr "Open on GitHub"
 
@@ -7139,7 +7155,7 @@ msgid "Nothing would change."
 msgstr "Nothing would change."
 
 #: src/settings/sections/Updates.tsx:137
-#: src/shell/AppMenu.tsx:192
+#: src/shell/AppMenu.tsx:202
 msgid "What's new in {version}"
 msgstr "What's new in {version}"
 
@@ -7309,7 +7325,7 @@ msgstr "Create a profile first."
 msgid "Which?"
 msgstr "Which?"
 
-#: src/shell/AppMenu.tsx:210
+#: src/shell/AppMenu.tsx:220
 msgid "Open data folder"
 msgstr "Open data folder"
 
@@ -7642,7 +7658,7 @@ msgstr "Could not change how Nexus links open"
 msgid "requirements"
 msgstr "requirements"
 
-#: src/shell/AppMenu.tsx:110
+#: src/shell/AppMenu.tsx:112
 msgid "Source code"
 msgstr "Source code"
 
@@ -8871,9 +8887,13 @@ msgstr "The rest of Mortar still works. Try again, or copy the details for a bug
 msgid "New since you last looked"
 msgstr "New since you last looked"
 
-#: src/shell/BugReportDialog.tsx:64
+#: src/shell/BugReportDialog.tsx:108
 msgid "Title"
 msgstr "Title"
+
+#: src/shell/AppMenu.tsx:117
+msgid "Ask on Discord"
+msgstr "Ask on Discord"
 
 #: src/launch/SaveWarnDialog.tsx:90
 msgid "Open Saves"
@@ -8974,7 +8994,7 @@ msgstr "A game update replaced {0}'s launcher"
 msgid "Could not undo. Missing from the store: {list}"
 msgstr "Could not undo. Missing from the store: {list}"
 
-#: src/shell/AppMenu.tsx:65
+#: src/shell/AppMenu.tsx:67
 msgid "Nexus Mods · Not signed in"
 msgstr "Nexus Mods · Not signed in"
 
@@ -8994,6 +9014,10 @@ msgstr "Reading the mod's page…"
 #: src/mods/redundantReason.ts:71
 msgid "{count, plural, one {{by} already includes everything it changes} other {{by} together include everything it changes}}"
 msgstr "{count, plural, one {{by} already includes everything it changes} other {{by} together include everything it changes}}"
+
+#: src/shell/BugReportDialog.tsx:142
+msgid "Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you attach it to the post)"
+msgstr "Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you attach it to the post)"
 
 #: src/shell/checkForUpdates.ts:70
 msgid "Update check failed"
@@ -9707,6 +9731,8 @@ msgid "{profileName} has {0} more than once. {loader} loads only one, so pick wh
 msgstr "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
 
 #: src/share/ListFormat.tsx:48
+#: src/shell/BugReportDialog.tsx:104
+#: src/shell/SuggestDialog.tsx:45
 msgid "Discord"
 msgstr "Discord"
 
@@ -9899,6 +9925,10 @@ msgstr "Debug"
 #: src/launch/PrePlayDialog.tsx:43
 msgid "Broken or obsolete ({0})"
 msgstr "Broken or obsolete ({0})"
+
+#: src/shell/BugReportDialog.tsx:155
+msgid "Copy and open Discord"
+msgstr "Copy and open Discord"
 
 #: src/profiles/HealthCheckBadge.tsx:15
 msgid "{count, plural, one {# thing to repair} other {# things to repair}}"
@@ -10199,7 +10229,7 @@ msgstr "Default for Share and Export. You can change it per share."
 msgid "The Vortex folder {folder} has no profiles."
 msgstr "The Vortex folder {folder} has no profiles."
 
-#: src/App.tsx:90
+#: src/App.tsx:91
 #: src/games/useGameTiles.ts:77
 #: src/games/useOpenGame.ts:42
 msgid "Could not read your games"
@@ -10263,6 +10293,7 @@ msgstr "Fits {name}"
 #: src/mods/ProblemsTab.tsx:432
 #: src/mods/ReportToAuthorButton.tsx:176
 #: src/settings/sections/AboutDiagnostics.tsx:140
+#: src/shell/BugReportDialog.tsx:68
 msgid "Report copied"
 msgstr "Report copied"
 
@@ -10443,7 +10474,7 @@ msgstr "overrides {count, plural, one {# file} other {# files}}"
 msgid "Save to library…"
 msgstr "Save to library…"
 
-#: src/shell/BugReportDialog.tsx:86
+#: src/shell/BugReportDialog.tsx:130
 msgid "Steps to reproduce"
 msgstr "Steps to reproduce"
 
@@ -11029,6 +11060,8 @@ msgstr "Report it so it can be fixed."
 #: src/mods/listRows.ts:142
 #: src/mods/Sidebar.tsx:498
 #: src/settings/sections/Accounts.tsx:17
+#: src/shell/BugReportDialog.tsx:105
+#: src/shell/SuggestDialog.tsx:42
 msgid "GitHub"
 msgstr "GitHub"
 
@@ -11253,7 +11286,7 @@ msgid "Enabled"
 msgstr "Enabled"
 
 #: src/settings/sections/NexusMods.tsx:156
-#: src/shell/AppMenu.tsx:71
+#: src/shell/AppMenu.tsx:73
 msgid "Premium"
 msgstr "Premium"
 
@@ -11668,7 +11701,7 @@ msgstr "Save backups"
 msgid "The game's first frames; mods doing setup work in update events show up here"
 msgstr "The game's first frames; mods doing setup work in update events show up here"
 
-#: src/shell/AppMenu.tsx:144
+#: src/shell/AppMenu.tsx:154
 msgid "Mortar menu"
 msgstr "Mortar menu"
 
@@ -13560,7 +13593,7 @@ msgstr "No differences."
 msgid "{0, plural, one {# more pack} other {# more packs}}"
 msgstr "{0, plural, one {# more pack} other {# more packs}}"
 
-#: src/shell/AppMenu.tsx:65
+#: src/shell/AppMenu.tsx:67
 msgid "Nexus Mods · Signed in as {name}"
 msgstr "Nexus Mods · Signed in as {name}"
 
@@ -14131,7 +14164,7 @@ msgstr "Open Nexus settings"
 msgid "Report to author…"
 msgstr "Report to author…"
 
-#: src/shell/BugReportDialog.tsx:99
+#: src/shell/BugReportDialog.tsx:149
 msgid "Opens a GitHub issue with these filled in. You review it before posting."
 msgstr "Opens a GitHub issue with these filled in. You review it before posting."
 
@@ -14285,7 +14318,7 @@ msgstr "Save current as…"
 msgid "groups"
 msgstr "groups"
 
-#: src/shell/AppMenu.tsx:249
+#: src/shell/AppMenu.tsx:259
 msgid "Quit Mortar"
 msgstr "Quit Mortar"
 
@@ -14760,6 +14793,10 @@ msgstr "Share profiles on the local network"
 #: src/share/DestinationGrid.tsx:53
 msgid "A link or .mortar file"
 msgstr "A link or .mortar file"
+
+#: src/shell/BugReportDialog.tsx:148
+msgid "Copies the report for you to paste into a new post in the bug-reports forum on Mortar's Discord, and saves the diagnostics zip to attach."
+msgstr "Copies the report for you to paste into a new post in the bug-reports forum on Mortar's Discord, and saves the diagnostics zip to attach."
 
 #: src/firstrun/LoaderStep.tsx:105
 msgid "Could not set it in Steam"

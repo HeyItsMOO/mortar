@@ -30,6 +30,7 @@ import { ShareDialog } from './share/ShareDialog.tsx'
 import { AppFrame } from './shell/AppFrame.tsx'
 import { BugReportDialog } from './shell/BugReportDialog.tsx'
 import { ErrorBoundary } from './shell/ErrorBoundary.tsx'
+import { SuggestDialog } from './shell/SuggestDialog.tsx'
 import { AvOverrideDialog } from './toasts/AvOverrideDialog.tsx'
 import { toastError } from './toasts/report.ts'
 import { ToastHost } from './toasts/ToastHost.tsx'
@@ -114,6 +115,7 @@ export function App() {
       <DownloadsDialog />
       <WhatsNewDialog />
       <BugReportDialog />
+      <SuggestDialog />
       <QuitPrompt />
       <ToastHost />
     </>

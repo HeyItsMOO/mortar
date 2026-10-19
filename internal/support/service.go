@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/Rethunk-Tech/mortar/internal/appversion"
 	"github.com/Rethunk-Tech/mortar/internal/doctor"
@@ -130,9 +131,8 @@ type BugReport struct {
 	Diagnostics bool   `json:"diagnostics"`
 }
 
-// BugURL is a new GitHub issue on Mortar prefilled with the report, the version, OS and game, and, when the user
-// left it on, the diagnostics checks and recent log lines; never a full log.
-func (s *Service) BugURL(gameID string, r BugReport) string {
+// bugBody is the report's sections and the about line: what both the GitHub issue and the Discord post start from.
+func (s *Service) bugBody(gameID string, r BugReport) string {
 	about := fmt.Sprintf("Mortar %s (build %s) · %s/%s", s.version, cmp.Or(appversion.Commit(), "unknown"), runtime.GOOS, runtime.GOARCH)
 	if g := game.Find(gameID); g != nil {
 		env := s.env(gameID)
@@ -147,8 +147,14 @@ func (s *Service) BugURL(gameID string, r BugReport) string {
 	section := func(heading, text string) string {
 		return "**" + heading + "**\n" + strings.TrimSpace(text) + "\n\n"
 	}
-	body := section("What happened", r.Happened) + section("What you expected", r.Expected) +
+	return section("What happened", r.Happened) + section("What you expected", r.Expected) +
 		section("Steps to reproduce", r.Steps) + "---\n" + about + "\n"
+}
+
+// BugURL is a new GitHub issue on Mortar prefilled with the report, the version, OS and game, and, when the user
+// left it on, the diagnostics checks and recent log lines; never a full log.
+func (s *Service) BugURL(gameID string, r BugReport) string {
+	body := s.bugBody(gameID, r)
 	if r.Diagnostics {
 		if report, err := s.Doctor(); err == nil {
 			dir, _ := s.dataDir()
@@ -158,6 +164,29 @@ func (s *Service) BugURL(gameID string, r BugReport) string {
 	title := strings.TrimSpace(r.Title)
 	title = cmp.Or(title, "Bug: ")
 	return issuesURL + "?" + url.Values{"title": {title}, "body": {body}}.Encode()
+}
+
+// maxDiscordPost is Discord's message length limit in characters.
+const maxDiscordPost = 2000
+
+// BugText is the report as a Discord post: the title, the sections and the about line without diagnostics (the
+// zip carries those), cut on a line boundary to fit Discord's limit.
+func (s *Service) BugText(gameID string, r BugReport) string {
+	title := cmp.Or(strings.TrimSpace(r.Title), "Bug report")
+	return fitPost("**"+title+"**\n"+s.bugBody(gameID, r), maxDiscordPost)
+}
+
+// fitPost trims text to at most limit characters at a line boundary, ending with "…" when it cut anything.
+func fitPost(text string, limit int) string {
+	text = strings.TrimSpace(text)
+	if utf8.RuneCountInString(text) <= limit {
+		return text
+	}
+	cut := string([]rune(text)[:limit-2])
+	if i := strings.LastIndex(cut, "\n"); i > 0 {
+		cut = cut[:i]
+	}
+	return cut + "\n…"
 }
 
 // maxDiagnostics keeps the prefilled issue URL well under the length GitHub and browsers accept.

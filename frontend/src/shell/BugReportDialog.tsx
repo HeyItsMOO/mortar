@@ -8,13 +8,21 @@ import {
   DialogTitle,
   FormControlLabel,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from '@mui/material'
-import { type SyntheticEvent, useEffect, useState } from 'react'
+import { type SyntheticEvent, useEffect, useId, useState } from 'react'
 import { OpenWeb } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/opener/service.ts'
-import { BugURL } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/support/service.ts'
+import {
+  BugText,
+  BugURL,
+} from '../../bindings/github.com/Rethunk-Tech/mortar/internal/support/service.ts'
+import { openPage } from '../mods/menu.ts'
+import { copyText } from '../share/copyText.ts'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
+import { type Destination, GO, getDestination, REPORT_KEY, setDestination } from './destination.ts'
 import { useBugReport } from './reportBug.ts'
 import { saveDiagnostics } from './saveDiagnostics.ts'
 import { useDiscardGuard } from './useDiscardGuard.tsx'
@@ -23,9 +31,12 @@ const empty = { title: '', happened: '', expected: '', steps: '' }
 
 export function BugReportDialog() {
   const { t } = useLingui()
+  const destinationLabel = useId()
   const game = useBugReport((s) => s.game)
   const [form, setForm] = useState(empty)
   const [diagnostics, setDiagnostics] = useState(true)
+  const [to, setTo] = useState<Destination>(() => getDestination(REPORT_KEY))
+  const discord = to === 'discord'
   useEffect(() => {
     if (game !== null) {
       setForm(empty)
@@ -46,10 +57,24 @@ export function BugReportDialog() {
     if (form.happened.trim() === '') {
       return
     }
-    // The zip is saved first so the GitHub page opens after the user has a file to drag into it.
+    // The zip is saved first so the destination opens after the user has a file to attach to it.
     const attach = diagnostics ? saveDiagnostics(game ?? '', '', true) : Promise.resolve(false)
+    const report = { ...form, diagnostics }
+    if (discord) {
+      attach
+        .then(() => BugText(game ?? '', report))
+        .then(
+          (text) =>
+            copyText(text, t`Report copied`, () => {
+              openPage(`${GO}bug-reports/`)
+              close()
+            }),
+          reportUnexpected,
+        )
+      return
+    }
     attach
-      .then(() => BugURL(game ?? '', { ...form, diagnostics }))
+      .then(() => BugURL(game ?? '', report))
       .then((url) => OpenWeb(url))
       .then(close, reportUnexpected)
   }
@@ -60,6 +85,25 @@ export function BugReportDialog() {
         <DialogContent
           sx={{ display: 'flex', flexDirection: 'column', gap: space.pad, pt: '8px !important' }}
         >
+          <Typography id={destinationLabel} sx={{ fontSize: 13, color: 'text.secondary' }}>
+            {t`Post on`}
+          </Typography>
+          <ToggleButtonGroup
+            exclusive={true}
+            size="small"
+            fullWidth={true}
+            value={to}
+            aria-labelledby={destinationLabel}
+            onChange={(_, next: Destination | null) => {
+              if (next !== null) {
+                setTo(next)
+                setDestination(REPORT_KEY, next)
+              }
+            }}
+          >
+            <ToggleButton value="discord">{t`Discord`}</ToggleButton>
+            <ToggleButton value="github">{t`GitHub`}</ToggleButton>
+          </ToggleButtonGroup>
           <TextField
             label={t`Title`}
             placeholder={t`A short summary`}
@@ -93,16 +137,22 @@ export function BugReportDialog() {
             control={
               <Checkbox checked={diagnostics} onChange={(e) => setDiagnostics(e.target.checked)} />
             }
-            label={t`Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you drag it into the issue)`}
+            label={
+              discord
+                ? t`Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you attach it to the post)`
+                : t`Attach diagnostics (a zip of checks, logs and settings with secrets and your home folder removed; you drag it into the issue)`
+            }
           />
           <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
-            {t`Opens a GitHub issue with these filled in. You review it before posting.`}
+            {discord
+              ? t`Copies the report for you to paste into a new post in the bug-reports forum on Mortar's Discord, and saves the diagnostics zip to attach.`
+              : t`Opens a GitHub issue with these filled in. You review it before posting.`}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={guard.request}>{t`Cancel`}</Button>
           <Button type="submit" variant="contained" disabled={form.happened.trim() === ''}>
-            {t`Open on GitHub`}
+            {discord ? t`Copy and open Discord` : t`Open on GitHub`}
           </Button>
         </DialogActions>
       </form>

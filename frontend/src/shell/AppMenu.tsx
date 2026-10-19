@@ -9,6 +9,7 @@ import {
   FolderOpen,
   Info,
   LifeBuoy,
+  Lightbulb,
   LogIn,
   LogOut,
   RefreshCw,
@@ -19,7 +20,6 @@ import { memo, type ReactNode, useEffect } from 'react'
 import { SignOut } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexussvc/service.ts'
 import { OpenDataFolder } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { DiscordLogo } from '../brand/Discord.tsx'
-import { DISCORD_INVITE } from '../brand/discordInvite.ts'
 import { Logo } from '../brand/Logo.tsx'
 import { useConsole } from '../console/store.ts'
 import { compact } from '../game/compact.ts'
@@ -34,8 +34,10 @@ import { space } from '../theme/density.ts'
 import { reportUnexpected, toastError } from '../toasts/report.ts'
 import { showWhatsNew } from '../updates/whatsNew.ts'
 import { checkForUpdates } from './checkForUpdates.ts'
+import { GO } from './destination.ts'
 import { useUpdatesOfflineReason } from './offlineText.ts'
 import { reportBug } from './reportBug.ts'
+import { suggestFeature } from './suggest.ts'
 import { MenuHeading, MenuRule, TitleMenu, TitleMenuItem } from './TitleMenu.tsx'
 import { Tooltip } from './Tooltip.tsx'
 import { useTitleMenu } from './titleMenus.ts'
@@ -112,8 +114,16 @@ function ProjectLinks({ close }: { close: () => void }) {
       />
       <TitleMenuItem
         icon={<DiscordLogo size={ICON_PX} />}
-        label={t`Join our Discord`}
-        onClick={open(DISCORD_INVITE)}
+        label={t`Ask on Discord`}
+        onClick={open(`${GO}help/`)}
+      />
+      <TitleMenuItem
+        icon={<Lightbulb size={ICON_PX} />}
+        label={t`Suggest a feature…`}
+        onClick={() => {
+          close()
+          suggestFeature()
+        }}
       />
     </>
   )
