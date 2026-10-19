@@ -337,7 +337,7 @@ func (s *Service) ProblemsWithEvidence(ctx context.Context, gameID, id string) (
 		owners := sync.OnceValue(func() map[string]framework.Mod { return pluginOwners(mods) })
 		enabledMods := slices.DeleteFunc(slices.Clone(mods), func(x framework.Mod) bool { return !x.Enabled })
 		r.Broken = append(r.Broken, authorMarkedMods(s.home, env.Nexus.Domain, enabledMods)...)
-		r.Broken = append(r.Broken, s.sourceFlagged(ctx, env.Nexus.Domain, enabledMods)...)
+		r.Broken = append(r.Broken, s.sourceFlagged(ctx, gameID, env.Nexus.Domain, enabledMods)...)
 		if l, ok := game.LoaderOf(gameID, s.profiles.LoaderID(gameID, id)); ok {
 			if dir, err := s.profiles.ProfileDir(gameID, id); err == nil {
 				r.LoadFailures = loaderFailures(l, loader.ProfileView{Game: gameID, Dir: dir}, s.playerLog(gameID, id, l), owners)

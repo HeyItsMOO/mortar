@@ -192,7 +192,7 @@ A mod you enabled needs another mod that is not in the profile or is disabled, s
 
 #### Broken mod
 
-Something marks the mod as broken, obsolete, abandoned or gone: SMAPI's list for your game version, Mortar's list of known-broken mods, or the mod's site (a hidden, removed or moderated Nexus page; an archived, inactive, abandoned or deleted Modrinth, CurseForge or GitHub project). The row names who said so. The mod may crash, do nothing, or break at the next game update. Update it, or replace it with the mod the row names.
+Something marks the mod as broken, obsolete, abandoned or gone: SMAPI's list for your game version, Mortar's list of known-broken mods, or the mod's site (a hidden, removed or moderated Nexus page; an archived, inactive, abandoned or deleted Modrinth, CurseForge or GitHub project; a Thunderstore package taken off the site). The row names who said so. The mod may crash, do nothing, or break at the next game update. Update it, or replace it with the mod the row names.
 
 #### Duplicate mod
 

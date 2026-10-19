@@ -20,16 +20,16 @@ import (
 const nexusSiteName = "Nexus Mods"
 
 // sourceFlagged turns the sites' own flags on installed mods into Broken rows that name the site: Nexus's page status
-// from the pages Mortar already holds, and the archived, abandoned or deleted flags Modrinth, CurseForge and GitHub
-// publish, asked for in one cached batch per site.
-func (s *Service) sourceFlagged(ctx context.Context, domain string, enabled []framework.Mod) []Broken {
+// from the pages Mortar already holds, the archived, abandoned or deleted flags Modrinth, CurseForge and GitHub
+// publish, and the Thunderstore packages the community's index no longer lists, asked for in one cached batch per site.
+func (s *Service) sourceFlagged(ctx context.Context, gameID, domain string, enabled []framework.Mod) []Broken {
 	cl := &meta.Client{CacheDir: filepath.Join(s.home, "cache")}
 	out := nexusFlagged(cl, domain, enabled)
-	for _, kind := range []string{profile.KindModrinth, profile.KindCurseForge, profile.KindGitHub} {
+	for _, kind := range []string{profile.KindModrinth, profile.KindCurseForge, profile.KindGitHub, profile.KindThunderstore} {
 		entry, ok := source.Get(kind)
 		checker, can := entry.Source.(source.StandingChecker)
 		if ok && can && source.Unavailable(entry.Source) == "" {
-			out = append(out, s.siteFlagged(ctx, cl, kind, entry.Source.Name(), checker, enabled)...)
+			out = append(out, s.siteFlagged(ctx, cl, gameID, kind, entry.Source.Name(), checker, enabled)...)
 		}
 	}
 	return out
@@ -77,15 +77,23 @@ func nexusState(status string, available bool) string {
 	return ""
 }
 
-func (s *Service) siteFlagged(ctx context.Context, cl *meta.Client, kind, site string, checker source.StandingChecker, enabled []framework.Mod) []Broken {
+func (s *Service) siteFlagged(ctx context.Context, cl *meta.Client, gameID, kind, site string, checker source.StandingChecker, enabled []framework.Mod) []Broken {
 	byID := map[string][]framework.Mod{}
 	for _, im := range enabled {
 		if im.SourceKind != kind {
 			continue
 		}
 		id := im.SourceName
-		if kind == profile.KindGitHub {
+		switch kind {
+		case profile.KindGitHub:
 			id = im.SourceRepo
+		case profile.KindThunderstore:
+			// The index is per community, so the checker is told which one.
+			if key := thunderstoreKey(gameID); key != "" && id != "" {
+				id = key + "/" + id
+			} else {
+				id = ""
+			}
 		}
 		if id != "" {
 			byID[id] = append(byID[id], im)

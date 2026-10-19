@@ -235,3 +235,13 @@ func TestDeprecatedListsPackagesAndTheirNamedReplacement(t *testing.T) {
 		t.Fatalf("got %+v", got)
 	}
 }
+
+func TestStandingsFlagOnlyPackagesTheIndexNoLongerLists(t *testing.T) {
+	f := newFake(t)
+	d := Driver{URL: f.srv.URL, CacheDir: t.TempDir()}
+	ids := []string{"lethal-company/Alice-MoreCompany", "lethal-company/dave-library", "lethal-company/Eve-OldMod", "lethal-company/Gone-Mod", "no-slash"}
+	got, err := d.Standings(t.Context(), "1.2.3", ids)
+	if err != nil || len(got) != 1 || got["lethal-company/Gone-Mod"].State != "removed" {
+		t.Fatalf("a listed or deprecated package is not removed, only a missing one: %+v %v", got, err)
+	}
+}
