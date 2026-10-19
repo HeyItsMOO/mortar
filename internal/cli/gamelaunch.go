@@ -2,9 +2,24 @@ package cli
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/Rethunk-Tech/mortar/internal/control"
 )
+
+func (c *cmd) gameFolder() error {
+	a, err := c.need(2, "a game", "a folder")
+	if err != nil {
+		return err
+	}
+	dir, err := filepath.Abs(a[1])
+	if err != nil {
+		return err
+	}
+	return show(c, "game.folder", control.Params{Game: a[0], Path: dir}, func(res control.GameFolderResult) {
+		fmt.Fprintf(c.out, "%s now uses the folder %s.\n", res.Game, res.Folder)
+	})
+}
 
 func (c *cmd) gameSteamLaunchOption() error {
 	a, err := c.need(2, "a game")

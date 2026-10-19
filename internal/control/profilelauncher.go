@@ -75,6 +75,12 @@ func (s *Services) profileSteam(gameID, profileID string) (SteamShortcutResult, 
 	return SteamShortcutResult{Result: res}, nil
 }
 
+// GameFolderResult is the install folder now stored for a game.
+type GameFolderResult struct {
+	Game   string `json:"game"`
+	Folder string `json:"folder"`
+}
+
 // SteamLaunchOptionResult is the current or updated Steam launch options line.
 type SteamLaunchOptionResult struct {
 	Options string `json:"options"`

@@ -334,6 +334,11 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 		return s.games()
 	case "game.steamLaunchOption":
 		return s.gameSteamLaunchOption(p.Game, p.Set, p.Clear)
+	case "game.folder":
+		if err := s.SettingsSvc.SetGameFolder(p.Game, p.Path); err != nil {
+			return nil, err
+		}
+		return GameFolderResult{Game: p.Game, Folder: s.Settings.Get().GameFolders[p.Game]}, nil
 	case "game.launchPresetTemplates":
 		return s.gameLaunchPresetTemplates(p)
 	case "antivirus.status":
