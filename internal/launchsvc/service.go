@@ -1415,7 +1415,7 @@ func (s *Service) reportSettingsRestore(g game.Game, profileID string, err error
 
 // Send runs a console command in the running game through the bridge mod in the running profile. The command
 // is echoed into the console; its output arrives with the game's own log.
-func (s *Service) Send(gameID, command string) error {
+func (s *Service) Send(ctx context.Context, gameID, command string) error {
 	g, err := game.Require(gameID)
 	if err != nil {
 		return err
@@ -1445,7 +1445,7 @@ func (s *Service) Send(gameID, command string) error {
 	if view.Companion == "" {
 		return fmt.Errorf("%s has no console bridge in this profile", g.Name())
 	}
-	if _, err := console.Send(context.Background(), loader.Target{Game: gameID, InstallDir: inst.Dir}, view, command); err != nil {
+	if _, err := console.Send(ctx, loader.Target{Game: gameID, InstallDir: inst.Dir}, view, command); err != nil {
 		return err
 	}
 	s.say(sl, cur.Profile, "> "+command)

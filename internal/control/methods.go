@@ -37,11 +37,11 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/share"
 	"github.com/Rethunk-Tech/mortar/internal/sharesvc"
-	"github.com/Rethunk-Tech/mortar/internal/syncsvc"
 	"github.com/Rethunk-Tech/mortar/internal/shortcut"
 	"github.com/Rethunk-Tech/mortar/internal/store"
 	"github.com/Rethunk-Tech/mortar/internal/storecheck"
 	"github.com/Rethunk-Tech/mortar/internal/support"
+	"github.com/Rethunk-Tech/mortar/internal/syncsvc"
 	"github.com/Rethunk-Tech/mortar/internal/templates"
 	"github.com/Rethunk-Tech/mortar/internal/tools"
 	"github.com/Rethunk-Tech/mortar/internal/updatesvc"
@@ -823,7 +823,7 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 		}
 		return s.modConfigFields(cfg, p.Game, id, ref)
 	case "console.send":
-		return nil, s.Launches.Send(p.Game, p.Value)
+		return nil, s.Launches.Send(ctx, p.Game, p.Value)
 	case "screenshots":
 		return s.Games.Screenshots(p.Game)
 	case "nexus.endorse":

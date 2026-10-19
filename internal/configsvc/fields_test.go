@@ -2,6 +2,7 @@ package configsvc
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -25,7 +26,7 @@ func TestFieldsAndSetFieldReachABepInExFile(t *testing.T) {
 	if ok, err := s.SetField("lc", "p", id, "com.example.betterstuff.cfg/General/LeaveDelay", "60"); !ok || err != nil {
 		t.Fatalf("set: %v %v", ok, err)
 	}
-	if raw, _ := os.ReadFile(path); !strings.Contains(string(raw), "LeaveDelay = 60") {
+	if raw, _ := os.ReadFile(filepath.Clean(path)); !strings.Contains(string(raw), "LeaveDelay = 60") {
 		t.Fatalf("not written:\n%s", raw)
 	}
 	if ok, err := s.SetField("lc", "p", id, "com.example.betterstuff.cfg/General/LeaveDelay", "9999"); !ok || err == nil {

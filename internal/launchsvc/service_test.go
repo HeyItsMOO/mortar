@@ -227,7 +227,7 @@ func TestSendRunsThroughTheBridgeAndEchoesTheCommand(t *testing.T) {
 	items, profiles := testenv.Stores(t)
 	p := testenv.Profile(t, profiles, "stardew", "A")
 	svc := NewService(t.TempDir(), nil, profiles)
-	if err := svc.Send("stardew", "help"); err == nil {
+	if err := svc.Send(t.Context(), "stardew", "help"); err == nil {
 		t.Fatal("Send while idle must fail")
 	}
 	ln, err := (&net.ListenConfig{}).Listen(context.Background(), "tcp", "127.0.0.1:0")
@@ -276,7 +276,7 @@ func TestSendRunsThroughTheBridgeAndEchoesTheCommand(t *testing.T) {
 	buf := &launch.Buffer{}
 	svc.logs["stardew/"] = session{buf: buf, profile: p.ID}
 	svc.status["stardew/"] = Status{Game: "stardew", State: Running, Profile: p.ID}
-	if err := svc.Send("stardew", "  help  "); err != nil {
+	if err := svc.Send(t.Context(), "stardew", "  help  "); err != nil {
 		t.Fatal(err)
 	}
 	if line := <-got; line != "tok\nhelp\n" {
