@@ -43,11 +43,12 @@ import {
 import { modId, nexusIdOf } from './lookup.ts'
 import { ModListTable } from './ModListVirtual.tsx'
 import { useMarked, useRowFocus, useTabStop } from './marked.ts'
-import { contextMenuProps } from './menu.ts'
+import { contextMenuProps, openModPage } from './menu.ts'
 import { useNexusFresh } from './nexusDetails.ts'
 import { formatCount, isNewer } from './nexusFormat.ts'
 import { OverlayCountChip } from './OverlayRow.tsx'
 import { nestOverlays, overlaysByBase, ownSlice } from './overlayRows.ts'
+import { MIDDLE, opensPage } from './pageClick.ts'
 import {
   LastRunBadge,
   LetterTile,
@@ -320,8 +321,13 @@ function ModRowView({ row, cols, locale, first, orderedRef, profile, onArrow }: 
       hover={true}
       selected={marked}
       onMouseDown={(e) => {
-        if (e.shiftKey) {
+        if (e.shiftKey || e.button === MIDDLE) {
           e.preventDefault()
+        }
+      }}
+      onAuxClick={(e) => {
+        if (opensPage(e, false)) {
+          openModPage(m)
         }
       }}
       onClick={(e) => {

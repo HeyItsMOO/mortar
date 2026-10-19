@@ -5,10 +5,10 @@ import { type MouseEvent, memo, useState } from 'react'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
 import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
 import { formatAuthors } from '../mods/authorNormalize.ts'
+import { MIDDLE, opensPage } from '../mods/pageClick.ts'
 import { useSettings } from '../settings/store.ts'
 import { BUTTON_RADIUS_PX, BUTTON_SMALL_HEIGHT } from '../theme/theme.ts'
 import { GRAY_OPACITY, PICTURE_PX, ROW_PICTURE_PX } from './browseConstants.ts'
-
 import type { BrowseModes } from './browseModes.ts'
 import type { BrowseItem, ResultCardProps } from './browseTypes.ts'
 import { pictureSrc } from './pictureSrc.ts'
@@ -178,10 +178,25 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
     <Card
       data-hit={hitKey(item)}
       aria-current={selected ? 'true' : undefined}
-      onClick={(e) => {
-        if (!onControl(e)) {
-          useBrowseSelection.getState().select({ item, source })
+      onMouseDown={(e) => {
+        if (e.button === MIDDLE) {
+          e.preventDefault()
         }
+      }}
+      onAuxClick={(e) => {
+        if (opensPage(e, true) && !onControl(e)) {
+          props.openUrl(shownItem.url)
+        }
+      }}
+      onClick={(e) => {
+        if (onControl(e)) {
+          return
+        }
+        if (opensPage(e, true)) {
+          props.openUrl(shownItem.url)
+          return
+        }
+        useBrowseSelection.getState().select({ item, source })
       }}
       onContextMenu={(e) => {
         e.preventDefault()

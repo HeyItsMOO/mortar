@@ -23,10 +23,11 @@ import { entryOf, modId, nexusIdOf } from './lookup.ts'
 import { ModMenu } from './ModMenu.tsx'
 import { GroupHeaderRow, StickyGroupSlot } from './ModsGroupHeader.tsx'
 import { useMarked, useRowFocus, useTabStop } from './marked.ts'
-import { contextMenuProps } from './menu.ts'
+import { contextMenuProps, openModPage } from './menu.ts'
 import { useNexusFresh } from './nexusDetails.ts'
 import { OverlayCountChip } from './OverlayRow.tsx'
 import { ownSlice } from './overlayRows.ts'
+import { MIDDLE, opensPage } from './pageClick.ts'
 import {
   LastRunBadge,
   LetterTile,
@@ -206,8 +207,13 @@ function ModCardView({
               }
             }}
             onMouseDown={(e) => {
-              if (e.shiftKey) {
+              if (e.shiftKey || e.button === MIDDLE) {
                 e.preventDefault()
+              }
+            }}
+            onAuxClick={(e) => {
+              if (opensPage(e, false)) {
+                openModPage(m)
               }
             }}
             onClick={(e) => {

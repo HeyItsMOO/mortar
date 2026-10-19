@@ -51,6 +51,14 @@ export const ICON_SIZE = 16
 // (a page, a changelog, a collection) can never start another app.
 export const openPage = (url: string) => OpenWeb(url).catch(reportUnexpected)
 
+/** Opens the mod's page on its site, when the app knows one. */
+export function openModPage(mod: Mod) {
+  const page = useMods.getState().pages[modId(mod)]
+  if (page) {
+    openPage(page)
+  }
+}
+
 export type MenuAnchor = { el: HTMLElement } | { top: number; left: number }
 
 // The one right-click menu of the mods screen: which mod it is for and where it opens.
