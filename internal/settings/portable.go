@@ -156,7 +156,7 @@ func ApplyExport(cur *Settings, exported Settings, present map[string]struct{}) 
 }
 
 func sanitizePortable(s Settings) Settings {
-	if !slices.Contains(accents, s.Accent) {
+	if !validAccent(s.Accent) {
 		s.Accent = Defaults().Accent
 	}
 	if !slices.Contains(backgrounds, s.Background) {

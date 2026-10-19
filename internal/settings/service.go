@@ -11,6 +11,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/picker"
+	"github.com/Rethunk-Tech/mortar/internal/sysaccent"
 	"github.com/Rethunk-Tech/mortar/internal/winhost"
 )
 
@@ -40,6 +41,12 @@ func (s *Service) SetLanguage(language string) error {
 
 func (s *Service) SetAccent(accent string) error {
 	return s.set(func(v *Settings) { v.Accent = accent })
+}
+
+// SystemAccent is the desktop's accent colour as "#rrggbb", empty when it has none.
+func (s *Service) SystemAccent() string {
+	c, _ := sysaccent.Read()
+	return c
 }
 
 func (s *Service) SetTellWhenSmapiOut(on bool) error {

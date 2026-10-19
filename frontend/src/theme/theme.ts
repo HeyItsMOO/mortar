@@ -264,9 +264,15 @@ function buttonOverrides(
 
 function createMortarTheme(
   accent: AccentName,
-  opts: { compact?: boolean; roomy?: boolean; reduceMotion?: boolean; mode?: ThemeMode } = {},
+  opts: {
+    accentHex?: string
+    compact?: boolean
+    roomy?: boolean
+    reduceMotion?: boolean
+    mode?: ThemeMode
+  } = {},
 ): Theme {
-  const main = accents[accent]
+  const main = opts.accentHex ?? accents[accent]
   const compactUi = opts.compact === true
   const reduceMotion = opts.reduceMotion === true
   const mode: ThemeMode = opts.mode === 'light' ? 'light' : 'dark'

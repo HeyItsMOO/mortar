@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material'
 import React from 'react'
 import { useSettings } from './settings/store.ts'
-import { isAccent } from './settings/theme.ts'
+import { accentColour, isAccent, useSystemAccent } from './settings/theme.ts'
 import { defaultAccent } from './theme/accents.ts'
 import { honourTheme } from './theme/palette.ts'
 import { honourReducedMotion } from './theme/reducedMotion.ts'
@@ -10,6 +10,7 @@ import { createMortarTheme } from './theme/theme.ts'
 
 export function Themed({ children }: { children: React.ReactNode }) {
   const accent = useSettings((s) => s.accent)
+  const systemAccent = useSystemAccent()
   const density = useSettings((s) => s.density)
   const roomy = useRoomy((s) => s.roomy)
   const reduceMotion = useSettings((s) => s.reduceMotion)
@@ -43,12 +44,13 @@ export function Themed({ children }: { children: React.ReactNode }) {
   const theme = React.useMemo(
     () =>
       createMortarTheme(isAccent(accent) ? accent : defaultAccent, {
+        accentHex: accentColour(accent, systemAccent),
         compact: density === 'compact' && !roomy,
         roomy,
         reduceMotion: honourReducedMotion(reduceMotion || 'system', osReduce),
         mode: honourTheme(colourTheme || 'dark', osLight),
       }),
-    [accent, colourTheme, density, osLight, osReduce, reduceMotion, roomy],
+    [accent, systemAccent, colourTheme, density, osLight, osReduce, reduceMotion, roomy],
   )
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }

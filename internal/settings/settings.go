@@ -355,7 +355,7 @@ func (s *Store) normalize() {
 	if s.cur.Games == nil {
 		s.cur.Games = map[string]*GameSettings{}
 	}
-	if !slices.Contains(accents, s.cur.Accent) {
+	if !validAccent(s.cur.Accent) {
 		s.cur.Accent = Defaults().Accent
 	}
 	if s.cur.Language != "" && s.cur.Language != "en" {
@@ -423,7 +423,7 @@ func (s *Store) Update(fn func(*Settings)) (Settings, error) {
 		return s.cur, err
 	}
 	fn(&next)
-	if !slices.Contains(accents, next.Accent) {
+	if !validAccent(next.Accent) {
 		return s.cur, fmt.Errorf("unknown accent %q", next.Accent)
 	}
 	if next.Language != "" && next.Language != "en" {

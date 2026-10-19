@@ -1,5 +1,14 @@
 package settings
 
+import (
+	"slices"
+
+	"github.com/Rethunk-Tech/mortar/internal/sysaccent"
+)
+
+// AccentSystem follows the desktop's accent colour.
+const AccentSystem = "system"
+
 // accentColors matches frontend/src/theme/accents.ts; the browser extension shows the same colour as the app.
 var accentColors = map[string]string{
 	"sand":     "#D6B17A",
@@ -12,8 +21,16 @@ var accentColors = map[string]string{
 	"slate":    "#94A7BC",
 }
 
-// AccentColor returns the hex colour for an accent name, or the default accent's for an unknown one.
+func validAccent(name string) bool { return name == AccentSystem || slices.Contains(accents, name) }
+
+// AccentColor returns the hex colour for an accent name, or the default accent's for an unknown one or a system accent
+// the desktop does not give.
 func AccentColor(name string) string {
+	if name == AccentSystem {
+		if c, ok := sysaccent.Read(); ok {
+			return c
+		}
+	}
 	if c, ok := accentColors[name]; ok {
 		return c
 	}

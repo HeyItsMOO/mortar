@@ -14,7 +14,6 @@ import { columnLabel } from '../../mods/columnLabel.ts'
 import { LIST_COLUMN_IDS, sanitizeListSort } from '../../mods/listColumns.ts'
 import { BackdropImage } from '../../shell/BackdropImage.tsx'
 import { visuallyHidden } from '../../shell/visuallyHidden.ts'
-import { type AccentName, accents } from '../../theme/accents.ts'
 import { space } from '../../theme/density.ts'
 import { PAD_FOCUS } from '../../theme/theme.ts'
 import { reportError } from '../../toasts/report.ts'
@@ -23,7 +22,7 @@ import { PrefByKey, PrefKeys } from '../PrefRow.tsx'
 import { persist } from '../persist.ts'
 import { Searchable, SettingRow, SettingsSection } from '../SettingsSection.tsx'
 import { useSettings } from '../store.ts'
-import { isAccent } from '../theme.ts'
+import { accentColour, isAccent, SYSTEM_ACCENT, useSystemAccent } from '../theme.ts'
 
 // An image above this is decoded whole on every start, and an animated GIF is never shrunk, so it costs memory and GPU.
 const LARGE_BACKGROUND_BYTES = 16_777_216 // 16 MiB
@@ -93,7 +92,7 @@ export function Appearance() {
   const backgroundImage = useSettings((s) => s.backgroundImage)
   const reportFailure = reportError(t`Could not save that setting`)
   const backdropSrc = `/backdrop?mode=image&v=${encodeURIComponent(backgroundImage)}`
-  const cards: { name: AccentName; label: string; note: string }[] = [
+  const cards: { name: string; label: string; note: string }[] = [
     { name: 'sand', label: t`Sand`, note: t`Default` },
     { name: 'moss', label: t`Moss`, note: t`Earthy green` },
     { name: 'copper', label: t`Copper`, note: t`Warm and bold` },
@@ -102,7 +101,9 @@ export function Appearance() {
     { name: 'lavender', label: t`Lavender`, note: t`Gentle violet` },
     { name: 'teal', label: t`Teal`, note: t`Fresh and clear` },
     { name: 'slate', label: t`Slate`, note: t`Quiet grey-blue` },
+    { name: SYSTEM_ACCENT, label: t`System`, note: t`Follows your desktop` },
   ]
+  const systemAccent = useSystemAccent()
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: space.pad }}>
       <SettingsSection title={t`Theme`}>
@@ -113,7 +114,7 @@ export function Appearance() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px', p: space.pad }}>
             <RadioGroup
               aria-label={t`Accent colour`}
-              value={isAccent(accent) ? accent : ''}
+              value={isAccent(accent) || accent === SYSTEM_ACCENT ? accent : ''}
               onChange={(_, name) => {
                 SetAccent(name).catch(reportFailure)
               }}
@@ -136,7 +137,7 @@ export function Appearance() {
                           width: '100%',
                           height: SWATCH_PX,
                           borderRadius: '6px',
-                          bgcolor: accents[card.name],
+                          bgcolor: accentColour(card.name, systemAccent),
                         }}
                       />
                       <Box component="span" sx={{ fontSize: 14, fontWeight: 600 }}>
