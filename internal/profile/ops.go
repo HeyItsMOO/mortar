@@ -619,8 +619,17 @@ func applyEnabled(p *Profile, dir, key string, uniqueID mod.ID, enabled bool) er
 			}
 		}
 		e.Disabled = slices.DeleteFunc(e.Disabled, func(x mod.ID) bool { return mod.Equal(x, uniqueID) })
+		for id := range e.SwitchedOff {
+			if mod.Equal(id, uniqueID) {
+				delete(e.SwitchedOff, id)
+			}
+		}
 		if !enabled {
 			e.Disabled = append(e.Disabled, e.Mods[mi].ID)
+			if e.SwitchedOff == nil {
+				e.SwitchedOff = map[mod.ID]time.Time{}
+			}
+			e.SwitchedOff[e.Mods[mi].ID] = time.Now().UTC()
 		}
 		return nil
 	}

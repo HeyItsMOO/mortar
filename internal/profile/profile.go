@@ -166,6 +166,8 @@ type Entry struct {
 	Disabled       []mod.ID    `json:"disabled"`
 	// Added is when this entry was put in the profile; zero for entries written before the field existed.
 	Added time.Time `json:"added,omitzero"`
+	// SwitchedOff is when each of the entry's mods was last switched off by the player; a mod switched on has none.
+	SwitchedOff map[mod.ID]time.Time `json:"switchedOff,omitempty"`
 	// Implicit marks an entry Mortar brought in to satisfy another mod rather than one the player asked for. It is
 	// decided when the entry is created and changed afterwards only by the player.
 	Implicit bool `json:"implicit,omitempty"`

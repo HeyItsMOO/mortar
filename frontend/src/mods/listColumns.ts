@@ -13,7 +13,7 @@ import { isNewer } from './nexusFormat.ts'
 const LIST_COLUMN_GROUPS = [
   ['on', 'name', 'author', 'category', 'notes', 'id'],
   ['version', 'latest', 'status', 'needs'],
-  ['installed', 'reason', 'updated', 'lastRun', 'size', 'startup', 'order'],
+  ['installed', 'switchedOff', 'reason', 'updated', 'lastRun', 'size', 'startup', 'order'],
   ['source', 'endorsements', 'downloads'],
 ] as const
 
@@ -41,6 +41,7 @@ const NARROW_HIDE_LIST_COLUMNS: readonly ListColumnId[] = [
   'downloads',
   'updated',
   'installed',
+  'switchedOff',
   'reason',
   'needs',
   'notes',
@@ -78,6 +79,7 @@ const LIST_COLUMN_WIDTH: Record<ListColumnId, string> = {
   downloads: '88px',
   updated: '140px',
   installed: '140px',
+  switchedOff: '140px',
   reason: '124px',
   needs: '140px',
   status: '100px',
@@ -91,6 +93,8 @@ const LIST_COLUMN_WIDTH: Record<ListColumnId, string> = {
 interface ListRow {
   mod: Mod
   added: string
+  /** When the mod was last switched off; empty while it is on or when the time was not recorded. */
+  switchedOff: string
   source: string
   /** The entry records no page, or no file on its page, to get it from again. */
   unsourced?: boolean
@@ -383,6 +387,12 @@ function compareListRows(a: ListRow, b: ListRow, sort: ListColumnSort): number {
     case 'installed': {
       const av = Date.parse(a.added)
       const bv = Date.parse(b.added)
+      primary = missingLast(yearMissing(av), yearMissing(bv), dir, cmpNum(av, bv))
+      break
+    }
+    case 'switchedOff': {
+      const av = Date.parse(a.switchedOff)
+      const bv = Date.parse(b.switchedOff)
       primary = missingLast(yearMissing(av), yearMissing(bv), dir, cmpNum(av, bv))
       break
     }

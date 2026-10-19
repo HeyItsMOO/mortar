@@ -33,6 +33,7 @@ const row = (over: Partial<ListRow> & { name: string }): ListRow => {
   const out: ListRow = {
     mod: mod({ name: over.name, ...over.mod }),
     added: over.added ?? '',
+    switchedOff: over.switchedOff ?? '',
     source: over.source ?? '',
     status: over.status ?? '',
     note: over.note ?? '',
@@ -135,6 +136,7 @@ test('compares numbers, versions, dates and text, with missing last in both dire
     source: 'Nexus Mods',
     status: 'Enabled',
     added: '2026-01-02T00:00:00Z',
+    switchedOff: '2026-03-01T00:00:00Z',
     details: details({
       version: '2.1.0',
       category: 'UI',
@@ -164,6 +166,8 @@ test('compares numbers, versions, dates and text, with missing last in both dire
   expect(compareListRows(missing, a, { column: 'version', dir: 'asc' })).toBeGreaterThan(0)
   expect(compareListRows(missing, a, { column: 'version', dir: 'desc' })).toBeGreaterThan(0)
   expect(compareListRows(a, b, { column: 'installed', dir: 'asc' })).toBeGreaterThan(0)
+  expect(compareListRows(a, b, { column: 'switchedOff', dir: 'asc' })).toBeLessThan(0)
+  expect(compareListRows(a, b, { column: 'switchedOff', dir: 'desc' })).toBeLessThan(0)
   const heavier = row({ name: 'Beta', size: 200 })
   const lighter = row({ name: 'Alpha', size: 50 })
   expect(compareListRows(heavier, lighter, { column: 'size', dir: 'desc' })).toBeLessThan(0)

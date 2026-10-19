@@ -762,3 +762,27 @@ func TestSwitchingOffAModWhoseRecordedFolderIsGoneNamesTheFolder(t *testing.T) {
 		t.Fatalf("err = %v, want the missing folder named", err)
 	}
 }
+
+func TestSwitchingAModOffRecordsWhenAndSwitchingItOnClearsIt(t *testing.T) {
+	t.Parallel()
+	e := newEnv(t)
+	e.item(t, "local-a", map[string]string{"manifest.json": manifestJSON("Me.A")})
+	p, _ := e.Create("stardew", "P")
+	if _, err := e.AddEntry("stardew", p.ID, "local-a", Source{}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := e.SetModEnabled("stardew", p.ID, "", "smapi:Me.A", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if at := got.Entries[0].SwitchedOff["smapi:Me.A"]; time.Since(at) > time.Minute || at.IsZero() {
+		t.Fatalf("switched off = %v", got.Entries[0].SwitchedOff)
+	}
+	got, err = e.SetModEnabled("stardew", p.ID, "", "smapi:Me.A", true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.Entries[0].SwitchedOff) != 0 {
+		t.Fatalf("switched off after switching on = %v", got.Entries[0].SwitchedOff)
+	}
+}

@@ -179,7 +179,7 @@ msgstr "Could not read that file"
 msgid "Unofficial build"
 msgstr "Unofficial build"
 
-#: src/mods/listRows.ts:160
+#: src/mods/listRows.ts:161
 #: src/mods/Toolbar.tsx:71
 #: src/mods/useListHeading.ts:22
 msgid "Implicit"
@@ -1968,7 +1968,7 @@ msgstr "Mortar does not have permission to do that."
 msgid "Could not ignore updates from {source}"
 msgstr "Could not ignore updates from {source}"
 
-#: src/mods/columnLabel.ts:24
+#: src/mods/columnLabel.ts:25
 msgid "Startup"
 msgstr "Startup"
 
@@ -3738,7 +3738,7 @@ msgstr "{left, plural, one {# mod has no page, or more than one} other {# mods h
 msgid "Manual"
 msgstr "Manual"
 
-#: src/mods/columnLabel.ts:18
+#: src/mods/columnLabel.ts:19
 #: src/mods/Toolbar.tsx:262
 #: src/settings/prefCopyModsView.ts:49
 msgid "Install reason"
@@ -4083,7 +4083,7 @@ msgid "Edit launch preset"
 msgstr "Edit launch preset"
 
 #: src/browse/BrowseShow.tsx:38
-#: src/mods/columnLabel.ts:23
+#: src/mods/columnLabel.ts:24
 msgid "Size"
 msgstr "Size"
 
@@ -4754,7 +4754,7 @@ msgid "{off} switched off"
 msgstr "{off} switched off"
 
 #: src/mods/ModCards.tsx:492
-#: src/mods/ModList.tsx:397
+#: src/mods/ModList.tsx:401
 #: src/mods/Toolbar.tsx:233
 #: src/mods/typedConfig/ConfigTab.tsx:169
 msgid "A mod with several tags appears under its first tag."
@@ -4798,7 +4798,7 @@ msgid "Needs a CurseForge key, or the file from its page"
 msgstr "Needs a CurseForge key, or the file from its page"
 
 #: src/mods/AuthorDialog.tsx:135
-#: src/mods/listRows.ts:163
+#: src/mods/listRows.ts:164
 #: src/mods/ModDependencyTree.tsx:138
 #: src/mods/OptionalFileRows.tsx:123
 #: src/mods/PreviewPick.tsx:23
@@ -5931,7 +5931,7 @@ msgstr "Reading your screenshots…"
 msgid "{0, plural, one {# fix} other {# fixes}}"
 msgstr "{0, plural, one {# fix} other {# fixes}}"
 
-#: src/mods/columnLabel.ts:19
+#: src/mods/columnLabel.ts:20
 #: src/mods/ModDependencyTree.tsx:247
 msgid "Needs"
 msgstr "Needs"
@@ -7850,7 +7850,7 @@ msgstr "{who} all edit {target}.{winner}"
 msgid "Changed launch settings"
 msgstr "Changed launch settings"
 
-#: src/mods/columnLabel.ts:21
+#: src/mods/columnLabel.ts:22
 msgid "Notes and tags"
 msgstr "Notes and tags"
 
@@ -11301,7 +11301,7 @@ msgid "Auto-enable requirements"
 msgstr "Auto-enable requirements"
 
 #: src/mods/AuthorDialog.tsx:134
-#: src/mods/listRows.ts:163
+#: src/mods/listRows.ts:164
 #: src/mods/ModDependencyTree.tsx:136
 #: src/mods/Sidebar.tsx:231
 #: src/mods/Sidebar.tsx:244
@@ -11878,7 +11878,7 @@ msgstr "Delete {0} permanently?"
 msgid "Could not mark the mods explicit"
 msgstr "Could not mark the mods explicit"
 
-#: src/mods/listRows.ts:160
+#: src/mods/listRows.ts:161
 #: src/mods/Toolbar.tsx:70
 #: src/mods/useListHeading.ts:21
 msgid "Explicit"
@@ -12342,7 +12342,7 @@ msgstr "Could not delete the profile"
 msgid "Include pre-release mod versions"
 msgstr "Include pre-release mod versions"
 
-#: src/mods/columnLabel.ts:20
+#: src/mods/columnLabel.ts:21
 #: src/mods/Toolbar.tsx:252
 #: src/settings/prefCopyModsView.ts:41
 msgid "Status"
@@ -12664,7 +12664,7 @@ msgstr "About"
 msgid "Updated fixable mods"
 msgstr "Updated fixable mods"
 
-#: src/mods/columnLabel.ts:25
+#: src/mods/columnLabel.ts:26
 msgid "Order"
 msgstr "Order"
 
@@ -13431,7 +13431,7 @@ msgstr "Ignored fields Mortar does not import: {0}"
 msgid "Also watch these folders"
 msgstr "Also watch these folders"
 
-#: src/mods/columnLabel.ts:22
+#: src/mods/columnLabel.ts:23
 #: src/mods/problemText.ts:32
 msgid "Last run"
 msgstr "Last run"
@@ -13463,6 +13463,10 @@ msgstr "Back up saves before Play"
 #: src/updates/WhatsNewDialog.tsx:202
 msgid "What's new in Mortar {0}"
 msgstr "What's new in Mortar {0}"
+
+#: src/mods/columnLabel.ts:18
+msgid "Switched off"
+msgstr "Switched off"
 
 #: src/settings/prefCopy.ts:189
 msgid "Run crashed"

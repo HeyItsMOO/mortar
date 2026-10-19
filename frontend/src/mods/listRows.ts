@@ -155,6 +155,7 @@ function toListRow(
   const row: ListRow = {
     mod: m,
     added: entry?.added ?? '',
+    switchedOff: m.enabled ? '' : (entry?.switchedOff?.[m.id] ?? ''),
     pinned: Boolean(entry?.pinned),
     implicit,
     reason: implicit ? i18n._(msg`Implicit`) : i18n._(msg`Explicit`),

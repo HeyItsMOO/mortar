@@ -58,6 +58,7 @@ func (e Entry) Clone() Entry {
 	e.Mods = cloneSlice(e.Mods, Component.clone)
 	e.TrayFiles = slices.Clone(e.TrayFiles)
 	e.Disabled = slices.Clone(e.Disabled)
+	e.SwitchedOff = maps.Clone(e.SwitchedOff)
 	e.SkipSources = slices.Clone(e.SkipSources)
 	e.Tags = slices.Clone(e.Tags)
 	e.Fomod = cloneFomod(e.Fomod)

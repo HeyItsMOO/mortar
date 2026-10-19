@@ -194,6 +194,7 @@ function cellsFor(id: ListColumnId, row: ListRow, locale: string, profile: Profi
     case 'category':
     case 'updated':
     case 'installed':
+    case 'switchedOff':
     case 'reason':
     case 'notes': {
       const notes = [row.note, row.tags.join(', ')].filter((part) => part !== '').join(' · ')
@@ -202,6 +203,9 @@ function cellsFor(id: ListColumnId, row: ListRow, locale: string, profile: Profi
       }
       if (id === 'installed') {
         return <ValueCell key={id} text={<When value={row.added} />} />
+      }
+      if (id === 'switchedOff') {
+        return <ValueCell key={id} text={<When value={row.switchedOff} />} />
       }
       const text = {
         id: dash(m.id),
