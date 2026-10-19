@@ -56,6 +56,8 @@ function hash(s: string): number {
   return h
 }
 
+const MAX_NAMED = 12
+
 // The mod's Nexus picture when it has one that loads, else its first letter on a colour from its UniqueID.
 function RemoveDialogBody({ removing }: { removing: Mod[] }) {
   const { t } = useLingui()
@@ -115,6 +117,14 @@ function RemoveDialogBody({ removing }: { removing: Mod[] }) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText>{body}</DialogContentText>
+        {removing.length > 1 ? (
+          <DialogContentText sx={{ mt: 1 }}>
+            {listNames(
+              removing.map((m) => m.name),
+              MAX_NAMED,
+            )}
+          </DialogContentText>
+        ) : null}
         {optional > 0 ? (
           <DialogContentText sx={{ mt: 1 }}>
             {t`${plural(optional, { one: 'Also removes # optional file that goes on top of it.', other: 'Also removes # optional files that go on top of it.' })}`}

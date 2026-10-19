@@ -43,7 +43,7 @@ msgstr "Launch method"
 #. placeholder {0}: gone.date
 #. placeholder {0}: mark.date
 #: src/mods/NexusDetails.tsx:218
-#: src/mods/parts.tsx:285
+#: src/mods/parts.tsx:295
 #: src/mods/Sidebar.tsx:138
 msgid "Hidden on Nexus · {0}"
 msgstr "Hidden on Nexus · {0}"
@@ -708,7 +708,7 @@ msgstr "Also adds what it needs: {0}"
 #. placeholder {0}: update.installed
 #. placeholder {1}: official.version
 #. placeholder {1}: update.version
-#: src/mods/parts.tsx:388
+#: src/mods/parts.tsx:398
 #: src/mods/UpdateBanner.tsx:58
 msgid "Update available: {0} → {1}"
 msgstr "Update available: {0} → {1}"
@@ -1333,7 +1333,7 @@ msgid "This save was last played with {0, plural, one {# mod this profile lacks}
 msgstr "This save was last played with {0, plural, one {# mod this profile lacks} other {# mods this profile lacks}}"
 
 #: src/mods/NexusDetails.tsx:217
-#: src/mods/parts.tsx:284
+#: src/mods/parts.tsx:294
 #: src/mods/Sidebar.tsx:137
 msgid "Hidden on Nexus"
 msgstr "Hidden on Nexus"
@@ -1426,7 +1426,7 @@ msgstr "In use"
 
 #: src/mods/ModMenu.tsx:148
 #: src/mods/OldFilesCallouts.tsx:97
-#: src/mods/parts.tsx:466
+#: src/mods/parts.tsx:476
 msgid "Show files"
 msgstr "Show files"
 
@@ -2245,7 +2245,7 @@ msgstr "Mortar renames the folder {0} without its leading dots, so SMAPI loads t
 msgid "Curator's instructions"
 msgstr "Curator's instructions"
 
-#: src/mods/parts.tsx:120
+#: src/mods/parts.tsx:130
 msgid "{optional, plural, one {Also removes # optional file that goes on top of it.} other {Also removes # optional files that go on top of it.}}"
 msgstr "{optional, plural, one {Also removes # optional file that goes on top of it.} other {Also removes # optional files that go on top of it.}}"
 
@@ -2454,7 +2454,7 @@ msgstr "Will update"
 msgid "{count} selected"
 msgstr "{count} selected"
 
-#: src/mods/parts.tsx:153
+#: src/mods/parts.tsx:163
 msgid "{allCount, plural, one {Remove all # mod} other {Remove all # mods}}"
 msgstr "{allCount, plural, one {Remove all # mod} other {Remove all # mods}}"
 
@@ -2909,7 +2909,7 @@ msgstr "Could not restore profile game settings"
 
 #. placeholder {0}: dependents.length
 #. placeholder {1}: listNames(dependents.map((m) => m.name))
-#: src/mods/parts.tsx:106
+#: src/mods/parts.tsx:108
 msgid "{0, plural, one {# mod needs this} other {# mods need this}}: {1}"
 msgstr "{0, plural, one {# mod needs this} other {# mods need this}}: {1}"
 
@@ -3236,7 +3236,7 @@ msgstr "Update in every profile…"
 msgid "All mods present"
 msgstr "All mods present"
 
-#: src/mods/parts.tsx:258
+#: src/mods/parts.tsx:268
 msgid "Not loaded in the running game"
 msgstr "Not loaded in the running game"
 
@@ -4518,7 +4518,7 @@ msgstr "Mortar already named the likely mod for the last crash."
 #: src/mods/CategoryEditor.tsx:156
 #: src/mods/CategoryEditor.tsx:236
 #: src/mods/GameModsReviewDialog.tsx:213
-#: src/mods/parts.tsx:138
+#: src/mods/parts.tsx:148
 #: src/mods/ReportToAuthorButton.tsx:271
 #: src/mods/SelectionBarDialogs.tsx:87
 #: src/mods/SelectionBarDialogs.tsx:137
@@ -4809,7 +4809,7 @@ msgid "Code copied"
 msgstr "Code copied"
 
 #. placeholder {0}: listNames(extra)
-#: src/mods/parts.tsx:93
+#: src/mods/parts.tsx:95
 msgid "Mods from the same download are removed together: {0}. You can undo this."
 msgstr "Mods from the same download are removed together: {0}. You can undo this."
 
@@ -4946,7 +4946,7 @@ msgstr "{0, plural, one {# settings file was left out (too large):} other {# set
 msgid "Add or remove the tag"
 msgstr "Add or remove the tag"
 
-#: src/mods/parts.tsx:328
+#: src/mods/parts.tsx:338
 #: src/mods/Sidebar.tsx:195
 msgid "Last run: {summary}"
 msgstr "Last run: {summary}"
@@ -5868,7 +5868,7 @@ msgid "Mod updates"
 msgstr "Mod updates"
 
 #. placeholder {0}: removing.length
-#: src/mods/parts.tsx:114
+#: src/mods/parts.tsx:116
 msgid "{0, plural, one {Remove # mod from this profile?} other {Remove # mods from this profile?}}"
 msgstr "{0, plural, one {Remove # mod from this profile?} other {Remove # mods from this profile?}}"
 
@@ -6048,7 +6048,7 @@ msgstr "Clear finished"
 #. placeholder {0}: mod.name
 #. placeholder {0}: overlay.label
 #: src/mods/OverlayRow.tsx:59
-#: src/mods/parts.tsx:446
+#: src/mods/parts.tsx:456
 msgid "Enable {0}"
 msgstr "Enable {0}"
 
@@ -6247,7 +6247,7 @@ msgstr "You started this download on Nexus. Show Mortar to choose the profile it
 msgid "The newest Steam has"
 msgstr "The newest Steam has"
 
-#: src/mods/parts.tsx:354
+#: src/mods/parts.tsx:364
 msgid "Pinned at this version"
 msgstr "Pinned at this version"
 
@@ -6678,7 +6678,7 @@ msgstr "Could not read load order"
 msgid "Image"
 msgstr "Image"
 
-#: src/mods/parts.tsx:241
+#: src/mods/parts.tsx:251
 msgid "Problem: {text}"
 msgstr "Problem: {text}"
 
@@ -8524,7 +8524,7 @@ msgstr "Skip the intro"
 msgid "These will be removed ({0})"
 msgstr "These will be removed ({0})"
 
-#: src/mods/parts.tsx:95
+#: src/mods/parts.tsx:97
 msgid "Its folder is removed from this profile. You can undo this."
 msgstr "Its folder is removed from this profile. You can undo this."
 
@@ -8635,7 +8635,7 @@ msgid "Go to"
 msgstr "Go to"
 
 #: src/mods/NexusDetails.tsx:219
-#: src/mods/parts.tsx:286
+#: src/mods/parts.tsx:296
 #: src/mods/Sidebar.tsx:139
 msgid "Removed from Nexus"
 msgstr "Removed from Nexus"
@@ -9470,6 +9470,10 @@ msgstr "No other profiles with overrides"
 msgid "a copy of {name}"
 msgstr "a copy of {name}"
 
+#: src/mods/ModsHeaderActions.tsx:25
+msgid "Remove switched-off mods"
+msgstr "Remove switched-off mods"
+
 #: src/profiles/collectionUnlink.ts:33
 msgid "Unlinked collection"
 msgstr "Unlinked collection"
@@ -9622,7 +9626,7 @@ msgstr "No backups yet"
 
 #. placeholder {0}: unneeded.length
 #. placeholder {1}: listNames(unneeded.map((m) => m.name))
-#: src/mods/parts.tsx:133
+#: src/mods/parts.tsx:143
 msgid "{0, plural, one {Also remove # library only this needed} other {Also remove # libraries only these needed}}: {1}"
 msgstr "{0, plural, one {Also remove # library only this needed} other {Also remove # libraries only these needed}}: {1}"
 
@@ -9703,7 +9707,7 @@ msgstr "Undo only this mod's change from this entry. Everything else stays as it
 
 #. placeholder {0}: unofficial.version
 #. placeholder {0}: update.version
-#: src/mods/parts.tsx:387
+#: src/mods/parts.tsx:397
 #: src/mods/UpdateBanner.tsx:63
 #: src/mods/updateReview/RowCopy.tsx:28
 msgid "Unofficial update available: {0}"
@@ -10585,7 +10589,7 @@ msgstr "Save to library…"
 msgid "Steps to reproduce"
 msgstr "Steps to reproduce"
 
-#: src/mods/parts.tsx:91
+#: src/mods/parts.tsx:93
 msgid "Their folders are removed from this profile. You can undo this."
 msgstr "Their folders are removed from this profile. You can undo this."
 
@@ -11085,7 +11089,7 @@ msgstr "Preview"
 msgid "Updated in Steam"
 msgstr "Updated in Steam"
 
-#: src/mods/parts.tsx:143
+#: src/mods/parts.tsx:153
 msgid "Remove anyway"
 msgstr "Remove anyway"
 
@@ -11276,7 +11280,7 @@ msgstr "A file a mod wrote is too large to copy into the profile and stays in th
 #. placeholder {0}: gone.date
 #. placeholder {0}: mark.date
 #: src/mods/NexusDetails.tsx:220
-#: src/mods/parts.tsx:287
+#: src/mods/parts.tsx:297
 #: src/mods/Sidebar.tsx:140
 msgid "Removed from Nexus · {0}"
 msgstr "Removed from Nexus · {0}"
@@ -11871,8 +11875,8 @@ msgstr "Got a Mortar link? You see what it holds first. Nexus mods need your Nex
 #: src/mods/CleanupSection.tsx:88
 #: src/mods/ModMenu.tsx:181
 #: src/mods/ModMenu.tsx:280
-#: src/mods/parts.tsx:165
-#: src/mods/parts.tsx:484
+#: src/mods/parts.tsx:175
+#: src/mods/parts.tsx:494
 #: src/mods/SelectionBarActions.tsx:165
 #: src/mods/SelectionBarDialogs.tsx:83
 #: src/settings/sections/WatchFolders.tsx:41
@@ -12208,7 +12212,7 @@ msgid "Keep mine"
 msgstr "Keep mine"
 
 #: src/mods/ModSections.tsx:63
-#: src/mods/parts.tsx:354
+#: src/mods/parts.tsx:364
 #: src/mods/updateReview/Row.tsx:37
 msgid "Pinned: {pinned}"
 msgstr "Pinned: {pinned}"
@@ -13181,7 +13185,7 @@ msgstr "Downloaded"
 msgid "Cancelled"
 msgstr "Cancelled"
 
-#: src/mods/ModsHeaderActions.tsx:17
+#: src/mods/ModsHeaderActions.tsx:31
 msgid "Check mods and Mortar for updates (F5)"
 msgstr "Check mods and Mortar for updates (F5)"
 
@@ -13249,7 +13253,7 @@ msgstr "Could not build the link"
 
 #. placeholder {0}: hit.warnings
 #: src/mods/lastRun.ts:62
-#: src/mods/parts.tsx:310
+#: src/mods/parts.tsx:320
 msgid "{0, plural, one {# warning} other {# warnings}}"
 msgstr "{0, plural, one {# warning} other {# warnings}}"
 
@@ -13849,7 +13853,7 @@ msgid "{count, plural, one {{name} · # mod} other {{name} · # mods}}"
 msgstr "{count, plural, one {{name} · # mod} other {{name} · # mods}}"
 
 #: src/mods/ModMenu.tsx:173
-#: src/mods/parts.tsx:413
+#: src/mods/parts.tsx:423
 #: src/mods/SelectionBarActions.tsx:96
 #: src/mods/UpdateBanner.tsx:91
 #: src/mods/updateReview/UpdateActions.tsx:133
@@ -14193,7 +14197,7 @@ msgstr "Sort: most popular"
 #. placeholder {0}: mod.name
 #. placeholder {0}: overlay.label
 #: src/mods/OverlayRow.tsx:58
-#: src/mods/parts.tsx:446
+#: src/mods/parts.tsx:456
 msgid "Disable {0}"
 msgstr "Disable {0}"
 
@@ -14668,7 +14672,7 @@ msgid "Stop the game to change save backups."
 msgstr "Stop the game to change save backups."
 
 #. placeholder {0}: one.name
-#: src/mods/parts.tsx:113
+#: src/mods/parts.tsx:115
 msgid "Remove {0} from this profile?"
 msgstr "Remove {0} from this profile?"
 
@@ -15040,7 +15044,7 @@ msgstr "{endorsements, plural, one {# follower} other {# followers}}"
 msgid "Untrack mods?"
 msgstr "Untrack mods?"
 
-#: src/mods/parts.tsx:258
+#: src/mods/parts.tsx:268
 msgid "Loaded in the running game"
 msgstr "Loaded in the running game"
 
