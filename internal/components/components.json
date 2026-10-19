@@ -4959,6 +4959,9 @@
       "id": "hollow-knight-silksong",
       "name": "Hollow Knight: Silksong",
       "enabled": true,
+      "importIds": {
+        "mo2": "Hollow Knight: Silksong"
+      },
       "marker": "Hollow Knight Silksong.exe",
       "r2modmanFolder": "HollowKnightSilksong",
       "metadata": [],
@@ -7675,6 +7678,10 @@
       "id": "subnautica",
       "name": "Subnautica",
       "enabled": true,
+      "importIds": {
+        "vortex": "subnautica",
+        "mo2": "Subnautica"
+      },
       "marker": "Subnautica.exe",
       "r2modmanFolder": "Subnautica",
       "metadata": [],
@@ -7719,6 +7726,10 @@
       "id": "subnautica-below-zero",
       "name": "Subnautica: Below Zero",
       "enabled": true,
+      "importIds": {
+        "vortex": "subnauticabelowzero",
+        "mo2": "Subnautica: Below Zero"
+      },
       "marker": "SubnauticaZero.exe",
       "r2modmanFolder": "SubnauticaBZ",
       "metadata": [],
@@ -8653,6 +8664,9 @@
       "id": "schedule-i",
       "name": "Schedule I",
       "enabled": true,
+      "importIds": {
+        "mo2": "Schedule I"
+      },
       "marker": "Schedule I.exe",
       "r2modmanFolder": "ScheduleI",
       "metadata": [],
@@ -9675,6 +9689,10 @@
       "id": "sims4",
       "name": "The Sims 4",
       "enabled": true,
+      "importIds": {
+        "vortex": "thesims4",
+        "mo2": "The Sims 4"
+      },
       "marker": "TS4_x64.exe",
       "markerDir": "Game/Bin",
       "metadata": [],
@@ -9802,6 +9820,10 @@
       "id": "witcher3",
       "name": "The Witcher 3: Wild Hunt",
       "enabled": true,
+      "importIds": {
+        "vortex": "witcher3",
+        "mo2": "The Witcher 3: Wild Hunt"
+      },
       "marker": "witcher3.exe",
       "markerDir": "bin/x64_DX12",
       "metadata": [],
@@ -9844,6 +9866,10 @@
       "id": "darkest-dungeon",
       "name": "Darkest Dungeon",
       "enabled": true,
+      "importIds": {
+        "vortex": "darkestdungeon",
+        "mo2": "Darkest Dungeon"
+      },
       "marker": "Darkest.exe",
       "markerDir": "_windows/win64",
       "metadata": [],
@@ -9888,6 +9914,9 @@
       "id": "starbound",
       "name": "Starbound",
       "enabled": true,
+      "importIds": {
+        "vortex": "starbound"
+      },
       "marker": "starbound.exe",
       "markerDir": "win64",
       "metadata": [],
@@ -9971,6 +10000,10 @@
       "id": "cyberpunk-2077",
       "name": "Cyberpunk 2077",
       "enabled": true,
+      "importIds": {
+        "vortex": "cyberpunk2077",
+        "mo2": "Cyberpunk 2077"
+      },
       "marker": "Cyberpunk2077.exe",
       "markerDir": "bin/x64",
       "metadata": [],
@@ -10202,6 +10235,9 @@
       "id": "7-days-to-die",
       "name": "7 Days to Die",
       "enabled": true,
+      "importIds": {
+        "vortex": "7daystodie"
+      },
       "marker": "7DaysToDie.exe",
       "metadata": [],
       "paths": {
@@ -10240,6 +10276,10 @@
       "id": "blade-and-sorcery",
       "name": "Blade & Sorcery",
       "enabled": true,
+      "importIds": {
+        "vortex": "bladeandsorcery",
+        "mo2": "Blade & Sorcery"
+      },
       "marker": "BladeAndSorcery.exe",
       "metadata": [],
       "paths": {
@@ -10278,6 +10318,10 @@
       "id": "monster-hunter-world",
       "name": "Monster Hunter: World",
       "enabled": true,
+      "importIds": {
+        "vortex": "monsterhunterworld",
+        "mo2": "Monster Hunter: World"
+      },
       "marker": "MonsterHunterWorld.exe",
       "metadata": [],
       "paths": {
@@ -10315,6 +10359,10 @@
       "id": "x4-foundations",
       "name": "X4: Foundations",
       "enabled": true,
+      "importIds": {
+        "vortex": "x4foundations",
+        "mo2": "X4: Foundations"
+      },
       "marker": "X4.exe",
       "metadata": [],
       "paths": {
@@ -10353,6 +10401,10 @@
       "id": "kingdom-come-deliverance",
       "name": "Kingdom Come: Deliverance",
       "enabled": true,
+      "importIds": {
+        "vortex": "kingdomcomedeliverance",
+        "mo2": "Kingdom Come: Deliverance"
+      },
       "marker": "KingdomCome.exe",
       "markerDir": "Bin/Win64",
       "metadata": [],
@@ -10392,6 +10444,9 @@
       "id": "kingdom-come-deliverance-2",
       "name": "Kingdom Come: Deliverance II",
       "enabled": true,
+      "importIds": {
+        "mo2": "Kingdom Come: Deliverance II"
+      },
       "marker": "KingdomCome.exe",
       "markerDir": "Bin/Win64MasterMasterSteamPGO",
       "metadata": [],
@@ -10431,6 +10486,9 @@
       "id": "ready-or-not",
       "name": "Ready or Not",
       "enabled": true,
+      "importIds": {
+        "mo2": "Ready or Not"
+      },
       "marker": "ReadyOrNot-Win64-Shipping.exe",
       "markerDir": "ReadyOrNot/Binaries/Win64",
       "metadata": [],
@@ -10469,6 +10527,9 @@
       "id": "code-vein",
       "name": "CODE VEIN",
       "enabled": true,
+      "importIds": {
+        "vortex": "codevein"
+      },
       "marker": "CodeVein-Win64-Shipping.exe",
       "markerDir": "CodeVein/Binaries/Win64",
       "metadata": [],
@@ -10749,6 +10810,9 @@
       "id": "final-fantasy-vii-rebirth",
       "name": "FINAL FANTASY VII REBIRTH",
       "enabled": true,
+      "importIds": {
+        "mo2": "Final Fantasy VII Rebirth"
+      },
       "marker": "ff7rebirth.exe",
       "metadata": [],
       "paths": {
