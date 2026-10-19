@@ -2,7 +2,6 @@ package nexussvc
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 
@@ -90,13 +89,11 @@ func PeekDetails(c *meta.Client, domain string, id int) (Details, bool) {
 }
 
 func (s *Service) fetchPages(ctx context.Context, domain string, ids []int) error {
-	// The page data is public: signed out, the same request goes without a key, so requirements still show.
+	// The page data is public: without a usable key (signed out, or a keyring locked or not running) the same
+	// request goes without one, so categories and requirements still show.
 	c, err := Authed(s.store, s.client)
-	if errors.Is(err, ErrSignedOut) {
-		c, err = s.client, nil
-	}
 	if err != nil {
-		return err
+		c = s.client
 	}
 	infos, err := c.ModsByDomain(ctx, domain, ids)
 	if err != nil {

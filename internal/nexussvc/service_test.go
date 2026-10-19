@@ -327,6 +327,11 @@ func TestPrimeDetailsAsksOncePerBatch(t *testing.T) {
 	if _, err := s.Prime(ctx, "lethal-company", ids); err != nil || requests.Load() != before {
 		t.Fatalf("a fresh cache must not be asked again: %d requests, %v", requests.Load()-before, err)
 	}
+	// A key the keyring cannot hand over (locked, or no keyring running) does not hold back the public page data.
+	keyring.MockInitWithError(errors.New("the keyring is locked"))
+	if got, err := s.Prime(ctx, "lethal-company", []int{900}); err != nil || got[900].Category != "Misc" {
+		t.Fatalf("locked keyring: %+v, %v", got[900], err)
+	}
 	// Nexus fails for the one new mod: the window still gets the 800 it has, with the reason for the rest.
 	down.Store(true)
 	primed, err := s.PrimeDetails(ctx, "lethal-company", append(slices.Clone(ids), 801))
