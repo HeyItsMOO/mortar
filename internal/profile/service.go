@@ -469,6 +469,11 @@ func (s *Service) SetPinned(game, id, key string, pinned bool, pinReason string)
 	return s.store.SetPinned(game, id, key, pinned, pinReason)
 }
 
+// SetFrozen holds every mod of the profile at its current version, or lifts the holds a freeze made.
+func (s *Service) SetFrozen(game, id string, frozen bool) (Profile, error) {
+	return s.store.SetFrozen(game, id, frozen)
+}
+
 func (s *Service) SetPinnedMany(game, id string, keys []string, pinned bool, pinReason string) (Profile, error) {
 	return s.store.SetPinnedMany(game, id, keys, pinned, pinReason)
 }

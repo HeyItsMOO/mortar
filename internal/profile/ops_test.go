@@ -786,3 +786,33 @@ func TestSwitchingAModOffRecordsWhenAndSwitchingItOnClearsIt(t *testing.T) {
 		t.Fatalf("switched off after switching on = %v", got.Entries[0].SwitchedOff)
 	}
 }
+
+func TestFreezePinsEveryModAndUnfreezeKeepsThePlayersOwnPins(t *testing.T) {
+	t.Parallel()
+	e := newEnv(t)
+	e.item(t, "local-a", map[string]string{"manifest.json": manifestJSON("Me.A")})
+	e.item(t, "local-b", map[string]string{"manifest.json": manifestJSON("Me.B")})
+	p, _ := e.Create("stardew", "P")
+	for _, k := range []string{"local-a", "local-b"} {
+		if _, err := e.AddEntry("stardew", p.ID, k, Source{}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := e.SetPinned("stardew", p.ID, "local-a", true, "mine"); err != nil {
+		t.Fatal(err)
+	}
+	got, err := e.SetFrozen("stardew", p.ID, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if a, b := got.Entries[0], got.Entries[1]; !a.Pinned || a.PinReason != "mine" || !b.Pinned || b.PinReason != FrozenPinReason || b.OffersUpdate("9") {
+		t.Fatalf("frozen: %+v %+v", a, b)
+	}
+	got, err = e.SetFrozen("stardew", p.ID, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if a, b := got.Entries[0], got.Entries[1]; !a.Pinned || a.PinReason != "mine" || b.Pinned || b.PinReason != "" {
+		t.Fatalf("unfrozen: %+v %+v", a, b)
+	}
+}

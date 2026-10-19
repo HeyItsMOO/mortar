@@ -8,6 +8,7 @@ import {
   ImagePlus,
   PackagePlus,
   ShieldCheck,
+  Snowflake,
   SquareArrowOutUpRight,
   Trash2,
 } from 'lucide-react'
@@ -22,6 +23,8 @@ import {
   Exists as ShortcutExists,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/shortcut/service.ts'
 import { AddResult } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/steam/models.ts'
+import { setFrozen } from '../mods/freeze.ts'
+import { isFrozen } from '../mods/frozen.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
 import { MenuRule } from '../shell/TitleMenu.tsx'
@@ -211,6 +214,7 @@ function MoreMenuItems({ profile, close }: { profile: Profile; close: () => void
   const { t } = useLingui()
   const hasGame = useProfiles((s) => s.game !== null)
   const duplicate = useProfiles((s) => s.duplicate)
+  const openId = useProfiles((s) => s.openId)
   return [
     <ProfileMenuItem
       key="history"
@@ -222,6 +226,17 @@ function MoreMenuItems({ profile, close }: { profile: Profile; close: () => void
       }}
     />,
     <CheckProfileMenuItem key="check" profile={profile} close={close} />,
+    <ProfileMenuItem
+      key="freeze"
+      icon={<Snowflake size={16} />}
+      label={isFrozen(profile) ? t`Unfreeze` : t`Freeze this profile`}
+      disabled={profile.id !== openId}
+      {...(profile.id === openId ? {} : { tooltip: t`Open the profile first.` })}
+      onClick={() => {
+        close()
+        setFrozen(!isFrozen(profile)).catch(reportUnexpected)
+      }}
+    />,
     <ProfileMenuItem
       key="duplicate"
       icon={<Copy size={16} />}

@@ -73,3 +73,23 @@ func setSkipSource(e *Entry, source string, skip bool) {
 		e.SkipSources = nil
 	}
 }
+
+// FrozenPinReason marks the pins a freeze made, so Unfreeze lifts those and keeps the ones the player set.
+const FrozenPinReason = "Frozen with the profile"
+
+// SetFrozen holds every mod of the profile at its current version, or lifts the pins a freeze made. A mod the player
+// pinned already keeps their pin and reason either way. Pinned mods are offered no update.
+func (s *Store) SetFrozen(game, id string, frozen bool) (Profile, error) {
+	return s.update(game, id, func(p *Profile, _ string) error {
+		for i := range p.Entries {
+			e := &p.Entries[i]
+			switch {
+			case frozen && !e.Pinned && e.OverlayOf == "":
+				e.Pinned, e.SkipVersion, e.PinReason = true, "", FrozenPinReason
+			case !frozen && e.Pinned && e.PinReason == FrozenPinReason:
+				e.Pinned, e.PinReason = false, ""
+			}
+		}
+		return nil
+	})
+}

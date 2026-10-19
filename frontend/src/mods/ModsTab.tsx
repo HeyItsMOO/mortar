@@ -19,6 +19,7 @@ import { reportUnexpected } from '../toasts/report.ts'
 import { useCustomCategories } from './customCategories.ts'
 import { useDetail } from './detail.ts'
 import { EndorsePrompt } from './EndorsePrompt.tsx'
+import { FrozenCallout } from './FrozenCallout.tsx'
 import { customCategoryById, profileTags } from './group.ts'
 import { partKey, supportParts } from './installReason.ts'
 import { LegacyReasonsCallout } from './LegacyReasonsCallout.tsx'
@@ -412,6 +413,7 @@ export function ModsTab({ profile }: { profile: Profile }) {
       <UpdateBar />
       <OldFilesCallouts profile={profile} />
       <NewFoldersCallout profile={profile} />
+      <FrozenCallout profile={profile} />
       <LegacyReasonsCallout profile={profile} />
       <FilteredMods profile={profile} />
       <UpdateReview profile={profile} />
