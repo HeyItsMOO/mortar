@@ -1743,7 +1743,7 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:544
+#: src/games/GameSelect.tsx:494
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -4028,7 +4028,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:113
-#: src/games/GameSelect.tsx:448
+#: src/games/GameSelect.tsx:394
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4405,11 +4405,11 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:547
+#: src/games/GameSelect.tsx:497
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
-#: src/games/GameSelect.tsx:278
+#: src/games/GameSelect.tsx:282
 msgid "Set up"
 msgstr "Set up"
 
@@ -6804,7 +6804,7 @@ msgid "No profiles found."
 msgstr "No profiles found."
 
 #. placeholder {0}: game.name
-#: src/games/GameSelect.tsx:214
+#: src/games/GameSelect.tsx:218
 msgid "Open {0}"
 msgstr "Open {0}"
 
@@ -6833,7 +6833,7 @@ msgstr "Could not move the old files to trash"
 msgid "No profiles yet"
 msgstr "No profiles yet"
 
-#: src/games/GameSelect.tsx:167
+#: src/games/GameSelect.tsx:171
 #: src/games/ProfileCards.tsx:48
 #: src/profiles/store.ts:280
 #: src/profiles/store.ts:361
@@ -8636,7 +8636,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:447
+#: src/games/GameSelect.tsx:393
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -8702,7 +8702,7 @@ msgstr "Minutes between background update checks"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/games/GameSelect.tsx:152
+#: src/games/GameSelect.tsx:156
 msgid "{playtime} played"
 msgstr "{playtime} played"
 
@@ -10152,7 +10152,7 @@ msgstr "A saved group keeps at least one mod; delete the saved group instead"
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:449
+#: src/games/GameSelect.tsx:395
 msgid "Other games"
 msgstr "Other games"
 
@@ -10348,7 +10348,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/FirstRun.tsx:47
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
-#: src/games/GameSelect.tsx:478
+#: src/games/GameSelect.tsx:424
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -11783,7 +11783,7 @@ msgid "Stop the game to test a launch."
 msgstr "Stop the game to test a launch."
 
 #: src/firstrunTour/TourPopover.tsx:42
-#: src/games/GameSelect.tsx:265
+#: src/games/GameSelect.tsx:269
 #: src/launch/PlayControl.tsx:184
 #: src/mods/typedConfig/ConfigTab.tsx:317
 #: src/settings/GameSettingsPage.tsx:98
@@ -12095,7 +12095,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:449
+#: src/games/GameSelect.tsx:395
 msgid "All games"
 msgstr "All games"
 
@@ -12628,7 +12628,7 @@ msgstr "Sort: newest"
 msgid "Could not roll back {0}"
 msgstr "Could not roll back {0}"
 
-#: src/games/GameSelect.tsx:260
+#: src/games/GameSelect.tsx:264
 msgid "Play {playName}"
 msgstr "Play {playName}"
 
@@ -13697,7 +13697,7 @@ msgstr "Command-line control"
 msgid "Could not repair this profile"
 msgstr "Could not repair this profile"
 
-#: src/games/GameSelect.tsx:165
+#: src/games/GameSelect.tsx:169
 #: src/games/ProfileCards.tsx:46
 #: src/games/ProfileCards.tsx:59
 #: src/games/useOpenGame.ts:42
@@ -13885,7 +13885,7 @@ msgstr "See which mods slow the game"
 
 #. placeholder {0}: game.name
 #: src/firstrun/GameSetup.tsx:176
-#: src/games/GameSelect.tsx:273
+#: src/games/GameSelect.tsx:277
 msgid "Set up {0}"
 msgstr "Set up {0}"
 
