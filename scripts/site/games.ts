@@ -105,7 +105,6 @@ function gameCard(g: Game, art: Record<string, SteamArt>, data = ''): string {
 
 const MORE_GAMES = 4
 
-/** Up to four other games on the same loader, the ones after this game alphabetically, wrapping around. */
 /** The games after g in name order that share its loader or, for a loader only g runs, its first mod site. */
 function neighbours(g: Game, games: Game[]): { title: string; games: Game[] } {
   const { loader } = facts(g)
