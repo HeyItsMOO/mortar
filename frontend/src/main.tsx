@@ -18,6 +18,7 @@ import { initPlayRequests } from './launch/playRequests.ts'
 import { initLoader } from './loader/store.ts'
 import { initNexusSeen } from './mods/nexusDetails.ts'
 import { initUpdateDigestToast } from './mods/updateDigestToast.ts'
+import { initNavHistory } from './nav/history.ts'
 import { initNxm } from './nxm/store.ts'
 import { initProfilesChanged } from './profiles/store.ts'
 import { initQueue } from './queue/store.ts'
@@ -68,6 +69,7 @@ initPlayRequests()
 initShare().catch(reportUnexpected)
 initIncoming().catch(reportUnexpected)
 initQuit()
+initNavHistory()
 initScheduledBackups()
 initTidyReport()
 initGamepad()
