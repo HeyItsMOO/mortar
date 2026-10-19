@@ -26,11 +26,8 @@ const getTimeout = 3 * time.Second
 // and OnUnlocked fires when it completes.
 var ErrWaitingForUnlock = usererr.New(usererr.Locked, "Waiting for you to unlock the keyring.")
 
-// keyringGet and keyringDelete are the backend calls, replaced in tests.
-var (
-	keyringGet    = func(name string) (string, error) { return keyring.Get(service, name) }
-	keyringDelete = func(name string) error { return keyring.Delete(service, name) }
-)
+// keyringGet is the backend read, replaced in tests.
+var keyringGet = func(name string) (string, error) { return keyring.Get(service, name) }
 
 // OnUnlocked is called after a read that outlived getTimeout completes, so the app can retry what it deferred.
 var OnUnlocked = func() {}
@@ -127,7 +124,7 @@ func Delete(name string) error {
 	if sandbox.InFlatpak() {
 		return flatpakDelete(name)
 	}
-	if err := keyringDelete(name); err != nil && !errors.Is(err, ErrNotFound) {
+	if err := keyring.Delete(service, name); err != nil && !errors.Is(err, ErrNotFound) {
 		return explain(err)
 	}
 	return nil

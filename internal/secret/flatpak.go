@@ -202,11 +202,10 @@ func flatpakDelete(name string) error {
 		delete(m, name)
 		return ok
 	})
-	_ = keyringDelete(name)
 	return err
 }
 
-// flatpakGet reads the file store, falling back to the Secret Service copy of an earlier release and moving it over.
+// flatpakGet reads the file store.
 func flatpakGet(name string) (string, error) {
 	var v string
 	var ok bool
@@ -222,17 +221,8 @@ func flatpakGet(name string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if ok {
-		return v, nil
-	}
-	// Any keyring failure reads as a miss: the Secret Service is unreachable by design once the sandbox drops it.
-	old, kerr := keyringGet(name)
-	if kerr != nil || old == "" {
+	if !ok {
 		return "", ErrNotFound
 	}
-	if err := flatpakSet(name, old); err != nil {
-		return "", err
-	}
-	_ = keyringDelete(name)
-	return old, nil
+	return v, nil
 }

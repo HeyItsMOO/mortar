@@ -25,7 +25,6 @@ finish-args:
   - --filesystem=xdg-download
   - --filesystem=/run/media
   - --filesystem=/mnt
-  - --talk-name=org.freedesktop.secrets
   # Desktop notifications and the tray icon talk to these names directly, not through a portal.
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
