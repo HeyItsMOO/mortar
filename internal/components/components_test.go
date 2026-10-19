@@ -146,6 +146,12 @@ func TestLoadRefusesSerialRollbackAndKeepsCachedManifest(t *testing.T) {
 	if !errors.Is(err, ErrRollback) || errors.Is(err, ErrBadSignature) {
 		t.Fatalf("serial rollback reported as %v, want ErrRollback", err)
 	}
+	// The same serial again is a routine refresh, not a rollback.
+	now = now.Add(25 * time.Hour)
+	serveRollback = false
+	if manifest, err := client.Load(t.Context(), cache, public); err != nil || manifest.Serial != base+2 {
+		t.Fatalf("same-serial refresh = %d, %v", manifest.Serial, err)
+	}
 }
 
 func TestLoadTellsABadSignatureFromAnUnavailableManifest(t *testing.T) {

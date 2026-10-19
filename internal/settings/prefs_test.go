@@ -316,3 +316,52 @@ func TestCacheClearingIsPerGameWithProfileOverrideAndRejectsOtherValues(t *testi
 		t.Fatalf("code default = %q", got)
 	}
 }
+
+// Each range is inclusive at both ends: a value on the bound is kept by
+// normalize and accepted by validate, never reset to its default.
+func TestRangeBoundsAreInclusive(t *testing.T) {
+	for _, end := range []string{"min", "max"} {
+		pick := func(lo, hi int) int {
+			if end == "min" {
+				return lo
+			}
+			return hi
+		}
+		s := defaultPrefs()
+		normalizePrefs(&s)
+		s.ParallelDownloads = pick(MinParallelDownloads, MaxParallelDownloads)
+		s.UpdateCheckIntervalMinutes = pick(MinUpdateCheckIntervalMinutes, MaxUpdateCheckIntervalMinutes)
+		s.StoreRetentionDays = pick(MinStoreRetentionDays, MaxStoreRetentionDays)
+		s.TrashRetentionDays = pick(MinTrashRetentionDays, MaxTrashRetentionDays)
+		s.HistoryEventsKept = pick(MinHistoryEventsKept, MaxHistoryEventsKept)
+		if err := validatePrefs(s); err != nil {
+			t.Errorf("%s prefs: validate: %v", end, err)
+		}
+		got := s
+		normalizePrefs(&got)
+		if got.ParallelDownloads != s.ParallelDownloads || got.UpdateCheckIntervalMinutes != s.UpdateCheckIntervalMinutes ||
+			got.StoreRetentionDays != s.StoreRetentionDays || got.TrashRetentionDays != s.TrashRetentionDays ||
+			got.HistoryEventsKept != s.HistoryEventsKept {
+			t.Errorf("%s prefs: normalize changed a bound value", end)
+		}
+
+		g := defaultGameSettings()
+		g.SaveBackupsKept = pick(MinSaveBackupsKept, MaxSaveBackupsKept)
+		g.SaveBackupKeep = pick(MinSaveBackupsKept, MaxSaveBackupsKept)
+		g.SaveBackupHours = pick(MinSaveBackupHours, MaxSaveBackupHours)
+		g.RunsKept = pick(MinRunsKept, MaxRunsKept)
+		g.ConsoleLogCap = pick(MinConsoleLogCap, MaxConsoleLogCap)
+		g.Instances = pick(MinInstances, MaxInstances)
+		g.DelaySeconds = pick(MinDelaySeconds, MaxDelaySeconds)
+		if err := validateGame(g); err != nil {
+			t.Errorf("%s game: validate: %v", end, err)
+		}
+		gotG := g
+		normalizeGame("", &gotG)
+		if gotG.SaveBackupsKept != g.SaveBackupsKept || gotG.SaveBackupKeep != g.SaveBackupKeep ||
+			gotG.SaveBackupHours != g.SaveBackupHours || gotG.RunsKept != g.RunsKept ||
+			gotG.ConsoleLogCap != g.ConsoleLogCap || gotG.Instances != g.Instances || gotG.DelaySeconds != g.DelaySeconds {
+			t.Errorf("%s game: normalize changed a bound value", end)
+		}
+	}
+}

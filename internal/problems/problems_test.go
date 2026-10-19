@@ -294,3 +294,59 @@ func TestCountShowsConflictsBetweenTheSameModsOnce(t *testing.T) {
 		t.Fatalf("count = %d, want 2", got)
 	}
 }
+
+// Count and WarningCount add one per row of every family they cover.
+func TestCountAndWarningCountAddEveryFamily(t *testing.T) {
+	var r Result
+	v := reflect.ValueOf(&r).Elem()
+	one := func(names ...string) {
+		for _, n := range names {
+			f := v.FieldByName(n)
+			f.Set(reflect.MakeSlice(f.Type(), 1, 1))
+		}
+	}
+	one("Missing", "Duplicates", "Broken", "Settings", "RunErrors", "LoadFailures", "PluginClashes", "Drift", "Damaged")
+	one("Compat", "Cleanup", "Deprecated")
+	if got := r.Count(); got != 9 {
+		t.Errorf("Count() = %d, want 9", got)
+	}
+	if got := r.WarningCount(); got != 3 {
+		t.Errorf("WarningCount() = %d, want 3", got)
+	}
+}
+
+func TestOptionalRequirementReadsAForNoteAsAWholeWord(t *testing.T) {
+	for note, want := range map[string]bool{
+		"Optional, for the map": true,
+		"recommended":           true,
+		"For multiplayer":       true,
+		"for":                   true,
+		"format fix":            false,
+		"fora":                  false,
+		"forz":                  false,
+		"for0":                  false,
+		"for9":                  false,
+		"for_x":                 false,
+		"required":              false,
+	} {
+		if got := optionalRequirement(note); got != want {
+			t.Errorf("optionalRequirement(%q) = %v, want %v", note, got, want)
+		}
+	}
+}
+
+func TestNewerOrdersByVersionThenFileID(t *testing.T) {
+	for _, c := range []struct {
+		a, b Ref
+		want bool
+	}{
+		{Ref{Version: "2.0", FileID: 1}, Ref{Version: "1.0", FileID: 9}, true},
+		{Ref{Version: "1.0", FileID: 9}, Ref{Version: "2.0", FileID: 1}, false},
+		{Ref{Version: "1.0", FileID: 2}, Ref{Version: "1.0", FileID: 1}, true},
+		{Ref{Version: "1.0", FileID: 1}, Ref{Version: "1.0", FileID: 2}, false},
+	} {
+		if got := newer(c.a, c.b); got != c.want {
+			t.Errorf("newer(%+v, %+v) = %v, want %v", c.a, c.b, got, c.want)
+		}
+	}
+}
