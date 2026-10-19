@@ -114,6 +114,7 @@ test('decodes a link the app made', async () => {
     game: 'lethal-company',
     gameVersion: '',
     sourceKeys: {
+      curseforge: '7275',
       github: 'lethal-company-mod',
       nexus: 'lethalcompany',
       thunderstore: 'lethal-company',

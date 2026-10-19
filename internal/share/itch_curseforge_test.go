@@ -58,7 +58,7 @@ func TestACurseForgeLinkNeedsTheGamesCurseForgeKey(t *testing.T) {
 	p := profile.Profile{Name: "Desk", Entries: []profile.Entry{
 		{Key: "pkg-1", Source: profile.Source{Kind: profile.KindCurseForge, Name: "1", FileID: 2}},
 	}}
-	if _, err := Encode("lethal-company", p, profile.ShareFacts{}); err == nil {
+	if _, err := Encode("repo", p, profile.ShareFacts{}); err == nil {
 		t.Fatal("a CurseForge ref for a game with no CurseForge source was accepted")
 	}
 }

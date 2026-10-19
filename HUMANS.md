@@ -217,7 +217,7 @@ The Sims 4 (`sims4` in `components.source.json`) is the worked `folder` game: `l
 
 ### A catalog-only game, end to end
 
-A game on a loader, store and sources Mortar already has needs no Go: `game.Find` answers for every catalog entry, and only a game the entry cannot describe is a type in `internal/game` listed in `coded` (Stardew Valley, for the process names SMAPI's install leaves). Lethal Company is the worked example (Steam, BepInEx 5, Thunderstore, Nexus, GitHub).
+A game on a loader, store and sources Mortar already has needs no Go: `game.Find` answers for every catalog entry, and only a game the entry cannot describe is a type in `internal/game` listed in `coded` (Stardew Valley, for the process names SMAPI's install leaves). Lethal Company is the worked example (Steam, BepInEx 5, Thunderstore, Nexus, CurseForge, GitHub).
 
 1. **Entry.** Add it to `games` with `enabled: false` while checking. Lethal Company's names `stores.steam.appId`, `loaders: [{id: "bepinex5", companion: "bridge"}]`, `sources` for `thunderstore` (`key` is the community slug), `nexus` (domain `key` and numeric `gameId`) and `github`, `r2modmanFolder`, `paths.saves`, `deploy: "profile"` and the `profile` target.
 2. **Components.** A loader whose release Mortar installs (SMAPI) or a companion (the bridge) is a `components` entry with a GitHub source, an asset pattern and a version policy. BepInEx ships as a Thunderstore package and needs none.

@@ -222,6 +222,11 @@
           "gameId": 5848
         },
         {
+          "id": "curseforge",
+          "key": "7275",
+          "gameId": 86318
+        },
+        {
           "id": "github",
           "key": "lethal-company-mod"
         }
@@ -320,6 +325,11 @@
           "id": "nexus",
           "key": "valheim",
           "gameId": 3667
+        },
+        {
+          "id": "curseforge",
+          "key": "4841",
+          "gameId": 68013
         },
         {
           "id": "github",
