@@ -12,6 +12,7 @@ const TABS = [
   'screenshots',
   'console',
   'performance',
+  'moo',
 ] as const
 const TAB_KEY = 'mortar.tab'
 

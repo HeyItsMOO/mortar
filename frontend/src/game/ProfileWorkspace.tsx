@@ -10,6 +10,7 @@ import { ProblemsTab } from '../mods/ProblemsTab.tsx'
 import { RemoveDialog } from '../mods/parts.tsx'
 import { ConfigTab } from '../mods/typedConfig/ConfigTab.tsx'
 import { useConfigListLoaded } from '../mods/typedConfig/configList.ts'
+import { MooTab } from '../moo/MooTab.tsx'
 import { SavesTab } from '../saves/SavesTab.tsx'
 import { ScreenshotsTab } from '../screenshots/ScreenshotsTab.tsx'
 import { usePasteLink } from '../share/usePasteLink.ts'
@@ -43,6 +44,7 @@ export function ProfileWorkspace({
       {tab === 'home' ? null : <TabHeader profile={profile} />}
       <ErrorBoundary resetKey={`${tab}-${profile.id}`}>
         {tab === 'console' ? <ConsoleTab game={game} /> : null}
+        {tab === 'moo' ? <MooTab /> : null}
         {tab === 'performance' ? <PerformanceTab game={game} /> : null}
         {tab === 'config' ? <ConfigTab profile={profile} game={game} /> : null}
         {tab === 'saves' ? <SavesTab profile={profile} game={game} /> : null}

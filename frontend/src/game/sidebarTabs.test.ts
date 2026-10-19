@@ -11,16 +11,17 @@ test('the sidebar lists every group for a loader with all capabilities, in order
     ['get', ['browse']],
     ['health', ['problems', 'load-order', 'performance']],
     ['logs', ['console']],
+    ['fun', ['moo']],
   ])
 })
 
 test('sections a loader lacks are left out and an empty group loses its header', () => {
   const groups = sidebarGroups(none, { updates: 0, problems: 0 })
-  expect(groups.map((g) => g.id)).toEqual(['library', 'get', 'health'])
+  expect(groups.map((g) => g.id)).toEqual(['library', 'get', 'health', 'fun'])
   expect(groups[2]?.entries.map((e) => e.id)).toEqual(['problems'])
-  expect(sidebarGroups({ ...none, console: true }, { updates: 0, problems: 0 }).at(-1)?.id).toBe(
-    'logs',
-  )
+  expect(
+    sidebarGroups({ ...none, console: true }, { updates: 0, problems: 0 }).map((g) => g.id),
+  ).toEqual(['library', 'get', 'health', 'logs', 'fun'])
 })
 
 test('Mods carries the update count and Problems the problem count, each only when above zero', () => {

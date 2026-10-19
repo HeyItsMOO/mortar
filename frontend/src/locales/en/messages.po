@@ -24,7 +24,7 @@ msgid "Windows only. On this computer its games come in through Heroic, Lutris o
 msgstr "Windows only. On this computer its games come in through Heroic, Lutris or Bottles."
 
 #: src/console/PerformancePanelParts.tsx:194
-#: src/game/Sidebar.tsx:215
+#: src/game/Sidebar.tsx:224
 msgid "Performance"
 msgstr "Performance"
 
@@ -642,7 +642,7 @@ msgstr "Show token"
 msgid "On Windows, Steam starts the game without {loader} unless told to. With Steam closed, Mortar can set that up; or in Steam, right-click {gameName}, choose Properties and paste this line into Launch Options:"
 msgstr "On Windows, Steam starts the game without {loader} unless told to. With Steam closed, Mortar can set that up; or in Steam, right-click {gameName}, choose Properties and paste this line into Launch Options:"
 
-#: src/game/Sidebar.tsx:210
+#: src/game/Sidebar.tsx:219
 msgid "Config"
 msgstr "Config"
 
@@ -3603,7 +3603,7 @@ msgstr "Keep my changes"
 msgid "Unpinned selected mods"
 msgstr "Unpinned selected mods"
 
-#: src/game/Sidebar.tsx:252
+#: src/game/Sidebar.tsx:263
 msgid "Profile sections"
 msgstr "Profile sections"
 
@@ -4028,6 +4028,10 @@ msgstr "Recent"
 msgid "Report a bug"
 msgstr "Report a bug"
 
+#: src/moo/MooTab.tsx:259
+msgid "MOO"
+msgstr "MOO"
+
 #: src/settings/sections/DataMods.tsx:42
 msgid "{size} in {path}"
 msgstr "{size} in {path}"
@@ -4095,7 +4099,7 @@ msgstr "Skip the pre-Play check"
 msgid "Stopped at the API limit; {0} left"
 msgstr "Stopped at the API limit; {0} left"
 
-#: src/game/Sidebar.tsx:216
+#: src/game/Sidebar.tsx:225
 #: src/settings/GameSettingsPage.tsx:104
 #: src/settings/GameSettingsPage.tsx:163
 msgid "Console"
@@ -5523,7 +5527,7 @@ msgstr "Changed outside Mortar"
 msgid " · {name} {0}"
 msgstr " · {name} {0}"
 
-#: src/game/Sidebar.tsx:217
+#: src/game/Sidebar.tsx:228
 msgid "Library"
 msgstr "Library"
 
@@ -6715,7 +6719,7 @@ msgstr "Day"
 msgid "Allow"
 msgstr "Allow"
 
-#: src/game/Sidebar.tsx:320
+#: src/game/Sidebar.tsx:331
 msgid "Collapse"
 msgstr "Collapse"
 
@@ -7135,7 +7139,7 @@ msgstr "Each plugin's load (constructor and Awake) the BepInEx Bridge timed; a p
 msgid "Add from the extra mods folder"
 msgstr "Add from the extra mods folder"
 
-#: src/game/Sidebar.tsx:207
+#: src/game/Sidebar.tsx:216
 msgid "Home"
 msgstr "Home"
 
@@ -7195,7 +7199,7 @@ msgstr "Windows removed the file as malware without saying which. If you trust i
 msgid "Share as r2modman code…"
 msgstr "Share as r2modman code…"
 
-#: src/game/Sidebar.tsx:214
+#: src/game/Sidebar.tsx:223
 msgid "Load order"
 msgstr "Load order"
 
@@ -7870,7 +7874,7 @@ msgstr "Send"
 #: src/commandPalette/CommandPalette.tsx:101
 #: src/console/ConsoleTab.tsx:61
 #: src/firstrunTour/TourPopover.tsx:46
-#: src/game/Sidebar.tsx:208
+#: src/game/Sidebar.tsx:217
 #: src/mods/ModListVirtual.tsx:314
 #: src/settings/GameSettingsPage.tsx:101
 #: src/settings/GameSettingsPage.tsx:147
@@ -8927,7 +8931,7 @@ msgstr "Could not read that code or file"
 msgid "Recently deleted"
 msgstr "Recently deleted"
 
-#: src/game/Sidebar.tsx:211
+#: src/game/Sidebar.tsx:220
 msgid "Screenshots"
 msgstr "Screenshots"
 
@@ -9270,13 +9274,17 @@ msgstr "{0, plural, one {Undo this and # later change?} other {Undo this and # l
 msgid "No profile"
 msgstr "No profile"
 
-#: src/game/Sidebar.tsx:297
+#: src/game/Sidebar.tsx:308
 msgid "Collapse sidebar"
 msgstr "Collapse sidebar"
 
 #: src/mods/NexusAccountActions.tsx:118
 msgid "Could not untrack"
 msgstr "Could not untrack"
+
+#: src/game/Sidebar.tsx:226
+msgid "Moo"
+msgstr "Moo"
 
 #: src/launch/PlayControl.tsx:129
 msgid "Current scene"
@@ -10046,7 +10054,7 @@ msgid "SMAPI loads mods"
 msgstr "SMAPI loads mods"
 
 #: src/firstrunTour/TourPopover.tsx:34
-#: src/game/Sidebar.tsx:212
+#: src/game/Sidebar.tsx:221
 msgid "Browse"
 msgstr "Browse"
 
@@ -10364,7 +10372,7 @@ msgid "{0} failed"
 msgstr "{0} failed"
 
 #: src/firstrunTour/TourPopover.tsx:58
-#: src/game/Sidebar.tsx:213
+#: src/game/Sidebar.tsx:222
 msgid "Problems"
 msgstr "Problems"
 
@@ -10909,6 +10917,10 @@ msgstr "Search run logs"
 #: src/firstrun/FindStep.tsx:203
 msgid "{0} not installed yet"
 msgstr "{0} not installed yet"
+
+#: src/moo/MooTab.tsx:261
+msgid "Click to let the cow moo"
+msgstr "Click to let the cow moo"
 
 #: src/shell/offlineText.ts:48
 msgid "{names} can't be reached; nothing saved to show yet"
@@ -11528,6 +11540,10 @@ msgstr "Include notes"
 #: src/mods/storeEntries.ts:300
 msgid "Could not pin the selected mods"
 msgstr "Could not pin the selected mods"
+
+#: src/game/Sidebar.tsx:227
+msgid "Fun"
+msgstr "Fun"
 
 #: src/profiles/PackImportDialog.tsx:109
 msgid "Import a profile code or file"
@@ -12221,7 +12237,7 @@ msgstr "Flagged by {0}: {1}{2}"
 msgid "{total, plural, one {Filter # mod} other {Filter # mods}}"
 msgstr "{total, plural, one {Filter # mod} other {Filter # mods}}"
 
-#: src/game/Sidebar.tsx:218
+#: src/game/Sidebar.tsx:229
 msgid "Get mods"
 msgstr "Get mods"
 
@@ -12599,7 +12615,7 @@ msgstr "Collapse {0}"
 msgid "Use mods from…"
 msgstr "Use mods from…"
 
-#: src/game/Sidebar.tsx:297
+#: src/game/Sidebar.tsx:308
 msgid "Expand sidebar"
 msgstr "Expand sidebar"
 
@@ -12963,7 +12979,7 @@ msgstr "Mortar installs the loader for you."
 msgid "Automatic port"
 msgstr "Automatic port"
 
-#: src/game/Sidebar.tsx:219
+#: src/game/Sidebar.tsx:230
 #: src/settings/sections/StreamOverlay.tsx:80
 msgid "Health"
 msgstr "Health"
@@ -13158,7 +13174,7 @@ msgid "Templates are shared by every profile of this game. Adding one copies it 
 msgstr "Templates are shared by every profile of this game. Adding one copies it into this profile's launch presets."
 
 #: src/game/Home.tsx:137
-#: src/game/Sidebar.tsx:209
+#: src/game/Sidebar.tsx:218
 #: src/saves/SaveListRow.tsx:51
 msgid "Saves"
 msgstr "Saves"
@@ -13598,7 +13614,7 @@ msgstr "Could not create the profile"
 msgid "Into a deleted profile"
 msgstr "Into a deleted profile"
 
-#: src/game/Sidebar.tsx:220
+#: src/game/Sidebar.tsx:231
 #: src/settings/sections/About.tsx:109
 msgid "Logs"
 msgstr "Logs"

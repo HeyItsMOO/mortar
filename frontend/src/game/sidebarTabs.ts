@@ -1,6 +1,6 @@
 import type { TabId } from './tab.ts'
 
-type SidebarGroupId = 'library' | 'get' | 'health' | 'logs'
+type SidebarGroupId = 'library' | 'get' | 'health' | 'logs' | 'fun'
 
 // What the open profile's loader supports; a section the loader lacks has no entry.
 interface SidebarCaps {
@@ -52,6 +52,7 @@ function sidebarGroups(caps: SidebarCaps, counts: SidebarCounts): SidebarGroup[]
       ],
     },
     { id: 'logs', entries: caps.console ? [{ id: 'console', badge: null }] : [] },
+    { id: 'fun', entries: [{ id: 'moo', badge: null }] },
   ]
   return groups.filter((g) => g.entries.length > 0)
 }

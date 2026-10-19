@@ -8,6 +8,7 @@ import {
   Images,
   List,
   type LucideIcon,
+  Milk,
   Save,
   Search,
   SlidersHorizontal,
@@ -22,6 +23,7 @@ import { useBadges } from '../mods/badges.ts'
 import { problemCount } from '../mods/lookup.ts'
 import { useMods } from '../mods/store.ts'
 import { useLoadProblemsOnFocus } from '../mods/useLoadProblemsOnFocus.ts'
+import { primeMoo } from '../moo/mooSound.ts'
 import { openProfileOf, useProfileLoader, useProfiles } from '../profiles/store.ts'
 import { arrowFocus } from '../shell/arrowFocus.ts'
 import { Tooltip } from '../shell/Tooltip.tsx'
@@ -57,6 +59,7 @@ const icons: Record<TabId, LucideIcon> = {
   'load-order': List,
   performance: Gauge,
   console: SquareTerminal,
+  moo: Milk,
 }
 
 const tours: Partial<Record<TabId, string>> = {
@@ -122,7 +125,13 @@ const Item = memo(
         tabIndex={active ? 0 : -1}
         aria-label={rail ? railLabel(label, badge) : undefined}
         data-tour={tours[tab]}
-        onClick={() => setTab(tab)}
+        onClick={() => {
+          // Audio only starts from a user gesture, so the click that opens the tab wakes it.
+          if (tab === 'moo') {
+            primeMoo()
+          }
+          setTab(tab)
+        }}
         sx={{
           position: 'relative',
           justifyContent: rail ? 'center' : 'flex-start',
@@ -214,6 +223,8 @@ function useLabels(): Record<TabId, string> & Record<SidebarGroupId, string> {
     'load-order': t`Load order`,
     performance: t`Performance`,
     console: t`Console`,
+    moo: t`Moo`,
+    fun: t`Fun`,
     library: t`Library`,
     get: t`Get mods`,
     health: t`Health`,
