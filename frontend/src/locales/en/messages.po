@@ -447,7 +447,7 @@ msgstr "Log level"
 msgid "Balance only: one mod's prices win."
 msgstr "Balance only: one mod's prices win."
 
-#: src/browse/BrowseMenu.tsx:91
+#: src/browse/BrowseMenu.tsx:94
 msgid "Could not hide that mod"
 msgstr "Could not hide that mod"
 
@@ -524,7 +524,7 @@ msgstr "{0} has damaged files."
 msgid "Deleted a profile"
 msgstr "Deleted a profile"
 
-#: src/settings/sections/HiddenMods.tsx:20
+#: src/settings/sections/HiddenMods.tsx:24
 msgid "Left out of Browse. Links and imports still install them."
 msgstr "Left out of Browse. Links and imports still install them."
 
@@ -1304,7 +1304,7 @@ msgid "Last opened profile"
 msgstr "Last opened profile"
 
 #. placeholder {0}: sourceNames.get(c.source) ?? c.source
-#: src/browse/BrowseMenu.tsx:72
+#: src/browse/BrowseMenu.tsx:75
 msgid "Open page on {0}"
 msgstr "Open page on {0}"
 
@@ -3617,7 +3617,7 @@ msgstr "Neither profile has a mod that matches the filter."
 msgid "{count, plural, one {# mod will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.} other {# mods will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.}}"
 msgstr "{count, plural, one {# mod will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.} other {# mods will be moved into a new profile and out of the game's Mods folder. Mortar puts the profile's mods there each time you play.}}"
 
-#: src/browse/BrowseMenu.tsx:48
+#: src/browse/BrowseMenu.tsx:51
 #: src/console/StartupTable.tsx:188
 msgid "Show details"
 msgstr "Show details"
@@ -3739,7 +3739,7 @@ msgstr "Only in {name}"
 msgid "Other mods require it"
 msgstr "Other mods require it"
 
-#: src/browse/BrowseMenu.tsx:62
+#: src/browse/BrowseMenu.tsx:65
 #: src/browse/CardAction.tsx:58
 #: src/mods/OptionalFileRows.tsx:177
 #: src/queue/store.ts:143
@@ -4856,7 +4856,7 @@ msgstr "{0, plural, one {Show it} other {Show all # lines}}"
 msgid "Profile changes will appear here."
 msgstr "Profile changes will appear here."
 
-#: src/browse/BrowseMenu.tsx:42
+#: src/browse/BrowseMenu.tsx:45
 msgid "Mortar installs this itself."
 msgstr "Mortar installs this itself."
 
@@ -5005,7 +5005,7 @@ msgstr "Get the extension"
 msgid "None"
 msgstr "None"
 
-#: src/browse/BrowseMenu.tsx:81
+#: src/browse/BrowseMenu.tsx:84
 #: src/console/HelpDialog.tsx:185
 #: src/share/MethodPanes.tsx:127
 msgid "Link copied"
@@ -5247,7 +5247,8 @@ msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 #: src/settings/sections/GameSettings.tsx:357
 #: src/settings/sections/GameSettings.tsx:383
 #: src/settings/sections/General.tsx:40
-#: src/settings/sections/HiddenMods.tsx:32
+#: src/settings/sections/HiddenMods.tsx:36
+#: src/settings/sections/HiddenMods.tsx:49
 #: src/settings/sections/LoaderRow.tsx:51
 #: src/settings/sections/ModsProfiles.tsx:19
 #: src/settings/sections/Notifications.tsx:34
@@ -7031,7 +7032,7 @@ msgstr "Deprecated or obsolete"
 msgid "Premium downloads come from this Nexus server when it offers the file."
 msgstr "Premium downloads come from this Nexus server when it offers the file."
 
-#: src/browse/BrowseMenu.tsx:55
+#: src/browse/BrowseMenu.tsx:58
 #: src/browse/CardAction.tsx:136
 #: src/mods/modActions.ts:81
 #: src/mods/modActions.ts:82
@@ -8446,6 +8447,11 @@ msgstr "Choose cover image"
 msgid "Install separately"
 msgstr "Install separately"
 
+#. placeholder {0}: item.author
+#: src/browse/BrowseMenu.tsx:102
+msgid "Hide everything by {0}"
+msgstr "Hide everything by {0}"
+
 #: src/settings/sections/StreamOverlay.tsx:104
 msgid "Credits"
 msgstr "Credits"
@@ -8781,7 +8787,7 @@ msgstr "Saved .r2z"
 msgid "Bosses defeated"
 msgstr "Bosses defeated"
 
-#: src/browse/BrowseMenu.tsx:62
+#: src/browse/BrowseMenu.tsx:65
 #: src/browse/CardAction.tsx:84
 #: src/console/RunProblems.tsx:138
 #: src/downloads/newDownloads.ts:35
@@ -8812,6 +8818,10 @@ msgstr "{0, plural, one {Filter # save} other {Filter # saves}}"
 #: src/launch/UpdateWarnDialog.tsx:30
 msgid "{gameName} is now {0}. This profile last launched on {1}."
 msgstr "{gameName} is now {0}. This profile last launched on {1}."
+
+#: src/browse/BrowseMenu.tsx:106
+msgid "Could not hide that author"
+msgstr "Could not hide that author"
 
 #: src/mods/ChangelogDialog.tsx:89
 msgid "No changelog published"
@@ -9073,6 +9083,10 @@ msgstr "Update check failed"
 #: src/templates/TemplateDialogs.tsx:158
 msgid "Manage templates"
 msgstr "Manage templates"
+
+#: src/settings/sections/HiddenMods.tsx:45
+msgid "Everything by {a}"
+msgstr "Everything by {a}"
 
 #: src/mods/NexusAccountActions.tsx:139
 msgid "Could not track"
@@ -10704,7 +10718,8 @@ msgstr ".mortar file"
 
 #: src/mods/HiddenInside.tsx:80
 #: src/mods/HiddenInside.tsx:93
-#: src/settings/sections/HiddenMods.tsx:35
+#: src/settings/sections/HiddenMods.tsx:39
+#: src/settings/sections/HiddenMods.tsx:52
 msgid "Unhide"
 msgstr "Unhide"
 
@@ -11424,7 +11439,7 @@ msgstr "Handle \"Mod Manager Download\" links"
 msgid "Loading game settings…"
 msgstr "Loading game settings…"
 
-#: src/settings/sections/HiddenMods.tsx:19
+#: src/settings/sections/HiddenMods.tsx:23
 msgid "Hidden mods"
 msgstr "Hidden mods"
 
@@ -11662,7 +11677,7 @@ msgstr "Paste a link…"
 msgid "Author on cards"
 msgstr "Author on cards"
 
-#: src/browse/BrowseMenu.tsx:40
+#: src/browse/BrowseMenu.tsx:43
 msgid "Already in this profile."
 msgstr "Already in this profile."
 
@@ -12285,7 +12300,7 @@ msgstr "Settings"
 msgid "Could not read the details of {0}"
 msgstr "Could not read the details of {0}"
 
-#: src/browse/BrowseMenu.tsx:87
+#: src/browse/BrowseMenu.tsx:90
 msgid "Hide from Browse"
 msgstr "Hide from Browse"
 
@@ -14095,7 +14110,7 @@ msgstr "Find an asset"
 msgid "This mod is no longer in the profile."
 msgstr "This mod is no longer in the profile."
 
-#: src/browse/BrowseMenu.tsx:79
+#: src/browse/BrowseMenu.tsx:82
 #: src/share/MethodPanes.tsx:130
 msgid "Copy link"
 msgstr "Copy link"

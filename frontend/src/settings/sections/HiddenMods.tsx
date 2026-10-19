@@ -1,6 +1,9 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Typography } from '@mui/material'
-import { UnhideBrowseMod } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
+import {
+  UnhideBrowseAuthor,
+  UnhideBrowseMod,
+} from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { useCurrentGame } from '../../nav/currentGame.ts'
 import { space } from '../../theme/density.ts'
 import { persist } from '../persist.ts'
@@ -10,8 +13,9 @@ import { useSettings } from '../store.ts'
 function HiddenMods() {
   const { t } = useLingui()
   const game = useCurrentGame()
-  const hidden = useSettings((s) => s.games?.[game]?.hiddenMods)
-  if (!hidden || hidden.length === 0) {
+  const hidden = useSettings((s) => s.games?.[game]?.hiddenMods) ?? []
+  const authors = useSettings((s) => s.games?.[game]?.hiddenAuthors) ?? []
+  if (hidden.length === 0 && authors.length === 0) {
     return null
   }
   return (
@@ -30,6 +34,19 @@ function HiddenMods() {
               size="small"
               onClick={() =>
                 persist(() => UnhideBrowseMod(game, h.source, h.id), t`Could not save that setting`)
+              }
+            >
+              {t`Unhide`}
+            </Button>
+          </Box>
+        ))}
+        {authors.map((a) => (
+          <Box key={`author:${a}`} sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
+            <Typography sx={{ minWidth: 160 }}>{t`Everything by ${a}`}</Typography>
+            <Button
+              size="small"
+              onClick={() =>
+                persist(() => UnhideBrowseAuthor(game, a), t`Could not save that setting`)
               }
             >
               {t`Unhide`}

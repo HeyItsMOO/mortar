@@ -1,6 +1,9 @@
 package settings
 
-import "strings"
+import (
+	"slices"
+	"strings"
+)
 
 // HiddenMod is a mod hidden from Browse: its source and id, and its name for the list that unhides it.
 type HiddenMod struct {
@@ -45,6 +48,31 @@ func (s *Service) UnhideBrowseMod(game, source, id string) error {
 			}
 		}
 		gp.HiddenMods = kept
+		putGame(v, game, gp)
+	})
+}
+
+// HidesAuthor reports whether the game hides every mod by this author from Browse.
+func (g GameSettings) HidesAuthor(author string) bool {
+	return author != "" && slices.ContainsFunc(g.HiddenAuthors, func(a string) bool { return strings.EqualFold(a, author) })
+}
+
+// HideBrowseAuthor hides every mod by the author from the game's Browse.
+func (s *Service) HideBrowseAuthor(game, author string) error {
+	return s.set(func(v *Settings) {
+		gp := v.GamePrefs(game)
+		if author != "" && !gp.HidesAuthor(author) {
+			gp.HiddenAuthors = append(gp.HiddenAuthors, author)
+		}
+		putGame(v, game, gp)
+	})
+}
+
+// UnhideBrowseAuthor shows the author's mods in the game's Browse again.
+func (s *Service) UnhideBrowseAuthor(game, author string) error {
+	return s.set(func(v *Settings) {
+		gp := v.GamePrefs(game)
+		gp.HiddenAuthors = slices.DeleteFunc(slices.Clone(gp.HiddenAuthors), func(a string) bool { return strings.EqualFold(a, author) })
 		putGame(v, game, gp)
 	})
 }

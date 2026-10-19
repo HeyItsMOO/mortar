@@ -16,8 +16,8 @@ type Service struct {
 	Profiles *profile.Service
 	// ShowAdult reports the player's "show adult mods" setting.
 	ShowAdult func() bool
-	// HiddenMod reports whether the game hides the mod from Browse.
-	HiddenMod func(game, source, id string) bool
+	// HiddenMod reports whether the game hides the hit, by mod or by author, from Browse.
+	HiddenMod func(game string, it Item) bool
 	// SourceOrder is the game's preferred source ids, first first; nil means catalog order.
 	SourceOrder func(game string) []string
 	// Installed reads the manifests of a profile's mods, whose update keys name the pages they came from; nil skips them.
@@ -43,7 +43,7 @@ func (s *Service) Search(ctx context.Context, game, sourceID, text string, page 
 		c.Prefer = s.SourceOrder(game)
 	}
 	if s.HiddenMod != nil {
-		c.Hidden = func(it Item) bool { return s.HiddenMod(game, it.Source, it.ID) }
+		c.Hidden = func(it Item) bool { return s.HiddenMod(game, it) }
 	}
 	if s.Compat != nil {
 		c.Compat = s.Compat(game)

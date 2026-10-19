@@ -894,7 +894,10 @@ func run() error {
 		}
 		return nil
 	}
-	browseSvc.HiddenMod = func(game, source, id string) bool { return store.Get().GamePrefs(game).HidesMod(source, id) }
+	browseSvc.HiddenMod = func(game string, it browse.Item) bool {
+		gp := store.Get().GamePrefs(game)
+		return gp.HidesMod(it.Source, it.ID) || gp.HidesAuthor(it.Author)
+	}
 	browseSvc.SourceOrder = func(game string) []string {
 		return strings.FieldsFunc(store.Get().GamePrefs(game).SourceOrder, func(r rune) bool { return r == ',' })
 	}

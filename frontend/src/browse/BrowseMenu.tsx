@@ -2,7 +2,10 @@ import { useLingui } from '@lingui/react/macro'
 import { Menu } from '@mui/material'
 import { ExternalLink, EyeOff, Info, Link2, Plus } from 'lucide-react'
 import { memo } from 'react'
-import { HideBrowseMod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
+import {
+  HideBrowseAuthor,
+  HideBrowseMod,
+} from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { useCurrentGame } from '../nav/currentGame.ts'
 import { copyText } from '../share/copyText.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
@@ -91,6 +94,20 @@ function Items({
           .catch(reportError(t`Could not hide that mod`))
       })}
     />,
+    ...(item.author
+      ? [
+          <MenuAction
+            key="hide-author"
+            icon={<EyeOff size={16} />}
+            label={t`Hide everything by ${item.author}`}
+            onClick={run(() => {
+              HideBrowseAuthor(game, item.author)
+                .then(() => useBrowseView.getState().noteHide())
+                .catch(reportError(t`Could not hide that author`))
+            })}
+          />,
+        ]
+      : []),
   ]
 }
 

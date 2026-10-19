@@ -386,3 +386,23 @@ func TestHidingAModFromBrowseIsPerGameAndUndoable(t *testing.T) {
 		t.Fatal("still hidden")
 	}
 }
+
+func TestHidingAnAuthorMatchesWithoutCaseAndUndoes(t *testing.T) {
+	st, _ := open(t)
+	svc := NewService(st)
+	for _, a := range []string{"Me", "me"} {
+		if err := svc.HideBrowseAuthor("a", a); err != nil {
+			t.Fatal(err)
+		}
+	}
+	gp := st.Get().GamePrefs("a")
+	if len(gp.HiddenAuthors) != 1 || !gp.HidesAuthor("ME") || gp.HidesAuthor("") || st.Get().GamePrefs("b").HidesAuthor("me") {
+		t.Fatalf("hidden authors = %v", gp.HiddenAuthors)
+	}
+	if err := svc.UnhideBrowseAuthor("a", "ME"); err != nil {
+		t.Fatal(err)
+	}
+	if st.Get().GamePrefs("a").HidesAuthor("me") {
+		t.Fatal("still hidden")
+	}
+}
