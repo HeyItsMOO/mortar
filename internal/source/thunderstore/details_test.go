@@ -23,3 +23,17 @@ func TestDetailsReadsTheIndexAndTheNewestReadme(t *testing.T) {
 		t.Fatal("a package missing from the index answered")
 	}
 }
+
+func TestChangelogReadsTheUpdatedVersionsFile(t *testing.T) {
+	f := newFake(t)
+	f.mux.HandleFunc("/api/experimental/package/Alice/MoreCompany/1.0.0/changelog/",
+		func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write([]byte(`{"markdown":"- fixed"}`)) })
+	d := Driver{URL: f.srv.URL, CacheDir: t.TempDir()}
+	got, err := d.Changelog(t.Context(), "lethal-company", "Alice-MoreCompany", "0.9.0", "1.0.0", "1.2.3")
+	if err != nil || len(got) != 1 || got[0].Version != "1.0.0" || got[0].Body != "- fixed" {
+		t.Fatalf("notes = %+v, err %v", got, err)
+	}
+	if none, err := d.Changelog(t.Context(), "lethal-company", "Alice-MoreCompany", "1.0.0", "2.0.0", "1.2.3"); err != nil || len(none) != 0 {
+		t.Fatalf("a version without a CHANGELOG gave %+v, err %v", none, err)
+	}
+}

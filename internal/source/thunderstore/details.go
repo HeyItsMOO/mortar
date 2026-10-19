@@ -60,3 +60,34 @@ func (d Driver) doc(ctx context.Context, p pkg, ver, kind, ua string) (string, e
 	}
 	return body.Markdown, nil
 }
+
+// Changelog is the CHANGELOG of the version an update lands on: authors keep one file that covers every release, so
+// the versions in between add nothing. A version without a CHANGELOG answers no notes.
+func (d Driver) Changelog(ctx context.Context, key, id, _, latest, mortarVersion string) ([]source.Note, error) {
+	ua := source.UserAgentWithSite(mortarVersion)
+	pk, err := d.packages(ctx, key, ua)
+	if err != nil {
+		return nil, err
+	}
+	owner, name, _ := strings.Cut(id, "-")
+	for _, p := range pk {
+		if !strings.EqualFold(p.Owner, owner) || !strings.EqualFold(p.Name, name) || len(p.Versions) == 0 {
+			continue
+		}
+		ver := p.Versions[0].Number
+		for _, v := range p.Versions {
+			if v.Number == latest {
+				ver = latest
+			}
+		}
+		body, err := d.doc(ctx, p, ver, "changelog", ua)
+		if errors.Is(err, errNotFound) || (err == nil && strings.TrimSpace(body) == "") {
+			return []source.Note{}, nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		return []source.Note{{Version: ver, Body: strings.TrimSpace(body)}}, nil
+	}
+	return nil, fmt.Errorf("%s is not in the %s index", id, key)
+}

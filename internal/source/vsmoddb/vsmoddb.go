@@ -228,6 +228,8 @@ type release struct {
 	ModVersion string   `json:"modversion"`
 	ModIDStr   string   `json:"modidstr"`
 	Tags       []string `json:"tags"`
+	Created    string   `json:"created"`
+	Changelog  string   `json:"changelog"`
 }
 
 type modDetail struct {
@@ -330,6 +332,33 @@ func (d Driver) Items(ctx context.Context, _, _ string, ids []string) (map[strin
 			Source: d.ID(), ID: ID(m.ModID, m.AssetID), Name: m.Name, Author: m.Author, Version: r.ModVersion,
 			Picture: m.Logo, URL: pageURL(m.URLAlias, m.AssetID),
 		}
+	}
+	return out, nil
+}
+
+// Changelog reads the changelogs of the mod's releases newer than installed, up to latest, newest first. The site
+// lists releases newest first and writes each changelog as HTML.
+func (d Driver) Changelog(ctx context.Context, _, id, installed, latest, _ string) ([]source.Note, error) {
+	ref := id
+	if modID, _, ok := splitID(id); ok {
+		ref = modID
+	}
+	m, err := d.mod(ctx, ref)
+	if err != nil {
+		return nil, err
+	}
+	out := []source.Note{}
+	started := latest == ""
+	for _, r := range m.Releases {
+		if r.ModVersion == installed {
+			break
+		}
+		started = started || r.ModVersion == latest
+		if !started || len(out) == source.MaxNotes {
+			continue
+		}
+		date, _, _ := strings.Cut(r.Created, " ")
+		out = append(out, source.Note{Version: r.ModVersion, Date: date, Body: source.HTMLText(r.Changelog)})
 	}
 	return out, nil
 }

@@ -1942,6 +1942,8 @@ func (c *cmd) updates(p control.Params) error {
 			switch {
 			case u.GitHubRepo != "":
 				src, id = "github", u.GitHubRepo
+			case u.Package != "":
+				src, id = cmp.Or(u.PackageSource, profile.KindThunderstore), u.Package
 			case u.NexusID < 1:
 				continue
 			}

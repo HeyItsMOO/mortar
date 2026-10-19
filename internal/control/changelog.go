@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/Rethunk-Tech/mortar/internal/browse"
 	"github.com/Rethunk-Tech/mortar/internal/nexus"
 )
 
-// updateChangelog returns the notes an update crosses for the mod p.ID in p.Source: its GitHub releases or its Nexus
-// changelog. Name is the installed version and Value the latest.
+// updateChangelog returns the notes an update crosses for the mod p.ID in p.Source: its GitHub releases, its Nexus
+// changelog or the notes of another source that keeps them. Name is the installed version and Value the latest.
 func (s *Services) updateChangelog(ctx context.Context, p Params) ([]nexus.Changelog, error) {
 	switch p.Source {
 	case "github":
@@ -21,6 +22,6 @@ func (s *Services) updateChangelog(ctx context.Context, p Params) ([]nexus.Chang
 		}
 		return s.Nexus.UpdateChangelog(ctx, p.Game, id, "", p.Name, p.Value)
 	default:
-		return nil, fmt.Errorf("source %q has no changelog", p.Source)
+		return browse.Changelog(ctx, p.Game, p.Source, p.ID, p.Name, p.Value, s.Version)
 	}
 }

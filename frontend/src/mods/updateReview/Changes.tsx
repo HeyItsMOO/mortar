@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Typography } from '@mui/material'
+import { Changelog as SourceChangelog } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/browse/service.ts'
 import type { Changelog } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/nexus/models.ts'
 import { UpdateChangelog } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/nexussvc/service.ts'
 import type { Update } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/problems/models.ts'
@@ -44,14 +45,25 @@ function Loaded({ update }: { update: Update }) {
   const game = useProfiles((s) => s.game?.id ?? '')
   const { data, error } = useLoaded<Changelog[] | undefined>(
     () =>
-      UpdateChangelog(
-        game,
-        update.nexusId,
-        update.githubRepo,
-        update.installed,
-        update.version,
+      (update.nexusId > 0 || update.githubRepo || !update.package
+        ? UpdateChangelog(game, update.nexusId, update.githubRepo, update.installed, update.version)
+        : SourceChangelog(
+            game,
+            update.packageSource || 'thunderstore',
+            update.package,
+            update.installed,
+            update.version,
+          )
       ).then((got) => got ?? []),
-    [game, update.githubRepo, update.installed, update.nexusId, update.version],
+    [
+      game,
+      update.githubRepo,
+      update.installed,
+      update.nexusId,
+      update.package,
+      update.packageSource,
+      update.version,
+    ],
     undefined,
   )
   const logs = error === null ? data : 'failed'
@@ -69,7 +81,7 @@ function Loaded({ update }: { update: Update }) {
 
 export function Changes({ update }: { update: Update }) {
   const { t } = useLingui()
-  if (!(update.nexusId > 0 || update.githubRepo)) {
+  if (!(update.nexusId > 0 || update.githubRepo || update.package)) {
     return null
   }
   return (

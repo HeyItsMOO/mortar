@@ -906,3 +906,42 @@ func (Driver) Dependencies(_ context.Context, _, _ string, refs []source.Version
 	}
 	return out, nil
 }
+
+// Changelog reads the file changelogs of the files published after the installed one, up to latest, newest first. The
+// API serves each as HTML, which becomes plain text. Without the installed file in the newest page of files, the
+// newest ones up to the cap stand in.
+func (d Driver) Changelog(ctx context.Context, _, id, installed, latest, _ string) ([]source.Note, error) {
+	files, err := d.files(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	files = slices.DeleteFunc(files, func(f fileResp) bool { return !f.IsAvailable })
+	slices.SortStableFunc(files, func(a, b fileResp) int { return strings.Compare(b.FileDate, a.FileDate) })
+	since, until := "", "\xff"
+	for _, f := range files {
+		switch {
+		case f.version() == installed:
+			since = f.FileDate
+		case f.version() == latest || strconv.Itoa(f.ID) == latest:
+			until = f.FileDate
+		}
+	}
+	out := []source.Note{}
+	for _, f := range files {
+		if f.FileDate <= since || f.FileDate > until {
+			continue
+		}
+		if len(out) == source.MaxNotes {
+			break
+		}
+		var body struct {
+			Data string `json:"data"`
+		}
+		if err := d.get(ctx, "/mods/"+url.PathEscape(id)+"/files/"+strconv.Itoa(f.ID)+"/changelog", nil, &body); err != nil {
+			return nil, err
+		}
+		date, _, _ := strings.Cut(f.FileDate, "T")
+		out = append(out, source.Note{Version: f.version(), Date: date, Body: source.HTMLText(body.Data)})
+	}
+	return out, nil
+}
