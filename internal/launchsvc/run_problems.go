@@ -97,7 +97,7 @@ func (s *Service) loaderProblems(gameID, profileID, text, player string) []launc
 		return nil
 	}
 	var found []loader.Finding
-	owners := map[string]profile.Installed{}
+	var owners map[string]profile.Installed
 	if isLogs {
 		for _, a := range logs.Analyzers() {
 			found = append(found, a.Analyze(loader.Logs{Loader: text, Player: player})...)
