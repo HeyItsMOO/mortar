@@ -19,7 +19,7 @@ subjects="$(git log --no-merges --format=%s "${prev:+$prev..}$ref")"
 
 # Scopes that name code, tooling or the automation CLI rather than something a user sees, and subjects that name code
 # (camelCase or snake_case identifiers, backticks) or tooling.
-internal='^([a-z-]*svc|main|release|gate|lint|deps|build|ci|tests?|selftest|regress|e2e|dotnet|taskfile|scripts|server|control|doctor|dev|fsx|datadir|data|meta|usererr|github|site|sampler|notices|credits|migrate|config|components|nativehost|errors|logs?|cli)$'
+internal='^([a-z-]*svc|main|release|gate|lint|deps|build|ci|tests?|selftest|regress|e2e|dotnet|taskfile|scripts|server|control|doctor|dev|fsx|datadir|data|meta|usererr|github|site|sampler|notices|credits|migrate|config|components|nativehost|errors|logs?|cli|opener|docs|docscheck|i18n)$'
 codeish='[a-z][A-Z]|[A-Z]+_[A-Z]|[a-z]_[a-z]|`|(^|[^a-z])(selftest|gate|lint|biome|knip|golangci|gui-design|frontend build|api types)([^a-z]|$)'
 # Product names spelled in camel case are words a player knows, not identifiers.
 products='BepInEx|WebKit|GitHub|SpaceCore|ModConfig|PlayStation|YouTube|macOS|iOS'
@@ -35,7 +35,7 @@ area_of() { # scope -> area
     problems | diag | console | support) echo 'Problems and diagnostics' ;;
     queue | updates | update | watch | nxm) echo 'Downloads and updates' ;;
     saves | backup | backups) echo Saves ;;
-    settings | ui | ux | theme | shell | frontend | firstrun | tour | i18n | a11y) echo 'Interface and settings' ;;
+    settings | ui | ux | theme | shell | frontend | firstrun | tour | a11y) echo 'Interface and settings' ;;
     *) echo Other ;;
   esac
 }
