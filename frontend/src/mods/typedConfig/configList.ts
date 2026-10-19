@@ -64,12 +64,23 @@ const selectionKey = (profile: string) => `mortar.config.${profile}`
 const useConfigList = create<{
   byProfile: Record<string, { list: ModList; stamp: string } | undefined>
   selected: Record<string, string | undefined>
+  // A found setting to land on: the mod, its file and the search that finds the entry; n tells repeats apart.
+  jump: { profile: string; id: string; file: string; query: string; n: number } | null
+  jumpTo: (profile: string, id: string, file: string, query: string) => void
   // Reads the list unless one is held for this stamp; `force` reads it again (after an edit).
   load: (game: string, profile: string, stamp: string, force?: boolean) => Promise<void>
   select: (profile: string, selection: string) => void
 }>((set, get) => ({
   byProfile: {},
   selected: {},
+  jump: null,
+  jumpTo: (profile, id, file, query) => {
+    writeStored(selectionKey(profile), modSelection(id))
+    set((s) => ({
+      selected: { ...s.selected, [profile]: modSelection(id) },
+      jump: { profile, id, file, query, n: (s.jump?.n ?? 0) + 1 },
+    }))
+  },
   load: async (game, profile, stamp, force = false) => {
     if (!force && get().byProfile[profile]?.stamp === stamp) {
       return
@@ -86,7 +97,7 @@ const useConfigList = create<{
   },
   select: (profile, selection) => {
     writeStored(selectionKey(profile), selection)
-    set((s) => ({ selected: { ...s.selected, [profile]: selection } }))
+    set((s) => ({ selected: { ...s.selected, [profile]: selection }, jump: null }))
   },
 }))
 

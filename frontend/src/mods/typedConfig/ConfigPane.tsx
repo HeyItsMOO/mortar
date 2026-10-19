@@ -330,11 +330,14 @@ export function ConfigPane({
   mod,
   target,
   file: initialFile,
+  landing,
 }: {
   name: string
   mod: Mod | null
   target: Target
   file?: string
+  /** The file and search to open on, from a setting found by the profile-wide search. */
+  landing?: { file: string; query: string }
 }) {
   const { t } = useLingui()
   const files = useTypedConfig((s) => s.files)
@@ -344,13 +347,13 @@ export function ConfigPane({
   const open = useTypedConfig((s) => s.open)
   const { game, profile, key, id } = target
   useEffect(() => {
-    open({ game, profile, key, id }, initialFile).catch(reportUnexpected)
-  }, [open, game, profile, key, id, initialFile])
+    open({ game, profile, key, id }, landing?.file ?? initialFile).catch(reportUnexpected)
+  }, [open, game, profile, key, id, initialFile, landing?.file])
   const reload = () => {
     open(target, initialFile).catch(reportUnexpected)
   }
   const resetAll = useTypedConfig((s) => s.resetAll)
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(landing?.query ?? '')
   const [confirming, setConfirming] = useState(false)
   // A preset applied from here rewrites the file, so the profile's change time rereads it.
   const updated = useProfiles((st) => openProfileOf(st)?.updated)

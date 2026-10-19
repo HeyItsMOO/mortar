@@ -13,7 +13,11 @@ import {
 } from '@mui/material'
 import { Check, ChevronDown, Filter, Play, SlidersHorizontal } from 'lucide-react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import type { ModConfig } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/configsvc/models.ts'
+import type {
+  Hit,
+  ModConfig,
+} from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/configsvc/models.ts'
+import { Search } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/configsvc/service.ts'
 import type { Profile } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { playOpenProfile } from '../../launch/playOpen.ts'
 import { ControlsRow } from '../../shell/ControlsRow.tsx'
@@ -41,6 +45,8 @@ import {
 } from './configList.ts'
 
 const LIST_WIDTH_PX = 300
+const MIN_SETTING_QUERY = 2
+const SETTING_SEARCH_DELAY_MS = 300
 const DIMMED = 0.55
 const SHOWS: ConfigShow[] = ['all', 'changed', 'menu', 'waiting']
 
@@ -280,11 +286,15 @@ function Editor({
   other: { name: string }[]
 }) {
   const mods = useMods((s) => s.mods)
+  const jump = useConfigList((s) => s.jump)
   const chosenMod = all.find((m) => modSelection(m.id) === selection)
   if (chosenMod) {
+    const landing =
+      jump && jump.profile === profile.id && jump.id === chosenMod.id ? jump : undefined
     return (
       <ConfigPane
-        key={`${profile.id}/${chosenMod.id}`}
+        key={`${profile.id}/${chosenMod.id}/${landing?.n ?? ''}`}
+        {...(landing ? { landing: { file: landing.file, query: landing.query } } : {})}
         name={chosenMod.name}
         mod={mods.find((m) => m.key === chosenMod.key && m.id === chosenMod.id) ?? null}
         target={{ game, profile: profile.id, key: chosenMod.key, id: chosenMod.id }}
@@ -303,6 +313,57 @@ function Editor({
       target={{ game, profile: profile.id, key: '', id: '' }}
       file={chosenFile.name}
     />
+  )
+}
+
+// Settings across the profile's config files that the Filter mods text matches, found by the app a moment after typing.
+function useSettingHits(game: string, profile: string, query: string): Hit[] {
+  const [hits, setHits] = useState<Hit[]>([])
+  useEffect(() => {
+    const q = query.trim()
+    if (q.length < MIN_SETTING_QUERY) {
+      setHits([])
+      return
+    }
+    let live = true
+    const timer = setTimeout(() => {
+      Search(game, profile, q)
+        .then((found) => live && setHits(found ?? []))
+        .catch(() => live && setHits([]))
+    }, SETTING_SEARCH_DELAY_MS)
+    return () => {
+      live = false
+      clearTimeout(timer)
+    }
+  }, [game, profile, query])
+  return hits
+}
+
+function SettingHits({ profileId, hits }: { profileId: string; hits: Hit[] }) {
+  const { t } = useLingui()
+  const jumpTo = useConfigList((s) => s.jumpTo)
+  if (hits.length === 0) {
+    return null
+  }
+  return (
+    <Box role="group" aria-label={t`Matching settings`}>
+      <Typography sx={{ px: space.pad, py: 0.5, fontSize: 12, color: 'text.secondary' }}>
+        {t`Matching settings`}
+      </Typography>
+      {hits.map((h) => (
+        <ListItemButton
+          key={`${h.modId}/${h.file}/${h.section}/${h.key}`}
+          onClick={() => jumpTo(profileId, h.modId, h.file, h.key)}
+          sx={{ minHeight: space.row }}
+        >
+          <ListItemText
+            primary={h.label || h.key}
+            secondary={h.modName}
+            slotProps={{ primary: { noWrap: true }, secondary: { noWrap: true } }}
+          />
+        </ListItemButton>
+      ))}
+    </Box>
   )
 }
 
@@ -333,6 +394,7 @@ function ModsColumn({
   selection,
   filtered,
   showOther,
+  hits,
 }: {
   profileId: string
   view: GroupsView
@@ -343,6 +405,7 @@ function ModsColumn({
   selection: string | undefined
   filtered: boolean
   showOther: boolean
+  hits: Hit[]
 }) {
   const { t } = useLingui()
   const choose = useConfigList((s) => s.select)
@@ -399,6 +462,7 @@ function ModsColumn({
             {t`No mods match`}
           </Typography>
         ) : null}
+        <SettingHits profileId={profileId} hits={hits} />
         {other.length > 0 && showOther && !filtered ? (
           <OtherFiles view={view} other={other} selection={selection} onChoose={onChoose} />
         ) : null}
@@ -430,6 +494,7 @@ export function ConfigTab({ profile, game }: { profile: Profile; game: string })
   const other = list?.other ?? []
   const shown = useMemo(() => filterConfigMods(all, query, show), [all, query, show])
   const selection = selectionOf(list, stored, profile.id)
+  const hits = useSettingHits(game, profile.id, query)
   if (!list) {
     return failure ? (
       <LoadErrorRow error={failure} onRetry={reload} />
@@ -463,6 +528,7 @@ export function ConfigTab({ profile, game }: { profile: Profile; game: string })
           selection={selection}
           filtered={query.trim() !== ''}
           showOther={show === 'all'}
+          hits={hits}
         />
         <Editor profile={profile} game={game} selection={selection} all={all} other={other} />
       </Box>
