@@ -463,6 +463,9 @@
       "r2modmanFolder": "PEAK",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/LandCrab/PEAK"
+        },
         "unityLog": {
           "windows": "{localLow}/LandCrab/PEAK/Player.log"
         }
