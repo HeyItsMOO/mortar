@@ -239,7 +239,7 @@ func (s *Service) obsolete() []Item {
 	var out []Item
 	for _, it := range s.items {
 		if (it.State == StateQueued || it.State == StateWaitingClick) && it.Repo == "" && it.FileID > 0 &&
-			it.staged == "" && !it.readyZip && (it.Latest || it.Kind == KindUpdate) {
+			it.staged == "" && !it.readyZip && !it.Exact && (it.Latest || it.Kind == KindUpdate) {
 			out = append(out, *it)
 		}
 	}

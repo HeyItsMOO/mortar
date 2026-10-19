@@ -470,6 +470,21 @@ func TestWaitingLatestItemIsSkippedOnceTheProfileHasANewerFile(t *testing.T) {
 	}
 }
 
+func TestExactUpdateIsNotSkippedForANewerHeldFile(t *testing.T) {
+	f := newFixture(t)
+	f.premium.Store(false)
+	f.start()
+	r := req(10)
+	r.Kind, r.Exact = KindUpdate, true
+	f.add(r)
+	f.wait("the click", f.item(StateWaitingClick))
+	f.newest.Store(11)
+	f.s.skipHeld()
+	if !f.item(StateWaitingClick)(f.s.State()) {
+		t.Errorf("an exact update was skipped: %+v", f.s.State().Items)
+	}
+}
+
 func TestExpiredKeyReopensThePage(t *testing.T) {
 	f := newFixture(t)
 	f.premium.Store(false)

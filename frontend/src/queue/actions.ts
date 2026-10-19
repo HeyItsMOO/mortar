@@ -31,6 +31,7 @@ export type Want = Pick<Request, 'kind'> &
       | 'asset'
       | 'implicit'
       | 'latest'
+      | 'exact'
       | 'batchId'
     >
   >

@@ -7,9 +7,11 @@ import type {
   ModState,
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { useProfiles } from '../profiles/store.ts'
 import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
+import { ChangeVersionDialog } from './ChangeVersionDialog.tsx'
 import { useDetail } from './detail.ts'
 import { LockedReason } from './LockedReason.tsx'
 import { entryOf, modId } from './lookup.ts'
@@ -17,6 +19,7 @@ import { heading } from './paper.ts'
 import { useMods } from './store.ts'
 import { EditConfigButton } from './typedConfig/EditConfigButton.tsx'
 import { useLocked } from './useLocked.ts'
+import { targetOfSource } from './versionChoices.ts'
 
 const text = { fontSize: 13 } as const
 const row = {
@@ -54,7 +57,10 @@ function Versions({
   const locked = useLocked()
   const entry = entryOf(profile, mod.key)
   const pinned = entry?.pinned && entry.pinReason ? entry.pinReason : ''
-  if (!(pinned || state?.previousVersion)) {
+  const target = entry ? targetOfSource(entry.source) : null
+  const [choosing, setChoosing] = useState(false)
+  const game = useProfiles((s) => s.game?.id ?? '')
+  if (!(pinned || state?.previousVersion || target)) {
     return null
   }
   return (
@@ -73,6 +79,33 @@ function Versions({
             </Button>
           </LockedReason>
         </Box>
+      ) : null}
+      {target && entry ? (
+        <Box sx={row}>
+          <LockedReason locked={locked}>
+            <Button
+              size="small"
+              variant="outlined"
+              disabled={locked}
+              onClick={() => setChoosing(true)}
+            >
+              {t`Change version…`}
+            </Button>
+          </LockedReason>
+        </Box>
+      ) : null}
+      {choosing && target && entry ? (
+        <ChangeVersionDialog
+          game={game}
+          name={mod.name}
+          target={target}
+          entry={{
+            key: entry.key,
+            version: entry.source.version ?? mod.version,
+            pinned: entry.pinned === true,
+          }}
+          onClose={() => setChoosing(false)}
+        />
       ) : null}
     </Section>
   )

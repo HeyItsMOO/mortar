@@ -87,11 +87,11 @@ function isActive(state: CardState): boolean {
   return ACTIVE.has(state.kind)
 }
 
-// Whether the profile's entries hold the mod, by the entry's own source: Nexus by mod id, GitHub by repository, any
-// other source by the package name it was installed under (the same rule as the backend's browse.Holdings).
-function inProfile(profile: Profile | undefined, source: string, id: string): boolean {
+// The profile's entry for the mod, by the entry's own source: Nexus by mod id, GitHub by repository, any other source
+// by the package name it was installed under (the same rule as the backend's browse.Holdings).
+function entryIn(profile: Profile | undefined, source: string, id: string) {
   const want = id.toLowerCase()
-  return (profile?.entries ?? []).some((e) => {
+  return (profile?.entries ?? []).find((e) => {
     const src = e.source
     if (src.kind !== source) {
       return false
@@ -103,6 +103,9 @@ function inProfile(profile: Profile | undefined, source: string, id: string): bo
   })
 }
 
+const inProfile = (profile: Profile | undefined, source: string, id: string): boolean =>
+  entryIn(profile, source, id) !== undefined
+
 // Whether the card counts its mod as installed. The profile's entries are the live word and the search's flag counts
 // only until the profile changes, except for a loader: no entry holds it, so its flag stands until the next search.
 function isInstalled(held: boolean, searched: boolean, loader: boolean, fresh: boolean): boolean {
@@ -110,4 +113,4 @@ function isInstalled(held: boolean, searched: boolean, loader: boolean, fresh: b
 }
 
 export type { CardState }
-export { cardState, inProfile, isActive, isInstalled, shownState }
+export { cardState, entryIn, inProfile, isActive, isInstalled, shownState }

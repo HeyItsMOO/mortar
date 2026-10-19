@@ -127,7 +127,9 @@ type Item struct {
 	State    string  `json:"state"`
 	Progress float64 `json:"progress"`
 	// Latest carries Request.Latest so a restart still resolves to the newest file.
-	Latest   bool                           `json:"latest,omitempty"`
+	Latest bool `json:"latest,omitempty"`
+	// Exact carries Request.Exact: the file stays queued even when the profile holds a newer one.
+	Exact    bool                           `json:"exact,omitempty"`
 	Disabled []mod.ID                       `json:"disabled,omitempty"`
 	Fomod    map[string]map[string][]string `json:"fomod,omitempty"`
 	// Overlay is where an optional file without a manifest goes in its main file, from a share; nil asks the user.
@@ -249,7 +251,10 @@ type Request struct {
 	FallbackID mod.ID `json:"fallbackId,omitempty"`
 	// Latest asks for the newest file that updates FileID: a file found in the mod dataset, or that a save
 	// recorded, may have been superseded since. Share imports leave it off to reproduce the shared files.
-	Latest   bool                           `json:"latest"`
+	Latest bool `json:"latest"`
+	// Exact is a file the player picked by hand, so an update of an older file than the profile holds is not skipped
+	// as already newest.
+	Exact    bool                           `json:"exact,omitempty"`
 	Disabled []mod.ID                       `json:"disabled,omitempty"`
 	Fomod    map[string]map[string][]string `json:"fomod,omitempty"`
 	Overlay  *OverlayPlace                  `json:"overlay,omitempty"`
@@ -738,7 +743,7 @@ func (s *Service) add(ctx context.Context, reqs []Request) ([]Item, error) {
 		it := &Item{
 			ID: ids.New(), Kind: r.Kind, BatchID: r.BatchID, Game: r.Game, Profile: r.Profile, ModID: r.ModID, FileID: r.FileID,
 			Name: r.Name, FileName: r.FileName, Version: r.Version, State: StateQueued, key: r.key, expires: r.expires,
-			Package: r.Package, Source: r.Source, PackageFile: r.PackageFile, Digest: r.digest, URL: r.url, SizeKB: r.sizeKB, Picture: cmp.Or(r.picture, r.Picture), Category: r.category, Repo: r.Repo, Tag: r.Tag, Asset: r.Asset, FallbackRepo: r.FallbackRepo, FallbackID: r.FallbackID, Latest: r.Latest, Disabled: slices.Clone(r.Disabled), Fomod: r.Fomod, fomod: r.Fomod, Overlay: r.Overlay,
+			Package: r.Package, Source: r.Source, PackageFile: r.PackageFile, Digest: r.digest, URL: r.url, SizeKB: r.sizeKB, Picture: cmp.Or(r.picture, r.Picture), Category: r.category, Repo: r.Repo, Tag: r.Tag, Asset: r.Asset, FallbackRepo: r.FallbackRepo, FallbackID: r.FallbackID, Latest: r.Latest, Exact: r.Exact, Disabled: slices.Clone(r.Disabled), Fomod: r.Fomod, fomod: r.Fomod, Overlay: r.Overlay,
 			Implicit: r.implicit(), FromLink: r.fromLink,
 		}
 		if it.Repo != "" {

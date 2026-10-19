@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Chip, Link, Typography } from '@mui/material'
+import { Box, Button, Chip, Link, Typography } from '@mui/material'
 import { memo, type ReactNode, useEffect, useState } from 'react'
 import { Details as ReadDetails } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/browse/service.ts'
 import type { Changelog } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexus/models.ts'
@@ -7,6 +7,7 @@ import type { Details } from '../../bindings/github.com/Rethunk-Tech/mortar/inte
 import { formatAuthors } from '../mods/authorNormalize.ts'
 import { parseBBCode } from '../mods/bbcode.ts'
 import { ChangelogEntries } from '../mods/ChangelogDialog.tsx'
+import { ChangeVersionDialog } from '../mods/ChangeVersionDialog.tsx'
 import { DependencyChips } from '../mods/DependencyChips.tsx'
 import { DetailsAside } from '../mods/DetailsAside.tsx'
 import { DetailsHeader } from '../mods/DetailsHeader.tsx'
@@ -17,6 +18,8 @@ import { Rich } from '../mods/NexusDetails.tsx'
 import { loadDetails, useNexusEntry } from '../mods/nexusDetails.ts'
 import { heading } from '../mods/paper.ts'
 import { useReleases } from '../mods/releases.ts'
+import { listsVersions } from '../mods/versionChoices.ts'
+import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { ErrorRetry } from '../shell/ErrorRetry.tsx'
 import { SkeletonRows } from '../shell/SkeletonRows.tsx'
 import { useLoaded } from '../shell/useLoaded.ts'
@@ -24,6 +27,7 @@ import { space } from '../theme/density.ts'
 import { type InlineError, inlineError } from '../toasts/report.ts'
 import { GITHUB, NEXUS } from './browseConstants.ts'
 import type { BrowseItem } from './browseTypes.ts'
+import { entryIn } from './cardState.ts'
 import { CardPicture } from './ResultCard.tsx'
 import { SourceBadges } from './SourceBadges.tsx'
 import { hitKey, useBrowseSelection } from './selection.ts'
@@ -220,11 +224,15 @@ function Panel({
   game: string
   sourceNames: Map<string, string>
 }) {
+  const { t } = useLingui()
   const sources = [item.source, ...(item.alts ?? []).map((a) => a.source)]
   const [picked, setPicked] = useState(initial)
   const source = sources.includes(picked) ? picked : item.source
   const { shownItem, action } = useCardAction(card, item, source)
   const stats = useStats(shownItem)
+  const profile = useProfiles(openProfileOf)
+  const held = entryIn(profile, source, shownItem.id)
+  const [choosing, setChoosing] = useState(false)
   return (
     <Box
       sx={{
@@ -249,7 +257,31 @@ function Panel({
         onClose={() => useBrowseSelection.getState().select(null)}
       />
       <SourceBadges sources={sources} picked={source} names={sourceNames} onPick={setPicked} />
-      <Box sx={{ alignSelf: 'flex-start' }}>{action}</Box>
+      <Box sx={{ alignSelf: 'flex-start', display: 'flex', gap: space.gap }}>
+        {action}
+        {listsVersions(source) ? (
+          <Button size="small" variant="outlined" onClick={() => setChoosing(true)}>
+            {held ? t`Change version…` : t`Choose a version…`}
+          </Button>
+        ) : null}
+      </Box>
+      {choosing ? (
+        <ChangeVersionDialog
+          game={game}
+          name={shownItem.name}
+          target={{ source, id: shownItem.id }}
+          {...(held
+            ? {
+                entry: {
+                  key: held.key,
+                  version: held.source.version ?? '',
+                  pinned: held.pinned === true,
+                },
+              }
+            : {})}
+          onClose={() => setChoosing(false)}
+        />
+      ) : null}
       <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{stats}</Typography>
       {source === NEXUS ? (
         <NexusPage key={shownItem.id} modId={Number(shownItem.id)} />
