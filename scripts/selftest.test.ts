@@ -42,6 +42,8 @@ function run(base: string, root: string, ...args: string[]) {
   })
 }
 
+// Two selftest.sh runs, each scanning every process's /proc links: well under a second here, but past bun's 5s
+// default on a CI runner busy with the rest of the gate.
 test('reap deletes only idle marked sandboxes, and only with --yes', () => {
   const base = mkdtempSync(join(tmpdir(), 'mortar-reap-test-'))
   const idle = sandbox(base, 'idle', true)
@@ -69,7 +71,7 @@ test('reap deletes only idle marked sandboxes, and only with --yes', () => {
     holder.kill()
     rmSync(base, { recursive: true, force: true })
   }
-})
+}, 20_000)
 
 test('destroy refuses an unmarked folder and one outside the base', () => {
   const base = mkdtempSync(join(tmpdir(), 'mortar-destroy-test-'))
