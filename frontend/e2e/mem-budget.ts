@@ -274,6 +274,8 @@ const scenarios: Scenario[] = [
     // Last: it leaves the page on Game Selection. Every catalog row passes by, as a player flicking through the list.
     name: 'games',
     async run(page) {
+      // A launch before this leaves its run dialog open over the title bar.
+      await page.keyboard.press('Escape')
       await page.getByRole('button', { name: /^(Switch game|Choose a game)/ }).click()
       await page.getByRole('menuitem', { name: 'All games…' }).click()
       await sleep(SETTLE_MS)
