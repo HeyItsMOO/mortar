@@ -37,7 +37,8 @@ func (s *Services) packImport(ctx context.Context, p Params) (any, error) {
 	return res, err
 }
 
-// packExportModpack writes the profile as a Thunderstore modpack zip at Path; All adds its config folder.
+// packExportModpack writes the profile as a Thunderstore modpack zip at Path from the form's remembered fields (a
+// patch bump of the last version); All adds its config folder.
 func (s *Services) packExportModpack(p Params) (any, error) {
 	if s.Packs == nil {
 		return nil, errors.New("pack export is unavailable")
@@ -49,7 +50,15 @@ func (s *Services) packExportModpack(p Params) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	return s.Packs.ExportModpack(p.Game, prof.ID, p.Path, p.All)
+	form, err := s.Packs.ModpackForm(p.Game, prof.ID)
+	if err != nil {
+		return nil, err
+	}
+	o := form.Options
+	if !p.All {
+		o.Configs = nil
+	}
+	return s.Packs.ExportModpack(p.Game, prof.ID, p.Path, o)
 }
 
 // packExportR2z writes the profile as an r2modman .r2z file at Path.

@@ -284,6 +284,8 @@ type Profile struct {
 	Loader string `json:"loader,omitempty"`
 	// Overrides are profile values for settings.ProfileOverridable keys.
 	Overrides map[string]string `json:"overrides,omitempty"`
+	// Modpack is what the last Thunderstore modpack export of this profile used.
+	Modpack *ModpackDraft `json:"modpack,omitempty"`
 	// Error is set on a list item whose profile.json could not be read.
 	Error string `json:"error,omitempty"`
 	// RepairError is why Repair is unavailable on a damaged list item.

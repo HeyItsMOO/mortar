@@ -32,6 +32,7 @@ type fakeProfiles struct {
 	writeErr error
 	list     []profile.Profile
 	dir      string
+	drafts   []profile.ModpackDraft
 }
 
 func (f *fakeProfiles) WriteFiles(_, _ string, files map[string][]byte) error {
@@ -45,6 +46,16 @@ func (f *fakeProfiles) Create(_, name string) (profile.Profile, error) {
 }
 
 func (f *fakeProfiles) List(string) ([]profile.Profile, error) { return f.list, nil }
+
+func (f *fakeProfiles) SetModpackDraft(_, id string, d profile.ModpackDraft) (profile.Profile, error) {
+	f.drafts = append(f.drafts, d)
+	for i := range f.list {
+		if f.list[i].ID == id {
+			f.list[i].Modpack = &d
+		}
+	}
+	return profile.Profile{}, nil
+}
 
 func (f *fakeProfiles) ProfileDir(string, string) (string, error) { return f.dir, nil }
 

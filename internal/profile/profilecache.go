@@ -49,6 +49,11 @@ func (p Profile) Clone() Profile {
 	p.Collection = clonePtr(p.Collection)
 	p.LaunchPresets = slices.Clone(p.LaunchPresets)
 	p.Overrides = maps.Clone(p.Overrides)
+	if p.Modpack != nil {
+		d := *p.Modpack
+		d.Exported = slices.Clone(d.Exported)
+		p.Modpack = &d
+	}
 	return p
 }
 

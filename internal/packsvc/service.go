@@ -29,6 +29,7 @@ type profiles interface {
 	List(game string) ([]profile.Profile, error)
 	WriteFiles(game, id string, files map[string][]byte) error
 	ProfileDir(game, id string) (string, error)
+	SetModpackDraft(game, id string, d profile.ModpackDraft) (profile.Profile, error)
 	Backup(game, id string) (profile.Profile, map[string][]byte, error)
 	BackupDirs(game string, p profile.Profile, keep func(profile.Entry) bool) (map[string]string, error)
 	RestoreZip(ctx context.Context, game, zipPath string) (profile.Profile, error)

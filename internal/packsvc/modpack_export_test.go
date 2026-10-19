@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/mod"
@@ -36,7 +37,7 @@ func TestExportModpackReimportsAsTheSamePackages(t *testing.T) {
 	}}}}
 	s := &Service{Profiles: ps}
 	dest := filepath.Join(t.TempDir(), "pack.zip")
-	res, err := s.ExportModpack("lethal-company", "p1", dest, true)
+	res, err := s.ExportModpack("lethal-company", "p1", dest, ModpackOptions{Name: "Friday_Night", Version: "1.0.0", Configs: []string{"ainavt.lc.lethalconfig.cfg"}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -87,5 +88,48 @@ func TestExportR2zReimportsAsTheSameModList(t *testing.T) {
 	want := []string{"AinaVT-LethalConfig-1.4.6", "Alice-Quiet-0.1.0 off"}
 	if pv.Name != "Friends" || !slices.Equal(got, want) {
 		t.Fatalf("re-imported %+v", pv)
+	}
+}
+
+func TestModpackFormSuggestsABumpAndChangelogAgainstTheLastExport(t *testing.T) {
+	ts := func(name, version string) profile.Entry {
+		return profile.Entry{
+			Source: profile.Source{Kind: profile.KindThunderstore, Name: name, Version: version},
+			Mods:   []profile.Component{{ID: mod.NewID(mod.FormatThunderstore, name)}},
+		}
+	}
+	off := ts("Alice-Quiet", "0.1.0")
+	off.Disabled = []mod.ID{off.Mods[0].ID}
+	ps := &fakeProfiles{dir: t.TempDir(), list: []profile.Profile{{ID: "p1", Name: "Friends", Entries: []profile.Entry{ts("A-One", "1.0.0"), ts("B-Two", "1.0.0"), off}}}}
+	s := &Service{Profiles: ps}
+	first, err := s.ModpackForm("lethal-company", "p1")
+	if err != nil || first.Options.Version != "1.0.0" || first.Options.Changelog != "" || !slices.Equal(first.Disabled, []string{"Alice-Quiet"}) {
+		t.Fatalf("first form %+v, %v", first, err)
+	}
+	if _, err := s.ExportModpack("lethal-company", "p1", filepath.Join(t.TempDir(), "a.zip"), ModpackOptions{Name: "Friends", Version: "1.0.0", Author: "Me"}); err != nil {
+		t.Fatal(err)
+	}
+	ps.list[0].Entries = []profile.Entry{ts("A-One", "1.1.0"), ts("C-Three", "2.0.0"), off}
+	next, err := s.ModpackForm("lethal-company", "p1")
+	if err != nil || next.Options.Version != "1.0.1" || next.Options.Author != "Me" || next.LastVersion != "1.0.0" {
+		t.Fatalf("next form %+v, %v", next, err)
+	}
+	for _, want := range []string{"## 1.0.1", "- Updated A-One from 1.0.0 to 1.1.0", "- Added C-Three 2.0.0", "- Removed B-Two"} {
+		if !strings.Contains(next.Options.Changelog, want) {
+			t.Errorf("changelog lacks %q:\n%s", want, next.Options.Changelog)
+		}
+	}
+	withOff, err := s.ModpackChangelog("lethal-company", "p1", "1.0.1", true)
+	if err != nil || !strings.Contains(withOff, "- Added Alice-Quiet 0.1.0") {
+		t.Errorf("switched-off package missing from %q, %v", withOff, err)
+	}
+	bad := filepath.Join(t.TempDir(), "icon.png")
+	if err := os.WriteFile(bad, []byte("not a png"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	for _, o := range []ModpackOptions{{Name: "x y", Version: "1.0.0"}, {Name: "x", Version: "1.0"}, {Name: "x", Version: "1.0.0", IconPath: bad}, {Name: "x", Version: "1.0.0", Configs: []string{"../x"}}} {
+		if _, err := s.ExportModpack("lethal-company", "p1", filepath.Join(t.TempDir(), "b.zip"), o); err == nil {
+			t.Errorf("exported with %+v", o)
+		}
 	}
 }

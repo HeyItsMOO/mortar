@@ -5,7 +5,6 @@ import { Copy, FileJson, Package, Save, Share2 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import {
   ExportCode,
-  ExportModpackDialog,
   ExportR2zDialog,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/packsvc/service.ts'
 import { SetLanSharing } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
@@ -27,6 +26,7 @@ import { usePending } from '../toasts/usePending.ts'
 import { copyText } from './copyText.ts'
 import { Included } from './Included.tsx'
 import { type MeterLevel, meter, type ShownInfo, suggestFile } from './logic.ts'
+import { ModpackDialog } from './ModpackDialog.tsx'
 import { type ShareInclude, toShareInclude } from './shareDefaults.ts'
 
 const PERCENT = 100
@@ -262,6 +262,7 @@ export function NexusPane({ game, profileId }: { game: string; profileId: string
 export function ThunderstorePane({ game, profileId }: { game: string; profileId: string }) {
   const { t } = useLingui()
   const [asking, setAsking] = useState(false)
+  const [packing, setPacking] = useState(false)
   const publish = () => {
     setAsking(false)
     ExportCode(game, profileId, true)
@@ -274,18 +275,6 @@ export function ThunderstorePane({ game, profileId }: { game: string; profileId:
         }),
       )
       .catch((error: unknown) => toastError(t`Could not publish the code`, error))
-  }
-  const saveModpack = async () => {
-    const r = await ExportModpackDialog(game, profileId, true)
-    if (!r.path) {
-      return
-    }
-    const left = [...(r.leftOut ?? []), ...(r.disabled ?? [])]
-    useToasts.getState().push({
-      kind: left.length > 0 ? 'warning' : 'success',
-      title: t`Modpack saved`,
-      body: left.length > 0 ? t`Left out: ${listNames(left)}` : r.path,
-    })
   }
   const saveR2z = async () => {
     const path = await ExportR2zDialog(game, profileId)
@@ -327,14 +316,15 @@ export function ThunderstorePane({ game, profileId }: { game: string; profileId:
           variant="outlined"
           color="inherit"
           startIcon={<Package size={16} />}
-          onClick={() => {
-            saveModpack().catch(reportError(t`Could not export the modpack`))
-          }}
+          onClick={() => setPacking(true)}
           sx={{ height: 40 }}
         >
           {t`Export as Thunderstore modpack…`}
         </Button>
       </Box>
+      {packing ? (
+        <ModpackDialog game={game} profileId={profileId} onClose={() => setPacking(false)} />
+      ) : null}
       <ConfirmDialog
         open={asking}
         title={t`Share as r2modman code?`}
