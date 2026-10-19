@@ -9,17 +9,6 @@ Decided work, short enough to build cold. Delete an item in the change that land
 
 ## Ready to build
 
-### Discord routes for Report a bug, help and suggestions
-
-Ships once the Discord remake in Rethunk-Tech/mortar-discord (`docs/remake.md`) has created the channels.
-
-- **Report a bug** (`frontend/src/shell/BugReportDialog.tsx`) asks "Post on Discord or GitHub?" and preselects the last choice.
-  - **Discord:** copies the report to the clipboard, trimmed to Discord's 2000-character limit, saves the full diagnostics as a `.txt` to attach, then opens `https://mortar.rethunk.tech/go/bug-reports/`.
-  - **GitHub:** keeps the prefilled issue URL (`internal/support/service.go` `BugURL`).
-- **Help menu** gains "Ask on Discord" (opens `/go/help/`) and "Suggest a feature", which asks "Discord or GitHub?" the same way: Discord opens `/go/suggestions/`, GitHub `https://github.com/Rethunk-Tech/mortar/issues/new?template=feature_request.yml`.
-- **Site:** `/go/bug-reports/`, `/go/help/` and `/go/suggestions/` redirect to permanent Discord invites targeting those channels (bug-reports discord.gg/9hKFwB8xGW, help discord.gg/4ZNKgGwYdw, suggestions discord.gg/sgp8MHXpH8; a channel URL shows nothing to someone not yet in the server), so a moved channel needs only a site change.
-- **Done when:** every route opens the right target from the installed build, and the trimmed clipboard text pastes into a forum post without hitting the limit.
-
 ### The Sims 4 before a release carries it
 
 - **Verify** on a real install and record in [sims4.md](sims4.md): the `Options.ini` section header and whether key names match case-insensitively, a localized Documents folder name ("Die Sims 4"), a DX9 or legacy executable, the stock `Resource.cfg` text, EA's statement of the `.ts4script` depth limit, and `gameProcesses`.

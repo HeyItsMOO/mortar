@@ -1,0 +1,54 @@
+name: Release announcement
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    if: startsWith(github.event.release.tag_name, 'v') && !github.event.release.prerelease
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout release notes
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          sparse-checkout: build/release/notes
+          persist-credentials: false
+
+      - name: Post to Discord
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+          ROLE: ${{ vars.DISCORD_RELEASE_PINGS_ROLE }}
+        run: |
+          set -euo pipefail
+          # Discord shows five bullets; the changelog page has the rest.
+          bullets=$(grep '^- ' "build/release/notes/${TAG}.md" || true)
+          total=0
+          [ -z "$bullets" ] || total=$(printf '%s\n' "$bullets" | wc -l)
+          jq -n \
+            --arg title "Mortar ${TAG}" \
+            --arg url "$RELEASE_URL" \
+            --arg bullets "$(printf '%s\n' "$bullets" | sed -n 1,5p)" \
+            --argjson more "$((total > 5 ? total - 5 : 0))" \
+            --arg role "$ROLE" '
+            {
+              allowed_mentions: (if $role == "" then {parse: []} else {roles: [$role]} end),
+              embeds: [{
+                title: $title,
+                url: $url,
+                color: 14070138,
+                description: ($bullets + (if $more > 0 then "\n…and \($more) more" else "" end)),
+                fields: [
+                  {name: "Changelog", value: "https://mortar.rethunk.tech/changelog/", inline: true},
+                  {name: "Download", value: "https://mortar.rethunk.tech/download/", inline: true}
+                ]
+              }]
+            } + (if $role == "" then {} else {content: "<@&\($role)>"} end)' >payload.json
+          curl --fail-with-body --silent --show-error -H 'Content-Type: application/json' -d @payload.json "$WEBHOOK"
