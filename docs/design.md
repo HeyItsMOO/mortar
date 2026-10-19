@@ -18,16 +18,16 @@ Remaining ([architecture.md](architecture.md#release)):
 
 Decided 2026-10-09 (NOMAD).
 
-### Discord routes for Report a bug and help
+### Discord routes for Report a bug, help and suggestions
 
 Decided 2026-10-18 (NOMAD). Ships after the Discord remake in Rethunk-Tech/mortar-discord (`docs/remake.md`) creates the channels.
 
 - **Report a bug** (`frontend/src/shell/BugReportDialog.tsx`) asks "Post on Discord or GitHub?", and preselects the last choice.
   - **Discord:** copies the report to the clipboard, trimmed to Discord's 2000-character limit. It saves the full diagnostics as a `.txt` to attach, then opens `https://mortar.rethunk.tech/go/bug-reports/`.
   - **GitHub:** keeps today's prefilled issue URL (`internal/support/service.go` `BugURL`).
-- **Help menu** gains "Ask on Discord", which opens `/go/help/`.
-- **Site:** `/go/bug-reports/` and `/go/help/` redirect to the forum channels. A moved channel then needs only a site change.
-- **Done when:** both routes open the right target from the installed build, and the trimmed clipboard text pastes into a forum post without hitting the limit.
+- **Help menu** gains "Ask on Discord", which opens `/go/help/`, and "Suggest a feature", which asks "Discord or GitHub?" the same way and preselects the last choice. Discord opens `/go/suggestions/`; GitHub opens `https://github.com/Rethunk-Tech/mortar/issues/new?template=feature_request.yml`.
+- **Site:** `/go/bug-reports/`, `/go/help/` and `/go/suggestions/` redirect to the forum channels. A moved channel then needs only a site change.
+- **Done when:** every route opens the right target from the installed build, and the trimmed clipboard text pastes into a forum post without hitting the limit.
 
 ### The Sims 4: what is left to check
 
