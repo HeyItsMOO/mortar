@@ -2,7 +2,12 @@ package queue
 
 import (
 	"context"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"sync/atomic"
 	"testing"
+	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
@@ -102,5 +107,66 @@ func TestPackageUpdateInstallsANewDependency(t *testing.T) {
 	}
 	if len(got) != 2 || !got["Lib-Added 1.0.0"] || got["Me-Mod 2.0.0"] {
 		t.Errorf("items %v", got)
+	}
+}
+
+func TestPackageDownloadFallsBackAcrossCDNs(t *testing.T) {
+	dead := httptest.NewServer(http.NotFoundHandler())
+	deadURL := dead.URL
+	dead.Close()
+	stalled := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		<-r.Context().Done()
+	}))
+	defer stalled.Close()
+	var served atomic.Int32
+	good := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		served.Add(1)
+		fmt.Fprint(w, payload)
+	}))
+	defer good.Close()
+
+	f := newFixture(t)
+	f.s.d.CDNs = []string{deadURL, stalled.URL, good.URL}
+	f.s.cdnStall = 150 * time.Millisecond
+	f.s.d.Closure = func(_ context.Context, _ string, _ []thunderstore.Ref, _ bool) ([]thunderstore.Resolved, error) {
+		return []thunderstore.Resolved{{Namespace: "Me", Name: "Mod", Version: "1.0.0", URL: deadURL + "/p/Me-Mod.zip"}}, nil
+	}
+	f.s.d.InstallPackage = f.s.d.Install
+	f.start()
+	if _, err := f.s.Add(t.Context(), []Request{{Kind: KindInstall, Game: "riskofrain2", Profile: "p1", Package: "Me-Mod"}}); err != nil {
+		t.Fatal(err)
+	}
+	f.wait("done", func(st State) bool { return len(st.Items) == 1 && st.Items[0].State == StateDone })
+	if served.Load() != 1 {
+		t.Fatalf("the working CDN served %d downloads", served.Load())
+	}
+	f.s.mu.Lock()
+	remembered := f.s.cdnGood
+	f.s.mu.Unlock()
+	if remembered != good.URL {
+		t.Fatalf("remembered %q, want %q", remembered, good.URL)
+	}
+}
+
+func TestPinnedCDNIsTheOnlyOneTried(t *testing.T) {
+	var other atomic.Int32
+	a := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { other.Add(1) }))
+	defer a.Close()
+	b := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, payload) }))
+	defer b.Close()
+	f := newFixture(t)
+	f.s.d.CDNs = []string{a.URL, b.URL}
+	f.s.d.ThunderstoreHost = func() string { return b.URL }
+	f.s.d.Closure = func(_ context.Context, _ string, _ []thunderstore.Ref, _ bool) ([]thunderstore.Resolved, error) {
+		return []thunderstore.Resolved{{Namespace: "Me", Name: "Mod", Version: "1.0.0", URL: a.URL + "/p/Me-Mod.zip"}}, nil
+	}
+	f.s.d.InstallPackage = f.s.d.Install
+	f.start()
+	if _, err := f.s.Add(t.Context(), []Request{{Kind: KindInstall, Game: "riskofrain2", Profile: "p1", Package: "Me-Mod"}}); err != nil {
+		t.Fatal(err)
+	}
+	f.wait("done", func(st State) bool { return len(st.Items) == 1 && st.Items[0].State == StateDone })
+	if other.Load() != 0 {
+		t.Fatalf("the unpinned CDN was asked %d times", other.Load())
 	}
 }

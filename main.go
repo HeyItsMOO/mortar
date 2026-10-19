@@ -615,6 +615,12 @@ func run() error {
 			}
 			return settings.ResolveAt(store.Get(), "dependencyVersions", settings.Scope{Game: game, Profile: profileID}, p.PrefOverrides()) == settings.DependencyExact
 		},
+		ThunderstoreHost: func() string {
+			if h := store.Get().ThunderstoreHost; h != settings.ThunderstoreHostAuto {
+				return "https://" + h
+			}
+			return ""
+		},
 		Held: func(game, profileID, pkg string) string {
 			p, err := profiles.Get(game, profileID)
 			if err != nil {

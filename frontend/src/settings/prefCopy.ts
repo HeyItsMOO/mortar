@@ -372,6 +372,18 @@ function batchPrefs(i18n: I18n): Record<string, PrefCopy> {
         { value: '3', label: i18n._(msg`3 times`) },
       ],
     },
+    thunderstoreHost: {
+      label: i18n._(msg`Thunderstore download host`),
+      description: i18n._(
+        msg`Automatic tries Thunderstore's hosts in turn when one fails or stalls; choosing one uses only that host.`,
+      ),
+      options: [
+        { value: 'auto', label: i18n._(msg`Automatic`) },
+        { value: 'ccdn.thunderstore.io', label: 'ccdn.thunderstore.io' },
+        { value: 'gcdn.thunderstore.io', label: 'gcdn.thunderstore.io' },
+        { value: 'hcdn-1.hcdn.thunderstore.io', label: 'hcdn-1.hcdn.thunderstore.io' },
+      ],
+    },
     pauseDownloadsWhilePlaying: {
       label: i18n._(msg`Pause downloads while the game runs`),
       description: i18n._(msg`Hold the download queue until the game exits`),

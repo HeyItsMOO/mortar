@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/datadir/datadirtest"
+	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
 )
 
 func TestPrefDefaultsMatchToday(t *testing.T) {
@@ -120,7 +121,7 @@ func TestPrefsExportImportRoundTrip(t *testing.T) {
 		"shareIncludeDisabledMods": "true", "shareIncludeFomodChoices": "false", "shareIncludeNotes": "false",
 		"shareIncludeConfigFiles": "false", "shareIncludeProblemChoices": "false", "shareIncludeLibraries": "false", "verifyNexusMD5": "true", "launchAtLogin": "true",
 		"startMinimised": "true", "rememberWindow": "true", "extensionConnection": "off",
-		"offerNewDownloads": "false", "updateDigest": "each", "extraModsFolder": "/var/tmp/mortar-extra", "showDotHiddenMods": "true", "oldFilesOnUpdate": "keep", "gameSettingsMode": "warn", "font": "Open Sans", "cacheClearing": "off", "dependencyVersions": "exact", "browseNoise": "show",
+		"offerNewDownloads": "false", "updateDigest": "each", "extraModsFolder": "/var/tmp/mortar-extra", "showDotHiddenMods": "true", "oldFilesOnUpdate": "keep", "gameSettingsMode": "warn", "font": "Open Sans", "cacheClearing": "off", "dependencyVersions": "exact", "browseNoise": "show", "thunderstoreHost": "gcdn.thunderstore.io",
 		"saveBackupHours": "6", "saveBackupKeep": "3", "sourceOrder": "github,nexus", "watchFolders": "/var/tmp/mortar-watch", "syncFolder": "/var/tmp/mortar-sync", "browseFilters": "installed=hide", "showAdultContent": "true",
 		"keepInTray": "false", "includeBetaReleases": "false", "includePrereleaseModVersions": "true", "askEndorseMods": "true", "listColumns": "on,name,version",
 		"checkOnlyEnabledMods": "true", "enableModsWhenInstalled": "false", "tellWhenSmapiOut": "false",
@@ -443,5 +444,15 @@ func TestHidingAGameIsUndoable(t *testing.T) {
 	}
 	if got := st.Get().HiddenGames; len(got) != 1 || got[0] != "b" {
 		t.Fatalf("hidden games = %v", got)
+	}
+}
+
+func TestThunderstoreHostChoicesAreTheDownloadCDNs(t *testing.T) {
+	var want []string
+	for _, base := range thunderstore.CDNs {
+		want = append(want, strings.TrimPrefix(base, "https://"))
+	}
+	if got := thunderstoreHostValues[1:]; !slices.Equal(got, want) {
+		t.Fatalf("host choices %v, CDNs %v", got, want)
 	}
 }

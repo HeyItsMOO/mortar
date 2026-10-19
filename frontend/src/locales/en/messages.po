@@ -316,7 +316,7 @@ msgid "Settings imported"
 msgstr "Settings imported"
 
 #. placeholder {0}: part.n
-#: src/share/ListFormat.tsx:149
+#: src/share/ListFormat.tsx:165
 msgid "Copy message {0}"
 msgstr "Copy message {0}"
 
@@ -1210,7 +1210,7 @@ msgstr "Measure next launch"
 msgid "Something changed this profile's mods folder without Mortar, by adding, removing or editing a file. Mortar flags it so the profile matches what you expect."
 msgstr "Something changed this profile's mods folder without Mortar, by adding, removing or editing a file. Mortar flags it so the profile matches what you expect."
 
-#: src/share/ListFormat.tsx:63
+#: src/share/ListFormat.tsx:79
 msgid "Mod list copied"
 msgstr "Mod list copied"
 
@@ -1554,6 +1554,10 @@ msgstr "Notify when updates are found"
 #: src/browse/stats.ts:89
 msgid "Updated {0}"
 msgstr "Updated {0}"
+
+#: src/share/ListFormat.tsx:45
+msgid "Left out (not on Thunderstore, or switched off): {names}"
+msgstr "Left out (not on Thunderstore, or switched off): {names}"
 
 #: src/settings/sections/Downloads.tsx:140
 msgid "It marks Nexus Mods pages with what your profile already has and sends Mod Manager Download links to Mortar."
@@ -2045,13 +2049,13 @@ msgstr "Nothing in the queue needs a decision."
 msgid "Saved {name} as a launch preset template"
 msgstr "Saved {name} as a launch preset template"
 
-#: src/share/ListFormat.tsx:185
+#: src/share/ListFormat.tsx:195
 msgid "Copy mod list"
 msgstr "Copy mod list"
 
 #: src/settings/sections/StreamOverlay.tsx:275
 #: src/settings/sections/StreamOverlay.tsx:423
-#: src/share/ListFormat.tsx:138
+#: src/share/ListFormat.tsx:154
 #: src/toasts/ToastHost.tsx:71
 msgid "Copied"
 msgstr "Copied"
@@ -2607,7 +2611,7 @@ msgid "{count, plural, one {Overlaps with {by}: both change {detail}} other {Ove
 msgstr "{count, plural, one {Overlaps with {by}: both change {detail}} other {Overlaps with {by}: all change {detail}}}"
 
 #. placeholder {0}: part.n
-#: src/share/ListFormat.tsx:140
+#: src/share/ListFormat.tsx:156
 msgid "Message {0} of {total}"
 msgstr "Message {0} of {total}"
 
@@ -3750,7 +3754,7 @@ msgid "{name} is marked abandoned and may no longer be maintained."
 msgstr "{name} is marked abandoned and may no longer be maintained."
 
 #. placeholder {0}: part.text.length.toLocaleString(i18n.locale)
-#: src/share/ListFormat.tsx:145
+#: src/share/ListFormat.tsx:161
 msgid "{0} characters"
 msgstr "{0} characters"
 
@@ -3786,7 +3790,7 @@ msgstr "Manual"
 msgid "Install reason"
 msgstr "Install reason"
 
-#: src/share/ListFormat.tsx:177
+#: src/share/ListFormat.tsx:187
 msgid "Save to a file…"
 msgstr "Save to a file…"
 
@@ -4806,7 +4810,7 @@ msgstr "{rest, plural, one {# more} other {# more}}"
 msgid "Mortar: {label}"
 msgstr "Mortar: {label}"
 
-#: src/share/ListFormat.tsx:57
+#: src/share/ListFormat.tsx:73
 msgid "{off} switched off"
 msgstr "{off} switched off"
 
@@ -4870,7 +4874,7 @@ msgstr "Needs a CurseForge key, or the file from its page"
 #: src/profiles/ProfilesPage.tsx:278
 #: src/saves/SaveGapLine.tsx:22
 #: src/share/ImportPreview.tsx:88
-#: src/share/ListFormat.tsx:41
+#: src/share/ListFormat.tsx:63
 msgid "Disabled"
 msgstr "Disabled"
 
@@ -5068,7 +5072,7 @@ msgstr "Browser extension"
 msgid "Violet"
 msgstr "Violet"
 
-#: src/share/ListFormat.tsx:63
+#: src/share/ListFormat.tsx:79
 msgid "Message {n} of {total} copied"
 msgstr "Message {n} of {total} copied"
 
@@ -5569,7 +5573,7 @@ msgstr "Applied the preset {detail} to {name}"
 msgid "Changelog on Nexus"
 msgstr "Changelog on Nexus"
 
-#: src/share/ListFormat.tsx:168
+#: src/share/ListFormat.tsx:43
 msgid "Paste it into a chat or a forum post, or send the file."
 msgstr "Paste it into a chat or a forum post, or send the file."
 
@@ -5673,7 +5677,7 @@ msgstr "This profile matches {host}."
 msgid "Checking profiles…"
 msgstr "Checking profiles…"
 
-#: src/share/ListFormat.tsx:167
+#: src/share/ListFormat.tsx:47
 msgid "Discord takes 2,000 characters a message: paste each one in turn."
 msgstr "Discord takes 2,000 characters a message: paste each one in turn."
 
@@ -5776,10 +5780,6 @@ msgstr "Pause downloads while the game runs"
 #: src/profiles/ProfileRow.tsx:124
 msgid "{0} of saves"
 msgstr "{0} of saves"
-
-#: src/mods/typedConfig/ConfigPane.tsx:423
-msgid "Delete {name}?"
-msgstr "Delete {name}?"
 
 #: src/settings/SettingsShell.tsx:91
 msgid "Try another word, or clear the search."
@@ -6095,7 +6095,7 @@ msgstr "{0, plural, one {Mortar identified # mod as a library or supporting mod}
 msgid "Save backups…"
 msgstr "Save backups…"
 
-#: src/share/ListFormat.tsx:58
+#: src/share/ListFormat.tsx:74
 msgid "{total} messages"
 msgstr "{total} messages"
 
@@ -7503,11 +7503,11 @@ msgstr "A folder of unpacked mods to add from the Add menu"
 msgid "Show {0} in its profile"
 msgstr "Show {0} in its profile"
 
-#: src/share/ListFormat.tsx:90
+#: src/share/ListFormat.tsx:106
 msgid "Mod list format"
 msgstr "Mod list format"
 
-#: src/share/ListFormat.tsx:78
+#: src/share/ListFormat.tsx:94
 msgid "Mod list saved"
 msgstr "Mod list saved"
 
@@ -7769,10 +7769,6 @@ msgstr "requirements"
 #: src/shell/AppMenu.tsx:112
 msgid "Source code"
 msgstr "Source code"
-
-#: src/share/ListFormat.tsx:165
-msgid "Left out (not on Thunderstore, or switched off): {skippedNames}"
-msgstr "Left out (not on Thunderstore, or switched off): {skippedNames}"
 
 #: src/settings/sections/Appearance.tsx:151
 msgid "color"
@@ -8820,7 +8816,7 @@ msgid "Crashed"
 msgstr "Crashed"
 
 #: src/i18n/counts.ts:3
-#: src/share/ListFormat.tsx:56
+#: src/share/ListFormat.tsx:72
 msgid "{count, plural, one {# mod} other {# mods}}"
 msgstr "{count, plural, one {# mod} other {# mods}}"
 
@@ -8913,7 +8909,7 @@ msgstr "Keep this one"
 msgid "{gameName} save backups: {0}"
 msgstr "{gameName} save backups: {0}"
 
-#: src/share/ListFormat.tsx:72
+#: src/share/ListFormat.tsx:88
 msgid "Save mod list"
 msgstr "Save mod list"
 
@@ -9886,7 +9882,7 @@ msgstr "Open the import dialog"
 msgid "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
 msgstr "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
 
-#: src/share/ListFormat.tsx:51
+#: src/share/ListFormat.tsx:35
 #: src/shell/BugReportDialog.tsx:104
 #: src/shell/SuggestDialog.tsx:45
 msgid "Discord"
@@ -10428,7 +10424,7 @@ msgstr "{0} {1} is available"
 msgid "Include config files"
 msgstr "Include config files"
 
-#: src/share/ListFormat.tsx:50
+#: src/share/ListFormat.tsx:34
 msgid "Plain text"
 msgstr "Plain text"
 
@@ -10754,7 +10750,7 @@ msgstr "Slate"
 msgid "Updates"
 msgstr "Updates"
 
-#: src/share/ListFormat.tsx:110
+#: src/share/ListFormat.tsx:126
 msgid "The text that is copied"
 msgstr "The text that is copied"
 
@@ -11457,7 +11453,7 @@ msgstr "Auto-enable requirements"
 #: src/profiles/CompareTable.tsx:77
 #: src/profiles/ProfilesPage.tsx:269
 #: src/profiles/ProfilesPage.tsx:278
-#: src/share/ListFormat.tsx:41
+#: src/share/ListFormat.tsx:63
 msgid "Enabled"
 msgstr "Enabled"
 
@@ -12467,7 +12463,7 @@ msgstr "Follow the setting"
 msgid "{0} needs {1}"
 msgstr "{0} needs {1}"
 
-#: src/share/ListFormat.tsx:49
+#: src/share/ListFormat.tsx:33
 msgid "Markdown"
 msgstr "Markdown"
 
@@ -13011,7 +13007,7 @@ msgid "Import a profile"
 msgstr "Import a profile"
 
 #. placeholder {0}: next + 1
-#: src/share/ListFormat.tsx:185
+#: src/share/ListFormat.tsx:195
 msgid "Copy message {0} of {total}"
 msgstr "Copy message {0} of {total}"
 
@@ -13301,7 +13297,7 @@ msgstr "Logs"
 msgid "Looking for Mortar users…"
 msgstr "Looking for Mortar users…"
 
-#: src/share/ListFormat.tsx:81
+#: src/share/ListFormat.tsx:97
 msgid "Could not save the mod list"
 msgstr "Could not save the mod list"
 
@@ -14796,7 +14792,7 @@ msgstr "No saves yet"
 #: src/mods/listRows.ts:143
 #: src/mods/Sidebar.tsx:501
 #: src/share/DestinationGrid.tsx:62
-#: src/share/ListFormat.tsx:52
+#: src/share/ListFormat.tsx:36
 #: src/share/ShareDialog.tsx:43
 msgid "Thunderstore"
 msgstr "Thunderstore"

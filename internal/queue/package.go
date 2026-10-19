@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"slices"
 	"strings"
@@ -152,6 +153,72 @@ func packageSource(it Item) profile.Source {
 	return withIntent(it, src)
 }
 
+// cdnStallDefault is how long a Thunderstore download may receive nothing before the next CDN is tried.
+const cdnStallDefault = 20 * time.Second
+
+var errStalled = errors.New("the download stalled")
+
+// cdnFailure reports an error a different CDN may not share: a connection that failed or a download that stalled.
+func cdnFailure(ctx context.Context, err error) bool {
+	if ctx.Err() != nil {
+		return false
+	}
+	var netErr net.Error
+	return errors.Is(err, errStalled) || errors.As(err, &netErr)
+}
+
+// fetchPackage downloads a Thunderstore package from the first of the CDNs that serves it, moving on after a
+// connection failure or a stall, and remembers the one that worked.
+func (s *Service) fetchPackage(ctx context.Context, it Item, path string) error {
+	hosts := s.d.CDNs
+	if hosts == nil {
+		hosts = thunderstore.CDNs
+	}
+	pinned := ""
+	if s.d.ThunderstoreHost != nil {
+		pinned = s.d.ThunderstoreHost()
+	}
+	s.mu.Lock()
+	good := s.cdnGood
+	s.mu.Unlock()
+	order := thunderstore.CDNOrder(it.URL, hosts, pinned, good)
+	if len(order) == 0 {
+		return s.fetch(ctx, it, it.URL, path)
+	}
+	var err error
+	for i, host := range order {
+		if i > 0 {
+			dropDownload(path)
+		}
+		u, _ := thunderstore.OnHost(it.URL, host)
+		if err = s.fetchStalling(ctx, it, u, path); err == nil {
+			s.mu.Lock()
+			s.cdnGood = host
+			s.mu.Unlock()
+			return nil
+		}
+		if !cdnFailure(ctx, err) {
+			return err
+		}
+		log.Printf("queue: %s: %v; trying the next Thunderstore CDN", it.Package, err)
+	}
+	return err
+}
+
+// fetchStalling is fetch that gives up with errStalled when no bytes arrive for the stall time.
+func (s *Service) fetchStalling(ctx context.Context, it Item, url, path string) error {
+	stall := cmp.Or(s.cdnStall, cdnStallDefault)
+	cctx, cancel := context.WithCancelCause(ctx)
+	defer cancel(nil)
+	timer := time.AfterFunc(stall, func() { cancel(errStalled) })
+	defer timer.Stop()
+	err := s.fetchTicking(cctx, it, url, path, func() { timer.Reset(stall) })
+	if err != nil && errors.Is(context.Cause(cctx), errStalled) {
+		return errStalled
+	}
+	return err
+}
+
 // downloadPackage fetches a package archive and installs it into the item's profile.
 func (s *Service) downloadPackage(ctx context.Context, it Item) error {
 	if s.d.InstallPackage == nil {
@@ -164,7 +231,7 @@ func (s *Service) downloadPackage(ctx context.Context, it Item) error {
 		return err
 	}
 	path := s.dest(it.ID, it.FileName)
-	if err := s.fetch(ctx, it, it.URL, path); err != nil {
+	if err := s.fetchPackage(ctx, it, path); err != nil {
 		if ctx.Err() != nil {
 			return ctx.Err()
 		}

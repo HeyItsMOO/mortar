@@ -71,12 +71,20 @@ const fetchRestarts = 3
 
 // fetch streams url to path, appending with Range when a partial and the server allow it.
 func (s *Service) fetch(ctx context.Context, it Item, url, path string) error {
+	return s.fetchTicking(ctx, it, url, path, nil)
+}
+
+// fetchTicking is fetch that calls tick whenever bytes arrive.
+func (s *Service) fetchTicking(ctx context.Context, it Item, url, path string, tick func()) error {
 	p := &progress{s: s, id: it.ID, total: it.SizeKB << 10, last: s.d.Now()}
 	err := github.Download(ctx, s.d.HTTP, url, path, archive.DefaultMaxTotalBytes, func(done, total int64) {
 		if total > 0 {
 			p.total = total
 		}
 		p.set(done)
+		if tick != nil {
+			tick()
+		}
 	})
 	if err != nil && errors.Is(err, github.ErrLinkExpired) {
 		return err

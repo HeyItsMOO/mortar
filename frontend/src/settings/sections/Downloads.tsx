@@ -298,6 +298,7 @@ export function Downloads() {
           keys={[
             'parallelDownloads',
             'autoRetryDownloads',
+            'thunderstoreHost',
             'pauseDownloadsWhilePlaying',
             'verifyNexusMD5',
           ]}

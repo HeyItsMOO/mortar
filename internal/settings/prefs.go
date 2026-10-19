@@ -81,6 +81,11 @@ const (
 	ProfileOrderName       = "name"
 	ProfileOrderLastPlayed = "lastPlayed"
 
+	ThunderstoreHostAuto = "auto"
+	ThunderstoreHostC    = "ccdn.thunderstore.io"
+	ThunderstoreHostG    = "gcdn.thunderstore.io"
+	ThunderstoreHostH    = "hcdn-1.hcdn.thunderstore.io"
+
 	AutoRetryOff = "off"
 	AutoRetry1   = "1"
 	AutoRetry3   = "3"
@@ -189,6 +194,7 @@ func defaultPrefs() Settings {
 		DownloadFolder:             "",
 		ProfileOrder:               ProfileOrderManual,
 		AutoRetryDownloads:         AutoRetryOff,
+		ThunderstoreHost:           ThunderstoreHostAuto,
 		PauseDownloadsWhilePlaying: false,
 		SidebarBadges:              SidebarBadgesAll,
 		ShareIncludeDisabledMods:   on(),
@@ -305,6 +311,9 @@ func normalizePrefs(s *Settings) {
 	if !slices.Contains(profileOrderValues, s.ProfileOrder) {
 		s.ProfileOrder = ProfileOrderManual
 	}
+	if !slices.Contains(thunderstoreHostValues, s.ThunderstoreHost) {
+		s.ThunderstoreHost = ThunderstoreHostAuto
+	}
 	if !slices.Contains(autoRetryValues, s.AutoRetryDownloads) {
 		s.AutoRetryDownloads = AutoRetryOff
 	}
@@ -403,6 +412,9 @@ func validatePrefs(s Settings) error {
 	if !slices.Contains(profileOrderValues, s.ProfileOrder) {
 		return fmt.Errorf("profile order must be manual, name or lastPlayed, got %q", s.ProfileOrder)
 	}
+	if !slices.Contains(thunderstoreHostValues, s.ThunderstoreHost) {
+		return fmt.Errorf("thunderstore host must be auto or one of its download hosts, got %q", s.ThunderstoreHost)
+	}
 	if !slices.Contains(autoRetryValues, s.AutoRetryDownloads) {
 		return fmt.Errorf("auto-retry downloads must be off, 1 or 3, got %q", s.AutoRetryDownloads)
 	}
@@ -446,6 +458,7 @@ var (
 	launchMethodValues        = []string{LaunchSteam, LaunchDirect}
 	consoleLevelValues        = []string{ConsoleLevelTrace, ConsoleLevelDebug, ConsoleLevelInfo, ConsoleLevelWarn, ConsoleLevelError}
 	profileOrderValues        = []string{ProfileOrderManual, ProfileOrderName, ProfileOrderLastPlayed}
+	thunderstoreHostValues    = []string{ThunderstoreHostAuto, ThunderstoreHostC, ThunderstoreHostG, ThunderstoreHostH}
 	autoRetryValues           = []string{AutoRetryOff, AutoRetry1, AutoRetry3}
 	sidebarBadgesValues       = []string{SidebarBadgesAll, SidebarBadgesProblems, SidebarBadgesOff}
 	conflictScanValues        = []string{ConflictScanFull, ConflictScanSkipImages}

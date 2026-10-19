@@ -219,9 +219,11 @@ type Settings struct {
 	// VortexFolder is the Vortex data folder (holding state.v2) to import from when it is not in a default place.
 	VortexFolder string `json:"vortexFolder,omitempty"`
 	// PackFolder is the r2modman or Gale data folder to import profiles from when it is not in a default place.
-	PackFolder                 string `json:"packFolder,omitempty"`
-	ProfileOrder               string `json:"profileOrder"`
-	AutoRetryDownloads         string `json:"autoRetryDownloads"`
+	PackFolder         string `json:"packFolder,omitempty"`
+	ProfileOrder       string `json:"profileOrder"`
+	AutoRetryDownloads string `json:"autoRetryDownloads"`
+	// ThunderstoreHost is auto or the one Thunderstore download host to use.
+	ThunderstoreHost           string `json:"thunderstoreHost"`
 	PauseDownloadsWhilePlaying bool   `json:"pauseDownloadsWhilePlaying"`
 	SidebarBadges              string `json:"sidebarBadges"`
 	ShareIncludeDisabledMods   *bool  `json:"shareIncludeDisabledMods"`

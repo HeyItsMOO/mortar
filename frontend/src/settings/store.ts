@@ -112,6 +112,7 @@ const defaults: Settings = {
   downloadFolder: '',
   profileOrder: 'manual',
   autoRetryDownloads: 'off',
+  thunderstoreHost: 'auto',
   pauseDownloadsWhilePlaying: false,
   sidebarBadges: 'problemsAndUpdates',
   shareIncludeDisabledMods: true,

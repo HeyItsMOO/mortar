@@ -165,6 +165,7 @@ var registry = withDefaults([]pref{
 	packFolderPref(),
 	strPref("watchFolders", ScopeApp, func(s Settings, _ string) string { return s.WatchFolders }, func(s *Settings, _, v string) { s.WatchFolders = v }),
 	enumPref("profileOrder", ScopeApp, profileOrderValues, func(s Settings, _ string) string { return s.ProfileOrder }, func(s *Settings, _, v string) { s.ProfileOrder = v }),
+	enumPref("thunderstoreHost", ScopeApp, thunderstoreHostValues, func(s Settings, _ string) string { return s.ThunderstoreHost }, func(s *Settings, _, v string) { s.ThunderstoreHost = v }),
 	enumPref("autoRetryDownloads", ScopeApp, autoRetryValues, func(s Settings, _ string) string { return s.AutoRetryDownloads }, func(s *Settings, _, v string) { s.AutoRetryDownloads = v }),
 	boolPref("pauseDownloadsWhilePlaying", ScopeApp, func(s Settings, _ string) bool { return s.PauseDownloadsWhilePlaying }, func(s *Settings, _ string, on bool) { s.PauseDownloadsWhilePlaying = on }),
 	enumPref("sidebarBadges", ScopeApp, sidebarBadgesValues, func(s Settings, _ string) string { return s.SidebarBadges }, func(s *Settings, _, v string) { s.SidebarBadges = v }),

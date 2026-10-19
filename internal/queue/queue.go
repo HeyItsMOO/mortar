@@ -315,6 +315,10 @@ type Deps struct {
 	// ExactDependencies reports whether the profile installs a package's dependencies at the versions it pins; nil
 	// means the newest.
 	ExactDependencies func(gameID, profileID string) bool
+	// CDNs are Thunderstore's download hosts as base addresses, tried in order; nil means thunderstore.CDNs.
+	CDNs []string
+	// ThunderstoreHost is the base address of the one CDN the player pinned, or empty for automatic; nil means automatic.
+	ThunderstoreHost func() string
 	// Held is the version of a Thunderstore package ("Namespace-Name") the profile holds, or empty; nil means none.
 	Held func(game, profileID, pkg string) string
 	// InstallPackage adds a downloaded Thunderstore package archive to the profile; nil refuses packages.
@@ -383,6 +387,10 @@ type Service struct {
 	premiumFetch chan struct{}
 	freeFetch    chan struct{}
 	premiumInUse int
+	// cdnGood is the Thunderstore CDN that last served a download, kept for the session.
+	cdnGood string
+	// cdnStall is how long a download may receive nothing before the next CDN is tried; zero means cdnStallDefault.
+	cdnStall time.Duration
 }
 
 // New reads the saved queue: what was under way is queued again so a partial file can resume, and a file

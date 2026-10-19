@@ -32,7 +32,7 @@ var sectionFields = map[string][]string{
 		"desktopDownloadFinished", "desktopDownloadFailed", "desktopRunCrashed", "desktopModUpdates", "updateDigest",
 	},
 	SectionDownloads: {
-		"parallelDownloads", "autoRetryDownloads", "pauseDownloadsWhilePlaying", "nexusPreferredDownloadServer",
+		"parallelDownloads", "autoRetryDownloads", "thunderstoreHost", "pauseDownloadsWhilePlaying", "nexusPreferredDownloadServer",
 		"nxmRedirectOtherGames", "verifyNexusMD5", "autoTrackNexus", "checkModUpdatesOnStart", "updateCheckIntervalMinutes",
 		"includePrereleaseModVersions", "checkOnlyEnabledMods", "enableModsWhenInstalled", "includeBetaReleases", "showAdultContent",
 		"autoInstallMortarUpdates", "backgroundBadgeChecks", "tellWhenSmapiOut", "reuseFomodChoices", "driftChecks",
