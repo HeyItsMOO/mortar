@@ -46,8 +46,13 @@ type readPath struct {
 	placed    bool
 }
 
-// pathLength is the length of p in UTF-16 code units, which is how MAX_PATH is counted.
+// pathLength is the length of p in UTF-16 code units, which is how MAX_PATH is counted, for a path of at least maxPath
+// bytes; a shorter one is under the limit and gives its byte length.
 func pathLength(p string) int {
+	// UTF-8 never takes fewer bytes than UTF-16 takes units, so fewer bytes than the limit is under it.
+	if len(p) < maxPath {
+		return len(p)
+	}
 	n := 0
 	for _, r := range p {
 		n += utf16.RuneLen(r)

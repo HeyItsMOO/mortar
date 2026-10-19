@@ -53,8 +53,12 @@ func TestALongPathIsARowAndOneJustUnderIsNot(t *testing.T) {
 
 func TestPathLengthCountsAsWindowsDoes(t *testing.T) {
 	// U+1F600 is two UTF-16 code units and four bytes; é is one unit and two bytes.
-	if n := pathLength(`C:\é\😀`); n != 7 {
-		t.Fatalf("pathLength = %d, want 7", n)
+	p := `C:\` + strings.Repeat("é", 100) + `\` + strings.Repeat("😀", 50)
+	if n := pathLength(p); n != 204 {
+		t.Fatalf("pathLength = %d, want 204", n)
+	}
+	if len(p) < maxPath {
+		t.Fatalf("the path is %d bytes; the test needs it past the early return", len(p))
 	}
 }
 
