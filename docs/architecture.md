@@ -69,7 +69,7 @@ Fields and caps: `internal/profile` (`Profile`, `Entry`). Invalid `color`, `icon
 - `key` is the store item in use; for an entry cut from a folder game's archive `<item>#<path>` with `item` and `file`. Mods in an entry are components: `id` (`<format>:<local>`, e.g. `smapi:Pathoschild.ContentPatcher`), version, manifest folder, `needs`, `optional`, `contentPackFor`; `disabled` lists disabled mod ids.
 - `previousKey`/`previousSource`/`previousExtraStoreKeys` are the Roll back copy; on an updated archive's first entry `replaced` is the JSON of the entries it superseded. `tray`/`trayFiles` record Tray files with SHA-256.
 - `implicit`: Mortar brought the entry in for another mod (resolver dependency, a Nexus link download supplying a required mod, an import entry another listed entry requires); absent means the player asked. Set at creation, copied by every path that copies an entry, changed only by Mark explicit/implicit; loader and bridge entries are always implicit. An entry with several mods shows one main mod with the entry's reason and the rest implicit; the main mod is the base the others build on (one requiring no other mod of the entry that most require).
-- `pinned`, `skipVersion`, `note` (500), `tags` (8, each 24), `categoryOverride`, `added`, `source` (the reference used in share links).
+- `pinned`, `skipVersion`, `note` (500), `tags` (8, each 24), `categoryOverride`, `displayName`/`displayAuthor`/`displayVersion` (what this profile shows for a one-mod entry; the mod is never changed), `added`, `source` (the reference used in share links).
 
 The store keeps every item a profile names as `key` or `previousKey` and deletes the rest 30 days after last use. `ProfilesWithMod` reads `profile.json` files, not the store.
 

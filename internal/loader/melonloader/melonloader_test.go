@@ -135,7 +135,7 @@ func TestInstallAndLaunch(t *testing.T) {
 		t.Fatal(err)
 	}
 	z := `Z:` + strings.ReplaceAll(filepath.ToSlash(profile), "/", `\`)
-	if got, want := strings.Join(plan.Args, " "), "--melonloader.basedir "+z+" --melonloader.agfregenerate"; got != want {
+	if got, want := strings.Join(plan.Args, " "), "--melonloader.basedir "+z+" --melonloader.agfregenerate --melonloader.hideconsole"; got != want {
 		t.Fatalf("args %q, want %q", got, want)
 	}
 	if len(plan.Files) != 1 || plan.Files[0].Dst != "version.dll" || plan.Files[0].Src != filepath.Join(profile, "version.dll") {
@@ -206,5 +206,28 @@ func TestFetchOtherReleaseVerifies(t *testing.T) {
 		if err != nil && fsx.IsFile(dst) {
 			t.Errorf("Fetch(%s) left a file it refused", version)
 		}
+	}
+}
+
+func TestLaunchSettingsChooseConsoleAndLogArguments(t *testing.T) {
+	dir := t.TempDir()
+	l := Loader{}
+	if got := strings.Join(settingArgs(dir), " "); got != "--melonloader.hideconsole" {
+		t.Fatalf("default args %q", got)
+	}
+	for id, v := range map[string]string{settingConsole: "true", settingLogLevel: "all"} {
+		if err := l.SetLaunchSetting(dir, id, v); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got := strings.Join(settingArgs(dir), " "); got != "--melonloader.debug --melonloader.harmonyloglevel 4 --melonloader.captureplayerlogs" {
+		t.Fatalf("args %q", got)
+	}
+	got, err := l.LaunchSettings(dir)
+	if err != nil || got[0].Value != "true" || got[1].Value != "all" {
+		t.Fatalf("settings %+v, err %v", got, err)
+	}
+	if l.SetLaunchSetting(dir, settingLogLevel, "loud") == nil || l.SetLaunchSetting(dir, "nope", "x") == nil {
+		t.Fatal("an unknown level or setting was accepted")
 	}
 }

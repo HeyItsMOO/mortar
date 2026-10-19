@@ -30,8 +30,28 @@ type Loader struct {
 	APIBase string
 }
 
+// marker is what Mortar records in the profile: the installed version and the launch options it keeps for the profile.
 type marker struct {
 	Version string `json:"version"`
+	// Console is the user's choice to show MelonLoader's console window; Mortar's Console tab shows the log either way.
+	Console  bool   `json:"console,omitempty"`
+	LogLevel string `json:"logLevel,omitempty"`
+}
+
+func readMarker(profileDir string) marker {
+	var m marker
+	if b, err := fsx.ReadFile(filepath.Join(profileDir, markerFile)); err == nil {
+		_ = json.Unmarshal(b, &m)
+	}
+	return m
+}
+
+func writeMarker(profileDir string, m marker) error {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return err
+	}
+	return datadir.WriteFile(filepath.Join(profileDir, markerFile), b, 0o600)
 }
 
 func (Loader) ID() string { return ID }
@@ -43,11 +63,7 @@ func (Loader) Status(t loader.Target) (loader.Status, error) {
 	if !fsx.IsDir(filepath.Join(t.ProfileDir, loaderDir)) || !fsx.IsFile(filepath.Join(t.ProfileDir, proxyDLL)) {
 		return loader.Status{}, nil
 	}
-	var m marker
-	if b, err := fsx.ReadFile(filepath.Join(t.ProfileDir, markerFile)); err == nil {
-		_ = json.Unmarshal(b, &m)
-	}
-	return loader.Status{Installed: true, Version: m.Version}, nil
+	return loader.Status{Installed: true, Version: readMarker(t.ProfileDir).Version}, nil
 }
 
 // Install lays the release zip out in the profile and records its version.
@@ -58,11 +74,9 @@ func (Loader) Install(_ context.Context, t loader.Target, pkg loader.Package, pr
 	if progress != nil {
 		progress(loader.StepFiles)
 	}
-	b, err := json.Marshal(marker{Version: pkg.Version})
-	if err != nil {
-		return "", err
-	}
-	if err := datadir.WriteFile(filepath.Join(t.ProfileDir, markerFile), b, 0o600); err != nil {
+	m := readMarker(t.ProfileDir)
+	m.Version = pkg.Version
+	if err := writeMarker(t.ProfileDir, m); err != nil {
 		return "", err
 	}
 	return pkg.Version, nil
@@ -100,6 +114,7 @@ func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.Prof
 	}
 	proton := p.Runtime == "proton" || p.Runtime == "mortar-proton"
 	plan.AddArgs(LaunchArgs(p.Dir, proton)...)
+	plan.AddArgs(settingArgs(p.Dir)...)
 	plan.AddFile(launchplan.PlanFile{Src: filepath.Join(p.Dir, proxyDLL), Dst: proxyDLL})
 	if proton {
 		plan.RequireRuntime(launchplan.RuntimeReq{Kind: "dll-override", Key: "version", Value: "native,builtin"})
