@@ -67,6 +67,7 @@ test('report text lists versions and errors', () => {
     nexusDomain: 'stardewvalley',
     githubRepo: '',
     nexusModId: 0,
+    pageUrl: '',
     issueTitle: '',
   })
   expect(text).toContain('Mod: Content Patcher 2.0.0')
@@ -88,9 +89,34 @@ test('buildModReport prefers GitHub prefill', () => {
     nexusDomain: 'stardewvalley',
     githubRepo: 'Pathoschild/ContentPatcher',
     nexusModId: 0,
+    pageUrl: '',
     issueTitle: 'Oops',
   })
   expect(res.github).toBe(true)
   expect(res.url).toContain('github.com/Pathoschild/ContentPatcher/issues/new')
   expect(truncateGithubBody('abc')).toBe('abc')
+})
+
+test('buildModReport falls back to the mod site page', () => {
+  const res = buildModReport(i18n, {
+    modName: 'Carry On',
+    modVersion: '1',
+    gameName: 'Vintage Story',
+    gameVersion: '',
+    smapiVersion: '',
+    mortarVersion: '',
+    errorLines: [],
+    logShareURL: '',
+    source: { kind: 'vsmoddb', name: '890-4405' },
+    nexusDomain: '',
+    githubRepo: '',
+    nexusModId: 0,
+    pageUrl: 'https://mods.vintagestory.at/carryon',
+    issueTitle: '',
+  })
+  expect(res).toMatchObject({
+    url: 'https://mods.vintagestory.at/carryon',
+    page: true,
+    github: false,
+  })
 })

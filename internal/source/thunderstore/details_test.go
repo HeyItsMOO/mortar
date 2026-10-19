@@ -37,3 +37,15 @@ func TestChangelogReadsTheUpdatedVersionsFile(t *testing.T) {
 		t.Fatalf("a version without a CHANGELOG gave %+v, err %v", none, err)
 	}
 }
+
+func TestReportTargetIsThePackagePage(t *testing.T) {
+	f := newFake(t)
+	d := Driver{URL: f.srv.URL, CacheDir: t.TempDir()}
+	got, err := d.ReportTarget(t.Context(), "lethal-company", "alice-morecompany", "1.2.3")
+	if err != nil || got.URL == "" {
+		t.Fatalf("target %+v, %v", got, err)
+	}
+	if _, err := d.ReportTarget(t.Context(), "lethal-company", "Nobody-Nothing", "1.2.3"); err == nil {
+		t.Fatal("a package missing from the index answered")
+	}
+}

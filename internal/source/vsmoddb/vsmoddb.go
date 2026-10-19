@@ -366,6 +366,19 @@ func (d Driver) Changelog(ctx context.Context, _, id, installed, latest, _ strin
 	return out, nil
 }
 
+// ReportTarget is the mod's page, where the Mod DB takes comments and links its author.
+func (d Driver) ReportTarget(ctx context.Context, _, id, _ string) (source.ReportTarget, error) {
+	ref := id
+	if modID, _, ok := splitID(id); ok {
+		ref = modID
+	}
+	m, err := d.mod(ctx, ref)
+	if err != nil {
+		return source.ReportTarget{}, err
+	}
+	return source.ReportTarget{URL: pageURL(m.URLAlias, m.AssetID)}, nil
+}
+
 // Details reads the mod's page: its description (HTML on the site, Markdown here), its tags, every release's version
 // and the changelog of the release a player on stable builds gets. The site lists no dependencies apart from the mod
 // archive.

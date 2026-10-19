@@ -181,6 +181,7 @@ type modResp struct {
 	Links                struct {
 		WebsiteURL string `json:"websiteUrl"`
 		SourceURL  string `json:"sourceUrl"`
+		IssuesURL  string `json:"issuesUrl"`
 	} `json:"links"`
 	Authors []struct {
 		Name string `json:"name"`
@@ -950,4 +951,17 @@ func (d Driver) Changelog(ctx context.Context, _, id, installed, latest, _ strin
 		out = append(out, source.Note{Version: f.version(), Date: date, Body: source.HTMLText(body.Data)})
 	}
 	return out, nil
+}
+
+// ReportTarget is the project's issue tracker, its source repository when that is on GitHub, else its page. A tracker on
+// GitHub reports to the repository so the report arrives prefilled.
+func (d Driver) ReportTarget(ctx context.Context, _, id, _ string) (source.ReportTarget, error) {
+	m, err := d.mod(ctx, id)
+	if err != nil {
+		return source.ReportTarget{}, err
+	}
+	repo := cmp.Or(source.GitHubRepo(m.Links.IssuesURL), source.GitHubRepo(m.Links.SourceURL))
+	return source.ReportTarget{
+		Repo: repo, URL: cmp.Or(m.Links.IssuesURL, m.Links.WebsiteURL, d.ModPageURL("", id)),
+	}, nil
 }

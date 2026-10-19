@@ -91,3 +91,16 @@ func (d Driver) Changelog(ctx context.Context, key, id, _, latest, mortarVersion
 	}
 	return nil, fmt.Errorf("%s is not in the %s index", id, key)
 }
+
+// ReportTarget is the package's GitHub repository when its website links one, else its page on the site.
+func (d Driver) ReportTarget(ctx context.Context, key, id, mortarVersion string) (source.ReportTarget, error) {
+	items, err := d.Items(ctx, key, mortarVersion, []string{id})
+	if err != nil {
+		return source.ReportTarget{}, err
+	}
+	it, ok := items[strings.ToLower(id)]
+	if !ok {
+		return source.ReportTarget{}, fmt.Errorf("%s is not in the %s index", id, key)
+	}
+	return source.ReportTarget{Repo: it.Repo, URL: it.URL}, nil
+}

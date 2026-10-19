@@ -23,6 +23,8 @@ interface ModReportFields {
   nexusDomain: string
   githubRepo: string
   nexusModId: number
+  // pageUrl is where the mod's own site takes reports when it has no GitHub repository or Nexus bug tracker.
+  pageUrl: string
   issueTitle: string
 }
 
@@ -31,6 +33,7 @@ interface ModReportResult {
   url: string
   nexus: boolean
   github: boolean
+  page: boolean
 }
 
 function modErrorLines(entries: readonly Entry[], modName: string): string[] {
@@ -111,7 +114,7 @@ function buildModReportText(_i18n: I18n, fields: ModReportFields): string {
 }
 
 function buildAuthorReportUrl(text: string, fields: ModReportFields): ModReportResult {
-  const { issueTitle, modName, source, githubRepo, nexusModId, nexusDomain } = fields
+  const { issueTitle, modName, source, githubRepo, nexusModId, nexusDomain, pageUrl } = fields
   const title = issueTitle === '' ? `Error in ${modName}` : issueTitle
   let repo = githubRepo
   if (repo === '' && source?.kind === 'github') {
@@ -127,6 +130,7 @@ function buildAuthorReportUrl(text: string, fields: ModReportFields): ModReportR
       url: githubIssueURL(repo, title, text),
       nexus: false,
       github: true,
+      page: false,
     }
   }
   if (modId > 0 && nexusDomain !== '') {
@@ -135,9 +139,10 @@ function buildAuthorReportUrl(text: string, fields: ModReportFields): ModReportR
       url: nexusBugsURL(nexusDomain, modId),
       nexus: true,
       github: false,
+      page: false,
     }
   }
-  return { text, url: '', nexus: false, github: false }
+  return { text, url: pageUrl, nexus: false, github: false, page: pageUrl !== '' }
 }
 
 function buildModReport(i18n: I18n, fields: ModReportFields): ModReportResult {

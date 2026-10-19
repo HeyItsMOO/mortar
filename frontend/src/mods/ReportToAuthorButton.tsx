@@ -14,6 +14,7 @@ import {
 import { Clipboard } from '@wailsio/runtime'
 import { TriangleAlert } from 'lucide-react'
 import { useState } from 'react'
+import { ReportTarget } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/browse/service.ts'
 import {
   RunLines,
   RunLog,
@@ -22,6 +23,7 @@ import { OpenWeb } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/
 import type {
   Mod,
   Profile,
+  Source,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import {
   Log,
@@ -40,6 +42,8 @@ import { entryOf, nexusIdOf } from './lookup.ts'
 import { nexusDomain } from './nexusDomain.ts'
 import { buildModReport, type ModReportFields, modErrorLines } from './reportToAuthor.ts'
 
+const REPORT_SOURCES = ['thunderstore', 'curseforge', 'vsmoddb']
+
 const buttonSx = { whiteSpace: 'nowrap' } as const
 
 interface ReportFieldsInput {
@@ -52,6 +56,7 @@ interface ReportFieldsInput {
   loader: { gameVersion: string; version: string } | null
   mortarVersion: string
   logShareURL: string
+  target: { repo: string; url: string }
 }
 
 function reportFields(input: ReportFieldsInput): ModReportFields {
@@ -65,6 +70,7 @@ function reportFields(input: ReportFieldsInput): ModReportFields {
     loader,
     mortarVersion,
     logShareURL,
+    target,
   } = input
   const source = entryOf(profile, mod.key)?.source
   return {
@@ -78,30 +84,48 @@ function reportFields(input: ReportFieldsInput): ModReportFields {
     logShareURL,
     source,
     nexusDomain: nexusDomain(),
-    githubRepo: source?.kind === 'github' ? (source.repo ?? '') : '',
+    githubRepo: source?.kind === 'github' ? (source.repo ?? '') : target.repo,
     nexusModId: nexusIdOf(profile, mod),
+    pageUrl: target.url,
     issueTitle,
+  }
+}
+
+// Where the mod's own site takes reports, for the sites Mortar installs from that are neither GitHub nor Nexus; empty
+// when the site cannot say, so the report is still copied.
+async function reportTarget(
+  game: string,
+  source: Source | null | undefined,
+): Promise<{ repo: string; url: string }> {
+  const none = { repo: '', url: '' }
+  if (!(source && REPORT_SOURCES.includes(source.kind))) {
+    return none
+  }
+  try {
+    return (await ReportTarget(game, source.kind, source.name)) ?? none
+  } catch {
+    return none
   }
 }
 
 async function finishReport(opts: {
   i18n: I18n
   copiedTitle: string
-  nexusHint: string
+  pasteHint: string
   fields: ModReportFields
   push: ReturnType<typeof useToasts.getState>['push']
 }): Promise<void> {
-  const { i18n, copiedTitle, nexusHint, fields, push } = opts
+  const { i18n, copiedTitle, pasteHint, fields, push } = opts
   const report = buildModReport(i18n, fields)
   await Clipboard.SetText(report.text)
   if (report.url !== '') {
     await OpenWeb(report.url)
   }
-  if (report.nexus) {
+  if (report.nexus || report.page) {
     push({
       kind: 'success',
       title: copiedTitle,
-      body: nexusHint,
+      body: pasteHint,
     })
     return
   }
@@ -160,6 +184,7 @@ export function ReportToAuthorButton({
   const runWithLink = async (logShareURL: string) => {
     try {
       const entries = runId ? await RunLines(game, profile.id, runId) : null
+      const target = await reportTarget(game, entryOf(profile, mod.key)?.source)
       const fields = reportFields({
         game,
         profile,
@@ -170,11 +195,12 @@ export function ReportToAuthorButton({
         loader,
         mortarVersion,
         logShareURL,
+        target,
       })
       await finishReport({
         i18n,
         copiedTitle: t`Report copied`,
-        nexusHint: t`Paste it on the mod's bug tracker.`,
+        pasteHint: t`Paste it on the mod's page.`,
         fields,
         push,
       })
