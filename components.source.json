@@ -10763,6 +10763,156 @@
         }
       ],
       "sources": [{ "id": "thunderstore", "key": "in-silence" }]
+    },
+    {
+      "id": "valheim-server",
+      "name": "Valheim Dedicated Server",
+      "enabled": true,
+      "minVersion": "0.3.8",
+      "marker": "valheim_server.exe",
+      "linuxMarker": "valheim_server.x86_64",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "896660"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "nexusModId": 3605,
+          "package": "denikson-BepInExPack_Valheim"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "valheim"
+        }
+      ],
+      "server": {
+        "clients": "valheim",
+        "fixed": [
+          "-batchmode",
+          "-nographics"
+        ],
+        "args": [
+          {
+            "id": "name",
+            "name": "Server name",
+            "flag": "-name",
+            "default": "Mortar server",
+            "pattern": ".{1,64}"
+          },
+          {
+            "id": "port",
+            "name": "Port",
+            "flag": "-port",
+            "default": "2456",
+            "pattern": "[0-9]{1,5}"
+          },
+          {
+            "id": "world",
+            "name": "World name",
+            "flag": "-world",
+            "default": "Dedicated",
+            "pattern": "[A-Za-z0-9 _.-]{1,64}"
+          },
+          {
+            "id": "password",
+            "name": "Password",
+            "flag": "-password",
+            "required": true,
+            "secret": true,
+            "pattern": ".{5,64}"
+          },
+          {
+            "id": "public",
+            "name": "List publicly (0 or 1)",
+            "flag": "-public",
+            "default": "0",
+            "pattern": "[01]"
+          }
+        ]
+      }
+    },
+    {
+      "id": "riskofrain2-server",
+      "name": "Risk of Rain 2 Dedicated Server",
+      "enabled": true,
+      "minVersion": "0.3.8",
+      "marker": "Risk of Rain 2.exe",
+      "metadata": [],
+      "deploy": "profile",
+      "targets": [
+        {
+          "id": "profile",
+          "root": "{profile}"
+        }
+      ],
+      "stores": {
+        "steam": {
+          "appId": "1180760"
+        }
+      },
+      "loaders": [
+        {
+          "id": "bepinex5",
+          "name": "BepInEx 5",
+          "package": "bbepis-BepInExPack"
+        }
+      ],
+      "sources": [
+        {
+          "id": "thunderstore",
+          "key": "riskofrain2"
+        }
+      ],
+      "server": {
+        "clients": "riskofrain2",
+        "fixed": [
+          "-batchmode",
+          "-nographics"
+        ],
+        "args": [
+          {
+            "id": "name",
+            "name": "Server name",
+            "flag": "+sv_hostname",
+            "default": "Mortar server",
+            "pattern": ".{1,64}"
+          },
+          {
+            "id": "port",
+            "name": "Port",
+            "flag": "+sv_port",
+            "default": "27015",
+            "pattern": "[0-9]{1,5}"
+          },
+          {
+            "id": "password",
+            "name": "Password",
+            "flag": "+sv_password",
+            "secret": true,
+            "pattern": ".{1,64}"
+          },
+          {
+            "id": "maxplayers",
+            "name": "Player limit",
+            "flag": "+sv_maxplayers",
+            "default": "4",
+            "pattern": "[0-9]{1,2}"
+          }
+        ]
+      }
     }
   ]
 }

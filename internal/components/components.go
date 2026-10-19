@@ -196,6 +196,37 @@ type GameInfo struct {
 	// Templates are starter profiles offered when creating one: a named list of packages, each queued through the
 	// normal download path.
 	Templates []StarterTemplate `json:"templates,omitempty"`
+	// Server marks a dedicated server: the game it runs mods of and the launch arguments its profile settings fill.
+	// An older Mortar leaves the entry out through MinVersion.
+	Server *ServerSpec `json:"server,omitempty"`
+}
+
+// ServerSpec describes a dedicated server's launch.
+type ServerSpec struct {
+	// Clients is the id of the game whose profiles' mod lists the server runs, so a server profile can be filled from
+	// one of them.
+	Clients string `json:"clients"`
+	// Fixed are arguments every launch passes (-batchmode, -nographics).
+	Fixed []string `json:"fixed,omitempty"`
+	// Args are the arguments a profile's server settings fill, in order.
+	Args []ServerArg `json:"args,omitempty"`
+}
+
+// ServerArg is one launch argument taken from a profile's server settings.
+type ServerArg struct {
+	// ID names the setting in the profile (server.json) and on the command line of `profile set`.
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	// Flag precedes the value as its own argument ("-world", "+sv_port").
+	Flag string `json:"flag"`
+	// Default is the value used while the profile sets none; an argument with neither a default nor Required is left out.
+	Default string `json:"default,omitempty"`
+	// Required makes a launch without a value fail, naming the setting.
+	Required bool `json:"required,omitempty"`
+	// Secret keeps the value out of messages.
+	Secret bool `json:"secret,omitempty"`
+	// Pattern is a regular expression the whole value must match.
+	Pattern string `json:"pattern,omitempty"`
 }
 
 // Graphics is a game's graphics API choices.
@@ -609,6 +640,35 @@ func (g GameInfo) LoaderPackage() string {
 	return DefaultLoaderPackage
 }
 
+func (sp ServerSpec) validate() error {
+	if sp.Clients == "" {
+		return errors.New("a server names the game whose mods it runs")
+	}
+	seen := map[string]bool{}
+	for _, a := range sp.Args {
+		if a.ID == "" || a.Flag == "" || seen[a.ID] {
+			return fmt.Errorf("server argument %q needs a unique id and a flag", a.ID)
+		}
+		seen[a.ID] = true
+		if _, err := regexp.Compile("^(?:" + a.Pattern + ")$"); err != nil {
+			return fmt.Errorf("server argument %q has a bad pattern: %w", a.ID, err)
+		}
+		if a.Default != "" && !a.Matches(a.Default) {
+			return fmt.Errorf("server argument %q has a default its own pattern refuses", a.ID)
+		}
+	}
+	return nil
+}
+
+// Matches reports whether v is an allowed value; an argument with no pattern allows any.
+func (a ServerArg) Matches(v string) bool {
+	if a.Pattern == "" {
+		return true
+	}
+	re, err := regexp.Compile("^(?:" + a.Pattern + ")$")
+	return err == nil && re.MatchString(v)
+}
+
 // LoaderMajor is the major version the game's loader id runs, or 0 when its catalog entry names none.
 func (g GameInfo) LoaderMajor(id string) int {
 	for _, l := range g.Loaders {
@@ -726,6 +786,11 @@ func (g GameInfo) Validate() error {
 	}
 	if len(g.Loaders) == 0 {
 		return fmt.Errorf("game %q needs a loader", g.ID)
+	}
+	if g.Server != nil {
+		if err := g.Server.validate(); err != nil {
+			return fmt.Errorf("game %q: %w", g.ID, err)
+		}
 	}
 	if g.Enabled && len(g.Targets) == 0 {
 		return fmt.Errorf("enabled game %q needs a content target", g.ID)

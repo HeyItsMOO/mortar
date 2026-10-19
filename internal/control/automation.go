@@ -8,8 +8,10 @@ import (
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/bisect"
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/queue"
+	"github.com/Rethunk-Tech/mortar/internal/serverargs"
 )
 
 // queueAdd queues one mod from a source for the profile: Nexus by mod id (File is a file id, else the queue
@@ -106,13 +108,34 @@ func (s *Services) profileSet(p Params, prof profile.Profile, id string) (any, e
 			return nil, err
 		}
 		return s.Profiles.SetSkipPlayCheck(g, id, on)
+	case "server.mirror":
+		if s.Packs == nil {
+			return nil, errors.New("pack import is unavailable")
+		}
+		return s.Packs.MirrorClient(context.Background(), g, id, v)
 	case "cover":
 		if v == "" {
 			return s.Profiles.ClearCover(g, id)
 		}
 		return s.Profiles.SetCover(g, id, v)
 	}
+	if setting, ok := strings.CutPrefix(p.Key, "server."); ok {
+		return s.setServerSetting(g, id, setting, v)
+	}
 	return s.Profiles.SetOverride(g, id, p.Key, v)
+}
+
+// setServerSetting stores one of a dedicated server profile's launch settings (server.world, server.port, ...).
+func (s *Services) setServerSetting(game, id, setting, value string) (any, error) {
+	info, ok := components.Game(game)
+	if !ok || info.Server == nil {
+		return nil, fmt.Errorf("%s is not a dedicated server", game)
+	}
+	dir, err := s.Store.ProfileDir(game, id)
+	if err != nil {
+		return nil, err
+	}
+	return nil, serverargs.Set(dir, *info.Server, setting, value)
 }
 
 // storeCheck verifies the store's files and lists the damaged items of game (every game when empty).

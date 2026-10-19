@@ -17,6 +17,8 @@ import (
 	"testing"
 	"time"
 
+	"golang.org/x/mod/semver"
+
 	"github.com/Rethunk-Tech/mortar/internal/meta"
 )
 
@@ -646,6 +648,11 @@ func TestDecodeSkipsAGameThisBuildCannotRead(t *testing.T) {
 	SetRunning("0.3.5")
 	t.Cleanup(func() { SetRunning("") })
 	want := len(m.Games) - 3
+	for _, g := range m.Games[4:] {
+		if g.MinVersion != "" && semver.Compare("v0.3.5", "v"+g.MinVersion) < 0 {
+			want--
+		}
+	}
 	m.Games[0].Marker = ""
 	m.Games[1].MinVersion = "0.4.0"
 	m.Games[2].MinVersion = "soon"
@@ -679,5 +686,48 @@ func TestBundledGamesAreTheSourcesGames(t *testing.T) {
 	}
 	if !reflect.DeepEqual(m.Games, src.Games) {
 		t.Fatal("internal/components/components.json's games differ from components.source.json's: edit the source and run wails3 task components:refresh")
+	}
+}
+
+func TestDedicatedServersShareTheirClientsSources(t *testing.T) {
+	m, err := BundledManifest()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for id, want := range map[string]struct{ clients, app string }{
+		"valheim-server":     {"valheim", "896660"},
+		"riskofrain2-server": {"riskofrain2", "1180760"},
+	} {
+		i := slices.IndexFunc(m.Games, func(g GameInfo) bool { return g.ID == id })
+		if i < 0 {
+			t.Fatalf("%s missing from the catalog", id)
+		}
+		g := m.Games[i]
+		client, _ := Game(want.clients)
+		src, _ := g.Source("thunderstore")
+		clientSrc, _ := client.Source("thunderstore")
+		if g.Server == nil || g.Server.Clients != want.clients || g.SteamAppID() != want.app || g.MinVersion == "" ||
+			src.Key != clientSrc.Key || g.LoaderPackage() != client.LoaderPackage() {
+			t.Fatalf("%s = %+v", id, g)
+		}
+		if !slices.ContainsFunc(g.Server.Args, func(a ServerArg) bool { return a.Flag != "" && a.Secret || a.ID == "port" }) {
+			t.Fatalf("%s has no port or secret argument: %+v", id, g.Server.Args)
+		}
+	}
+}
+
+func TestServerSpecsAreChecked(t *testing.T) {
+	g, _ := Game("valheim-server")
+	g.Server = &ServerSpec{Clients: "valheim", Args: []ServerArg{{ID: "p", Flag: "-p", Pattern: "[", Default: ""}}}
+	if g.Validate() == nil {
+		t.Fatal("a bad pattern was accepted")
+	}
+	g.Server = &ServerSpec{Clients: "valheim", Args: []ServerArg{{ID: "p", Flag: "-p", Pattern: "[0-9]+", Default: "x"}}}
+	if g.Validate() == nil {
+		t.Fatal("a default its pattern refuses was accepted")
+	}
+	g.Server = &ServerSpec{Args: []ServerArg{{ID: "p", Flag: "-p"}}}
+	if g.Validate() == nil {
+		t.Fatal("a server with no clients game was accepted")
 	}
 }

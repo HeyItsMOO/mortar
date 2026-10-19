@@ -346,3 +346,22 @@ func TestUpdatingAProfileQueuesIntoItAndExtrasListsWhatThePackLacks(t *testing.T
 		t.Error("extras of a missing profile")
 	}
 }
+
+func TestMirrorClientQueuesTheClientsPackagesIntoTheServerProfile(t *testing.T) {
+	ps, q := &fakeProfiles{dir: t.TempDir(), list: []profile.Profile{{ID: "c1", Name: "Crew", Entries: []profile.Entry{
+		{Source: profile.Source{Kind: profile.KindThunderstore, Name: "Alice-Mod", Version: "1.0.0"}},
+		{Source: profile.Source{Kind: profile.KindThunderstore, Name: "denikson-BepInExPack_Valheim", Version: "5.4.2202"}},
+		{Source: profile.Source{Kind: profile.KindNexus, ModID: 5}},
+	}}}}, &fakeQueue{}
+	s := &Service{Profiles: ps, Queue: q}
+	res, err := s.MirrorClient(context.Background(), "valheim-server", "srv", "c1")
+	if err != nil || res.Queued != 1 {
+		t.Fatalf("MirrorClient = %+v, %v", res, err)
+	}
+	if len(q.got) != 1 || q.got[0].Game != "valheim-server" || q.got[0].Profile != "srv" || q.got[0].Package != "Alice-Mod" {
+		t.Fatalf("queued %+v", q.got)
+	}
+	if _, err := s.MirrorClient(context.Background(), "valheim", "srv", "c1"); err == nil {
+		t.Fatal("a client game was treated as a server")
+	}
+}

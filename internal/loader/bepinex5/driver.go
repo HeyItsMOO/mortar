@@ -18,6 +18,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 	"github.com/Rethunk-Tech/mortar/internal/loader/dotnetstack"
+	"github.com/Rethunk-Tech/mortar/internal/serverargs"
 	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
 )
 
@@ -106,6 +107,9 @@ func (Loader) Install(ctx context.Context, t loader.Target, pkg loader.Package, 
 // Contribute points Doorstop at the profile's entry assembly, declares the proxy files for the game folder and, under
 // Proton, asks for the override of the pack's proxy library. A native Linux build is started through LD_PRELOAD instead (see contributeLinux).
 func (Loader) Contribute(_ context.Context, plan *launchplan.Plan, p loader.ProfileView) error {
+	if err := contributeServer(plan, p); err != nil {
+		return err
+	}
 	m := readMarker(p.Dir)
 	if p.Platform == "linux" {
 		return contributeLinux(plan, p, m)
@@ -246,4 +250,19 @@ func (Loader) ModArchive(names []string) bool {
 // StackBlame names the plugin frame nearest the throw of each exception stack in BepInEx's log or Unity's Player.log.
 func (Loader) StackBlame(log string) []loader.Blame {
 	return dotnetstack.Blames(log, dotnetstack.Unity)
+}
+
+// contributeServer adds a dedicated server's arguments from the profile's server settings: world, port and password
+// are the player's, never the catalog's.
+func contributeServer(plan *launchplan.Plan, p loader.ProfileView) error {
+	g, ok := components.Game(p.Game)
+	if !ok || g.Server == nil {
+		return nil
+	}
+	args, err := serverargs.Args(*g.Server, serverargs.Load(p.Dir))
+	if err != nil {
+		return err
+	}
+	plan.AddArgs(args...)
+	return nil
 }

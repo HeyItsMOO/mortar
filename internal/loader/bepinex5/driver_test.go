@@ -16,6 +16,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/serverargs"
 )
 
 func TestLoaderContract(t *testing.T) {
@@ -164,5 +165,33 @@ func TestSendHandsTheLineToTheBridgeConsole(t *testing.T) {
 	}
 	if line := <-got; line != "tok\nconsole Spawn Boar\n" {
 		t.Fatalf("bridge got %q", line)
+	}
+}
+
+func TestADedicatedServerLaunchesWithItsProfilesSettings(t *testing.T) {
+	dir := t.TempDir()
+	view := loader.ProfileView{Game: "valheim-server", Dir: dir, Runtime: "proton"}
+	if err := (Loader{}).Contribute(t.Context(), launchplan.New(launchplan.ModeProfile), view); err == nil || strings.Contains(err.Error(), "hunter22") {
+		t.Fatalf("a server with no password set launched: %v", err)
+	}
+	g, _ := components.Game("valheim-server")
+	for id, v := range map[string]string{"world": "Mine", "port": "2500", "password": "hunter22"} {
+		if err := serverargs.Set(dir, *g.Server, id, v); err != nil {
+			t.Fatal(err)
+		}
+	}
+	plan := launchplan.New(launchplan.ModeProfile)
+	if err := (Loader{}).Contribute(t.Context(), plan, view); err != nil {
+		t.Fatal(err)
+	}
+	got := strings.Join(plan.Args, " ")
+	for _, want := range []string{"-batchmode -nographics", "-name Mortar server", "-port 2500", "-world Mine", "-password hunter22", "-public 0"} {
+		if !strings.Contains(got, want) {
+			t.Errorf("args %q lack %q", got, want)
+		}
+	}
+	client := launchplan.New(launchplan.ModeProfile)
+	if err := (Loader{}).Contribute(t.Context(), client, loader.ProfileView{Game: "valheim", Dir: t.TempDir(), Runtime: "proton"}); err != nil || strings.Contains(strings.Join(client.Args, " "), "-world") {
+		t.Fatalf("the client got server arguments: %v %v", client.Args, err)
 	}
 }
