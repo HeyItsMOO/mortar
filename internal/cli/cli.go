@@ -958,37 +958,15 @@ func modNamesForIDs(ids []string, mods []control.ModRow) []string {
 	return out
 }
 
+// countedMissing is the missing requirements Count includes; optional and outside ones are harmless.
 func countedMissing(r problems.Result) int {
 	n := 0
 	for _, x := range r.Missing {
-		if x.Optional || x.Listed {
-			continue
-		}
-		n++
-	}
-	return n
-}
-
-func harmlessMissing(r problems.Result) int {
-	n := 0
-	for _, x := range r.Missing {
-		if x.Optional || x.Listed {
+		if !x.Optional && !x.External {
 			n++
 		}
 	}
 	return n
-}
-
-// problemsHumanCount is Count without the listed requirements, which the CLI reports as harmless. Count already
-// leaves out optional and outside requirements, so those are not subtracted again.
-func problemsHumanCount(r problems.Result) int {
-	listed := 0
-	for _, x := range r.Missing {
-		if x.Listed && !x.Optional && !x.External {
-			listed++
-		}
-	}
-	return r.Count() - listed
 }
 
 // loaderColumn heads the runs' loader version column with the name of the loader they used, LOADER when they used
@@ -1816,7 +1794,7 @@ func (c *cmd) printProblemsText(r problems.Result) {
 			conflicts++
 		}
 	}
-	harmless += harmlessMissing(r)
+	harmless += len(r.Missing) - countedMissing(r)
 	fmt.Fprintf(c.out, "missing: %d\n", countedMissing(r))
 	fmt.Fprintf(c.out, "duplicates: %d\n", len(r.Duplicates))
 	fmt.Fprintf(c.out, "broken: %d\n", len(r.Broken))
@@ -1824,14 +1802,16 @@ func (c *cmd) printProblemsText(r problems.Result) {
 	fmt.Fprintf(c.out, "settings: %d\n", len(r.Settings))
 	fmt.Fprintf(c.out, "last-run errors: %d\n", len(r.RunErrors))
 	fmt.Fprintf(c.out, "outside edits: %d\n", len(r.Drift))
-	fmt.Fprintf(c.out, "counted: %d\n", problemsHumanCount(r))
+	fmt.Fprintf(c.out, "cleanup: %d\n", len(r.Cleanup))
+	fmt.Fprintf(c.out, "compat: %d\n", len(r.Compat))
+	fmt.Fprintf(c.out, "counted: %d\n", r.Count())
 	fmt.Fprintf(c.out, "harmless: %d\n", harmless)
 }
 
 func (c *cmd) printProblems(r problems.Result) {
 	conflicts := problems.ConflictRows(r.AssetConflicts)
 	fmt.Fprintf(c.out, "%d problems: %d missing, %d duplicates, %d broken, %d conflict groups, %d settings, %d last-run errors, %d outside edits\n",
-		problemsHumanCount(r), countedMissing(r), len(r.Duplicates), len(r.Broken), conflicts, len(r.Settings), len(r.RunErrors), len(r.Drift))
+		r.Count(), countedMissing(r), len(r.Duplicates), len(r.Broken), conflicts, len(r.Settings), len(r.RunErrors), len(r.Drift))
 	fmt.Fprintln(c.out, "Active")
 	n := 0
 	next := func() string {

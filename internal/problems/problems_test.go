@@ -228,7 +228,8 @@ func TestNexusFileWithoutANameIsNamedForItsMod(t *testing.T) {
 	}
 }
 
-func TestOptionalNexusFileDuplicateIsInformational(t *testing.T) {
+// An optional file beside its main file is marked so the tab shows it as information; like every listed row, it counts.
+func TestOptionalNexusFileDuplicateIsMarkedOptional(t *testing.T) {
 	a := inst("nexus-21788-116403", "SVE.WorldMap", "1.0", true)
 	a.SourceKind = "nexus"
 	b := inst("nexus-21788-175477", "SVE.WorldMap", "1.0", true)
@@ -239,7 +240,7 @@ func TestOptionalNexusFileDuplicateIsInformational(t *testing.T) {
 			{ID: 175477, Type: "MISCELLANEOUS", FileName: "WorldMap-addon.zip", Version: "1.0"},
 		},
 	}}}, testEnv, []framework.Mod{a, b}, nil)
-	if len(got.Duplicates) != 1 || !got.Duplicates[0].NexusOptional || got.Count() != 0 {
+	if len(got.Duplicates) != 1 || !got.Duplicates[0].NexusOptional || got.Count() != 1 {
 		t.Fatalf("optional duplicate = %+v, count = %d", got.Duplicates, got.Count())
 	}
 }
@@ -295,7 +296,7 @@ func TestCountShowsConflictsBetweenTheSameModsOnce(t *testing.T) {
 	}
 }
 
-// Count and WarningCount add one per row of every family they cover.
+// Count adds one per row of every family the Problems tab lists; WarningCount is the cosmetic conflicts.
 func TestCountAndWarningCountAddEveryFamily(t *testing.T) {
 	var r Result
 	v := reflect.ValueOf(&r).Elem()
@@ -307,11 +308,12 @@ func TestCountAndWarningCountAddEveryFamily(t *testing.T) {
 	}
 	one("Missing", "Duplicates", "Broken", "Settings", "RunErrors", "LoadFailures", "PluginClashes", "Drift", "Damaged")
 	one("Compat", "Cleanup", "Deprecated")
-	if got := r.Count(); got != 9 {
-		t.Errorf("Count() = %d, want 9", got)
+	r.AssetConflicts = []framework.AssetConflict{{Cosmetic: true}}
+	if got := r.Count(); got != 12 {
+		t.Errorf("Count() = %d, want 12", got)
 	}
-	if got := r.WarningCount(); got != 3 {
-		t.Errorf("WarningCount() = %d, want 3", got)
+	if got := r.WarningCount(); got != 1 {
+		t.Errorf("WarningCount() = %d, want 1", got)
 	}
 }
 

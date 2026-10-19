@@ -488,7 +488,7 @@ func TestProblemsDismissRestoreAndDismissed(t *testing.T) {
 	if !strings.Contains(r.out, "missing    Other") {
 		t.Fatalf("non-listed missing line: %q", r.out)
 	}
-	if !strings.Contains(r.out, "2 problems: 1 missing") {
+	if !strings.Contains(r.out, "3 problems: 2 missing") {
 		t.Fatalf("counted summary: %q", r.out)
 	}
 	r = invoke(t, results, "problems", "dismissed", "--profile", "Farm")

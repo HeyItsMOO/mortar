@@ -189,27 +189,23 @@ type CheckTiming struct {
 	Count int    `json:"count"`
 }
 
-// Count is the number of problems, one per missing dependency, duplicate, broken mod, asset conflict, setting last-run error and loader load failure.
+// Count is every row the Problems tab lists except cosmetic conflicts: the number the GUI's chip, badges and the CLI
+// all show. Optional and outside requirements are informational and left out.
 func (r Result) Count() int {
-	conflicts := ConflictRows(r.AssetConflicts)
-	duplicates := 0
-	for _, duplicate := range r.Duplicates {
-		if !duplicate.NexusOptional {
-			duplicates++
-		}
-	}
 	missing := 0
 	for _, m := range r.Missing {
 		if !m.External && !m.Optional {
 			missing++
 		}
 	}
-	return missing + duplicates + len(r.Broken) + conflicts + len(r.Settings) + len(r.RunErrors) + len(r.LoadFailures) + len(r.PluginClashes) + len(r.Drift) + len(r.Damaged)
+	return missing + len(r.Duplicates) + len(r.Broken) + ConflictRows(r.AssetConflicts) + len(r.Settings) +
+		len(r.RunErrors) + len(r.LoadFailures) + len(r.PluginClashes) + len(r.Drift) + len(r.Damaged) +
+		len(r.Deprecated) + len(r.Cleanup) + len(r.Compat) + redundantCount(r.Redundant)
 }
 
-// WarningCount is cosmetic asset conflicts plus compat, cleanup and redundancy hints.
+// WarningCount is the cosmetic asset conflicts, which the Problems tab sets apart and which never need a fix.
 func (r Result) WarningCount() int {
-	n := len(r.Compat) + len(r.Cleanup) + len(r.Deprecated) + redundantCount(r.Redundant)
+	n := 0
 	for _, c := range r.AssetConflicts {
 		if c.Cosmetic {
 			n++
