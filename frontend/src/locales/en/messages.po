@@ -691,7 +691,7 @@ msgstr "Startup and window"
 msgid "Turns mods off in halves and relaunches until the crash stops"
 msgstr "Turns mods off in halves and relaunches until the crash stops"
 
-#: src/game/ProfileMenuItems.tsx:141
+#: src/game/ProfileMenuItems.tsx:142
 msgid "Could not add it to Steam"
 msgstr "Could not add it to Steam"
 
@@ -882,7 +882,7 @@ msgstr "{0} was changed on {1} and here"
 msgid "How timestamps are shown"
 msgstr "How timestamps are shown"
 
-#: src/game/ProfileMenuItems.tsx:105
+#: src/game/ProfileMenuItems.tsx:106
 msgid "Remove the shortcut"
 msgstr "Remove the shortcut"
 
@@ -965,7 +965,7 @@ msgstr "This profile"
 msgid "Game version not supported"
 msgstr "Game version not supported"
 
-#: src/game/ProfileMenuItems.tsx:87
+#: src/game/ProfileMenuItems.tsx:88
 msgid "Add a desktop shortcut"
 msgstr "Add a desktop shortcut"
 
@@ -1221,7 +1221,7 @@ msgstr "Something changed this profile's mods folder without Mortar, by adding, 
 msgid "Mod list copied"
 msgstr "Mod list copied"
 
-#: src/game/ProfileMenuItems.tsx:132
+#: src/game/ProfileMenuItems.tsx:133
 msgid "Already in Steam"
 msgstr "Already in Steam"
 
@@ -1539,7 +1539,7 @@ msgstr "From a shared link"
 msgid "No matches"
 msgstr "No matches"
 
-#: src/game/ProfileMenuItems.tsx:197
+#: src/game/ProfileMenuItems.tsx:198
 msgid "Use the automatic cover"
 msgstr "Use the automatic cover"
 
@@ -1783,6 +1783,10 @@ msgstr "Add preset"
 #: src/firstrunTour/TourPopover.tsx:59
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
+
+#: src/profiles/ProfileFolderDialog.tsx:66
+msgid "Moving copies the whole profile, then removes the old copy, so it needs room for both. On another drive the mods are copies, not links to the shared store, so the profile takes its full size there. Stop the game first."
+msgstr "Moving copies the whole profile, then removes the old copy, so it needs room for both. On another drive the mods are copies, not links to the shared store, so the profile takes its full size there. Stop the game first."
 
 #: src/games/GameSelect.tsx:532
 msgid "No supported game was found in your launchers."
@@ -2293,7 +2297,7 @@ msgstr "Host:port"
 msgid "Nexus account"
 msgstr "Nexus account"
 
-#: src/game/ProfileMenuItems.tsx:250
+#: src/game/ProfileMenuItems.tsx:260
 msgid "Open the profile first."
 msgstr "Open the profile first."
 
@@ -3089,7 +3093,7 @@ msgstr "Support the author"
 msgid "Delete permanently"
 msgstr "Delete permanently"
 
-#: src/game/ProfileMenuItems.tsx:155
+#: src/game/ProfileMenuItems.tsx:156
 #: src/profiles/HealthDialog.tsx:269
 msgid "Check this profile"
 msgstr "Check this profile"
@@ -3223,7 +3227,7 @@ msgid "Find a mod in all profiles…"
 msgstr "Find a mod in all profiles…"
 
 #: src/game/ProfileMenu.tsx:86
-#: src/game/ProfileMenuItems.tsx:269
+#: src/game/ProfileMenuItems.tsx:279
 msgid "Compare…"
 msgstr "Compare…"
 
@@ -3702,7 +3706,7 @@ msgstr "Search GitHub releases"
 msgid "Mortar doesn't know where to get {id}"
 msgstr "Mortar doesn't know where to get {id}"
 
-#: src/game/ProfileMenuItems.tsx:137
+#: src/game/ProfileMenuItems.tsx:138
 msgid "It shows in your Steam library the next time Steam starts."
 msgstr "It shows in your Steam library the next time Steam starts."
 
@@ -4046,7 +4050,7 @@ msgstr "This option cannot be used."
 msgid "Grid card size"
 msgstr "Grid card size"
 
-#: src/game/ProfileMenuItems.tsx:280
+#: src/game/ProfileMenuItems.tsx:290
 #: src/mods/ExtraFolderMenu.tsx:82
 msgid "Add a saved group…"
 msgstr "Add a saved group…"
@@ -4205,7 +4209,7 @@ msgstr "Default launch preset"
 msgid "Custom categories"
 msgstr "Custom categories"
 
-#: src/game/ProfileDialogHost.tsx:34
+#: src/game/ProfileDialogHost.tsx:35
 #: src/groups/SavedGroupsSection.tsx:122
 #: src/mods/CategoryEditor.tsx:171
 #: src/mods/OldFilesCallouts.tsx:119
@@ -4428,6 +4432,10 @@ msgstr "Part of the OBS address; regenerate it if it leaks"
 msgid "{mods} is hidden"
 msgstr "{mods} is hidden"
 
+#: src/game/ProfileMenuItems.tsx:234
+msgid "Profile folder…"
+msgstr "Profile folder…"
+
 #: src/profiles/CrashHintCard.tsx:138
 msgid "Find the cause…"
 msgstr "Find the cause…"
@@ -4471,6 +4479,10 @@ msgstr "Sun"
 #: src/mods/problemFix/LoadFailureFix.tsx:29
 msgid "Find {dependency}"
 msgstr "Find {dependency}"
+
+#: src/profiles/ProfileFolderDialog.tsx:49
+msgid "Could not move the profile"
+msgstr "Could not move the profile"
 
 #: src/settings/sections/GameSettings.tsx:70
 msgid "Reset game install?"
@@ -4753,6 +4765,11 @@ msgstr "Downloads paused"
 #: src/game/FarmMenuItem.tsx:60
 msgid "Open the host's list"
 msgstr "Open the host's list"
+
+#. placeholder {0}: profile.name
+#: src/profiles/ProfileFolderDialog.tsx:58
+msgid "Folder of {0}"
+msgstr "Folder of {0}"
 
 #: src/settings/sections/StreamOverlay.tsx:106
 msgid "Biome"
@@ -5115,7 +5132,7 @@ msgid "{loader} is the loader every {gameName} mod needs. It goes into the game 
 msgstr "{loader} is the loader every {gameName} mod needs. It goes into the game folder, and Steam keeps launching the game as usual."
 
 #: src/game/ProfileMenu.tsx:78
-#: src/game/ProfileMenuItems.tsx:224
+#: src/game/ProfileMenuItems.tsx:225
 #: src/profiles/SinceLastRun.tsx:112
 msgid "History…"
 msgstr "History…"
@@ -5381,7 +5398,7 @@ msgstr "YOUR PROFILES"
 msgid "Automatic tries Thunderstore's hosts in turn when one fails or stalls; choosing one uses only that host."
 msgstr "Automatic tries Thunderstore's hosts in turn when one fails or stalls; choosing one uses only that host."
 
-#: src/game/ProfileMenuItems.tsx:136
+#: src/game/ProfileMenuItems.tsx:137
 msgid "Added to Steam"
 msgstr "Added to Steam"
 
@@ -5398,7 +5415,7 @@ msgid "No backups to delete"
 msgstr "No backups to delete"
 
 #: src/game/ProfileMenu.tsx:56
-#: src/game/ProfileMenuItems.tsx:259
+#: src/game/ProfileMenuItems.tsx:269
 #: src/profiles/LaunchPresetsBlock.tsx:53
 msgid "Duplicate"
 msgstr "Duplicate"
@@ -5662,6 +5679,10 @@ msgstr "Clear selection"
 #: src/profiles/historyLabel.ts:67
 msgid "{count, plural, one {Restored # mod from the store} other {Restored # mods from the store}}"
 msgstr "{count, plural, one {Restored # mod from the store} other {Restored # mods from the store}}"
+
+#: src/profiles/ProfileFolderDialog.tsx:80
+msgid "Move to a folder…"
+msgstr "Move to a folder…"
 
 #. placeholder {0}: props.list.length
 #: src/mods/updateReview/NeedsChoice.tsx:16
@@ -6020,7 +6041,7 @@ msgid "Restarting…"
 msgstr "Restarting…"
 
 #: src/game/ProfileMenu.tsx:95
-#: src/game/ProfileMenuItems.tsx:294
+#: src/game/ProfileMenuItems.tsx:304
 msgid "Delete profile…"
 msgstr "Delete profile…"
 
@@ -6933,7 +6954,12 @@ msgstr "Rename the open profile"
 msgid "Place {file}"
 msgstr "Place {file}"
 
-#: src/game/ProfileMenuItems.tsx:248
+#. placeholder {0}: profile.name
+#: src/profiles/ProfileFolderDialog.tsx:53
+msgid "Choose where {0} lives"
+msgstr "Choose where {0} lives"
+
+#: src/game/ProfileMenuItems.tsx:258
 msgid "Freeze this profile"
 msgstr "Freeze this profile"
 
@@ -7509,6 +7535,10 @@ msgstr "Chosen by you"
 msgid "Days left"
 msgstr "Days left"
 
+#: src/profiles/ProfileFolderDialog.tsx:62
+msgid "Kept in Mortar's data folder."
+msgstr "Kept in Mortar's data folder."
+
 #. placeholder {0}: result.hidden
 #: src/browse/BrowseBody.tsx:117
 msgid "{0} hidden"
@@ -7913,7 +7943,7 @@ msgstr "No mods match \"{text}\""
 msgid "Add these mods to another profile…"
 msgstr "Add these mods to another profile…"
 
-#: src/game/ProfileMenuItems.tsx:112
+#: src/game/ProfileMenuItems.tsx:113
 msgid "Shortcut removed"
 msgstr "Shortcut removed"
 
@@ -7930,7 +7960,7 @@ msgstr "Delete {0} permanently"
 msgid "Could not reach Nexus"
 msgstr "Could not reach Nexus"
 
-#: src/game/ProfileMenuItems.tsx:115
+#: src/game/ProfileMenuItems.tsx:116
 msgid "Could not remove the shortcut"
 msgstr "Could not remove the shortcut"
 
@@ -8003,7 +8033,7 @@ msgstr "Mortar could not tell which mod caused this. Finding the mod tries halve
 msgid "Unhide {0}?"
 msgstr "Unhide {0}?"
 
-#: src/game/ProfileDialogHost.tsx:33
+#: src/game/ProfileDialogHost.tsx:34
 msgid "The profile stays restorable for 30 days from Recently deleted."
 msgstr "The profile stays restorable for 30 days from Recently deleted."
 
@@ -8060,7 +8090,7 @@ msgstr "New profile from file"
 msgid "Nested"
 msgstr "Nested"
 
-#: src/game/ProfileMenuItems.tsx:96
+#: src/game/ProfileMenuItems.tsx:97
 msgid "Shortcut added"
 msgstr "Shortcut added"
 
@@ -8145,6 +8175,10 @@ msgstr "Skip all"
 #: src/saves/BackupsDialog.tsx:164
 msgid "Could not list backups: {error}"
 msgstr "Could not list backups: {error}"
+
+#: src/profiles/ProfileFolderDialog.tsx:62
+msgid "Kept in {folder}."
+msgstr "Kept in {folder}."
 
 #. placeholder {0}: target.name
 #: src/profiles/CompareDialog.tsx:134
@@ -8585,7 +8619,7 @@ msgstr "older, profile has {0}"
 msgid "Refresh"
 msgstr "Refresh"
 
-#: src/game/ProfileMenuItems.tsx:182
+#: src/game/ProfileMenuItems.tsx:183
 msgid "Choose cover image"
 msgstr "Choose cover image"
 
@@ -8935,7 +8969,7 @@ msgstr "Could not run diagnostics"
 msgid "·"
 msgstr "·"
 
-#: src/game/ProfileMenuItems.tsx:234
+#: src/game/ProfileMenuItems.tsx:244
 #: src/mods/FavouriteStar.tsx:21
 msgid "Remove from favourites"
 msgstr "Remove from favourites"
@@ -8984,7 +9018,7 @@ msgstr "{gameName} is now {0}. This profile last launched on {1}."
 msgid "Could not hide that author"
 msgstr "Could not hide that author"
 
-#: src/game/ProfileMenuItems.tsx:234
+#: src/game/ProfileMenuItems.tsx:244
 #: src/mods/FavouriteStar.tsx:21
 msgid "Add to favourites"
 msgstr "Add to favourites"
@@ -9014,7 +9048,7 @@ msgstr "Update all ({wantedCount})"
 msgid "No entries match."
 msgstr "No entries match."
 
-#: src/game/ProfileMenuItems.tsx:191
+#: src/game/ProfileMenuItems.tsx:192
 msgid "Choose cover image…"
 msgstr "Choose cover image…"
 
@@ -10827,6 +10861,10 @@ msgstr "Music volume ({value}%)"
 msgid "Press Play. Mortar samples the game until the title screen, skipping the intro animation, and shows the results here, with a Sampled column."
 msgstr "Press Play. Mortar samples the game until the title screen, skipping the intro animation, and shows the results here, with a Sampled column."
 
+#: src/profiles/ProfileFolderDialog.tsx:80
+msgid "Moving…"
+msgstr "Moving…"
+
 #: src/launch/playStart.ts:161
 msgid "Could not check the graphics setting"
 msgstr "Could not check the graphics setting"
@@ -11264,7 +11302,7 @@ msgstr "{0} of {1} · {2}/s"
 msgid "Preview"
 msgstr "Preview"
 
-#: src/game/ProfileMenuItems.tsx:136
+#: src/game/ProfileMenuItems.tsx:137
 msgid "Updated in Steam"
 msgstr "Updated in Steam"
 
@@ -12226,7 +12264,7 @@ msgstr "{local, plural, one {# mod you added from an archive can't go in the fil
 #. placeholder {0}: deleting?.name ?? ''
 #. placeholder {0}: drift.folder
 #. placeholder {0}: initialFile ?? name
-#: src/game/ProfileDialogHost.tsx:32
+#: src/game/ProfileDialogHost.tsx:33
 #: src/groups/SavedGroupsSection.tsx:120
 #: src/mods/CategoryEditor.tsx:169
 #: src/mods/ConfigPresets.tsx:156
@@ -12335,6 +12373,10 @@ msgstr "Could not verify its source"
 #: src/mods/describe.ts:214
 msgid "{dependentName}'s Nexus page lists {dep} as a requirement."
 msgstr "{dependentName}'s Nexus page lists {dep} as a requirement."
+
+#: src/profiles/ProfileFolderDialog.tsx:76
+msgid "Move back to the data folder"
+msgstr "Move back to the data folder"
 
 #: src/fomod/Dialog.tsx:266
 #: src/loader/Banner.tsx:30
@@ -13181,7 +13223,7 @@ msgstr "{name} {0} is out"
 msgid "Move data folder"
 msgstr "Move data folder"
 
-#: src/game/ProfileMenuItems.tsx:184
+#: src/game/ProfileMenuItems.tsx:185
 #: src/profiles/EditProfileDialog.tsx:443
 msgid "Could not use that image"
 msgstr "Could not use that image"
@@ -13243,6 +13285,10 @@ msgstr "Add all {0}"
 #: src/console/CrashDialog.tsx:255
 msgid "{gameName} crashed"
 msgstr "{gameName} crashed"
+
+#: src/profiles/ProfileFolderDialog.tsx:55
+msgid "Could not choose the folder"
+msgstr "Could not choose the folder"
 
 #: src/shell/offlineText.ts:42
 msgid "{names} can't be reached; showing what Mortar saved ({asOf})"
@@ -13722,7 +13768,7 @@ msgstr "Enabled in one only"
 msgid "Saves whose recorded mod list this profile covers, out of the saves that record one"
 msgstr "Saves whose recorded mod list this profile covers, out of the saves that record one"
 
-#: src/game/ProfileMenuItems.tsx:248
+#: src/game/ProfileMenuItems.tsx:258
 #: src/mods/FrozenCallout.tsx:19
 msgid "Unfreeze"
 msgstr "Unfreeze"
@@ -14282,7 +14328,7 @@ msgstr "clamd socket"
 msgid "Try fewer words, or the mod's exact name."
 msgstr "Try fewer words, or the mod's exact name."
 
-#: src/game/ProfileMenuItems.tsx:123
+#: src/game/ProfileMenuItems.tsx:124
 msgid "Add this profile to Steam"
 msgstr "Add this profile to Steam"
 
@@ -14683,7 +14729,7 @@ msgstr "Take over"
 msgid "{0, plural, one {# day left} other {# days left}}"
 msgstr "{0, plural, one {# day left} other {# days left}}"
 
-#: src/game/ProfileMenuItems.tsx:98
+#: src/game/ProfileMenuItems.tsx:99
 msgid "Could not add the shortcut"
 msgstr "Could not add the shortcut"
 
@@ -14855,6 +14901,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/profiles/HealthDialog.tsx:272
 #: src/profiles/HistoryPanel.tsx:135
 #: src/profiles/LaunchPresetTemplatesDialog.tsx:74
+#: src/profiles/ProfileFolderDialog.tsx:72
 #: src/saves/BackupsDialog.tsx:198
 #: src/settings/sections/About.tsx:130
 #: src/settings/sections/AboutDiagnostics.tsx:225

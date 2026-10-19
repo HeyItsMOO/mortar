@@ -286,6 +286,9 @@ type Profile struct {
 	Overrides map[string]string `json:"overrides,omitempty"`
 	// Modpack is what the last Thunderstore modpack export of this profile used.
 	Modpack *ModpackDraft `json:"modpack,omitempty"`
+	// Folder is where the profile lives when that is not under the data folder (a profile moved to another drive). Set
+	// on a listed value from the link at the profile's usual place; never written to disk.
+	Folder string `json:"folder,omitempty"`
 	// Error is set on a list item whose profile.json could not be read.
 	Error string `json:"error,omitempty"`
 	// RepairError is why Repair is unavailable on a damaged list item.
@@ -496,7 +499,7 @@ func (s *Store) List(game string) ([]Profile, error) {
 	}
 	out := []Profile{}
 	for _, d := range dirs {
-		if !d.IsDir() || !idPattern.MatchString(d.Name()) {
+		if !idPattern.MatchString(d.Name()) || !isProfileDir(filepath.Join(dir, d.Name()), d) {
 			continue
 		}
 		p, err := s.read(game, d.Name())
@@ -569,6 +572,7 @@ func (s *Store) readDir(game, id string) (Profile, string, error) {
 		return Profile{}, "", err
 	}
 	p, err := readAt(dir, id)
+	p.Folder = folderOf(dir)
 	return p, dir, err
 }
 

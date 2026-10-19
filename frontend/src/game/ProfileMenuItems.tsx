@@ -1,6 +1,7 @@
 import { useLingui } from '@lingui/react/macro'
 import {
   Copy,
+  FolderOpen,
   Gamepad2,
   GitCompare,
   History,
@@ -225,6 +226,15 @@ function MoreMenuItems({ profile, close }: { profile: Profile; close: () => void
       onClick={() => {
         close()
         openProfileDialog('history', profile.id)
+      }}
+    />,
+    <ProfileMenuItem
+      key="folder"
+      icon={<FolderOpen size={16} />}
+      label={t`Profile folder…`}
+      onClick={() => {
+        close()
+        openProfileDialog('folder', profile.id)
       }}
     />,
     <CheckProfileMenuItem key="check" profile={profile} close={close} />,

@@ -7,6 +7,7 @@ import { EditProfileDialog } from '../profiles/EditProfileDialog.tsx'
 import { HealthDialog } from '../profiles/HealthDialog.tsx'
 import { HistoryDialog } from '../profiles/HistoryDialog.tsx'
 import { MergeDialog } from '../profiles/MergeDialog.tsx'
+import { ProfileFolderDialog } from '../profiles/ProfileFolderDialog.tsx'
 import { useProfiles } from '../profiles/store.ts'
 import { ConfirmDialog } from '../shell/ConfirmDialog.tsx'
 import { ApplyTemplateDialog } from '../templates/ApplyTemplateDialog.tsx'
@@ -100,6 +101,8 @@ function ProfileDialog({ kind, ...props }: DialogProps & { kind: ProfileDialogKi
           onApplied={(result) => savedGroupApplied(result, profile.id)}
         />
       )
+    case 'folder':
+      return <ProfileFolderDialog profile={profile} game={game} open={open} onClose={onClose} />
     case 'farm':
       return <FarmDialog open={open} profile={profile} onClose={onClose} />
     case 'backup':

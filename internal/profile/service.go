@@ -479,6 +479,19 @@ func (s *Service) SetFrozen(game, id string, frozen bool) (Profile, error) {
 	return s.store.SetFrozen(game, id, frozen)
 }
 
+// MoveToFolder moves the profile into a folder of its own, such as one on another drive.
+func (s *Service) MoveToFolder(game, id, parent string) (Profile, error) {
+	return s.store.MoveToFolder(game, id, parent)
+}
+
+// MoveHome brings a profile kept in another folder back under the data folder.
+func (s *Service) MoveHome(game, id string) (Profile, error) { return s.store.MoveHome(game, id) }
+
+// CheckFolder says whether the folder the profile lives in is there and usable.
+func (s *Service) CheckFolder(game, id string) (FolderCheck, error) {
+	return s.store.CheckFolder(game, id)
+}
+
 func (s *Service) SetPinnedMany(game, id string, keys []string, pinned bool, pinReason string) (Profile, error) {
 	return s.store.SetPinnedMany(game, id, keys, pinned, pinReason)
 }

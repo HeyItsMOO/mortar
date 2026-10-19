@@ -9,6 +9,7 @@ export type ProfileDialogKind =
   | 'delete'
   | 'savedGroup'
   | 'farm'
+  | 'folder'
   | 'backup'
   | 'saveTemplate'
   | 'applyTemplate'
