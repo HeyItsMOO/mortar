@@ -10,6 +10,8 @@ export interface Game {
   id: string
   name: string
   enabled: boolean
+  // A dedicated server's profile, which shares its client's page rather than being a game of its own.
+  server?: unknown
   stores?: Record<string, unknown>
   loaders?: { id: string; name: string }[]
   sources?: { id: string; key?: string }[]
@@ -40,7 +42,7 @@ export const SOURCE_NAMES: Record<string, string> = {
 
 export function playableGames(): Game[] {
   const { games } = JSON.parse(readFileSync(CATALOG, 'utf8')) as { games: Game[] }
-  return games.filter((g) => g.enabled)
+  return games.filter((g) => g.enabled && g.server === undefined)
 }
 
 function named(ids: string[], names: Record<string, string>): string[] {

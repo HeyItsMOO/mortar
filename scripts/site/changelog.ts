@@ -52,13 +52,18 @@ interface Release {
   html: string
 }
 
-/** Every release with written notes, newest first, dated from the metainfo. */
+/** Every release with written notes, newest first, dated from the metainfo. Notes drafted for the next release, newer than any dated one, wait until it is cut. */
 function releases(): Release[] {
   const metainfo = readFileSync(METAINFO, 'utf8')
+  const dated = [...metainfo.matchAll(/<release version="(\d+\.\d+\.\d+)" date=/g)].map(
+    (m) => m[1] ?? '',
+  )
+  const newest = dated.sort(byVersionDesc)[0] ?? ''
   return readdirSync(NOTES)
     .map((f) => /^v(\d+\.\d+\.\d+)\.md$/.exec(f)?.[1])
     .filter((v): v is string => v !== undefined)
     .sort(byVersionDesc)
+    .filter((v) => newest === '' || byVersionDesc(v, newest) >= 0)
     .map((version) => {
       const date = new RegExp(
         `<release version="${version.replaceAll('.', '\\.')}" date="([^"]+)"`,
