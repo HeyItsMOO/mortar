@@ -197,7 +197,8 @@ export function SaveRow({
     .filter(Boolean)
     .join(' · ')
   const label = saveName(fit)
-  const lastProfile = useProfiles.getState().profiles.find((p) => p.id === fit.lastProfileId)
+  const profiles = useProfiles((s) => s.profiles)
+  const lastProfile = profiles.find((p) => p.id === fit.lastProfileId)
   const lastGone = Boolean(fit.lastProfileId) && lastProfile === undefined
   const lastName = lastProfile?.name ?? (lastGone ? t`a deleted profile` : '')
   const lastLine = lastName === '' ? '' : t`Last played with ${{ profile: lastName }}`

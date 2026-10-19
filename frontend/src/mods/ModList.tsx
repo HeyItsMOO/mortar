@@ -2,7 +2,15 @@ import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { alpha, Box, TableCell, type TableCellProps, TableRow, useMediaQuery } from '@mui/material'
 import { CornerDownRight, Pin } from 'lucide-react'
-import { type MouseEvent, memo, type ReactNode, useMemo, useState } from 'react'
+import {
+  type MouseEvent,
+  memo,
+  type ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import type {
   Mod,
   Profile,
@@ -403,12 +411,16 @@ export function ModList({ profile, mods }: { profile: Profile; mods: Mod[] }) {
   const onMenu = (e: MouseEvent) => setMenu(columnMenuFromEvent(e))
   const grid = listGridColumns(cols)
   const headingFor = useListHeading(groupBy)
-  const onCommit = () => {
+  // The memoised header keeps the handler it first got while its columns stay put; reading the latest from a ref
+  // commits against the current columns even when one was added that the width hides.
+  const commit = useRef<() => void>(() => undefined)
+  commit.current = () => {
     if (preview) {
       persistColumns([...preview, ...visible.filter((id) => !preview.includes(id))])
     }
     setPreview(null)
   }
+  const onCommit = useCallback(() => commit.current(), [])
 
   return (
     <Box ref={box} sx={{ minWidth: 0, minHeight: 0, height: '100%' }}>
