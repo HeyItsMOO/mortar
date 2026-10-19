@@ -84,6 +84,7 @@
           <li><a href="#find-and-add-mods">Find and add mods</a></li>
           <li><a href="#modrinth-and-itchio">Modrinth and itch.io</a></li>
           <li><a href="#edit-a-mods-settings">Edit a mod's settings</a></li>
+          <li><a href="#your-mod-list">Your mod list</a></li>
           <li><a href="#lethal-company-and-thunderstore">Lethal Company and Thunderstore</a></li>
           <li><a href="#pair-your-computers">Pair your computers</a></li>
           <li><a href="#switch-games">Switch games</a></li>
@@ -176,6 +177,10 @@ sudo pacman -Sy mortar
 <ul>
 <li><strong>GitHub:</strong> <strong>Add</strong> installs the latest release. Your <code>gh auth login</code>, when present, raises GitHub's rate limits.</li>
 <li><strong>Card details:</strong> <strong>Show › Card details</strong> picks what cards list (popularity, downloads, file size, version, last update); the Mods tab uses the same choice.</li>
+<li><strong>Hide from Browse:</strong> a card's menu has <strong>Hide from Browse</strong> and <strong>Hide everything by &lt;author&gt;</strong>. The game's settings list <strong>Hidden mods</strong> with <strong>Unhide</strong>. Links and imports still install a hidden mod.</li>
+<li><strong>Modpacks, translations and cheats:</strong> results leave them out; <strong>Show modpacks, translations and cheats</strong> in the filters brings them back.</li>
+<li><strong>Open a mod's page:</strong> Ctrl+click a card in Browse, or middle-click a mod in the Mods tab.</li>
+<li><strong>Details:</strong> a card's details page lists a <strong>Support the author</strong> link when the mod's page gives a donation address. <strong>Choose a version…</strong> installs a version other than the latest; an installed mod offers the same choice, and <strong>Change version…</strong> once one is held.</li>
 </ul>
 <h3 id="narrow-and-sort-the-results">Narrow and sort the results</h3>
 <ul>
@@ -199,6 +204,19 @@ sudo pacman -Sy mortar
 <li><strong>Presets</strong> saves the file's values under a name and applies them to any profile's copy.</li>
 </ol>
 <p>The <strong>Config</strong> tab (Ctrl+6) lists every mod with settings. A change under <strong>In-game menu</strong> (Generic Mod Config Menu) says <strong>Applied when the game next starts</strong>.</p>
+<p>The Config tab can search every config file in the profile and find a setting across all the profile's files. <strong>Delete file</strong> removes a config file no mod owns.</p>
+<h2 id="your-mod-list">Your mod list</h2>
+<ul>
+<li><strong>Favourites:</strong> the star on a mod marks it a favourite; the profile menu's <strong>Add to favourites</strong> does the same for a profile.</li>
+<li><strong>Edit name, author and version…</strong> (the mod's menu) changes how one profile shows a mod; <strong>Use the mod's own</strong> goes back.</li>
+<li><strong>Update channel:</strong> a mod from GitHub, CurseForge or Modrinth can follow a different release channel; <strong>Pin this version</strong> stops its updates.</li>
+<li><strong>New:</strong> Thunderstore, CurseForge and GitHub mods that changed since you last looked are marked <strong>New</strong>.</li>
+<li><strong>Switching a mod off:</strong> when other enabled mods need it, Mortar offers to switch those off too.</li>
+<li><strong>Switched off column:</strong> the Mods list can show a <strong>Switched off</strong> column with when each mod was last switched off, and sort by it.</li>
+<li><strong>Remove switched-off mods:</strong> when the profile has switched-off mods, the Mods tab header offers <strong>Remove switched-off mods</strong>, which asks before removing them all.</li>
+<li><strong>Report to author…</strong> (the mod's menu) opens a prefilled report for a Thunderstore, CurseForge or Vintage Story mod.</li>
+<li><strong>What's new:</strong> an update shows the changes for Thunderstore, CurseForge and Vintage Story mods.</li>
+</ul>
 <h2 id="lethal-company-and-thunderstore">Lethal Company and Thunderstore</h2>
 <p>Lethal Company's mods are Thunderstore packages on BepInEx. Mortar installs BepInEx, searches Thunderstore alongside Nexus Mods and GitHub, and <strong>Add</strong> installs a package with its dependencies. A dependency still missing is flagged on the Load order tab and in <strong>Before you play</strong>.</p>
 <ul>
@@ -219,7 +237,8 @@ sudo pacman -Sy mortar
 <p>To send, use <strong>Share…</strong>, <strong>Nearby</strong>, and pick the computer. The receiver is asked to accept unless <strong>Auto-accept from paired computers</strong> is on.</p>
 <p>On Windows, sharing is off while every connected network is <strong>Public</strong>; set it to <strong>Private</strong>, and use <strong>Fix</strong> in Settings › General if the firewall still blocks Mortar.</p>
 <h2 id="switch-games">Switch games</h2>
-<p>Click the game's name in the title bar; it opens on the profile you used last. <strong>All games…</strong> opens Game select.</p>
+<p>Click the game's name in the title bar; it opens on the profile you used last. <strong>All games…</strong> opens Game select, where a game's menu has <strong>Hide this game</strong> (and <strong>Unhide</strong>) to keep it off the list.</p>
+<p>The mouse's back and forward buttons, and Alt with the left and right arrows, move through the pages you opened.</p>
 <h2 id="game-installs">Game installs</h2>
 <p>A game installed more than once (Steam and GOG, a beta branch, another folder) has a separate install for each. A profile uses the selected install unless you pin it in the game's settings; profiles pinned to different installs can run at once.</p>
 <h3 id="bottles">Bottles</h3>
@@ -229,23 +248,30 @@ sudo pacman -Sy mortar
 <p>A profile is one set of mods. Switching profiles never touches the game folder's own <code>Mods</code> folder.</p>
 <ul>
 <li><strong>Create:</strong> <strong>New profile…</strong> (Profiles page or title-bar switcher), then <strong>Start from</strong>: <strong>Empty profile</strong>, <strong>Copy of &lt;the open profile&gt;</strong> (mods, their settings and what they wrote) or a template from <strong>Save as template…</strong> (<strong>Manage templates…</strong> renames or deletes them).</li>
+<li><strong>Nested groups:</strong> name a group with a slash, such as <strong>Looks/Hats</strong>, to put it inside <strong>Looks</strong>. With the list grouped by <strong>Group</strong>, each level has its own header that collapses its contents, and the switch on a header turns on or off everything inside it. Renaming or deleting a group does the same to the groups inside it.</li>
 <li><strong>Why each mod is there:</strong> a mod you add is <strong>Explicit</strong>; one added because another needs it is <strong>Implicit</strong>. Group the Mods list by <strong>Install reason</strong>, and right-click a mod to mark it either way.</li>
 <li><strong>Switch, rename, duplicate, delete:</strong> from the Profiles page or the profile's menu. Play always starts the open profile. Deleted profiles wait in <strong>Recently deleted</strong> (<strong>Restore</strong>, <strong>Delete permanently</strong>).</li>
-<li><strong>Share:</strong> <strong>Share profile</strong>, then <strong>Copy link</strong> (names the mods and their Nexus or GitHub files, with pins, groups and install reasons) or save a <code>.mortar</code> file (also carries settings and notes; suits large profiles). For a Thunderstore game, <strong>Save .r2z…</strong> writes an r2modman or Gale profile file without posting a public code.</li>
+<li><strong>Freeze:</strong> the profile menu's <strong>Freeze this profile</strong> holds its mods on their versions and offers no updates until <strong>Unfreeze</strong>.</li>
+<li><strong>A game that is not listed:</strong> the game list's <strong>Add a game…</strong> takes a name, the game's program and how it is modded (BepInEx 5, BepInEx 6, MelonLoader, or a Mods folder). It stays on this computer and has no mod site, so add its mods from archives; <strong>Remove</strong> in the same dialog forgets it and leaves its folder and profiles on disk.</li>
+<li><strong>Profile folder:</strong> the profile menu's <strong>Profile folder…</strong> moves a profile to a folder of your choice, such as one on another drive, and back. The move copies the profile first and checks nothing is running; a profile whose drive is not connected says so there. On another drive its mods are copies instead of links into the shared store.</li>
+<li><strong>Share:</strong> <strong>Share profile</strong>, then <strong>Copy link</strong> (names the mods and their Nexus or GitHub files, with pins, groups and install reasons) or save a <code>.mortar</code> file (also carries settings and notes; suits large profiles). <strong>Share › Mod list</strong> can also write a Thunderstore dependency string list. For a Thunderstore game, <strong>Save .r2z…</strong> writes an r2modman or Gale profile file without posting a public code.</li>
 <li><strong>Import:</strong> <strong>Import</strong> on the Profiles page: <strong>From a link or file…</strong>, <strong>From the game's Mods folder…</strong>, <strong>Restore from a file…</strong> (a <strong>Back up to a file…</strong> backup or an older profile zip) or <strong>Import…</strong>. Mortar shows what the profile holds, then installs or queues what is missing.</li>
 <li><strong>From the game's Mods folder:</strong> copies the mods the game reads into a new profile and leaves the folder as is. Tick <strong>Move them out of the game's Mods folder</strong> to take the originals out; left there, the game keeps loading them even when a profile switches them off, and Mortar refills that folder on each Play. For The Sims 4 it is <code>Mods</code> in the Documents folder, and a file switched off by renaming (<code>hair.packageoff</code>) arrives switched off.</li>
-<li><strong>From another manager:</strong> <strong>Import…</strong> lists profiles found for the game from r2modman, Gale, Vortex, Mod Organizer 2 and Stardrop, with a preview. For a Thunderstore game, <strong>Use a code or file…</strong> reads an r2modman or Gale code or <code>.r2z</code> file. Copied mods may have no page to update from: group the Mods list by <strong>Source</strong> and choose <strong>Find on Nexus</strong>, or right-click a mod › <strong>Set Nexus page…</strong> (a file's Manual Download address names the file too). Mods with an unknown file still update but a share leaves them out.</li>
-<li><strong>Thunderstore modpack:</strong> profile menu › <strong>Export as Thunderstore modpack…</strong> zips the switched-on Thunderstore mods and config; others are named in the README.</li>
-<li><strong>Multiplayer mod list (Stardew Valley):</strong> profile menu › <strong>Multiplayer mod list…</strong> copies the host's switched-on mods with versions and sources. A friend pastes it under <strong>The host's list</strong> and chooses <strong>Check</strong>: missing mods show <strong>Install</strong>, other versions <strong>Update</strong>, and <strong>Fix all</strong> queues every one; a mod with no download source is named to install by hand. <strong>Check</strong> also reads <strong>Share › Mod list</strong> text and <strong>Load the host's list from a file…</strong>, which have no ids, so mods match by name and come from their Nexus Mods or GitHub page (possibly newer than the host's). Many mods refuse a player on another version, so match before joining. Terminal: <code>mortar profile farm export|check|fix</code>.</li>
+<li><strong>Several at once:</strong> <strong>Import…</strong> can read every r2modman or Gale profile in a data folder you choose in one step, and a pack can import under a name of your own or over an existing profile.</li>
+<li><strong>From another manager:</strong> <strong>Import…</strong> lists profiles found for the game from r2modman, Gale, Vortex, Mod Organizer 2 and Stardrop, with a preview. For a Thunderstore game, <strong>Use a code or file…</strong> reads an r2modman or Gale code or <code>.r2z</code> file. Copied mods may have no page to update from: group the Mods list by <strong>Source</strong> and choose <strong>Find sources</strong> (Stardew mods on Nexus, BepInEx plugins on Thunderstore, Vintage Story mods on the Mod DB), or right-click a mod › <strong>Set Nexus page…</strong> (a file's Manual Download address names the file too). Mods with an unknown file still update but a share leaves them out.</li>
+<li><strong>Thunderstore modpack:</strong> Share › Thunderstore › <strong>Export as Thunderstore modpack…</strong> opens a form for the name, author, version, description, website, icon (a 256x256 PNG), README, changelog, which config files go in, and whether switched-off mods are included. The form is remembered per profile, and the next export suggests the next patch version and writes a changelog of the packages added, updated or removed since the last one. Mods from other sources are named in the README.</li>
+<li><strong>Multiplayer mod list (Stardew Valley, Thunderstore games such as Lethal Company, REPO, PEAK, Content Warning and Valheim, and Vintage Story):</strong> profile menu › <strong>Multiplayer mod list…</strong> copies the host's switched-on mods with versions and sources. A friend pastes it under <strong>The host's list</strong> and chooses <strong>Check</strong>: missing mods show <strong>Install</strong>, other versions <strong>Update</strong>, and <strong>Fix all</strong> queues every one; a mod with no download source is named to install by hand. Mods match by SMAPI id, Thunderstore package id or Vintage Story mod id, and <strong>Update</strong> goes to the host's version even when yours is newer. On Stardew, <strong>Check</strong> also reads <strong>Share › Mod list</strong> text and <strong>Load the host's list from a file…</strong>, which have no ids, so mods match by name and come from their Nexus Mods or GitHub page (possibly newer than the host's). Many mods refuse a player on another version, so match before joining. Terminal: <code>mortar profile farm export|check|fix</code>.</li>
+<li><strong>Dedicated servers (Valheim and Risk of Rain 2):</strong> each server is its own game in Game select, with profiles of its own. <strong>Edit profile › Server</strong> sets its name, port and password, and <strong>Use mods from…</strong> queues a client profile's mods for install, so the server and the clients share one list. Valheim refuses to start without a password of five or more characters.</li>
 <li><strong>Separate saves:</strong> profile menu › <strong>Edit profile</strong>, enable <strong>Keep this profile's saves separate</strong> and confirm. Leave <strong>Start with a copy of my current saves</strong> ticked to start from your saves, or untick it to start empty. On each Play Mortar swaps in the profile's own <code>saves</code> folder and restores the shared one when the game closes (or at the next start). Nothing is deleted. Only games with a save folder have it.</li>
 </ul>
 <h2 id="play">Play</h2>
 <p><strong>Play</strong> applies the profile's mod list and starts the game through SMAPI. Direct Play (not a Steam or store URL launch) can start more than one instance, spaced by a delay, for local multiplayer.</p>
-<p>After a crash, a card on the profile's Home names the likely cause from the loader's log (for Lethal Company also Unity's player log, where a crash prints <code>Crash!!!</code> or <code>Fatal error</code>), and when the logs name no mod, from the game's crash dump (Unity's crash folder, a Windows error report or <code>coredumpctl</code>).</p>
+<p>After a crash, a card on the profile's Home names the likely cause from the loader's log (for Lethal Company also Unity's player log, where a crash prints <code>Crash!!!</code> or <code>Fatal error</code>), and when the logs name no mod, from the game's crash dump (Unity's crash folder, a Windows error report or <code>coredumpctl</code>). For BepInEx, MelonLoader, Vintage Story and SMAPI games, an exception stack in the logs that runs through one mod's code names that mod.</p>
 <ul>
 <li><strong>Most likely cause: &lt;mod&gt;</strong> shows the log line and the <strong>Stack frame</strong> or dump line. <strong>Disable it and play</strong> switches that mod off and relaunches.</li>
 <li><strong>Find the cause…</strong> halves the mods and relaunches until one is left. <strong>Dismiss</strong> hides the card for that run.</li>
 </ul>
+<p>A Heroic or Lutris copy starts through its own launcher, so the game runs in the prefix and runner the launcher keeps for it. <strong>Skip the intro</strong> in Stardew Valley's settings skips the title intro. In a BepInEx game whose bridge has a console, the <strong>Console</strong> tab takes commands.</p>
 <p>On Windows, Steam's own <strong>Play</strong> starts SMAPI with the game's own <code>Mods</code> folder, not a profile. Press Play in Mortar, or use the profile menu's <strong>Add a shortcut that plays this profile</strong> (Start Menu on Windows, launcher entry on Linux) or <strong>Add this profile to Steam</strong> (a non-Steam game; close Steam first).</p>
 <h2 id="problems">Problems</h2>
 <p>The <strong>Problems</strong> tab checks the open profile for missing requirements, conflicts, broken or outdated mods, damaged files, duplicates and more. It warns and never blocks Play.</p>
@@ -310,16 +336,18 @@ sudo pacman -Sy mortar
 <li>Work as usual; a few seconds after a profile stops changing, Mortar writes it into the folder.</li>
 <li>On another computer a toast says <strong>&lt;profile&gt; was changed on &lt;computer&gt;</strong>. <strong>Review</strong> opens <strong>Changes from your other machines</strong>: <strong>Show diff</strong>, <strong>Apply</strong> (make your profile match), <strong>Keep mine</strong> (overwrite the other revision) or <strong>Later</strong>.</li>
 <li>If both computers changed the same profile, Mortar never merges: pick <strong>Use theirs</strong> or <strong>Keep mine</strong>.</li>
+<li>To keep one mod switched on or off, or one config file, different on this computer, right-click the mod and choose <strong>Switch on or off on this computer only</strong>, or press <strong>Only on this computer</strong> in the mod's config editor. That choice stays on this computer: it is never written to the sync folder, and <strong>Apply</strong> and <strong>Keep mine</strong> leave it alone. Press the same item again to let it follow the sync. A profile must have synced once before you can do this.</li>
 </ol>
 <p><strong>Disable</strong> beside the folder stops syncing and leaves its files alone.</p>
 <h2 id="updates">Updates</h2>
 <ul>
 <li><strong>Mortar:</strong> the Mortar menu's <strong>Check mods and Mortar for updates</strong>, or <strong>Settings › Updates</strong> (which can include betas). An update applies when you close Mortar, or choose <strong>Restart now</strong>. The Mortar menu's <strong>What's new</strong> shows what changed.</li>
 <li><strong>Mods:</strong> updates show on the mod list; <strong>Settings › Updates</strong> has <strong>Review mod updates</strong>.</li>
+<li><strong>Mod loaders:</strong> Mortar tells you when a new loader version is out; each game's settings hold the loader version and its update notice.</li>
 <li><strong>SMAPI:</strong> Mortar tells you when a new one is out; the game's settings update it.</li>
 </ul>
 <h2 id="appearance">Appearance</h2>
-<p><strong>Settings › Appearance</strong> sets the theme, accent colour and background (an image, the desktop wallpaper or a solid colour). Animated backgrounds hold still while a game runs or <strong>Reduce motion</strong> is on; WebP animations are often a tenth of a GIF's size. Turn off <strong>Grow game rows on hover</strong> to keep Game select's rows a fixed height.</p>
+<p><strong>Settings › Appearance</strong> sets the theme, accent colour and background (an image, the desktop wallpaper or a solid colour). <strong>Accent colour</strong> can follow your desktop's (<strong>System</strong>), and <strong>Font</strong> picks the app's typeface. Animated backgrounds hold still while a game runs or <strong>Reduce motion</strong> is on; WebP animations are often a tenth of a GIF's size. Turn off <strong>Grow game rows on hover</strong> to keep Game select's rows a fixed height.</p>
 <h2 id="save-backups-and-restore">Save backups and restore</h2>
 <p>Mortar zips your saves before it changes them: before a profile update, on every game start with <strong>Back up saves before Play</strong>, and on a timer with <strong>Scheduled save backups</strong> (both under the game's <strong>Save backups</strong> in Settings).</p>
 <p>To restore, stop the game, open the <strong>Saves</strong> tab, choose <strong>Save backups…</strong>, pick a backup and choose <strong>Restore</strong>. Mortar backs up the current Saves folder first. <strong>Open backups folder</strong> shows the zips; <strong>Backup location</strong> in the game's settings moves new ones.</p>
@@ -354,6 +382,7 @@ sudo pacman -Sy mortar
 <li><strong>Mortar does not start:</strong> it shows why, with a button that opens the folder holding <code>mortar.log</code> (on Windows <strong>Yes</strong> opens it, Ctrl+C copies the message; on Linux without zenity or kdialog the message is a desktop notification). Starting Mortar again while a copy is stuck offers to end it.</li>
 <li><strong>Run checks:</strong> <strong>Settings › About › Diagnostics › Run checks…</strong>; <strong>Repair</strong> fixes what it can.</li>
 <li><strong>Logs:</strong> <code>mortar.log</code> in the data folder, plus <code>crash.log</code> after a crash. Each profile's SMAPI log is on its log view.</li>
+<li><strong>Ask for help or an idea:</strong> the Mortar menu has <strong>Ask on Discord</strong> and <strong>Suggest a feature…</strong>. <strong>Report a bug</strong> can also copy the report for a new post in the bug-reports forum on Mortar's Discord and save the diagnostics zip to attach.</li>
 <li><strong>Report a bug:</strong> the Mortar menu's <strong>Report a bug</strong> opens a prefilled GitHub issue. Leave <strong>Attach diagnostics</strong> ticked to save a zip (checks, logs, settings and recent runs, with secrets and your home folder removed) and drag it into the issue before posting. <strong>Save diagnostics…</strong> (Mortar menu, Settings › About › Diagnostics) writes the same zip.</li>
 <li><strong>Share a SMAPI log:</strong> <strong>Share log…</strong> on the profile's log view uploads it to smapi.io/log and gives you a link.</li>
 </ul>
