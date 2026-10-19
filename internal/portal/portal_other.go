@@ -13,3 +13,4 @@ func SetAutostart(bool, []string) error                    { return errUnsupport
 func InstallLauncher(string, string, string, []byte) error { return errUnsupported }
 func UninstallLauncher(string) error                       { return errUnsupported }
 func LauncherExists(string) (bool, error)                  { return false, errUnsupported }
+func RetrieveSecret() ([]byte, error)                      { return nil, errUnsupported }

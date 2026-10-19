@@ -3,6 +3,9 @@ package portal
 import (
 	"errors"
 	"fmt"
+	"io"
+	"math"
+	"os"
 	"strings"
 
 	"github.com/godbus/dbus/v5"
@@ -148,4 +151,39 @@ func launcherExists(conn *dbus.Conn, id string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+// RetrieveSecret asks the Secret portal for this app's master secret, the same bytes on every call, which the portal
+// writes to the pipe it is given.
+func RetrieveSecret() ([]byte, error) {
+	conn, err := dbus.ConnectSessionBus()
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = conn.Close() }()
+	r, w, err := os.Pipe()
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = r.Close() }()
+	fd := w.Fd()
+	if fd > math.MaxInt32 {
+		_ = w.Close()
+		return nil, errors.New("pipe descriptor out of range")
+	}
+	_, err = request(conn, "org.freedesktop.portal.Secret.RetrieveSecret", "mortar_secret",
+		dbus.UnixFD(fd), map[string]dbus.Variant{"handle_token": dbus.MakeVariant("mortar_secret")})
+	// Our copy of the write end must close or the read never sees EOF.
+	_ = w.Close()
+	if err != nil {
+		return nil, err
+	}
+	secret, err := io.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+	if len(secret) == 0 {
+		return nil, errors.New("the secret portal returned an empty secret")
+	}
+	return secret, nil
 }

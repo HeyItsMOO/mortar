@@ -13,6 +13,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/Rethunk-Tech/mortar/internal/portal"
 )
 
 // Inside a Flatpak the Secret Service is not reachable once the sandbox drops its bus name, so secrets live in one
@@ -26,7 +28,7 @@ const (
 
 // Replaced in tests.
 var (
-	portalSecret = retrievePortalSecret
+	portalSecret = portal.RetrieveSecret
 	storeDir     = func() string {
 		base := os.Getenv("XDG_DATA_HOME")
 		if base == "" {

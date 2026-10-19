@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/portal"
 	"github.com/zalando/go-keyring"
 )
 
@@ -177,11 +178,11 @@ func TestLivePortal(t *testing.T) {
 	if os.Getenv("MORTAR_LIVE_PORTAL") != "1" {
 		t.Skip("set MORTAR_LIVE_PORTAL=1 to call the real Secret portal")
 	}
-	a, err := retrievePortalSecret()
+	a, err := portal.RetrieveSecret()
 	if err != nil || len(a) == 0 {
 		t.Fatalf("first call: %q, %v", a, err)
 	}
-	b, err := retrievePortalSecret()
+	b, err := portal.RetrieveSecret()
 	if err != nil || !bytes.Equal(a, b) {
 		t.Fatalf("second call must return the same secret: %v", err)
 	}
