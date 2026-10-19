@@ -337,10 +337,57 @@ function groupHeading(
   if (by === 'framework' && key === SMAPI_MODS_GROUP) {
     return labels.smapi
   }
-  return key || labels.empty
+  return (by === 'group' ? groupLeaf(key) : key) || labels.empty
+}
+
+// A profile group named "Looks/Hats" sits inside "Looks"; the name is one flat string, so a Mortar that does not nest
+// shows it as a plain group of that name.
+const GROUP_SEP = '/'
+
+/** The groups a nested group lies inside, outermost first: "A/B/C" yields "A", "A/B". */
+function groupAncestors(key: string): string[] {
+  const parts = key.split(GROUP_SEP)
+  return parts.slice(0, -1).map((_, i) => parts.slice(0, i + 1).join(GROUP_SEP))
+}
+
+const groupDepth = (key: string) => (key === '' ? 0 : key.split(GROUP_SEP).length - 1)
+
+const groupLeaf = (key: string) => key.slice(key.lastIndexOf(GROUP_SEP) + 1)
+
+/** Whether key is group or lies inside it. */
+const inGroup = (key: string, group: string) => key === group || key.startsWith(group + GROUP_SEP)
+
+/** Whether a group above key is collapsed, which hides key's header and rows whatever its own state. */
+const hiddenByAncestor = (collapsed: Readonly<Record<string, boolean>>, key: string) =>
+  groupAncestors(key).some((a) => collapsed[a] === true)
+
+/** The keys with the parents they imply added, each parent before its children and siblings in name order. */
+function groupTreeOrder(keys: readonly string[]): string[] {
+  const all = new Set<string>()
+  for (const key of keys) {
+    for (const a of groupAncestors(key)) {
+      all.add(a)
+    }
+    all.add(key)
+  }
+  const paths = (key: string) => key.split(GROUP_SEP)
+  return [...all].sort((a, b) => {
+    const pa = paths(a)
+    const pb = paths(b)
+    for (let i = 0; i < Math.min(pa.length, pb.length); i++) {
+      const c = cmpText(pa[i] ?? '', pb[i] ?? '')
+      if (c !== 0) {
+        return c
+      }
+    }
+    return pa.length - pb.length
+  })
 }
 
 function orderedGroupKeys(by: GroupBy, keys: readonly string[]): string[] {
+  if (by === 'group') {
+    return [...groupTreeOrder(keys.filter((k) => k !== '')), ...(keys.includes('') ? [''] : [])]
+  }
   if (by === 'status') {
     return STATUS_GROUP_ORDER.filter((k) => keys.includes(k))
   }
@@ -393,7 +440,14 @@ export {
   customCategoryById,
   firstTag,
   frameworkGroupKey,
+  GROUP_SEP,
+  groupAncestors,
+  groupDepth,
+  groupLeaf,
   groupSorted,
+  groupTreeOrder,
+  hiddenByAncestor,
+  inGroup,
   installedNames,
   listHeadingFor,
   loadCollapsed,

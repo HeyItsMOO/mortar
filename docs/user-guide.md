@@ -173,6 +173,7 @@ Open the game from **Game select** (use **Choose folder…** if it sits somewher
 A profile is one set of mods. Switching profiles never touches the game folder's own `Mods` folder.
 
 - **Create:** **New profile…** (Profiles page or title-bar switcher), then **Start from**: **Empty profile**, **Copy of \<the open profile\>** (mods, their settings and what they wrote) or a template from **Save as template…** (**Manage templates…** renames or deletes them).
+- **Nested groups:** name a group with a slash, such as **Looks/Hats**, to put it inside **Looks**. With the list grouped by **Group**, each level has its own header that collapses its contents, and the switch on a header turns on or off everything inside it. Renaming or deleting a group does the same to the groups inside it.
 - **Why each mod is there:** a mod you add is **Explicit**; one added because another needs it is **Implicit**. Group the Mods list by **Install reason**, and right-click a mod to mark it either way.
 - **Switch, rename, duplicate, delete:** from the Profiles page or the profile's menu. Play always starts the open profile. Deleted profiles wait in **Recently deleted** (**Restore**, **Delete permanently**).
 - **Freeze:** the profile menu's **Freeze this profile** holds its mods on their versions and offers no updates until **Unfreeze**.

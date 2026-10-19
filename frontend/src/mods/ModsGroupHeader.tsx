@@ -8,7 +8,7 @@ import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { usePending } from '../toasts/usePending.ts'
 import { GroupMenu } from './GroupMenu.tsx'
-import { toggleCollapsed } from './group.ts'
+import { groupDepth, inGroup, toggleCollapsed } from './group.ts'
 import { LockedReason } from './LockedReason.tsx'
 import type { ListRow } from './listColumns.ts'
 import { useMods } from './store.ts'
@@ -16,6 +16,9 @@ import { findSources } from './storeEntries.ts'
 import { setGroupEnabled } from './storeGroups.ts'
 import { useLocked } from './useLocked.ts'
 import { GROUP_HEADER_PX } from './virtualRows.ts'
+
+// How far each level of a nested group is set in.
+const NEST_INDENT_PX = 16
 
 function ModsGroupHeader({
   label,
@@ -26,8 +29,10 @@ function ModsGroupHeader({
   enabled,
   onEnabled,
   menu,
+  depth = 0,
 }: {
   label: string
+  depth?: number
   count: number
   open: boolean
   onToggle: () => void
@@ -48,6 +53,7 @@ function ModsGroupHeader({
         // The virtual list reserves one height per header, and a header's switch and menu fit inside it.
         minHeight: GROUP_HEADER_PX,
         px: space.pad,
+        pl: depth > 0 ? `calc(${space.pad}px + ${depth * NEST_INDENT_PX}px)` : space.pad,
         bgcolor: 'var(--mortar-hairline-ghost)',
         borderBottom: '1px solid var(--mortar-hairline-muted)',
         '& > :not(.MuiButtonBase-root, [data-control])': { pointerEvents: 'none' },
@@ -120,6 +126,12 @@ interface HeaderRowProps {
   groups: readonly { key: string; items: readonly ListRow[] }[]
 }
 
+// Whether every mod of the group and of the groups inside it is on; a group with no mods at all reads as off.
+function subtreeEnabled(groups: HeaderRowProps['groups'], key: string) {
+  const rows = groups.filter((g) => inGroup(g.key, key)).flatMap((g) => g.items)
+  return rows.length > 0 && rows.every((r) => r.mod.enabled)
+}
+
 function GroupHeaderRowView({
   groupKey,
   count,
@@ -135,14 +147,14 @@ function GroupHeaderRowView({
   return (
     <ModsGroupHeader
       label={label}
+      depth={groupBy === 'group' ? groupDepth(groupKey) : 0}
       count={count}
       open={open}
       onToggle={() => setCollapsed((cur) => toggleCollapsed(gameId, cur, groupKey, open))}
       {...(groupBy === 'tag' ? { hint: tagHint } : {})}
       {...(groupBy === 'group' && groupKey !== ''
         ? {
-            enabled:
-              groups.find((g) => g.key === groupKey)?.items.every((r) => r.mod.enabled) === true,
+            enabled: subtreeEnabled(groups, groupKey),
             menu: <GroupMenu name={groupKey} />,
             onEnabled: (on: boolean) => {
               setGroupEnabled(groupKey, on)
@@ -166,7 +178,7 @@ const headerFlags = (p: HeaderRowProps) => {
   const group = p.groups.find((g) => g.key === p.groupKey)
   return [
     p.collapsed[p.groupKey] === true,
-    group?.items.every((r) => r.mod.enabled) === true,
+    subtreeEnabled(p.groups, p.groupKey),
     group?.items.some((r) => r.unsourced === true) === true,
   ].join()
 }

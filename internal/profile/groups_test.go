@@ -90,3 +90,54 @@ func TestFreeGroupNameCountsUpAndStaysWithinTheLimit(t *testing.T) {
 		t.Fatalf("long name = %q", got)
 	}
 }
+
+func TestNestedGroupsToggleRenameAndDeleteTogether(t *testing.T) {
+	t.Parallel()
+	e := newEnv(t)
+	e.item(t, "local-a", map[string]string{"A/manifest.json": manifestJSON("Me.A")})
+	e.item(t, "local-b", map[string]string{"B/manifest.json": manifestJSON("Me.B")})
+	p := mustCreate(t, e, "P")
+	var err error
+	if p, err = e.AddEntry("stardew", p.ID, "local-a", Source{Kind: KindLocal, Name: "a.zip"}); err != nil {
+		t.Fatal(err)
+	}
+	if p, err = e.AddEntry("stardew", p.ID, "local-b", Source{Kind: KindLocal, Name: "b.zip"}); err != nil {
+		t.Fatal(err)
+	}
+	ka, kb := p.Entries[0].Key, p.Entries[1].Key
+	// Visuals has no group of its own: it exists as the parent of two.
+	if _, err = e.AddToGroup("stardew", p.ID, "Visuals/Hats", ka); err != nil {
+		t.Fatal(err)
+	}
+	if p, err = e.AddToGroup("stardew", p.ID, "Visuals/Skins", kb); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = e.CreateGroup("stardew", p.ID, "Visuals/"); err == nil {
+		t.Fatal("an empty level must be refused")
+	}
+	if p, err = e.SetGroupEnabled("stardew", p.ID, "Visuals", false); err != nil {
+		t.Fatal(err)
+	}
+	for _, en := range p.Entries {
+		if len(en.Disabled) == 0 {
+			t.Fatalf("entry %s still enabled after its parent group went off", en.Key)
+		}
+	}
+	if p, err = e.RenameGroup("stardew", p.ID, "Visuals", "Looks/Cosmetic"); err != nil {
+		t.Fatal(err)
+	}
+	var names []string
+	for _, g := range p.Groups {
+		names = append(names, g.Name)
+	}
+	slices.Sort(names)
+	if !slices.Equal(names, []string{"Looks/Cosmetic/Hats", "Looks/Cosmetic/Skins"}) {
+		t.Fatalf("renamed tree = %v", names)
+	}
+	if _, err = e.RenameGroup("stardew", p.ID, "Looks", "Looks/Inner"); err == nil {
+		t.Fatal("a group must not move inside itself")
+	}
+	if p, err = e.DeleteGroup("stardew", p.ID, "Looks"); err != nil || len(p.Groups) != 0 {
+		t.Fatalf("delete tree: %+v %v", p.Groups, err)
+	}
+}

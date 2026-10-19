@@ -11,17 +11,32 @@ import (
 
 const maxGroupName = 60
 
+// GroupSep splits a group name into the path of nested groups: "Visuals/Hats" is the group Hats inside Visuals. The
+// name stays one flat string, so a Mortar that does not nest reads the same profile or share as a plain group of that
+// name. A parent needs no group of its own; it exists while any name has it as a prefix.
+const GroupSep = "/"
+
+// InGroup reports whether name is group or lies inside it.
+func InGroup(name, group string) bool {
+	return strings.EqualFold(name, group) || strings.HasPrefix(strings.ToLower(name), strings.ToLower(group)+GroupSep)
+}
+
 // Group is a named set of profile entry keys that toggle together.
 type Group struct {
 	Name string   `json:"name"`
 	Keys []string `json:"keys"`
 }
 
-func cleanGroupName(name string) (string, error) {
-	name = strings.TrimSpace(name)
-	if name == "" {
-		return "", usererr.Wrap(usererr.Invalid, fmt.Errorf("group name is empty"))
+// CleanGroupName trims a group name and each level of its path, and refuses an empty name or level.
+func CleanGroupName(name string) (string, error) {
+	parts := strings.Split(name, GroupSep)
+	for i, part := range parts {
+		parts[i] = strings.TrimSpace(part)
+		if parts[i] == "" && (len(parts) > 1 || strings.TrimSpace(name) == "") {
+			return "", usererr.Wrap(usererr.Invalid, fmt.Errorf("group name %q has an empty level", name))
+		}
 	}
+	name = strings.Join(parts, GroupSep)
 	if utf8.RuneCountInString(name) > maxGroupName {
 		return "", usererr.Wrap(usererr.Invalid, fmt.Errorf("group name is longer than %d characters", maxGroupName))
 	}
@@ -50,7 +65,7 @@ func (s *Store) unlockedGroupName(game, id, name string) (string, error) {
 	if err := s.unlocked(game, id); err != nil {
 		return "", err
 	}
-	return cleanGroupName(name)
+	return CleanGroupName(name)
 }
 
 func (s *Store) mutateGroup(game, id, name string, fn func(p *Profile, idx int) error) (Profile, error) {
@@ -122,25 +137,65 @@ func (s *Store) AddGroup(game, id, name string, keys []string) (Profile, string,
 	return p, used, err
 }
 
-// RenameGroup changes a group's name.
+// groupsInside are the indexes of the groups named group or lying inside it.
+func (p Profile) groupsInside(group string) []int {
+	var out []int
+	for i, g := range p.Groups {
+		if InGroup(g.Name, group) {
+			out = append(out, i)
+		}
+	}
+	return out
+}
+
+// RenameGroup changes a group's name, and the path prefix of every group inside it, so renaming moves the whole tree.
 func (s *Store) RenameGroup(game, id, name, next string) (Profile, error) {
-	next, err := cleanGroupName(next)
+	next, err := CleanGroupName(next)
 	if err != nil {
 		return Profile{}, err
 	}
-	return s.mutateGroup(game, id, name, func(p *Profile, idx int) error {
-		if p.groupIndex(next) >= 0 && !strings.EqualFold(p.Groups[idx].Name, next) {
-			return usererr.Wrap(usererr.Invalid, fmt.Errorf("group %q already exists", next))
+	name, err = s.unlockedGroupName(game, id, name)
+	if err != nil {
+		return Profile{}, err
+	}
+	return s.update(game, id, func(p *Profile, _ string) error {
+		inside := p.groupsInside(name)
+		if len(inside) == 0 {
+			return usererr.Wrap(usererr.NotFound, fmt.Errorf("group %q not found", name))
 		}
-		p.Groups[idx].Name = next
+		if InGroup(next, name) && !strings.EqualFold(next, name) {
+			return usererr.Wrap(usererr.Invalid, fmt.Errorf("group %q cannot move inside itself", name))
+		}
+		renamed := make(map[int]string, len(inside))
+		for _, i := range inside {
+			to := next + string([]rune(p.Groups[i].Name)[utf8.RuneCountInString(name):])
+			if utf8.RuneCountInString(to) > maxGroupName {
+				return usererr.Wrap(usererr.Invalid, fmt.Errorf("group name %q is longer than %d characters", to, maxGroupName))
+			}
+			if j := p.groupIndex(to); j >= 0 && !slices.Contains(inside, j) {
+				return usererr.Wrap(usererr.Invalid, fmt.Errorf("group %q already exists", to))
+			}
+			renamed[i] = to
+		}
+		for i, to := range renamed {
+			p.Groups[i].Name = to
+		}
 		return nil
 	})
 }
 
-// DeleteGroup removes a group. Entries stay in the profile.
+// DeleteGroup removes a group and the groups inside it. Entries stay in the profile.
 func (s *Store) DeleteGroup(game, id, name string) (Profile, error) {
-	return s.mutateGroup(game, id, name, func(p *Profile, idx int) error {
-		p.Groups = slices.Delete(p.Groups, idx, idx+1)
+	name, err := s.unlockedGroupName(game, id, name)
+	if err != nil {
+		return Profile{}, err
+	}
+	return s.update(game, id, func(p *Profile, _ string) error {
+		inside := p.groupsInside(name)
+		if len(inside) == 0 {
+			return usererr.Wrap(usererr.NotFound, fmt.Errorf("group %q not found", name))
+		}
+		p.Groups = slices.DeleteFunc(p.Groups, func(g Group) bool { return InGroup(g.Name, name) })
 		return nil
 	})
 }
@@ -181,7 +236,7 @@ func (s *Store) RemoveFromGroup(game, id, name, key string) (Profile, error) {
 	})
 }
 
-// SetGroupEnabled switches every mod of every entry in the group in one history event.
+// SetGroupEnabled switches every mod of every entry in the group, and in the groups inside it, in one history event.
 func (s *Store) SetGroupEnabled(game, id, name string, on bool) (Profile, error) {
 	name, err := s.unlockedGroupName(game, id, name)
 	if err != nil {
@@ -197,22 +252,24 @@ func (s *Store) SetGroupEnabled(game, id, name string, on bool) (Profile, error)
 		return Profile{}, err
 	}
 	return s.updateLockedAs(game, id, kind, HistoryEvent{Change: change, Name: name}, func(p *Profile, dir string) error {
-		idx := p.groupIndex(name)
-		if idx < 0 {
+		inside := p.groupsInside(name)
+		if len(inside) == 0 {
 			return usererr.Wrap(usererr.NotFound, fmt.Errorf("group %q not found", name))
 		}
-		for _, key := range p.Groups[idx].Keys {
-			ei := entryIndex(p.Entries, key)
-			if ei < 0 {
-				continue
-			}
-			e := p.Entries[ei]
-			if e.Source.Bundled() {
-				continue
-			}
-			for _, m := range e.Mods {
-				if err := applyEnabled(p, dir, key, m.ID, on); err != nil {
-					return err
+		for _, gi := range inside {
+			for _, key := range p.Groups[gi].Keys {
+				ei := entryIndex(p.Entries, key)
+				if ei < 0 {
+					continue
+				}
+				e := p.Entries[ei]
+				if e.Source.Bundled() {
+					continue
+				}
+				for _, m := range e.Mods {
+					if err := applyEnabled(p, dir, key, m.ID, on); err != nil {
+						return err
+					}
 				}
 			}
 		}

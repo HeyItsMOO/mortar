@@ -74,9 +74,9 @@ func NewService(profiles *profile.Store, dataDir string) *Service {
 }
 
 func groupName(name string) (string, error) {
-	name = strings.TrimSpace(name)
-	if name == "" {
-		return "", errors.New("saved group name is empty")
+	name, err := profile.CleanGroupName(name)
+	if err != nil {
+		return "", err
 	}
 	if utf8.RuneCountInString(name) > maxName {
 		return "", fmt.Errorf("saved group name is longer than %d characters", maxName)
@@ -390,15 +390,20 @@ func (s *Service) SaveGroup(gameID, profileID, profileGroup, name string, replac
 	})
 }
 
-// snapshotGroup captures the mods of the entries a profile's group holds.
+// snapshotGroup captures the mods of the entries a profile's group, and the groups inside it, hold.
 func snapshotGroup(p profile.Profile, name string) ([]Mod, error) {
-	i := slices.IndexFunc(p.Groups, func(g profile.Group) bool { return strings.EqualFold(g.Name, name) })
-	if i < 0 {
+	var inside []profile.Group
+	for _, g := range p.Groups {
+		if profile.InGroup(g.Name, name) {
+			inside = append(inside, g)
+		}
+	}
+	if len(inside) == 0 {
 		return nil, usererr.Wrap(usererr.NotFound, fmt.Errorf("group %q not found", name))
 	}
 	var modIDs []mod.ID
 	for _, e := range p.Entries {
-		if e.Source.Bundled() || !slices.Contains(p.Groups[i].Keys, e.Key) {
+		if e.Source.Bundled() || !slices.ContainsFunc(inside, func(g profile.Group) bool { return slices.Contains(g.Keys, e.Key) }) {
 			continue
 		}
 		for _, m := range e.Mods {

@@ -140,3 +140,20 @@ test('the header above the top stays named until the next header pushes it out',
   expect(stuckHeader(items, starts, 90)).toEqual({ row: a, shift: -18 })
   expect(stuckHeader(items, starts, 120)).toEqual({ row: b, shift: 0 })
 })
+
+test('a collapsed group hides the groups inside it only when groups are nested', () => {
+  const groups = [
+    { key: 'Looks', items: [] as number[] },
+    { key: 'Looks/Hats', items: [1] },
+    { key: 'Core', items: [2] },
+  ]
+  const keys = (nested: boolean) =>
+    flattenModGroups(groups, {
+      grouped: true,
+      nested,
+      collapsed: { Looks: true },
+      idOf: String,
+    }).map((row) => row.key)
+  expect(keys(true)).toEqual(['h:Looks', 'h:Core', 'r:2'])
+  expect(keys(false)).toEqual(['h:Looks', 'h:Looks/Hats', 'r:1', 'h:Core', 'r:2'])
+})

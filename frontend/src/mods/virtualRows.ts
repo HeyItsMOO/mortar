@@ -3,7 +3,7 @@ import { type RefObject, useEffect, useLayoutEffect, useRef } from 'react'
 import { isTypingTarget, type TypingTarget } from '../settings/shortcuts.ts'
 import { TYPE_RESET_MS, typedKey, typedMatch } from '../shell/typeahead.ts'
 import { useDetail } from './detail.ts'
-import { toggleCollapsed } from './group.ts'
+import { hiddenByAncestor, toggleCollapsed } from './group.ts'
 import type { ListRow } from './listColumns.ts'
 import { modId } from './lookup.ts'
 
@@ -93,11 +93,16 @@ export function flattenModGroups<T>(
     collapsed: Readonly<Record<string, boolean>>
     idOf: (item: T) => string
     columns?: number
+    // Group keys are "/" paths of nested groups, and a collapsed group hides the ones inside it.
+    nested?: boolean
   },
 ): VirtualRow<T>[] {
-  const { grouped, collapsed, idOf, columns } = opts
+  const { grouped, collapsed, idOf, columns, nested } = opts
   const out: VirtualRow<T>[] = []
   for (const group of groups) {
+    if (nested && hiddenByAncestor(collapsed, group.key)) {
+      continue
+    }
     if (grouped) {
       out.push({
         kind: 'header',

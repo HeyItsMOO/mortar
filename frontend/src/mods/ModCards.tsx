@@ -389,6 +389,7 @@ function CardsPane({
     () =>
       flattenModGroups(groups, {
         grouped: groupBy !== 'none',
+        nested: groupBy === 'group',
         collapsed,
         idOf: (row) => modId(row.mod),
         columns,

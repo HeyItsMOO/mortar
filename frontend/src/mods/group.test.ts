@@ -9,7 +9,11 @@ import {
   customCategoryById,
   firstTag,
   frameworkGroupKey,
+  groupAncestors,
+  groupDepth,
   groupSorted,
+  hiddenByAncestor,
+  inGroup,
   listHeadingFor,
   profileTags,
   resolvedCategoryLabel,
@@ -301,4 +305,30 @@ test('install reason groups explicit before implicit', () => {
       () => 0,
     ).map((g) => g.key),
   ).toEqual(['explicit', 'implicit'])
+})
+
+test('nested groups list parents first, add the parents a path implies, and collapse by level', () => {
+  const rows = [{ k: 'Looks/Hats' }, { k: 'Looks/Skins/Dark' }, { k: 'Core' }, { k: '' }]
+  const groups = groupSorted(
+    rows,
+    'group',
+    (r) => r.k,
+    () => 0,
+  )
+  expect(groups.map((g) => g.key)).toEqual([
+    'Core',
+    'Looks',
+    'Looks/Hats',
+    'Looks/Skins',
+    'Looks/Skins/Dark',
+    '',
+  ])
+  expect(groups.find((g) => g.key === 'Looks')?.items).toEqual([])
+  expect(groupAncestors('Looks/Skins/Dark')).toEqual(['Looks', 'Looks/Skins'])
+  expect(groupDepth('Looks/Skins/Dark')).toBe(2)
+  expect(inGroup('Looks/Hats', 'Looks')).toBe(true)
+  expect(inGroup('Looksy', 'Looks')).toBe(false)
+  expect(hiddenByAncestor({ Looks: true }, 'Looks/Skins/Dark')).toBe(true)
+  expect(hiddenByAncestor({ Looks: true }, 'Looks')).toBe(false)
+  expect(hiddenByAncestor({ 'Looks/Skins': true }, 'Looks/Hats')).toBe(false)
 })

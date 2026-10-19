@@ -105,3 +105,31 @@ func TestRemovingAMainModRemovesItsOptionalFiles(t *testing.T) {
 		t.Fatalf("after remove = %+v, %v", g.Mods, err)
 	}
 }
+
+func TestSavingAGroupTakesTheGroupsInsideIt(t *testing.T) {
+	svc, profiles, items := testService(t)
+	addItem(t, items, "local-a", "A.One", "A One")
+	addItem(t, items, "local-b", "B.Two", "B Two")
+	from, err := profiles.Create("stardew", "From")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, key := range []string{"local-a", "local-b"} {
+		if _, err := profiles.AddEntry("stardew", from.ID, key, profile.Source{}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := profiles.AddToGroup("stardew", from.ID, "Looks/Hats", "local-a"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := profiles.AddToGroup("stardew", from.ID, "Looks/Skins", "local-b"); err != nil {
+		t.Fatal(err)
+	}
+	saved, err := svc.SaveGroup("stardew", from.ID, "Looks", "Looks", false)
+	if err != nil || len(saved.Mods) != 2 {
+		t.Fatalf("a parent group saves what is inside it: %+v, %v", saved, err)
+	}
+	if _, err := svc.SaveGroup("stardew", from.ID, "Looks/Hats", "Hats/", false); err == nil {
+		t.Fatal("a saved group name with an empty level must be refused")
+	}
+}

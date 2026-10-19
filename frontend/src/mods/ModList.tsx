@@ -413,6 +413,7 @@ export function ModList({ profile, mods }: { profile: Profile; mods: Mod[] }) {
       nestOverlays(
         flattenModGroups(groups, {
           grouped: groupBy !== 'none',
+          nested: groupBy === 'group',
           collapsed,
           idOf: (row) => modId(row.mod),
         }),
