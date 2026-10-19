@@ -160,7 +160,7 @@ func TestQueryReturnsTheRepliesJSON(t *testing.T) {
 func TestIsOwnListingMatchesEachSitesSpelling(t *testing.T) {
 	for name, want := range map[string]bool{
 		"Mortar SMAPI Bridge": true, "Mortar BepInEx Bridge": true, "MortarBepInExBridge": true,
-		"Mortar-MortarBepInExBridge": true, "Rethunk-MortarBepInExBridge": true, "MortarSmapiBridge": true,
+		"Mortar-MortarBepInExBridge": true, "Rethunk-MortarBepInExBridge": true, "Mortar-MortarBepInExBridge_Valheim": true, "MortarBepInExBridge_LethalCompany": true, "MortarSmapiBridge": true,
 		"Mortar": false, "BepInExPack": false, "Some-OtherBridge": false,
 	} {
 		if got := IsOwnListing(name); got != want {

@@ -42,11 +42,59 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "asset": "MortarBepInExBridge-{version}.zip",
+      "asset": "MortarBepInExBridge_LethalCompany-{version}.zip",
       "version": "latest"
     },
     {
       "game": "valheim",
+      "name": "bridge",
+      "kind": "bridge",
+      "source": {
+        "host": "github.com",
+        "owner": "Rethunk-Tech",
+        "repo": "mortar-bepinex-bridge"
+      },
+      "asset": "MortarBepInExBridge_Valheim-{version}.zip",
+      "version": "latest"
+    },
+    {
+      "game": "repo",
+      "name": "bridge",
+      "kind": "bridge",
+      "source": {
+        "host": "github.com",
+        "owner": "Rethunk-Tech",
+        "repo": "mortar-bepinex-bridge"
+      },
+      "asset": "MortarBepInExBridge-{version}.zip",
+      "version": "latest"
+    },
+    {
+      "game": "peak",
+      "name": "bridge",
+      "kind": "bridge",
+      "source": {
+        "host": "github.com",
+        "owner": "Rethunk-Tech",
+        "repo": "mortar-bepinex-bridge"
+      },
+      "asset": "MortarBepInExBridge-{version}.zip",
+      "version": "latest"
+    },
+    {
+      "game": "riskofrain2",
+      "name": "bridge",
+      "kind": "bridge",
+      "source": {
+        "host": "github.com",
+        "owner": "Rethunk-Tech",
+        "repo": "mortar-bepinex-bridge"
+      },
+      "asset": "MortarBepInExBridge-{version}.zip",
+      "version": "latest"
+    },
+    {
+      "game": "content-warning",
       "name": "bridge",
       "kind": "bridge",
       "source": {
