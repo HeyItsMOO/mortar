@@ -10,6 +10,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir/datadirtest"
 	"github.com/Rethunk-Tech/mortar/internal/framework"
+	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/testenv"
 	"github.com/Rethunk-Tech/mortar/internal/testenv/testfs"
@@ -166,9 +167,19 @@ func TestAPlacedFileIsJudgedAtItsPathInTheGameFolder(t *testing.T) {
 	}
 	_, profiles := testenv.Stores(t)
 	p := testenv.Profile(t, profiles, id, "A")
+	// The game's mods folder is wherever game.PathFor puts it, which on Linux is inside the game's Proton prefix, so the
+	// home is padded until that folder is about 200 characters long.
 	base := t.TempDir()
-	home := filepath.Join(base, strings.Repeat("h", max(200-len(base), 1)))
-	placedDir := filepath.Join(home, "Documents", "G", "Mods", "pack")
+	short, err := game.PathFor(base, set.Get(), id, "", "mods")
+	if err != nil {
+		t.Fatal(err)
+	}
+	home := filepath.Join(base, strings.Repeat("h", max(200-len(short), 1)))
+	root, err := game.PathFor(home, set.Get(), id, "", "mods")
+	if err != nil {
+		t.Fatal(err)
+	}
+	placedDir := filepath.Join(root, "pack")
 	name := strings.Repeat("n", maxPath+5-len(placedDir)-len(".pkg")-1) + ".pkg"
 	zip := testfs.WriteZip(t, filepath.Join(t.TempDir(), "pack.zip"), map[string]string{"pack/" + name: "x"})
 	if _, err := profiles.InstallArchive(t.Context(), id, p.ID, zip); err != nil {
