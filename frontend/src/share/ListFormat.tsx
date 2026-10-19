@@ -27,6 +27,28 @@ const text = {
   userSelect: 'text',
 } as const
 
+function useFormatOptions(): { id: ModListFormat; label: string; icon: typeof FileText }[] {
+  const { t } = useLingui()
+  return [
+    { id: 'markdown', label: t`Markdown`, icon: FileText },
+    { id: 'plain', label: t`Plain text`, icon: Type },
+    { id: 'discord', label: t`Discord`, icon: MessageSquare },
+    { id: 'thunderstore', label: t`Thunderstore`, icon: Package },
+  ]
+}
+
+function ListHint({ skipped, total }: { skipped: string[]; total: number }) {
+  const { t } = useLingui()
+  const names = listNames(skipped)
+  let hint = t`Paste it into a chat or a forum post, or send the file.`
+  if (skipped.length > 0) {
+    hint = t`Left out (not on Thunderstore, or switched off): ${names}`
+  } else if (total > 1) {
+    hint = t`Discord takes 2,000 characters a message: paste each one in turn.`
+  }
+  return <Typography sx={{ flex: 1, fontSize: 13, color: 'text.secondary' }}>{hint}</Typography>
+}
+
 // The mod list as text: the format, the text itself as it will be pasted, and Copy and Save. Discord's list is
 // shown as the messages it is split into, copied one after another.
 export function ListFormat() {
@@ -42,15 +64,9 @@ export function ListFormat() {
   const parts = formatModList(format, items, labels)
   const total = parts.length
   const skipped = format === 'thunderstore' ? skippedForDependencies(items) : []
-  const skippedNames = listNames(skipped)
   const next = copied >= total ? 0 : copied
   const off = items.filter((item) => !item.enabled).length
-  const options: { id: ModListFormat; label: string; icon: typeof FileText }[] = [
-    { id: 'markdown', label: t`Markdown`, icon: FileText },
-    { id: 'plain', label: t`Plain text`, icon: Type },
-    { id: 'discord', label: t`Discord`, icon: MessageSquare },
-    { id: 'thunderstore', label: t`Thunderstore`, icon: Package },
-  ]
+  const options = useFormatOptions()
   const count = items.length
   const summary = [
     plural(count, { one: '# mod', other: '# mods' }),
@@ -160,13 +176,7 @@ export function ListFormat() {
         ))}
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: space.gap }}>
-        <Typography sx={{ flex: 1, fontSize: 13, color: 'text.secondary' }}>
-          {skipped.length > 0
-            ? t`Left out (not on Thunderstore, or switched off): ${skippedNames}`
-            : total > 1
-              ? t`Discord takes 2,000 characters a message: paste each one in turn.`
-              : t`Paste it into a chat or a forum post, or send the file.`}
-        </Typography>
+        <ListHint skipped={skipped} total={total} />
         <Button
           variant="outlined"
           color="inherit"

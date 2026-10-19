@@ -420,7 +420,7 @@ export function ConfigPane({
       </Box>
       <ConfirmDialog
         open={deleting}
-        title={t`Delete ${name}?`}
+        title={t`Delete ${initialFile ?? name}?`}
         body={t`No mod owns this file. It is removed from this profile, and the game makes a new one if it needs it.`}
         confirmLabel={t`Delete`}
         color="error"

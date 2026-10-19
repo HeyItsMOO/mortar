@@ -230,7 +230,6 @@ export type { ModListFormat, ModListItem }
 export {
   DISCORD_LIMIT,
   escapeMarkdown,
-  formatDependencies,
   formatMarkdown,
   formatModList,
   formatPlain,
