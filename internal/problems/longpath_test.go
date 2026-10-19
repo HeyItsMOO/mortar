@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir/datadirtest"
@@ -13,6 +14,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/testenv"
+	"github.com/Rethunk-Tech/mortar/internal/testenv/modfixture"
 	"github.com/Rethunk-Tech/mortar/internal/testenv/testfs"
 )
 
@@ -207,5 +209,46 @@ func TestAPlacedFileIsJudgedAtItsPathInTheGameFolder(t *testing.T) {
 	checkLongPaths = false
 	if rows := s.longPaths(id, p.ID, mods); len(rows) != 0 {
 		t.Fatalf("a build that is not for Windows checks nothing: %+v", rows)
+	}
+}
+
+// TestTimeTheLongPathWalkOfAnEightHundredModProfile times the long-path check of a redirected game's mods folder on the
+// modfixture profile, shaped like a real 811-mod one (about 48,000 files). It is opt-in: MORTAR_SCALE=1.
+// MORTAR_SCALE_DATA names the data folder to build it in and keeps it, and a later run reuses the profile there, so
+// it times a process that did not just write the files.
+func TestTimeTheLongPathWalkOfAnEightHundredModProfile(t *testing.T) {
+	if os.Getenv("MORTAR_SCALE") != "1" {
+		t.Skip("set MORTAR_SCALE=1 to time the long-path walk of an 800-mod profile")
+	}
+	data := os.Getenv("MORTAR_SCALE_DATA")
+	if data == "" {
+		data = t.TempDir()
+	}
+	datadirtest.Use(t, data)
+	set, err := settings.Open()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, profiles := testenv.Stores(t)
+	const gameID = "stardew"
+	var id string
+	if have, err := profiles.List(gameID); err == nil && len(have) > 0 {
+		id = have[0].ID
+	} else {
+		at := time.Now()
+		id = modfixture.Profile(t, profiles, modfixture.Real)
+		t.Logf("fixture written in %v", time.Since(at).Round(time.Millisecond))
+	}
+	defer func(was bool) { checkLongPaths = was }(checkLongPaths)
+	checkLongPaths = true
+	s := NewService(t.TempDir(), set, profiles, nil)
+	mods, err := s.installed(gameID, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := range 5 {
+		at := time.Now()
+		rows := s.longPaths(gameID, id, mods)
+		t.Logf("check %d: %v over %d mods, %d rows", i+1, time.Since(at).Round(100*time.Microsecond), len(mods), len(rows))
 	}
 }

@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"slices"
 	"strings"
+	"sync"
 	"unicode/utf16"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
@@ -123,17 +124,42 @@ func longModsFolderPaths(modsDir string, mods []framework.Mod) []readPath {
 			folders[filepath.ToSlash(rel)] = m.Key
 		}
 	}
-	var out []readPath
 	// A folder that cannot be read is skipped: its files are no worse off than before the check. So is one whose name
 	// starts with a dot, which is how a switched-off mod is kept and which the loader does not read.
-	_ = fs.WalkDir(os.DirFS(modsDir), ".", func(rel string, d fs.DirEntry, err error) error {
-		if err == nil && d.IsDir() && rel != "." && strings.HasPrefix(d.Name(), ".") {
+	top, err := os.ReadDir(modsDir)
+	if err != nil {
+		return nil
+	}
+	// Each top folder is walked on its own goroutine: on Windows a walk mostly waits on each folder's listing, and an
+	// 800-mod folder one after another took about a second.
+	found := make([][]readPath, len(top))
+	sem := make(chan struct{}, max(1, runtime.GOMAXPROCS(0)))
+	var wg sync.WaitGroup
+	for i, e := range top {
+		if e.IsDir() && strings.HasPrefix(e.Name(), ".") {
+			continue
+		}
+		wg.Go(func() {
+			sem <- struct{}{}
+			defer func() { <-sem }()
+			found[i] = longPathsBelow(modsDir, e.Name(), folders)
+		})
+	}
+	wg.Wait()
+	return slices.Concat(found...)
+}
+
+// longPathsBelow is longModsFolderPaths for top, one entry of the mods folder.
+func longPathsBelow(modsDir, top string, folders map[string]string) []readPath {
+	var out []readPath
+	_ = fs.WalkDir(os.DirFS(modsDir), top, func(rel string, d fs.DirEntry, err error) error {
+		if err == nil && d.IsDir() && strings.HasPrefix(d.Name(), ".") {
 			return fs.SkipDir
 		}
 		if p := filepath.Join(modsDir, filepath.FromSlash(rel)); err == nil && d.Type().IsRegular() && pathLength(p) >= maxPath {
 			f := readPath{key: ownerKey(rel, folders), path: p}
 			if f.key == "" {
-				f.folder, _, _ = strings.Cut(rel, "/")
+				f.folder = top
 			}
 			out = append(out, f)
 		}
