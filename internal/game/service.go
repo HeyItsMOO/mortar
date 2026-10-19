@@ -189,8 +189,10 @@ type CustomLoader struct {
 // CustomLoaders are the loaders the Add a game form offers.
 func (s *Service) CustomLoaders() []CustomLoader {
 	return []CustomLoader{
-		{customgame.BepInEx5, "BepInEx 5"}, {customgame.BepInEx6, "BepInEx 6 (IL2CPP)"},
-		{customgame.MelonLoader, "MelonLoader"}, {customgame.Folder, "None: drop mods in a Mods folder"},
+		{customgame.BepInEx5, "BepInEx 5"},
+		{customgame.BepInEx6, "BepInEx 6 (IL2CPP)"},
+		{customgame.MelonLoader, "MelonLoader"},
+		{customgame.Folder, "None: drop mods in a Mods folder"},
 	}
 }
 
