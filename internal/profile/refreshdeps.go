@@ -58,7 +58,7 @@ func (s *Store) storeMods(game string, e Entry) []Component {
 		if e.File != "" {
 			return nil
 		}
-		mods, _, _ := s.packageMods(game, e.Key)
+		mods, _, _ := s.packageMods(game, e.Key, e.Source.ModName)
 		return mods
 	}
 	peer := storePeer(s, game, e.Key)

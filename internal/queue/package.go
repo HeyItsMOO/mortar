@@ -142,6 +142,9 @@ func packageSource(it Item) profile.Source {
 		Kind: cmp.Or(it.Source, profile.KindThunderstore), Name: it.Package, Version: it.Version, FileID: it.PackageFile, Digest: it.Digest,
 		Picture: it.Picture, Category: it.Category,
 	}
+	if it.Source != "" && it.Name != it.Package {
+		src.ModName = it.Name
+	}
 	if len(it.Disabled) > 0 {
 		src = src.WithDisabled(it.Disabled)
 	}

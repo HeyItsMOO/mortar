@@ -73,12 +73,18 @@ func TestFolderGameKeepsAScriptArchiveWhole(t *testing.T) {
 	e := newEnv(t)
 	p, _ := e.Create(folderGame, "S")
 	zip := zipOf(t, "m.zip", map[string]string{"m.ts4script": "s", "a.package": "1", "b.package": "2"})
-	res, err := e.InstallSource(t.Context(), folderGame, p.ID, zip, cfSource(11))
+	src := cfSource(11)
+	src.ModName = "Pack Title"
+	res, err := e.InstallSource(t.Context(), folderGame, p.ID, zip, src)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(res.Profile.Entries) != 1 || res.Profile.Entries[0].File != "" {
 		t.Fatalf("entries = %v", keysOf(res.Profile))
+	}
+	// Loose files carry no name of their own, so the mod takes its page's name rather than its store key.
+	if m := res.Profile.Entries[0].Mods; len(m) != 1 || m[0].Name != "Pack Title" {
+		t.Fatalf("mods = %+v", m)
 	}
 	owners, _ := e.PackageFileOwners(folderGame, p.ID)
 	if len(owners) != 3 {

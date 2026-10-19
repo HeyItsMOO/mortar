@@ -214,7 +214,7 @@ func (s *Store) placeKey(game, id, key string, source Source) (Profile, bool, bo
 		p, err := s.placeOverlayLocked(game, id, key, source)
 		return p, false, false, err
 	}
-	if mods, isPackage, err := s.packageMods(game, key); err != nil {
+	if mods, isPackage, err := s.packageMods(game, key, source.ModName); err != nil {
 		return Profile{}, false, false, err
 	} else if isPackage {
 		return s.placePackageLocked(game, id, key, source, mods)

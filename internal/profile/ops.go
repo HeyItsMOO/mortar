@@ -252,7 +252,7 @@ func (s *Store) addToStaged(game string, p *Profile, dir, key string, source Sou
 			return "", "", &DuplicateError{Key: key, Label: entryLabel(e)}
 		}
 	}
-	mods, isPackage, err := s.packageMods(game, key)
+	mods, isPackage, err := s.packageMods(game, key, source.ModName)
 	if err != nil {
 		return "", "", err
 	}
@@ -332,7 +332,7 @@ func (s *Store) addEntryLocked(game, id, key string, source Source) (Profile, er
 	} else if over {
 		return s.placeOverlayLocked(game, id, key, source)
 	}
-	if mods, isPackage, err := s.packageMods(game, key); err != nil {
+	if mods, isPackage, err := s.packageMods(game, key, source.ModName); err != nil {
 		return Profile{}, err
 	} else if isPackage && slices.Contains(installerGame(game).Loaders, folderLoader) {
 		p, _, _, err := s.placeFolderLocked(game, id, key, source, mods)

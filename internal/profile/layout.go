@@ -168,15 +168,16 @@ func cutSuffixFold(s, suffix string) (string, bool) {
 	return s[:len(s)-len(suffix)], true
 }
 
-// packageMods is the one component of a Thunderstore package item; ok is false for any other item.
-func (s *Store) packageMods(game, key string) (mods []Component, ok bool, err error) {
+// packageMods is the one component of a Thunderstore package item; ok is false for any other item. title is the mod's
+// name on its source's page, which names a folder game's mod when its files carry no name of their own.
+func (s *Store) packageMods(game, key, title string) (mods []Component, ok bool, err error) {
 	arch, g, inst, err := s.pick(game, key)
 	if err == nil && inst.ID() == "plain" && slices.Contains(g.Loaders, folderLoader) {
-		c := Component{ID: mod.NewID(mod.FormatFolder, key), Name: key, Folder: "."}
+		c := Component{ID: mod.NewID(mod.FormatFolder, key), Name: cmp.Or(title, key), Folder: "."}
 		if file, ok := installer.ModRootFile(arch, g); ok {
 			if b, rerr := fsx.ReadFile(filepath.Join(arch.Dir, filepath.FromSlash(file))); rerr == nil {
 				if info, perr := manifest.ParseModInfo(b); perr == nil {
-					c.Name, c.Version, c.Author = cmp.Or(info.Name, info.ModID, key), info.Version, strings.Join(info.Authors, ", ")
+					c.Name, c.Version, c.Author = cmp.Or(info.Name, info.ModID, title, key), info.Version, strings.Join(info.Authors, ", ")
 					c.ModID, c.Requires, c.MinGame = strings.ToLower(info.ModID), info.Dependencies, info.GameVersion
 				}
 			}

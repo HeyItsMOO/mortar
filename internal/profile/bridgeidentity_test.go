@@ -19,7 +19,7 @@ func TestTheCatalogBridgeIsNamedWithoutAManifestNamespace(t *testing.T) {
 	if err := e.items.AddDir(t.Context(), "lethal-company", key, src); err != nil {
 		t.Fatal(err)
 	}
-	mods, ok, err := e.packageMods("lethal-company", key)
+	mods, ok, err := e.packageMods("lethal-company", key, "")
 	if err != nil || !ok || len(mods) != 1 || mods[0].ID != "thunderstore:Rethunk-MortarBepInExBridge" {
 		t.Fatalf("mods = %+v, %v, %v", mods, ok, err)
 	}

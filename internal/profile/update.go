@@ -204,7 +204,7 @@ func (s *Store) swapTo(game string, p *Profile, dir string, ei int, newKey strin
 // movePackage is package entry e switched to newKey, which must be a version of the same package. Its source takes
 // the package's version.
 func (s *Store) movePackage(game, id string, e Entry, newKey string) (Entry, error) {
-	mods, ok, err := s.packageMods(game, newKey)
+	mods, ok, err := s.packageMods(game, newKey, e.Source.ModName)
 	if err != nil {
 		return Entry{}, err
 	}

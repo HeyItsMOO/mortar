@@ -69,8 +69,8 @@ type Source struct {
 	Repo             string `json:"repo,omitempty"`
 	Tag              string `json:"tag,omitempty"`
 	Asset            string `json:"asset,omitempty"`
-	// ModName is the Nexus mod page's name, and Category the file's category on that page (MAIN, OPTIONAL, ...), or
-	// a Thunderstore package's site category (thunderstore.Category).
+	// ModName is the mod's name on its page (Nexus, CurseForge, Modrinth, ...), and Category the Nexus file's category on
+	// that page (MAIN, OPTIONAL, ...) or a Thunderstore package's site category (thunderstore.Category).
 	ModName  string `json:"modName,omitempty"`
 	Category string `json:"category,omitempty"`
 	// Digest is the downloaded file's "sha512:<hex>" where the site published one (Modrinth, CurseForge as "sha1:<hex>"), which its update

@@ -71,7 +71,8 @@ func (s *Service) expandDirect(ctx context.Context, r Request) ([]Request, error
 		}
 		// A dependency named by another id the site answers to (a Vintage Story mod id) is kept under the site's own.
 		q.Package, q.Version, q.url, q.sizeKB, q.digest = cmp.Or(f.ID, ref.ID), f.Version, f.URL, f.SizeKB, f.Digest
-		if !root || q.Name == "" {
+		// A request that named the mod only by its id (the CLI's queue add) takes the site's name for it.
+		if !root || q.Name == "" || q.Name == ref.ID {
 			q.Name = cmp.Or(f.Name, ref.ID)
 		}
 		q.FileName = f.FileName
