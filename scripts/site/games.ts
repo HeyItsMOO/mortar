@@ -185,7 +185,7 @@ export function gamePage(g: Game, art: Record<string, SteamArt>, games: Game[]):
         <li>Open Browse, add the mods you want, and press Play. Each profile keeps its own mods and settings.</li>
       </ol>
       <h2>Share a profile</h2>
-      <p>A profile for ${name} shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click; the profile never leaves their browser.</p>${
+      <p>A profile for ${name} shared from Mortar is a link to <code>mortar.rethunk.tech/${g.id}/p</code>. Whoever opens it sees the mod list and imports it into Mortar in one click. The whole profile is inside the link, so nothing is uploaded anywhere.</p>${
         more.games.length > 0
           ? `
       <div data-pagefind-ignore>
