@@ -1,6 +1,8 @@
 package settings
 
 import (
+	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/Rethunk-Tech/mortar/internal/datadir/datadirtest"
@@ -159,5 +161,56 @@ func TestNewDefaults(t *testing.T) {
 	}
 	if got, _ := d.LookupGame("defaultLaunchMethod", "valheim"); got != LaunchSteam {
 		t.Errorf("valheim launch = %q", got)
+	}
+}
+
+// Every bounded setting takes both of its ends and refuses one past either, through the key setter the CLI and the
+// window use.
+func TestEveryIntSettingTakesItsBoundsAndRefusesBeyond(t *testing.T) {
+	for _, spec := range PrefSpecs() {
+		if spec.Type != TypeInt {
+			continue
+		}
+		game := ""
+		if spec.Scope == ScopeGame {
+			game = "stardew"
+		}
+		for n, ok := range map[int]bool{spec.Min: true, spec.Max: true, spec.Min - 1: false, spec.Max + 1: false} {
+			s := Defaults()
+			if err := ApplyKeyGame(&s, spec.Key, strconv.Itoa(n), game); (err == nil) != ok {
+				t.Errorf("%s = %d: err %v, want accepted %v", spec.Key, n, err, ok)
+			}
+		}
+	}
+}
+
+// A game's saved settings carry every field set on them, so no per-game choice is lost on load.
+func TestMergeGameKeepsEverySetField(t *testing.T) {
+	var src GameSettings
+	v := reflect.ValueOf(&src).Elem()
+	on := true
+	for sf, f := range v.Fields() {
+		k := f.Kind()
+		if k == reflect.String {
+			f.SetString("x")
+		} else if k == reflect.Int || k == reflect.Int64 {
+			f.SetInt(7)
+		} else if k == reflect.Bool {
+			f.SetBool(true)
+		} else if k == reflect.Pointer && f.Type().Elem().Kind() == reflect.Bool {
+			f.Set(reflect.ValueOf(&on))
+		} else if k == reflect.Slice {
+			f.Set(reflect.MakeSlice(f.Type(), 1, 1))
+		} else {
+			t.Fatalf("%s: give this test a value for a %s field", sf.Name, f.Type())
+		}
+	}
+	var dst GameSettings
+	mergeGame(&dst, src)
+	d := reflect.ValueOf(dst)
+	for sf, f := range v.Fields() {
+		if !reflect.DeepEqual(d.FieldByIndex(sf.Index).Interface(), f.Interface()) {
+			t.Errorf("%s was not merged", sf.Name)
+		}
 	}
 }

@@ -334,6 +334,9 @@ func mergeGame(dst *GameSettings, src GameSettings) {
 	if src.SourceOrder != "" {
 		dst.SourceOrder = src.SourceOrder
 	}
+	if src.ProtonVersion != "" {
+		dst.ProtonVersion = src.ProtonVersion
+	}
 	if src.BrowseFilters != "" {
 		dst.BrowseFilters = src.BrowseFilters
 	}
@@ -611,20 +614,7 @@ func ApplyKeyGame(s *Settings, key, value, game string) error {
 	if p.spec.Scope != ScopeGame {
 		game = ""
 	}
-	if p.spec.Type == TypeInt {
-		n, err := strconv.Atoi(value)
-		if err != nil {
-			return fmt.Errorf("not an integer: %s", value)
-		}
-		if p.spec.Min != 0 || p.spec.Max != 0 {
-			if n < p.spec.Min || n > p.spec.Max {
-				return fmt.Errorf("%s must be %d to %d, got %d", p.spec.Key, p.spec.Min, p.spec.Max, n)
-			}
-		}
-	}
-	if p.spec.Type == TypeEnum && len(p.spec.Values) > 0 && !slices.Contains(p.spec.Values, value) {
-		return fmt.Errorf("must be %s, got %q", strings.Join(p.spec.Values, ", "), value)
-	}
+	// Each pref's own setter parses and bounds its value.
 	return p.set(s, game, value)
 }
 
