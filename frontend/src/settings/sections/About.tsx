@@ -61,8 +61,7 @@ function CreditList() {
 export function About() {
   const { t } = useLingui()
   const [creditsOpen, setCreditsOpen] = useState(false)
-  const version = useMortarUpdate((s) => s.info?.version ?? '')
-  const commit = useMortarUpdate((s) => s.info?.commit ?? '')
+  const info = useMortarUpdate((s) => s.info)
   return (
     <>
       <SettingsSection title={t`Mortar`}>
@@ -83,12 +82,14 @@ export function About() {
             <Box component="span" sx={{ color: 'var(--mortar-ink-sec)', fontSize: 14 }}>
               {t`AGPL-3.0 · Rethunk-Tech/mortar`}
             </Box>
-            {version ? (
+            {info?.version ? (
               <Box
                 component="span"
                 sx={{ color: 'var(--mortar-ink-sec)', fontSize: 14, userSelect: 'text' }}
               >
-                {commit ? t`Version ${version} · build ${commit}` : t`Version ${version}`}
+                {info.commit
+                  ? t`Version ${info.version} · build ${info.commit}`
+                  : t`Version ${info.version}`}
               </Box>
             ) : null}
           </Box>
