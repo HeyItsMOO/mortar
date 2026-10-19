@@ -26,13 +26,13 @@ func TestInstallFromFixture(t *testing.T) {
 		t.Fatal(err)
 	}
 	replaced := strings.ReplaceAll(string(fixtureGogLinux), "/home/player/Games/Stardew Valley", dir)
-	got, err := newMatcher(testGame).installFromYAML(replaced)
-	if err != nil || got != dir {
-		t.Fatalf("install = %q, %v", got, err)
+	got := newMatcher(testGame).installFromYAML(replaced)
+	if got != dir {
+		t.Fatalf("install = %q", got)
 	}
-	steam, err := newMatcher(testGame).installFromYAML(string(fixtureSteamRunner))
-	if err != nil || steam != "" {
-		t.Fatalf("steam runner = %q, %v", steam, err)
+	steam := newMatcher(testGame).installFromYAML(string(fixtureSteamRunner))
+	if steam != "" {
+		t.Fatalf("steam runner = %q", steam)
 	}
 }
 

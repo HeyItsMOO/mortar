@@ -105,8 +105,7 @@ func (m matcher) installFromConfig(gamesDir, name string) (dir, text string, err
 	if err != nil {
 		return "", "", err
 	}
-	dir, err = m.installFromYAML(string(b))
-	return dir, string(b), err
+	return m.installFromYAML(string(b)), string(b), nil
 }
 
 func configValue(re *regexp.Regexp, text string) string {
@@ -127,14 +126,11 @@ func winePrefix(prefix string) string {
 	return ""
 }
 
-func (m matcher) installFromYAML(text string) (string, error) {
-	if reRunnerSteam.MatchString(text) {
-		return "", nil
+func (m matcher) installFromYAML(text string) string {
+	if reRunnerSteam.MatchString(text) || !m.matches(text) {
+		return ""
 	}
-	if !m.matches(text) {
-		return "", nil
-	}
-	return m.resolveDir(text), nil
+	return m.resolveDir(text)
 }
 
 func (m matcher) matches(text string) bool {
