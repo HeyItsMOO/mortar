@@ -86,6 +86,10 @@ Optional: it marks Nexus pages with what your profile already has and sends Mod 
 
 - **GitHub:** **Add** installs the latest release. Your `gh auth login`, when present, raises GitHub's rate limits.
 - **Card details:** **Show › Card details** picks what cards list (popularity, downloads, file size, version, last update); the Mods tab uses the same choice.
+- **Hide from Browse:** a card's menu has **Hide from Browse** and **Hide everything by \<author\>**. The game's settings list **Hidden mods** with **Unhide**. Links and imports still install a hidden mod.
+- **Modpacks, translations and cheats:** results leave them out; **Show modpacks, translations and cheats** in the filters brings them back.
+- **Open a mod's page:** Ctrl+click a card in Browse, or middle-click a mod in the Mods tab.
+- **Details:** a card's details page lists a **Support the author** link when the mod's page gives a donation address. **Choose a version…** installs a version other than the latest; an installed mod offers the same choice, and **Change version…** once one is held.
 
 ### Narrow and sort the results
 
@@ -113,6 +117,18 @@ Mortar edits a mod's config as a form, and other files a BepInEx mod keeps (YAML
 
 The **Config** tab (Ctrl+6) lists every mod with settings. A change under **In-game menu** (Generic Mod Config Menu) says **Applied when the game next starts**.
 
+The Config tab can search every config file in the profile and find a setting across all the profile's files. **Delete file** removes a config file no mod owns.
+
+## Your mod list
+
+- **Favourites:** the star on a mod marks it a favourite; the profile menu's **Add to favourites** does the same for a profile.
+- **Edit name, author and version…** (the mod's menu) changes how one profile shows a mod; **Use the mod's own** goes back.
+- **Update channel:** a mod from GitHub, CurseForge or Modrinth can follow a different release channel; **Pin this version** stops its updates.
+- **New:** Thunderstore, CurseForge and GitHub mods that changed since you last looked are marked **New**.
+- **Switching a mod off:** when other enabled mods need it, Mortar offers to switch those off too.
+- **Report to author…** (the mod's menu) opens a prefilled report for a Thunderstore, CurseForge or Vintage Story mod.
+- **What's new:** an update shows the changes for Thunderstore, CurseForge and Vintage Story mods.
+
 ## Lethal Company and Thunderstore
 
 Lethal Company's mods are Thunderstore packages on BepInEx. Mortar installs BepInEx, searches Thunderstore alongside Nexus Mods and GitHub, and **Add** installs a package with its dependencies. A dependency still missing is flagged on the Load order tab and in **Before you play**.
@@ -138,7 +154,9 @@ On Windows, sharing is off while every connected network is **Public**; set it t
 
 ## Switch games
 
-Click the game's name in the title bar; it opens on the profile you used last. **All games…** opens Game select.
+Click the game's name in the title bar; it opens on the profile you used last. **All games…** opens Game select, where a game's menu has **Hide this game** (and **Unhide**) to keep it off the list.
+
+The mouse's back and forward buttons, and Alt with the left and right arrows, move through the pages you opened.
 
 ## Game installs
 
@@ -157,10 +175,12 @@ A profile is one set of mods. Switching profiles never touches the game folder's
 - **Create:** **New profile…** (Profiles page or title-bar switcher), then **Start from**: **Empty profile**, **Copy of \<the open profile\>** (mods, their settings and what they wrote) or a template from **Save as template…** (**Manage templates…** renames or deletes them).
 - **Why each mod is there:** a mod you add is **Explicit**; one added because another needs it is **Implicit**. Group the Mods list by **Install reason**, and right-click a mod to mark it either way.
 - **Switch, rename, duplicate, delete:** from the Profiles page or the profile's menu. Play always starts the open profile. Deleted profiles wait in **Recently deleted** (**Restore**, **Delete permanently**).
+- **Freeze:** the profile menu's **Freeze this profile** holds its mods on their versions and offers no updates until **Unfreeze**.
 - **Profile folder:** the profile menu's **Profile folder…** moves a profile to a folder of your choice, such as one on another drive, and back. The move copies the profile first and checks nothing is running; a profile whose drive is not connected says so there. On another drive its mods are copies instead of links into the shared store.
-- **Share:** **Share profile**, then **Copy link** (names the mods and their Nexus or GitHub files, with pins, groups and install reasons) or save a `.mortar` file (also carries settings and notes; suits large profiles). For a Thunderstore game, **Save .r2z…** writes an r2modman or Gale profile file without posting a public code.
+- **Share:** **Share profile**, then **Copy link** (names the mods and their Nexus or GitHub files, with pins, groups and install reasons) or save a `.mortar` file (also carries settings and notes; suits large profiles). **Share › Mod list** can also write a Thunderstore dependency string list. For a Thunderstore game, **Save .r2z…** writes an r2modman or Gale profile file without posting a public code.
 - **Import:** **Import** on the Profiles page: **From a link or file…**, **From the game's Mods folder…**, **Restore from a file…** (a **Back up to a file…** backup or an older profile zip) or **Import…**. Mortar shows what the profile holds, then installs or queues what is missing.
 - **From the game's Mods folder:** copies the mods the game reads into a new profile and leaves the folder as is. Tick **Move them out of the game's Mods folder** to take the originals out; left there, the game keeps loading them even when a profile switches them off, and Mortar refills that folder on each Play. For The Sims 4 it is `Mods` in the Documents folder, and a file switched off by renaming (`hair.packageoff`) arrives switched off.
+- **Several at once:** **Import…** can read every r2modman or Gale profile in a data folder you choose in one step, and a pack can import under a name of your own or over an existing profile.
 - **From another manager:** **Import…** lists profiles found for the game from r2modman, Gale, Vortex, Mod Organizer 2 and Stardrop, with a preview. For a Thunderstore game, **Use a code or file…** reads an r2modman or Gale code or `.r2z` file. Copied mods may have no page to update from: group the Mods list by **Source** and choose **Find sources** (Stardew mods on Nexus, BepInEx plugins on Thunderstore, Vintage Story mods on the Mod DB), or right-click a mod › **Set Nexus page…** (a file's Manual Download address names the file too). Mods with an unknown file still update but a share leaves them out.
 - **Thunderstore modpack:** Share › Thunderstore › **Export as Thunderstore modpack…** opens a form for the name, author, version, description, website, icon (a 256x256 PNG), README, changelog, which config files go in, and whether switched-off mods are included. The form is remembered per profile, and the next export suggests the next patch version and writes a changelog of the packages added, updated or removed since the last one. Mods from other sources are named in the README.
 - **Multiplayer mod list (Stardew Valley, Thunderstore games such as Lethal Company, REPO, PEAK, Content Warning and Valheim, and Vintage Story):** profile menu › **Multiplayer mod list…** copies the host's switched-on mods with versions and sources. A friend pastes it under **The host's list** and chooses **Check**: missing mods show **Install**, other versions **Update**, and **Fix all** queues every one; a mod with no download source is named to install by hand. Mods match by SMAPI id, Thunderstore package id or Vintage Story mod id, and **Update** goes to the host's version even when yours is newer. On Stardew, **Check** also reads **Share › Mod list** text and **Load the host's list from a file…**, which have no ids, so mods match by name and come from their Nexus Mods or GitHub page (possibly newer than the host's). Many mods refuse a player on another version, so match before joining. Terminal: `mortar profile farm export|check|fix`.
@@ -174,6 +194,8 @@ After a crash, a card on the profile's Home names the likely cause from the load
 
 - **Most likely cause: \<mod\>** shows the log line and the **Stack frame** or dump line. **Disable it and play** switches that mod off and relaunches.
 - **Find the cause…** halves the mods and relaunches until one is left. **Dismiss** hides the card for that run.
+
+A Heroic or Lutris copy starts through its own launcher, so the game runs in the prefix and runner the launcher keeps for it. **Skip the intro** in Stardew Valley's settings skips the title intro. In a BepInEx game whose bridge has a console, the **Console** tab takes commands.
 
 On Windows, Steam's own **Play** starts SMAPI with the game's own `Mods` folder, not a profile. Press Play in Mortar, or use the profile menu's **Add a shortcut that plays this profile** (Start Menu on Windows, launcher entry on Linux) or **Add this profile to Steam** (a non-Steam game; close Steam first).
 
@@ -268,11 +290,12 @@ A sync folder shares each profile's mod list, sources, settings and mod config f
 
 - **Mortar:** the Mortar menu's **Check mods and Mortar for updates**, or **Settings › Updates** (which can include betas). An update applies when you close Mortar, or choose **Restart now**. The Mortar menu's **What's new** shows what changed.
 - **Mods:** updates show on the mod list; **Settings › Updates** has **Review mod updates**.
+- **Mod loaders:** Mortar tells you when a new loader version is out; each game's settings hold the loader version and its update notice.
 - **SMAPI:** Mortar tells you when a new one is out; the game's settings update it.
 
 ## Appearance
 
-**Settings › Appearance** sets the theme, accent colour and background (an image, the desktop wallpaper or a solid colour). Animated backgrounds hold still while a game runs or **Reduce motion** is on; WebP animations are often a tenth of a GIF's size. Turn off **Grow game rows on hover** to keep Game select's rows a fixed height.
+**Settings › Appearance** sets the theme, accent colour and background (an image, the desktop wallpaper or a solid colour). **Accent colour** can follow your desktop's (**System**), and **Font** picks the app's typeface. Animated backgrounds hold still while a game runs or **Reduce motion** is on; WebP animations are often a tenth of a GIF's size. Turn off **Grow game rows on hover** to keep Game select's rows a fixed height.
 
 ## Save backups and restore
 
@@ -319,5 +342,6 @@ Before a mod enters Mortar's store, Mortar scans it with Windows Security or, on
 - **Mortar does not start:** it shows why, with a button that opens the folder holding `mortar.log` (on Windows **Yes** opens it, Ctrl+C copies the message; on Linux without zenity or kdialog the message is a desktop notification). Starting Mortar again while a copy is stuck offers to end it.
 - **Run checks:** **Settings › About › Diagnostics › Run checks…**; **Repair** fixes what it can.
 - **Logs:** `mortar.log` in the data folder, plus `crash.log` after a crash. Each profile's SMAPI log is on its log view.
+- **Ask for help or an idea:** the Mortar menu has **Ask on Discord** and **Suggest a feature…**. **Report a bug** can also copy the report for a new post in the bug-reports forum on Mortar's Discord and save the diagnostics zip to attach.
 - **Report a bug:** the Mortar menu's **Report a bug** opens a prefilled GitHub issue. Leave **Attach diagnostics** ticked to save a zip (checks, logs, settings and recent runs, with secrets and your home folder removed) and drag it into the issue before posting. **Save diagnostics…** (Mortar menu, Settings › About › Diagnostics) writes the same zip.
 - **Share a SMAPI log:** **Share log…** on the profile's log view uploads it to smapi.io/log and gives you a link.
