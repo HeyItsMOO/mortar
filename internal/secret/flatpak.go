@@ -35,7 +35,8 @@ var (
 			home, _ := os.UserHomeDir()
 			base = filepath.Join(home, ".local", "share")
 		}
-		return filepath.Join(base, "mortar")
+		// Beside Mortar's data folder, never in it, so a backup, move or share of that folder carries no secret.
+		return filepath.Join(base, "mortar-secrets")
 	}
 )
 
