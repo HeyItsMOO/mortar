@@ -147,6 +147,7 @@ type session struct {
 	preview     Preview
 	notes       string
 	description string
+	favourite   bool
 	configs     []share.Config
 	// loaderConfigs are the loader's own config files, written into the profile as soon as it exists.
 	loaderConfigs []share.LoaderConfig
@@ -484,6 +485,7 @@ func (s *Service) previewShared(ctx context.Context, game string, pv share.Previ
 	s.mu.Lock()
 	if s.current != nil && s.current.id == out.Session {
 		s.current.description = pv.Description
+		s.current.favourite = pv.Favourite
 		s.current.groups = pv.Groups
 		s.current.choices = pv.Choices
 		s.current.loaderConfigs = pv.LoaderConfigs
@@ -958,6 +960,13 @@ func (s *Service) importWithBatch(ctx context.Context, game, session, profileID 
 				return Result{}, errors.Join(err, s.d.Profiles.Delete(game, p.ID))
 			}
 			p = withDesc
+		}
+		if cur.favourite {
+			starred, err := s.d.Profiles.SetFavourite(game, p.ID, true)
+			if err != nil {
+				return Result{}, errors.Join(err, s.d.Profiles.Delete(game, p.ID))
+			}
+			p = starred
 		}
 		res.Profile = p
 		profileID = p.ID

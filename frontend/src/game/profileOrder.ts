@@ -3,9 +3,10 @@ import { cmpText } from '../mods/cmpText.ts'
 export interface OrderableProfile {
   id: string
   name: string
+  favourite?: boolean | undefined
 }
 
-export function orderProfiles<T extends OrderableProfile>(
+function ordered<T extends OrderableProfile>(
   profiles: T[],
   order: string,
   lastPlayedProfile = '',
@@ -25,4 +26,14 @@ export function orderProfiles<T extends OrderableProfile>(
     })
   }
   return profiles
+}
+
+/** The profiles in the chosen order, those the player starred first and each group in that order. */
+export function orderProfiles<T extends OrderableProfile>(
+  profiles: T[],
+  order: string,
+  lastPlayedProfile = '',
+): T[] {
+  const sorted = ordered(profiles, order, lastPlayedProfile)
+  return [...sorted.filter((p) => p.favourite), ...sorted.filter((p) => !p.favourite)]
 }

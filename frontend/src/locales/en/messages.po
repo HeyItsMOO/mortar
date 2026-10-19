@@ -180,7 +180,7 @@ msgid "Unofficial build"
 msgstr "Unofficial build"
 
 #: src/mods/listRows.ts:161
-#: src/mods/Toolbar.tsx:71
+#: src/mods/Toolbar.tsx:72
 #: src/mods/useListHeading.ts:22
 msgid "Implicit"
 msgstr "Implicit"
@@ -265,7 +265,7 @@ msgstr "Imported {0}: {1} to install"
 #: src/mods/problemFix/SettingFix.tsx:27
 #: src/mods/problemFix/WinFix.tsx:35
 #: src/mods/SplitCombineItems.tsx:36
-#: src/mods/Toolbar.tsx:328
+#: src/mods/Toolbar.tsx:329
 #: src/profiles/MergeDialog.tsx:180
 #: src/saves/lackChipActions.tsx:44
 #: src/saves/lackChips.tsx:60
@@ -691,7 +691,7 @@ msgstr "Startup and window"
 msgid "Turns mods off in halves and relaunches until the crash stops"
 msgstr "Turns mods off in halves and relaunches until the crash stops"
 
-#: src/game/ProfileMenuItems.tsx:139
+#: src/game/ProfileMenuItems.tsx:141
 msgid "Could not add it to Steam"
 msgstr "Could not add it to Steam"
 
@@ -878,7 +878,7 @@ msgstr "{0} was changed on {1} and here"
 msgid "How timestamps are shown"
 msgstr "How timestamps are shown"
 
-#: src/game/ProfileMenuItems.tsx:103
+#: src/game/ProfileMenuItems.tsx:105
 msgid "Remove the shortcut"
 msgstr "Remove the shortcut"
 
@@ -961,7 +961,7 @@ msgstr "This profile"
 msgid "Game version not supported"
 msgstr "Game version not supported"
 
-#: src/game/ProfileMenuItems.tsx:85
+#: src/game/ProfileMenuItems.tsx:87
 msgid "Add a desktop shortcut"
 msgstr "Add a desktop shortcut"
 
@@ -1218,7 +1218,7 @@ msgstr "Something changed this profile's mods folder without Mortar, by adding, 
 msgid "Mod list copied"
 msgstr "Mod list copied"
 
-#: src/game/ProfileMenuItems.tsx:130
+#: src/game/ProfileMenuItems.tsx:132
 msgid "Already in Steam"
 msgstr "Already in Steam"
 
@@ -1358,7 +1358,7 @@ msgstr "Sort: most downloaded"
 msgid "Scan command"
 msgstr "Scan command"
 
-#: src/mods/ModsTab.tsx:137
+#: src/mods/ModsTab.tsx:139
 msgid "Show all mods"
 msgstr "Show all mods"
 
@@ -1536,7 +1536,7 @@ msgstr "From a shared link"
 msgid "No matches"
 msgstr "No matches"
 
-#: src/game/ProfileMenuItems.tsx:195
+#: src/game/ProfileMenuItems.tsx:197
 msgid "Use the automatic cover"
 msgstr "Use the automatic cover"
 
@@ -1916,7 +1916,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/lan/SendPanel.tsx:194
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:421
-#: src/mods/ModsTab.tsx:112
+#: src/mods/ModsTab.tsx:114
 #: src/mods/typedConfig/ConfigPane.tsx:407
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
@@ -1961,7 +1961,7 @@ msgstr "Trim…"
 msgid "Stack frame: {0}"
 msgstr "Stack frame: {0}"
 
-#: src/browse/ResultCard.tsx:125
+#: src/browse/ResultCard.tsx:127
 msgid "Marked broken"
 msgstr "Marked broken"
 
@@ -2289,7 +2289,7 @@ msgstr "Host:port"
 msgid "Nexus account"
 msgstr "Nexus account"
 
-#: src/game/ProfileMenuItems.tsx:234
+#: src/game/ProfileMenuItems.tsx:250
 msgid "Open the profile first."
 msgstr "Open the profile first."
 
@@ -2425,9 +2425,9 @@ msgstr "Could not remove the mod from the saved group"
 msgid "Mortar is up to date"
 msgstr "Mortar is up to date"
 
-#: src/mods/Toolbar.tsx:389
-#: src/mods/Toolbar.tsx:415
-#: src/mods/Toolbar.tsx:433
+#: src/mods/Toolbar.tsx:390
+#: src/mods/Toolbar.tsx:416
+#: src/mods/Toolbar.tsx:434
 #: src/mods/typedConfig/ConfigTab.tsx:512
 #: src/profiles/CompareDialog.tsx:284
 #: src/profiles/CompareTop.tsx:182
@@ -2578,8 +2578,8 @@ msgstr "Show the first-run tips again"
 #: src/browse/BrowseShow.tsx:57
 #: src/browse/BrowseShow.tsx:61
 #: src/browse/BrowseShow.tsx:67
-#: src/mods/Toolbar.tsx:176
-#: src/mods/Toolbar.tsx:195
+#: src/mods/Toolbar.tsx:177
+#: src/mods/Toolbar.tsx:196
 #: src/mods/typedConfig/ConfigTab.tsx:119
 #: src/nxm/store.ts:57
 #: src/profiles/CompareDialog.tsx:185
@@ -3089,7 +3089,7 @@ msgstr "Support the author"
 msgid "Delete permanently"
 msgstr "Delete permanently"
 
-#: src/game/ProfileMenuItems.tsx:153
+#: src/game/ProfileMenuItems.tsx:155
 #: src/profiles/HealthDialog.tsx:269
 msgid "Check this profile"
 msgstr "Check this profile"
@@ -3132,8 +3132,8 @@ msgstr "Cleanup"
 msgid "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 msgstr "{name} now opens Thunderstore \"Install with Mod Manager\" links."
 
-#: src/mods/Toolbar.tsx:238
-#: src/mods/Toolbar.tsx:246
+#: src/mods/Toolbar.tsx:239
+#: src/mods/Toolbar.tsx:247
 msgid "Group by"
 msgstr "Group by"
 
@@ -3187,7 +3187,7 @@ msgstr "Could not find Mortar users"
 msgid "{name} is not paired with this computer, so Mortar sends the list of mods, not their files. {name} will download each mod from its site, one click per mod on a free Nexus account."
 msgstr "{name} is not paired with this computer, so Mortar sends the list of mods, not their files. {name} will download each mod from its site, one click per mod on a free Nexus account."
 
-#: src/mods/Toolbar.tsx:433
+#: src/mods/Toolbar.tsx:434
 msgid "Filter mods, filter active"
 msgstr "Filter mods, filter active"
 
@@ -3223,7 +3223,7 @@ msgid "Find a mod in all profiles…"
 msgstr "Find a mod in all profiles…"
 
 #: src/game/ProfileMenu.tsx:86
-#: src/game/ProfileMenuItems.tsx:253
+#: src/game/ProfileMenuItems.tsx:269
 msgid "Compare…"
 msgstr "Compare…"
 
@@ -3478,7 +3478,7 @@ msgstr "Could not open the file dialog"
 msgid "Could not disable {0}"
 msgstr "Could not disable {0}"
 
-#: src/mods/Toolbar.tsx:285
+#: src/mods/Toolbar.tsx:286
 msgid "Edit categories…"
 msgstr "Edit categories…"
 
@@ -3668,7 +3668,7 @@ msgid "Open on Thunderstore"
 msgstr "Open on Thunderstore"
 
 #. placeholder {0}: active.label(i18n)
-#: src/mods/Toolbar.tsx:176
+#: src/mods/Toolbar.tsx:177
 msgid "Show: {0}"
 msgstr "Show: {0}"
 
@@ -3698,7 +3698,7 @@ msgstr "Search GitHub releases"
 msgid "Mortar doesn't know where to get {id}"
 msgstr "Mortar doesn't know where to get {id}"
 
-#: src/game/ProfileMenuItems.tsx:135
+#: src/game/ProfileMenuItems.tsx:137
 msgid "It shows in your Steam library the next time Steam starts."
 msgstr "It shows in your Steam library the next time Steam starts."
 
@@ -3797,7 +3797,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #: src/mods/columnLabel.ts:19
-#: src/mods/Toolbar.tsx:262
+#: src/mods/Toolbar.tsx:263
 #: src/settings/prefCopyModsView.ts:49
 msgid "Install reason"
 msgstr "Install reason"
@@ -4046,7 +4046,7 @@ msgstr "This option cannot be used."
 msgid "Grid card size"
 msgstr "Grid card size"
 
-#: src/game/ProfileMenuItems.tsx:264
+#: src/game/ProfileMenuItems.tsx:280
 #: src/mods/ExtraFolderMenu.tsx:82
 msgid "Add a saved group…"
 msgstr "Add a saved group…"
@@ -4070,7 +4070,7 @@ msgstr "Console"
 msgid "{both, plural, one {# mod is in both} other {# mods are in both}}"
 msgstr "{both, plural, one {# mod is in both} other {# mods are in both}}"
 
-#: src/mods/ModsTab.tsx:139
+#: src/mods/ModsTab.tsx:141
 msgid "Try a different search or filter."
 msgstr "Try a different search or filter."
 
@@ -4315,7 +4315,7 @@ msgid "Should Mortar open Nexus \"Mod Manager Download\" links, so a click on Ne
 msgstr "Should Mortar open Nexus \"Mod Manager Download\" links, so a click on Nexus starts the download here?"
 
 #. placeholder {0}: listNames(also)
-#: src/mods/storeView.ts:68
+#: src/mods/storeView.ts:69
 msgid "Also enabled {0}"
 msgstr "Also enabled {0}"
 
@@ -4391,7 +4391,7 @@ msgstr "System"
 msgid "The game started without errors"
 msgstr "The game started without errors"
 
-#: src/mods/Toolbar.tsx:140
+#: src/mods/Toolbar.tsx:141
 #: src/settings/prefCopy.ts:131
 #: src/settings/prefCopy.ts:184
 #: src/settings/prefCopyModsView.ts:22
@@ -4443,7 +4443,7 @@ msgstr "Could not launch the game"
 msgid "{0, plural, one {# asset} other {# assets}}, {1} changed by more than one mod"
 msgstr "{0, plural, one {# asset} other {# assets}}, {1} changed by more than one mod"
 
-#: src/mods/Toolbar.tsx:68
+#: src/mods/Toolbar.tsx:69
 msgid "Local"
 msgstr "Local"
 
@@ -4831,8 +4831,8 @@ msgid "{off} switched off"
 msgstr "{off} switched off"
 
 #: src/mods/ModCards.tsx:498
-#: src/mods/ModList.tsx:407
-#: src/mods/Toolbar.tsx:233
+#: src/mods/ModList.tsx:410
+#: src/mods/Toolbar.tsx:234
 #: src/mods/typedConfig/ConfigTab.tsx:175
 msgid "A mod with several tags appears under its first tag."
 msgstr "A mod with several tags appears under its first tag."
@@ -5056,7 +5056,7 @@ msgstr "Get the extension"
 
 #: src/groups/SavedGroupsSection.tsx:86
 #: src/mods/ModDependencyTree.tsx:207
-#: src/mods/Toolbar.tsx:250
+#: src/mods/Toolbar.tsx:251
 #: src/settings/prefCopyModsView.ts:40
 msgid "None"
 msgstr "None"
@@ -5102,7 +5102,7 @@ msgid "{loader} is the loader every {gameName} mod needs. It goes into the game 
 msgstr "{loader} is the loader every {gameName} mod needs. It goes into the game folder, and Steam keeps launching the game as usual."
 
 #: src/game/ProfileMenu.tsx:78
-#: src/game/ProfileMenuItems.tsx:222
+#: src/game/ProfileMenuItems.tsx:224
 #: src/profiles/SinceLastRun.tsx:112
 msgid "History…"
 msgstr "History…"
@@ -5330,7 +5330,7 @@ msgstr "Could not save that setting"
 msgid "There are no mods to share."
 msgstr "There are no mods to share."
 
-#: src/mods/Toolbar.tsx:307
+#: src/mods/Toolbar.tsx:308
 #: src/queue/QueueBody.tsx:411
 msgid "Browse mods"
 msgstr "Browse mods"
@@ -5369,7 +5369,7 @@ msgstr "YOUR PROFILES"
 msgid "Automatic tries Thunderstore's hosts in turn when one fails or stalls; choosing one uses only that host."
 msgstr "Automatic tries Thunderstore's hosts in turn when one fails or stalls; choosing one uses only that host."
 
-#: src/game/ProfileMenuItems.tsx:134
+#: src/game/ProfileMenuItems.tsx:136
 msgid "Added to Steam"
 msgstr "Added to Steam"
 
@@ -5386,7 +5386,7 @@ msgid "No backups to delete"
 msgstr "No backups to delete"
 
 #: src/game/ProfileMenu.tsx:56
-#: src/game/ProfileMenuItems.tsx:243
+#: src/game/ProfileMenuItems.tsx:259
 #: src/profiles/LaunchPresetsBlock.tsx:53
 msgid "Duplicate"
 msgstr "Duplicate"
@@ -5999,7 +5999,7 @@ msgid "Restarting…"
 msgstr "Restarting…"
 
 #: src/game/ProfileMenu.tsx:95
-#: src/game/ProfileMenuItems.tsx:278
+#: src/game/ProfileMenuItems.tsx:294
 msgid "Delete profile…"
 msgstr "Delete profile…"
 
@@ -6369,7 +6369,7 @@ msgstr "Moving"
 msgid "Keep this profile's saves separate"
 msgstr "Keep this profile's saves separate"
 
-#: src/mods/Toolbar.tsx:200
+#: src/mods/Toolbar.tsx:201
 msgid "All mods"
 msgstr "All mods"
 
@@ -6509,7 +6509,7 @@ msgstr "Download folder"
 msgid "How to send it"
 msgstr "How to send it"
 
-#: src/mods/Toolbar.tsx:476
+#: src/mods/Toolbar.tsx:477
 msgid "Import a shared profile…"
 msgstr "Import a shared profile…"
 
@@ -6900,7 +6900,7 @@ msgstr "Rename the open profile"
 msgid "Place {file}"
 msgstr "Place {file}"
 
-#: src/game/ProfileMenuItems.tsx:232
+#: src/game/ProfileMenuItems.tsx:248
 msgid "Freeze this profile"
 msgstr "Freeze this profile"
 
@@ -6986,8 +6986,8 @@ msgstr "Problem choices"
 msgid "Next"
 msgstr "Next"
 
-#: src/mods/Toolbar.tsx:335
-#: src/mods/Toolbar.tsx:342
+#: src/mods/Toolbar.tsx:336
+#: src/mods/Toolbar.tsx:343
 msgid "Add archive…"
 msgstr "Add archive…"
 
@@ -7104,7 +7104,7 @@ msgstr "Slow startup"
 msgid "Pin {name}"
 msgstr "Pin {name}"
 
-#: src/browse/ResultCard.tsx:125
+#: src/browse/ResultCard.tsx:127
 msgid "Deprecated or obsolete"
 msgstr "Deprecated or obsolete"
 
@@ -7860,7 +7860,7 @@ msgstr "No mods match \"{text}\""
 msgid "Add these mods to another profile…"
 msgstr "Add these mods to another profile…"
 
-#: src/game/ProfileMenuItems.tsx:110
+#: src/game/ProfileMenuItems.tsx:112
 msgid "Shortcut removed"
 msgstr "Shortcut removed"
 
@@ -7877,7 +7877,7 @@ msgstr "Delete {0} permanently"
 msgid "Could not reach Nexus"
 msgstr "Could not reach Nexus"
 
-#: src/game/ProfileMenuItems.tsx:113
+#: src/game/ProfileMenuItems.tsx:115
 msgid "Could not remove the shortcut"
 msgstr "Could not remove the shortcut"
 
@@ -8002,12 +8002,12 @@ msgstr "Config of {name}"
 msgid "New profile from file"
 msgstr "New profile from file"
 
-#: src/mods/Toolbar.tsx:139
+#: src/mods/Toolbar.tsx:140
 #: src/settings/prefCopyModsView.ts:21
 msgid "Nested"
 msgstr "Nested"
 
-#: src/game/ProfileMenuItems.tsx:94
+#: src/game/ProfileMenuItems.tsx:96
 msgid "Shortcut added"
 msgstr "Shortcut added"
 
@@ -8019,7 +8019,7 @@ msgstr "Large"
 #: src/mods/NexusDetails.tsx:107
 #: src/mods/SelectionBarDialogs.tsx:122
 #: src/mods/Sidebar.tsx:158
-#: src/mods/Toolbar.tsx:253
+#: src/mods/Toolbar.tsx:254
 #: src/settings/prefCopyModsView.ts:42
 msgid "Category"
 msgstr "Category"
@@ -8473,7 +8473,7 @@ msgstr "Install {0} as from {1}?"
 msgid "Edit tool"
 msgstr "Edit tool"
 
-#: src/mods/Toolbar.tsx:261
+#: src/mods/Toolbar.tsx:262
 #: src/settings/prefCopyModsView.ts:48
 msgid "Group"
 msgstr "Group"
@@ -8526,7 +8526,7 @@ msgstr "older, profile has {0}"
 msgid "Refresh"
 msgstr "Refresh"
 
-#: src/game/ProfileMenuItems.tsx:180
+#: src/game/ProfileMenuItems.tsx:182
 msgid "Choose cover image"
 msgstr "Choose cover image"
 
@@ -8872,6 +8872,11 @@ msgstr "Could not run diagnostics"
 msgid "·"
 msgstr "·"
 
+#: src/game/ProfileMenuItems.tsx:234
+#: src/mods/FavouriteStar.tsx:21
+msgid "Remove from favourites"
+msgstr "Remove from favourites"
+
 #: src/share/MethodPanes.tsx:297
 msgid "Saved .r2z"
 msgstr "Saved .r2z"
@@ -8916,6 +8921,11 @@ msgstr "{gameName} is now {0}. This profile last launched on {1}."
 msgid "Could not hide that author"
 msgstr "Could not hide that author"
 
+#: src/game/ProfileMenuItems.tsx:234
+#: src/mods/FavouriteStar.tsx:21
+msgid "Add to favourites"
+msgstr "Add to favourites"
+
 #: src/mods/ChangelogDialog.tsx:89
 msgid "No changelog published"
 msgstr "No changelog published"
@@ -8941,7 +8951,7 @@ msgstr "Update all ({wantedCount})"
 msgid "No entries match."
 msgstr "No entries match."
 
-#: src/game/ProfileMenuItems.tsx:189
+#: src/game/ProfileMenuItems.tsx:191
 msgid "Choose cover image…"
 msgstr "Choose cover image…"
 
@@ -9315,7 +9325,7 @@ msgid "Store"
 msgstr "Store"
 
 #: src/browse/CardAction.tsx:53
-#: src/mods/Toolbar.tsx:259
+#: src/mods/Toolbar.tsx:260
 #: src/settings/prefCopyModsView.ts:46
 #: src/share/ImportPreview.tsx:72
 msgid "Download"
@@ -9518,12 +9528,12 @@ msgstr "Launchers"
 msgid "Could not save the template"
 msgstr "Could not save the template"
 
-#: src/mods/Toolbar.tsx:135
+#: src/mods/Toolbar.tsx:136
 #: src/settings/prefCopyModsView.ts:17
 msgid "Implicit mods"
 msgstr "Implicit mods"
 
-#: src/mods/ModsTab.tsx:110
+#: src/mods/ModsTab.tsx:112
 msgid "Could not read the mods: {loadError}"
 msgstr "Could not read the mods: {loadError}"
 
@@ -9800,7 +9810,7 @@ msgstr "This profile plays on its own saves. Your shared saves are untouched."
 msgid "Jump to next error"
 msgstr "Jump to next error"
 
-#: src/mods/Toolbar.tsx:69
+#: src/mods/Toolbar.tsx:70
 msgid "Added this week"
 msgstr "Added this week"
 
@@ -9901,6 +9911,10 @@ msgstr "Open the import dialog"
 #: src/mods/DuplicateDialog.tsx:98
 msgid "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
 msgstr "{profileName} has {0} more than once. {loader} loads only one, so pick which to keep. The others are disabled, not removed."
+
+#: src/mods/Toolbar.tsx:68
+msgid "Favourites"
+msgstr "Favourites"
 
 #: src/share/ListFormat.tsx:35
 #: src/shell/BugReportDialog.tsx:104
@@ -10275,7 +10289,7 @@ msgstr "Choose the mod folder"
 msgid "Use as profile cover"
 msgstr "Use as profile cover"
 
-#: src/mods/Toolbar.tsx:481
+#: src/mods/Toolbar.tsx:482
 msgid "Browse for mods, add an archive, or paste a share or collection link with Ctrl+V."
 msgstr "Browse for mods, add an archive, or paste a share or collection link with Ctrl+V."
 
@@ -10642,7 +10656,7 @@ msgstr "You endorsed this mod."
 msgid "Open on Nexus"
 msgstr "Open on Nexus"
 
-#: src/mods/ModList.tsx:123
+#: src/mods/ModList.tsx:125
 msgid "overrides {count, plural, one {# file} other {# files}}"
 msgstr "overrides {count, plural, one {# file} other {# files}}"
 
@@ -10704,7 +10718,7 @@ msgstr "{endorsements, plural, one {# endorsement} other {# endorsements}}"
 msgid "Changes to keep"
 msgstr "Changes to keep"
 
-#: src/mods/Toolbar.tsx:138
+#: src/mods/Toolbar.tsx:139
 #: src/settings/prefCopyModsView.ts:20
 msgid "Always shown"
 msgstr "Always shown"
@@ -11150,7 +11164,7 @@ msgstr "{0} of {1} · {2}/s"
 msgid "Preview"
 msgstr "Preview"
 
-#: src/game/ProfileMenuItems.tsx:134
+#: src/game/ProfileMenuItems.tsx:136
 msgid "Updated in Steam"
 msgstr "Updated in Steam"
 
@@ -11837,7 +11851,7 @@ msgstr "Deprecated"
 
 #. placeholder {0}: m.name
 #. placeholder {0}: props.name
-#: src/browse/ResultCard.tsx:126
+#: src/browse/ResultCard.tsx:128
 #: src/mods/ModCards.tsx:189
 msgid "Details of {0}"
 msgstr "Details of {0}"
@@ -11965,7 +11979,7 @@ msgstr "Running {who}"
 msgid "Flagged by {0}: {1}{2}"
 msgstr "Flagged by {0}: {1}{2}"
 
-#: src/mods/Toolbar.tsx:388
+#: src/mods/Toolbar.tsx:389
 #: src/mods/typedConfig/ConfigTab.tsx:513
 msgid "{total, plural, one {Filter # mod} other {Filter # mods}}"
 msgstr "{total, plural, one {Filter # mod} other {Filter # mods}}"
@@ -12047,7 +12061,7 @@ msgid "Could not mark the mods explicit"
 msgstr "Could not mark the mods explicit"
 
 #: src/mods/listRows.ts:161
-#: src/mods/Toolbar.tsx:70
+#: src/mods/Toolbar.tsx:71
 #: src/mods/useListHeading.ts:21
 msgid "Explicit"
 msgstr "Explicit"
@@ -12521,7 +12535,7 @@ msgid "Include pre-release mod versions"
 msgstr "Include pre-release mod versions"
 
 #: src/mods/columnLabel.ts:21
-#: src/mods/Toolbar.tsx:252
+#: src/mods/Toolbar.tsx:253
 #: src/settings/prefCopyModsView.ts:41
 msgid "Status"
 msgstr "Status"
@@ -12652,7 +12666,7 @@ msgid "{0} needs a newer version than this."
 msgstr "{0} needs a newer version than this."
 
 #: src/mods/SelectionBarDialogs.tsx:65
-#: src/mods/Toolbar.tsx:255
+#: src/mods/Toolbar.tsx:256
 #: src/settings/prefCopyModsView.ts:44
 msgid "Tag"
 msgstr "Tag"
@@ -12990,7 +13004,7 @@ msgstr "Enjoying these mods? Endorse them on Nexus"
 
 #: src/mods/columnLabel.ts:11
 #: src/mods/ModDisplayEdit.tsx:80
-#: src/mods/Toolbar.tsx:260
+#: src/mods/Toolbar.tsx:261
 #: src/settings/prefCopyModsView.ts:47
 msgid "Author"
 msgstr "Author"
@@ -13044,7 +13058,7 @@ msgstr "{name} {0} is out"
 msgid "Move data folder"
 msgstr "Move data folder"
 
-#: src/game/ProfileMenuItems.tsx:182
+#: src/game/ProfileMenuItems.tsx:184
 #: src/profiles/EditProfileDialog.tsx:443
 msgid "Could not use that image"
 msgstr "Could not use that image"
@@ -13056,7 +13070,7 @@ msgstr "Could not use that image"
 msgid "{0}'s {1} is {2}; it can match {installed} instead."
 msgstr "{0}'s {1} is {2}; it can match {installed} instead."
 
-#: src/mods/ModsTab.tsx:118
+#: src/mods/ModsTab.tsx:120
 msgid "Loading mods"
 msgstr "Loading mods"
 
@@ -13422,14 +13436,14 @@ msgstr "Group name"
 msgid "{0, plural, one {Created {name}; # mod still to download} other {Created {name}; # mods still to download}}"
 msgstr "{0, plural, one {Created {name}; # mod still to download} other {Created {name}; # mods still to download}}"
 
-#: src/mods/Toolbar.tsx:257
+#: src/mods/Toolbar.tsx:258
 #: src/settings/prefCopyModsView.ts:45
 msgid "Framework"
 msgstr "Framework"
 
 #: src/browse/BrowseToolbar.tsx:87
 #: src/mods/columnLabel.ts:12
-#: src/mods/Toolbar.tsx:254
+#: src/mods/Toolbar.tsx:255
 #: src/settings/prefCopyModsView.ts:43
 msgid "Source"
 msgstr "Source"
@@ -13581,7 +13595,7 @@ msgstr "Enabled in one only"
 msgid "Saves whose recorded mod list this profile covers, out of the saves that record one"
 msgstr "Saves whose recorded mod list this profile covers, out of the saves that record one"
 
-#: src/game/ProfileMenuItems.tsx:232
+#: src/game/ProfileMenuItems.tsx:248
 #: src/mods/FrozenCallout.tsx:19
 msgid "Unfreeze"
 msgstr "Unfreeze"
@@ -14133,7 +14147,7 @@ msgstr "clamd socket"
 msgid "Try fewer words, or the mod's exact name."
 msgstr "Try fewer words, or the mod's exact name."
 
-#: src/game/ProfileMenuItems.tsx:121
+#: src/game/ProfileMenuItems.tsx:123
 msgid "Add this profile to Steam"
 msgstr "Add this profile to Steam"
 
@@ -14219,7 +14233,7 @@ msgstr "Share {0}"
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
-#: src/mods/Toolbar.tsx:464
+#: src/mods/Toolbar.tsx:465
 msgid "No mods yet"
 msgstr "No mods yet"
 
@@ -14371,7 +14385,7 @@ msgstr "imported from a .mortar file"
 msgid "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 msgstr "Play this profile and save a game. Each save shows here with how well it fits {name}, so you know which mods it needs."
 
-#: src/mods/ModsTab.tsx:410
+#: src/mods/ModsTab.tsx:425
 msgid "Drop archives anywhere on the window, or use Browse to find mods."
 msgstr "Drop archives anywhere on the window, or use Browse to find mods."
 
@@ -14530,7 +14544,7 @@ msgstr "Take over"
 msgid "{0, plural, one {# day left} other {# days left}}"
 msgstr "{0, plural, one {# day left} other {# days left}}"
 
-#: src/game/ProfileMenuItems.tsx:96
+#: src/game/ProfileMenuItems.tsx:98
 msgid "Could not add the shortcut"
 msgstr "Could not add the shortcut"
 
@@ -14759,7 +14773,7 @@ msgstr "Older."
 msgid "{0} rolled back"
 msgstr "{0} rolled back"
 
-#: src/mods/Toolbar.tsx:328
+#: src/mods/Toolbar.tsx:329
 msgid "Adding…"
 msgstr "Adding…"
 
@@ -15103,7 +15117,7 @@ msgstr "Personal API key"
 msgid "Template deleted"
 msgstr "Template deleted"
 
-#: src/mods/ModsTab.tsx:136
+#: src/mods/ModsTab.tsx:138
 #: src/mods/typedConfig/ConfigTab.tsx:462
 msgid "No mods match"
 msgstr "No mods match"

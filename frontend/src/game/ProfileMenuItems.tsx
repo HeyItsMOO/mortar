@@ -10,11 +10,13 @@ import {
   ShieldCheck,
   Snowflake,
   SquareArrowOutUpRight,
+  Star,
   Trash2,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { PickImage } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/picker/service.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
+import { SetFavourite } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import {
   AddToSteam,
   Create as CreateShortcut,
@@ -226,6 +228,20 @@ function MoreMenuItems({ profile, close }: { profile: Profile; close: () => void
       }}
     />,
     <CheckProfileMenuItem key="check" profile={profile} close={close} />,
+    <ProfileMenuItem
+      key="favourite"
+      icon={<Star size={16} fill={profile.favourite ? 'currentColor' : 'none'} />}
+      label={profile.favourite ? t`Remove from favourites` : t`Add to favourites`}
+      onClick={() => {
+        close()
+        const game = useProfiles.getState().game?.id
+        if (game) {
+          SetFavourite(game, profile.id, !profile.favourite)
+            .then((next) => useProfiles.getState().replace(next))
+            .catch(reportUnexpected)
+        }
+      }}
+    />,
     <ProfileMenuItem
       key="freeze"
       icon={<Snowflake size={16} />}

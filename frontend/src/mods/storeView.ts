@@ -22,6 +22,7 @@ const isFilter = (v: unknown): v is ModFilter =>
     'update',
     'problem',
     'pinned',
+    'favourite',
     'local',
     'recent',
     'explicit',

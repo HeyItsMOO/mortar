@@ -5,6 +5,8 @@ import { type MouseEvent, memo, useState } from 'react'
 import { SourceLogo } from '../brand/sources/SourceLogo.tsx'
 import { hasSourceLogo } from '../brand/sources/sourceIcons.ts'
 import { formatAuthors } from '../mods/authorNormalize.ts'
+import { FavouriteStar } from '../mods/FavouriteStar.tsx'
+import { favouriteKey } from '../mods/favourites.ts'
 import { MIDDLE, opensPage } from '../mods/pageClick.ts'
 import { useSettings } from '../settings/store.ts'
 import { BUTTON_RADIUS_PX, BUTTON_SMALL_HEIGHT } from '../theme/theme.ts'
@@ -244,11 +246,14 @@ const ResultCard = memo(function BrowseResultCard(props: ResultCardProps) {
           opacity: dim,
         }}
       >
-        <CardTitle
-          name={name}
-          flag={flag}
-          onOpen={() => useBrowseSelection.getState().select({ item, source })}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minWidth: 0 }}>
+          <CardTitle
+            name={name}
+            flag={flag}
+            onOpen={() => useBrowseSelection.getState().select({ item, source })}
+          />
+          <FavouriteStar starKey={favouriteKey(item.source, item.id)} />
+        </Box>
         {author === '' ? null : (
           <Typography
             noWrap={true}

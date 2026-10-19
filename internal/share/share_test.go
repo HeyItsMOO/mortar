@@ -806,3 +806,31 @@ func TestCollectLeavesOutLibrariesWhenAsked(t *testing.T) {
 		t.Fatalf("without libraries = %+v, left out %+v", s.Entries, left)
 	}
 }
+
+func TestFileCarriesTheFavouriteStarAndLinksDoNot(t *testing.T) {
+	p := profile.Profile{Name: "Farm", Favourite: true}
+	var buf bytes.Buffer
+	if _, err := Write(&buf, "stardew", p, t.TempDir()); err != nil {
+		t.Fatal(err)
+	}
+	file := filepath.Join(t.TempDir(), "x.mortar")
+	if err := os.WriteFile(file, buf.Bytes(), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	pv, err := Read(file)
+	if err != nil || !pv.Favourite {
+		t.Fatalf("favourite = %v, err %v", pv.Favourite, err)
+	}
+	starred, err := Encode("stardew", p, profile.ShareFacts{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.Favourite = false
+	plain, err := Encode("stardew", p, profile.ShareFacts{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if starred.Payload != plain.Payload {
+		t.Fatal("the favourite star changed the share link payload")
+	}
+}

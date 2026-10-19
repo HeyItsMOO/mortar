@@ -74,6 +74,8 @@ type GameSettings struct {
 	BrowseFilters string `json:"browseFilters,omitempty"`
 	// HiddenMods are the mods the player hid from Browse; they stay installable from links and imports.
 	HiddenMods []HiddenMod `json:"hiddenMods,omitempty"`
+	// FavouriteMods are the mods the player starred, as "source:id" keys in lower case; see FavouriteKey.
+	FavouriteMods []string `json:"favouriteMods,omitempty"`
 	// HiddenAuthors are the authors whose mods Browse leaves out, compared without case.
 	HiddenAuthors []string `json:"hiddenAuthors,omitempty"`
 	// ListColumns are this game's Mods list columns; empty follows the global default.
@@ -423,6 +425,7 @@ func mergeGame(dst *GameSettings, src GameSettings) {
 	dst.ListColumns = slices.Clone(src.ListColumns)
 	dst.HiddenMods = slices.Clone(src.HiddenMods)
 	dst.HiddenAuthors = slices.Clone(src.HiddenAuthors)
+	dst.FavouriteMods = slices.Clone(src.FavouriteMods)
 	if src.OldFilesOnUpdate != "" {
 		dst.OldFilesOnUpdate = src.OldFilesOnUpdate
 	}

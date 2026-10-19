@@ -18,3 +18,13 @@ test('name sorts alphabetically', () => {
 test('lastPlayed puts the settings last-played profile first', () => {
   expect(orderProfiles(profiles, 'lastPlayed', 'c').map((p) => p.id)).toEqual(['c', 'b', 'a'])
 })
+
+test('starred profiles lead, each group in the chosen order', () => {
+  const starred = [
+    { id: 'b', name: 'Beta' },
+    { id: 'a', name: 'Alpha', favourite: true },
+    { id: 'c', name: 'Gamma', favourite: true },
+  ]
+  expect(orderProfiles(starred, 'manual').map((p) => p.id)).toEqual(['a', 'c', 'b'])
+  expect(orderProfiles(starred, 'name').map((p) => p.id)).toEqual(['a', 'c', 'b'])
+})

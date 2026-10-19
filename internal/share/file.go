@@ -60,6 +60,7 @@ type Preview struct {
 	Shared
 	Notes         string
 	Description   string
+	Favourite     bool
 	IDs           []mod.ID
 	Configs       []Config
 	LoaderConfigs []LoaderConfig
@@ -75,6 +76,7 @@ type fileDoc struct {
 	SourceKeys  map[string]string `json:"sourceKeys"`
 	Notes       string            `json:"notes"`
 	Description string            `json:"description,omitempty"`
+	Favourite   bool              `json:"favourite,omitempty"`
 	Entries     json.RawMessage   `json:"entries"`
 	IDs         []mod.ID          `json:"ids"`
 	Groups      []FileGroup       `json:"groups,omitempty"`
@@ -132,7 +134,7 @@ func Write(w io.Writer, gameID string, p profile.Profile, modsDir string, includ
 		notes = ""
 	}
 	doc := fileDoc{
-		Version: FormatVersion, Name: s.Name, Game: s.Game, SourceKeys: s.SourceKeys, Notes: notes, Description: p.Description,
+		Version: FormatVersion, Name: s.Name, Game: s.Game, SourceKeys: s.SourceKeys, Notes: notes, Description: p.Description, Favourite: p.Favourite,
 		Entries: entries, IDs: []mod.ID{}, Groups: collectFileGroups(p),
 	}
 	if inc.ProblemChoices {
@@ -460,7 +462,7 @@ func parseFileDoc(raw []byte) (Preview, error) {
 	if err != nil {
 		return Preview{}, err
 	}
-	pv := Preview{Name: d.Name, Game: d.Game, SourceKeys: d.SourceKeys, Entries: entries, Notes: d.Notes, Description: d.Description, IDs: d.IDs, Groups: d.Groups}
+	pv := Preview{Name: d.Name, Game: d.Game, SourceKeys: d.SourceKeys, Entries: entries, Notes: d.Notes, Description: d.Description, Favourite: d.Favourite, IDs: d.IDs, Groups: d.Groups}
 	if err := checkShared(pv.Shared); err != nil {
 		return Preview{}, err
 	}

@@ -456,3 +456,26 @@ func TestThunderstoreHostChoicesAreTheDownloadCDNs(t *testing.T) {
 		t.Fatalf("host choices %v, CDNs %v", got, want)
 	}
 }
+
+func TestStarringAModIsPerGameAndUndoable(t *testing.T) {
+	st, _ := open(t)
+	svc := NewService(st)
+	key := FavouriteKey("Thunderstore", "Me-Mod")
+	for range 2 {
+		if err := svc.SetModFavourite("a", key, true); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got := st.Get().GamePrefs("a").FavouriteMods; len(got) != 1 || got[0] != "thunderstore:me-mod" {
+		t.Fatalf("favourites = %v", got)
+	}
+	if len(st.Get().GamePrefs("b").FavouriteMods) != 0 {
+		t.Fatal("another game got the star")
+	}
+	if err := svc.SetModFavourite("a", "THUNDERSTORE:ME-MOD", false); err != nil {
+		t.Fatal(err)
+	}
+	if len(st.Get().GamePrefs("a").FavouriteMods) != 0 {
+		t.Fatal("still starred")
+	}
+}

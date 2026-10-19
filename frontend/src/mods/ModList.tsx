@@ -30,6 +30,8 @@ import { CompatChip } from './CompatChip.tsx'
 import { useColumnAvailable, useSavedColumns } from './contributedColumns.ts'
 import { useDetail } from './detail.ts'
 import { ExtraFilesChip } from './ExtraFilesChip.tsx'
+import { FavouriteStar } from './FavouriteStar.tsx'
+import { entryFavouriteKey } from './favourites.ts'
 import {
   columnMenuFromEvent,
   fitListColumns,
@@ -40,7 +42,7 @@ import {
   sanitizeListColumns,
   visibleListColumns,
 } from './listColumns.ts'
-import { modId, nexusIdOf } from './lookup.ts'
+import { entryOf, modId, nexusIdOf } from './lookup.ts'
 import { ModListTable } from './ModListVirtual.tsx'
 import { useMarked, useRowFocus, useTabStop } from './marked.ts'
 import { contextMenuProps, openModPage } from './menu.ts'
@@ -144,6 +146,7 @@ function NameCell({ row, profile }: { row: ListRow; profile: Profile }) {
             <CornerDownRight size={14} aria-hidden={true} />
           </Box>
         ) : null}
+        <FavouriteStar starKey={entryFavouriteKey(entryOf(profile, m.key))} />
         <Box component="span" sx={{ ...ellipsis, minWidth: 0 }}>
           {m.name}
         </Box>

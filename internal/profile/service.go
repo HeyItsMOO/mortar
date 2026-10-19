@@ -469,6 +469,11 @@ func (s *Service) SetPinned(game, id, key string, pinned bool, pinReason string)
 	return s.store.SetPinned(game, id, key, pinned, pinReason)
 }
 
+// SetFavourite stars a profile, or removes its star.
+func (s *Service) SetFavourite(game, id string, favourite bool) (Profile, error) {
+	return s.store.SetFavourite(game, id, favourite)
+}
+
 // SetFrozen holds every mod of the profile at its current version, or lifts the holds a freeze made.
 func (s *Service) SetFrozen(game, id string, frozen bool) (Profile, error) {
 	return s.store.SetFrozen(game, id, frozen)

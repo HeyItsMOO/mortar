@@ -65,6 +65,7 @@ const FILTERS: readonly {
   { id: 'update', label: (i18n) => i18n._(msg`Update available`) },
   { id: 'problem', label: (i18n) => i18n._(msg`Has problems`) },
   { id: 'pinned', label: (i18n) => i18n._(msg`Pinned`) },
+  { id: 'favourite', label: (i18n) => i18n._(msg`Favourites`) },
   { id: 'local', label: (i18n) => i18n._(msg`Local`) },
   { id: 'recent', label: (i18n) => i18n._(msg`Added this week`) },
   { id: 'explicit', label: (i18n) => i18n._(msg`Explicit`) },
@@ -489,6 +490,7 @@ export type ModFilter =
   | 'update'
   | 'problem'
   | 'pinned'
+  | 'favourite'
   | 'local'
   | 'recent'
   | 'explicit'

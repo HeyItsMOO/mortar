@@ -8,6 +8,7 @@ import type {
   Profile,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { useGameBusy } from '../launch/store.ts'
+import { useCurrentGame } from '../nav/currentGame.ts'
 import { userModCount } from '../profiles/count.ts'
 import { useProfiles } from '../profiles/store.ts'
 import { boundShortcut, dialogOpen } from '../settings/shortcuts.ts'
@@ -20,6 +21,7 @@ import { useCustomCategories } from './customCategories.ts'
 import { useDetail } from './detail.ts'
 import { EndorsePrompt } from './EndorsePrompt.tsx'
 import { FrozenCallout } from './FrozenCallout.tsx'
+import { entryFavouriteKey, isStarred } from './favourites.ts'
 import { customCategoryById, profileTags } from './group.ts'
 import { partKey, supportParts } from './installReason.ts'
 import { LegacyReasonsCallout } from './LegacyReasonsCallout.tsx'
@@ -179,7 +181,12 @@ function passesShow(
   filter: ModFilter,
   m: Mod,
   entry: Entry | undefined,
-  check: { update: () => boolean; problem: () => boolean; implicit: () => boolean },
+  check: {
+    update: () => boolean
+    problem: () => boolean
+    implicit: () => boolean
+    favourite: () => boolean
+  },
 ): boolean {
   switch (filter) {
     case 'all':
@@ -192,6 +199,8 @@ function passesShow(
       return check.problem()
     case 'pinned':
       return Boolean(entry?.pinned)
+    case 'favourite':
+      return check.favourite()
     case 'local':
       return entry?.source.kind === 'local'
     case 'recent':
@@ -240,6 +249,10 @@ function FilteredMods({ profile }: { profile: Profile }) {
   // Read only while the search or the Show choice uses them, so their answers arriving re-render nothing here.
   const problems = useMods((s) => (filter === 'problem' ? s.problems : null))
   const updates = useUpdates((s) => (filter === 'update' ? s.updates : null))
+  const game = useCurrentGame()
+  const starred = useSettings((s) =>
+    filter === 'favourite' ? s.games?.[game]?.favouriteMods : null,
+  )
   const nexusById = useNexusDetails((s) => (q === '' ? NO_DETAILS : s.byId))
   const customCategories = useCustomCategories((s) => (q === '' ? NO_CATEGORIES : s.categories))
   // Stable for the memoised Show menu, which a key typed into the search then skips.
@@ -281,6 +294,7 @@ function FilteredMods({ profile }: { profile: Profile }) {
         update: () => Boolean(updateFor(updates, m, profile)),
         problem: () => modStatusProblem(problems, m),
         implicit: () => Boolean(entry?.implicit) || parts.has(partKey(m)),
+        favourite: () => isStarred(starred, entryFavouriteKey(entry)),
       })
     })
   }, [
@@ -294,6 +308,7 @@ function FilteredMods({ profile }: { profile: Profile }) {
     customCategories,
     updates,
     problems,
+    starred,
   ])
   // The same mods keep the previous array, so an answer that changes nothing they show does not redraw the list.
   const last = lastShown.current
