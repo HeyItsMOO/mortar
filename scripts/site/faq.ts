@@ -131,10 +131,11 @@ const sourceIcons = (html: string) =>
     return `<span class="icon-row">${icons}</span>${run.endsWith(' ') ? ' ' : ''}`
   })
 
-// Other managers' game counts, read from their own repositories by `bun scripts/site.ts --refresh` and committed, so
-// building the site stays offline. A page names one as R2MODMAN_COUNT or GALE_COUNT.
-const RIVALS = 'scripts/site/rival-counts.json'
-const RIVAL_SOURCES: Record<string, { url: string; count: (body: unknown) => number }> = {
+// Facts about other managers read from their own repositories by `bun scripts/site.ts --refresh` (which the release's
+// site publish runs too) and committed, so building the site stays offline. A page names a game count as
+// R2MODMAN_COUNT, a latest release as MO2_RELEASE and its month as MO2_RELEASED.
+const RIVALS = 'scripts/site/rival-facts.json'
+const RIVAL_COUNTS: Record<string, { url: string; count: (body: unknown) => number }> = {
   r2modman: {
     url: 'https://raw.githubusercontent.com/ebkr/r2modmanPlus/develop/src/assets/data/ecosystem.json',
     count: (body) =>
@@ -147,21 +148,52 @@ const RIVAL_SOURCES: Record<string, { url: string; count: (body: unknown) => num
     count: (body) => (body as unknown[]).length,
   },
 }
+const RIVAL_RELEASES: Record<string, string> = {
+  mo2: 'ModOrganizer2/modorganizer',
+  vortex: 'Nexus-Mods/Vortex',
+  stardrop: 'Floogen/Stardrop',
+}
 
-export async function refreshRivalCounts(): Promise<void> {
-  const out: Record<string, number> = {}
-  for (const [id, src] of Object.entries(RIVAL_SOURCES)) {
-    const res = await fetch(src.url)
-    if (!res.ok) {
-      throw new Error(`${src.url} answered ${res.status}`)
+async function getJSON(url: string): Promise<unknown> {
+  const token = process.env.GITHUB_TOKEN
+  const res = await fetch(
+    url,
+    token && url.startsWith('https://api.github.com/')
+      ? { headers: { Authorization: `Bearer ${token}` } }
+      : {},
+  )
+  if (!res.ok) {
+    throw new Error(`${url} answered ${res.status}`)
+  }
+  return res.json()
+}
+
+export async function refreshRivalFacts(): Promise<void> {
+  const out: Record<string, number | string> = {}
+  for (const [id, src] of Object.entries(RIVAL_COUNTS)) {
+    out[`${id}_count`] = src.count(await getJSON(src.url))
+  }
+  for (const [id, repo] of Object.entries(RIVAL_RELEASES)) {
+    const rel = (await getJSON(`https://api.github.com/repos/${repo}/releases/latest`)) as {
+      tag_name: string
+      published_at: string
     }
-    out[id] = src.count(await res.json())
+    out[`${id}_release`] = rel.tag_name
+    out[`${id}_released`] = new Date(rel.published_at).toLocaleDateString('en-US', {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    })
   }
   writeFileSync(RIVALS, `${JSON.stringify(out, null, 2)}\n`)
 }
 
-const rivalCounts = (): Record<string, number> =>
-  JSON.parse(readFileSync(RIVALS, 'utf8')) as Record<string, number>
+const rivalFacts = (): Record<string, number | string> =>
+  JSON.parse(readFileSync(RIVALS, 'utf8')) as Record<string, number | string>
+
+/** The app version, from build/config.yml where it is set; a comparison page names it as MORTAR_VERSION. */
+export const appVersion = (): string =>
+  /^\s+version: "([^"]+)"/m.exec(readFileSync('build/config.yml', 'utf8'))?.[1] ?? ''
 
 /** Mortar's own counts, filled into a comparison page's GAME_COUNT and THUNDERSTORE_COUNT. */
 interface Counts {
@@ -185,12 +217,13 @@ export function whyPage(w: Why, counts: Counts): string {
   const filled = w.md
     .replaceAll('GAME_COUNT', String(counts.games))
     .replaceAll('THUNDERSTORE_COUNT', String(counts.thunderstore))
-    .replace(/\b([A-Z0-9]+)_COUNT\b/g, (token, id: string) => {
-      const n = rivalCounts()[id.toLowerCase()]
-      if (n === undefined) {
+    .replaceAll('MORTAR_VERSION', appVersion())
+    .replace(/\b[A-Z0-9]+_(?:COUNT|RELEASED?)\b/g, (token) => {
+      const v = rivalFacts()[token.toLowerCase()]
+      if (v === undefined) {
         throw new Error(`site: ${w.id}.md names ${token}, which ${RIVALS} lacks`)
       }
-      return String(n)
+      return String(v)
     })
   const md = gamesWinner(filled, counts.games)
   return page({

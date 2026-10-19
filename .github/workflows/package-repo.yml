@@ -79,6 +79,14 @@ jobs:
       - name: Setup Bun
         uses: Rethunk-Tech/gh-actions/setup-bun@043d9f8fb8b04b983fa8f7012b28241fd20f17b4 # v1.18
 
+      # Other managers' counts and releases and the Steam art move between releases; the tag's site is rebuilt with
+      # them fresh so a published claim is never older than the publish. A site from another ref is published as is.
+      - name: Refresh the site's outside facts
+        if: inputs.site == ''
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bun scripts/site.ts --refresh
+
       - name: Index the site for search
         env:
           SITE_FROM: ${{ inputs.site != '' && 'site-src/site' || 'site' }}

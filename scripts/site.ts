@@ -9,7 +9,15 @@ import { refreshSteamArt, steamArt } from './site/art.ts'
 import { brandArt, brandSprite } from './site/brands.ts'
 import { changelogFeed, changelogPage } from './site/changelog.ts'
 import { footer, nav, type Page, page, SITE, seo, urlOf } from './site/chrome.ts'
-import { docPage, faqPage, landingFaq, refreshRivalCounts, whyPage, whyPages } from './site/faq.ts'
+import {
+  appVersion,
+  docPage,
+  faqPage,
+  landingFaq,
+  refreshRivalFacts,
+  whyPage,
+  whyPages,
+} from './site/faq.ts'
 import { gamePage, gamesBand, gamesIndexPage, playableGames, sharePage } from './site/games.ts'
 import { guidePage } from './site/guide.ts'
 
@@ -44,7 +52,7 @@ function unescapeHTML(raw: string): string {
 }
 
 function appLd(): object {
-  const version = /^\s+version: "([^"]+)"/m.exec(readFileSync('build/config.yml', 'utf8'))?.[1]
+  const version = appVersion()
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -118,7 +126,7 @@ function notFoundPage(): string {
 
 const games = playableGames()
 if (process.argv.includes('--refresh')) {
-  await refreshRivalCounts()
+  await refreshRivalFacts()
   await refreshSteamArt(
     games.flatMap((g) => (g.stores?.steam as { appId?: string } | undefined)?.appId ?? []),
   )

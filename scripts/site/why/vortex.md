@@ -4,7 +4,7 @@ Vortex is Nexus Mods' manager, with deep Bethesda tooling. Mortar works with Nex
 
 | | Mortar | Vortex |
 | --- | --- | --- |
-| Platforms | !win Windows, Linux, Steam Deck | Windows ([v2.8.2 assets](https://github.com/Nexus-Mods/Vortex/releases/tag/v2.8.2)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
+| Platforms | !win Windows, Linux, Steam Deck | Windows ([VORTEX_RELEASE assets](https://github.com/Nexus-Mods/Vortex/releases/latest)); SteamOS support announced ([GamingOnLinux](https://www.gamingonlinux.com/2026/01/nexus-mods-say-they-are-committed-to-supporting-vortex-on-steamos-linux)) |
 | Games | GAME_COUNT | Over 250 ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Mod sites | !win :nexus: :thunderstore: :curseforge: :modrinth: :github: :vsmoddb: | :nexus: ([README](https://github.com/Nexus-Mods/Vortex)) |
 | Account | !win None needed; Nexus sign-in only for Nexus downloads | Nexus login to download from Nexus |
