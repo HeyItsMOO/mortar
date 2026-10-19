@@ -26,7 +26,7 @@ Decided 2026-10-18 (NOMAD). Ships after the Discord remake in Rethunk-Tech/morta
   - **Discord:** copies the report to the clipboard, trimmed to Discord's 2000-character limit. It saves the full diagnostics as a `.txt` to attach, then opens `https://mortar.rethunk.tech/go/bug-reports/`.
   - **GitHub:** keeps today's prefilled issue URL (`internal/support/service.go` `BugURL`).
 - **Help menu** gains "Ask on Discord", which opens `/go/help/`, and "Suggest a feature", which asks "Discord or GitHub?" the same way and preselects the last choice. Discord opens `/go/suggestions/`; GitHub opens `https://github.com/Rethunk-Tech/mortar/issues/new?template=feature_request.yml`.
-- **Site:** `/go/bug-reports/`, `/go/help/` and `/go/suggestions/` redirect to the forum channels. A moved channel then needs only a site change.
+- **Site:** `/go/bug-reports/`, `/go/help/` and `/go/suggestions/` redirect to permanent Discord invites that target those channels; a channel URL shows nothing to someone not yet in the server. A moved channel then needs only a site change.
 - **Done when:** every route opens the right target from the installed build, and the trimmed clipboard text pastes into a forum post without hitting the limit.
 
 ### The Sims 4: what is left to check
