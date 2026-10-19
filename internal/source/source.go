@@ -189,8 +189,28 @@ type DependencyLister interface {
 	Dependencies(ctx context.Context, key, mortarVersion string, refs []VersionRef) (map[VersionRef][]string, error)
 }
 
-// InstalledFile is a download installed from a source: its project id, version, and the file's "sha512:<hex>" digest.
-type InstalledFile struct{ ID, Version, Digest string }
+// InstalledFile is a download installed from a source: its project id, version, the file's "sha512:<hex>" digest and
+// the update channel its mod follows ("" or "main", "optional" or "beta"; see Stability).
+type InstalledFile struct{ ID, Version, Digest, Channel string }
+
+// Stability levels, numbered as CurseForge numbers a file's release type; Modrinth's version types follow the same order.
+const (
+	StabilityRelease = 1
+	StabilityBeta    = 2
+	StabilityAlpha   = 3
+)
+
+// Stability is the least stable release an update channel accepts: only releases on the main channel, releases and
+// betas on "optional", everything on "beta".
+func Stability(channel string) int {
+	switch channel {
+	case "optional":
+		return StabilityBeta
+	case "beta":
+		return StabilityAlpha
+	}
+	return StabilityRelease
+}
 
 // Latest is the newest version a source offers in place of an installed file. VersionID names that exact version,
 // which a version number alone may not when a project publishes one per loader.

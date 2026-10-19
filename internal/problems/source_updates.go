@@ -68,7 +68,7 @@ func (s *Service) githubUpdates(ctx context.Context, mods []framework.Mod, have 
 		if err != nil {
 			return out
 		}
-		r, _, err := github.Select(all, "")
+		r, _, err := github.Select(all, "", profile.NormalizeChannel(x.UpdateChannel) == profile.ChannelBeta)
 		if err != nil {
 			continue
 		}
@@ -243,7 +243,7 @@ func (s *Service) checkedUpdates(ctx context.Context, src components.GameSource,
 			continue
 		}
 		asked = append(asked, x)
-		files = append(files, source.InstalledFile{ID: x.SourceName, Version: cmp.Or(x.SourceVersion, x.Version), Digest: x.SourceDigest})
+		files = append(files, source.InstalledFile{ID: x.SourceName, Version: cmp.Or(x.SourceVersion, x.Version), Digest: x.SourceDigest, Channel: x.UpdateChannel})
 	}
 	if len(files) == 0 {
 		return nil, nil

@@ -250,9 +250,10 @@ func (f fileResp) required() []string {
 	return ids
 }
 
-// newest picks the newest published file, preferring stable releases, and keeping to files for one of gameVersions
-// when it names any.
-func newest(files []fileResp, gameVersions []string) (fileResp, bool) {
+// newest picks the newest published file, keeping to files for one of gameVersions when it names any. On the release
+// channel (stability source.StabilityRelease) a stable release wins over a newer beta; a channel that accepts betas or
+// alphas takes the newest file of any release type up to its stability.
+func newest(files []fileResp, gameVersions []string, stability int) (fileResp, bool) {
 	var best fileResp
 	found := false
 	for _, f := range files {
@@ -260,6 +261,12 @@ func newest(files []fileResp, gameVersions []string) (fileResp, bool) {
 			continue
 		}
 		if len(gameVersions) > 0 && !slices.ContainsFunc(f.GameVersions, func(v string) bool { return slices.Contains(gameVersions, v) }) {
+			continue
+		}
+		if stability > source.StabilityRelease {
+			if f.ReleaseType <= stability && (!found || f.FileDate > best.FileDate) {
+				best, found = f, true
+			}
 			continue
 		}
 		stable, bestStable := f.ReleaseType == releaseStable, best.ReleaseType == releaseStable
@@ -709,7 +716,7 @@ func (d Driver) Details(ctx context.Context, _, id, _ string) (source.Details, e
 			out.Versions = append(out.Versions, f.version())
 		}
 	}
-	if f, ok := newest(files, nil); ok {
+	if f, ok := newest(files, nil, source.StabilityRelease); ok {
 		out.Dependencies = append(out.Dependencies, f.required()...)
 	}
 	for _, c := range m.Categories {
@@ -791,7 +798,7 @@ func (d Driver) pick(ctx context.Context, id, version string) (fileResp, error) 
 	if version != "" {
 		files = slices.DeleteFunc(files, func(f fileResp) bool { return f.version() != version && f.DisplayName != version })
 	}
-	if f, ok := newest(files, nil); ok {
+	if f, ok := newest(files, nil, source.StabilityRelease); ok {
 		return f, nil
 	}
 	return fileResp{}, fmt.Errorf("%s %s is not on CurseForge", id, version)
@@ -884,12 +891,12 @@ func (d Driver) Latest(ctx context.Context, src components.GameSource, _ string,
 			return nil, err
 		}
 		for _, m := range resp.Data {
-			f, ok := newest(m.LatestFiles, src.GameVersions)
-			if !ok {
-				continue
-			}
-			remember(f)
 			for _, have := range byMod[m.ID] {
+				f, ok := newest(m.LatestFiles, src.GameVersions, source.Stability(have.Channel))
+				if !ok {
+					continue
+				}
+				remember(f)
 				if have.Digest == "sha1:"+f.sha1() || have.Version == f.version() {
 					continue
 				}

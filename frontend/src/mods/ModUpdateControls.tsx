@@ -12,12 +12,31 @@ import { useMods } from './store.ts'
 
 const fieldSize = 13
 
-function channelOptions(i18n: I18n) {
-  return [
-    { value: 'main', label: i18n._(msg`Main only`) },
-    { value: 'optional', label: i18n._(msg`Optional files`) },
-    { value: 'beta', label: i18n._(msg`Beta / prerelease`) },
-  ]
+// The channels a source offers: Nexus's file categories, GitHub's prereleases, and the release types CurseForge and
+// Modrinth publish. A source without a channel gets none.
+function channelOptions(i18n: I18n, kind: string) {
+  switch (kind) {
+    case 'nexus':
+      return [
+        { value: 'main', label: i18n._(msg`Main only`) },
+        { value: 'optional', label: i18n._(msg`Optional files`) },
+        { value: 'beta', label: i18n._(msg`Beta / prerelease`) },
+      ]
+    case 'github':
+      return [
+        { value: 'main', label: i18n._(msg`Releases only`) },
+        { value: 'beta', label: i18n._(msg`Include prereleases`) },
+      ]
+    case 'curseforge':
+    case 'modrinth':
+      return [
+        { value: 'main', label: i18n._(msg`Releases only`) },
+        { value: 'optional', label: i18n._(msg`Releases and betas`) },
+        { value: 'beta', label: i18n._(msg`Releases, betas and alphas`) },
+      ]
+    default:
+      return []
+  }
 }
 
 function ModUpdateControls({ mod, entry }: { mod: Mod; entry: Entry | undefined }) {
@@ -25,6 +44,7 @@ function ModUpdateControls({ mod, entry }: { mod: Mod; entry: Entry | undefined 
   const setPinned = useMods((s) => s.setPinned)
   const setUpdateChannel = useMods((s) => s.setUpdateChannel)
   const channel = entry?.updateChannel || 'main'
+  const options = channelOptions(i18n, entry?.source.kind ?? '')
   return (
     <>
       <Tooltip
@@ -42,8 +62,7 @@ function ModUpdateControls({ mod, entry }: { mod: Mod; entry: Entry | undefined 
           {entry?.pinned ? t`Unpin version` : t`Pin this version`}
         </Button>
       </Tooltip>
-      {/* The channels are Nexus file categories, which no other source has. */}
-      {entry?.source.kind === 'nexus' ? (
+      {options.length > 0 ? (
         <Box>
           <Typography
             sx={{ fontSize: fieldSize, color: 'text.secondary' }}
@@ -57,7 +76,7 @@ function ModUpdateControls({ mod, entry }: { mod: Mod; entry: Entry | undefined 
               setUpdateChannel(mod, String(ev.target.value)).catch(reportUnexpected)
             }
           >
-            {channelOptions(i18n).map((opt) => (
+            {options.map((opt) => (
               <MenuItem key={opt.value} value={opt.value}>
                 {opt.label}
               </MenuItem>

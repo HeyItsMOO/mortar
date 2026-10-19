@@ -380,7 +380,7 @@ Menus a mod registers with GMCM or GMCM Options come from mortar-smapi-bridge, w
 
 #### Other per-entry settings
 
-- **Update channel:** an entry's `updateChannel` is empty (main files only), `optional` (also newer OPTIONAL files on the same Nexus page) or `beta` (also prerelease versions); it filters offers where pins and skipped versions do.
+- **Update channel:** an entry's `updateChannel` is empty (main files only), `optional` (also newer OPTIONAL files on the same Nexus page) or `beta` (also prerelease versions); it filters offers where pins and skipped versions do. GitHub reads `beta` as prereleases (`github.Select`); CurseForge and Modrinth read the three as release, release and beta, and release, beta and alpha files (`source.Stability`, which `InstalledFile.Channel` carries to `UpdateChecker.Latest`).
 - **Config presets:** a mod's `config.json` can be saved by name under `<data>/config-presets/<game>/<local id>/<name>.json` and applied to any profile's copy as one history event. A profile's `groups` enable or disable together in one history event; after each problem check the counts are appended to `health.json` beside `profile.json` (newest 200 points).
 
 ## Nexus Mods

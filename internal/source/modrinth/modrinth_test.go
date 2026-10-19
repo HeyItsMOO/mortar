@@ -101,13 +101,14 @@ func TestLatestChecksEveryFileInOneBatch(t *testing.T) {
 			Algorithm    string   `json:"algorithm"`
 			Loaders      []string `json:"loaders"`
 			GameVersions []string `json:"game_versions"`
+			VersionTypes []string `json:"version_types"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Algorithm != "sha512" {
 			t.Errorf("body %+v %v", body, err)
 		}
 		switch r.URL.Path {
 		case "/version_files/update":
-			if strings.Join(body.Hashes, ",") != "aa11,bb22" || strings.Join(body.Loaders, ",") != "fabric" || strings.Join(body.GameVersions, ",") != "1.21" {
+			if strings.Join(body.Hashes, ",") != "aa11,bb22" || strings.Join(body.Loaders, ",") != "fabric" || strings.Join(body.GameVersions, ",") != "1.21" || strings.Join(body.VersionTypes, ",") != "release" {
 				t.Errorf("update body %+v", body)
 			}
 			http.ServeFile(w, r, "testdata/version_files_update.json")
@@ -191,5 +192,24 @@ func TestDetailsReadsTheProjectBody(t *testing.T) {
 	if err != nil || det.Description != "# Sodium\n\nFast." || strings.Join(det.Versions, ",") != "2.0,1.0" ||
 		strings.Join(det.Dependencies, ",") != "P1" || strings.Join(det.Categories, ",") != "fabric,optimization" {
 		t.Fatalf("%+v %v", det, err)
+	}
+}
+
+func TestLatestAsksForBetasOnTheBetaChannel(t *testing.T) {
+	var types []string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body struct {
+			VersionTypes []string `json:"version_types"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&body)
+		types = append(types, strings.Join(body.VersionTypes, "+"))
+		_, _ = w.Write([]byte(`{}`))
+	}))
+	t.Cleanup(srv.Close)
+	_, err := Driver{URL: srv.URL, HTTP: srv.Client()}.Latest(context.Background(), components.GameSource{Loaders: []string{"fabric"}}, "", []source.InstalledFile{
+		{Digest: "sha512:aa", Channel: "optional"}, {Digest: "sha512:bb", Channel: "beta"}, {Digest: "sha512:cc"},
+	})
+	if err != nil || strings.Join(types, ";") != "release;release+beta;release+beta+alpha" {
+		t.Fatalf("version types %v, err %v", types, err)
 	}
 }

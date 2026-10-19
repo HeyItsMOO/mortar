@@ -392,23 +392,32 @@ func (d Driver) Latest(ctx context.Context, src components.GameSource, mortarVer
 		return out, nil
 	}
 	byHash := map[string]string{}
+	// One request per update channel: the version types a file accepts depend on its mod's channel.
+	groups := map[int][]string{}
 	for _, f := range files {
 		if h, ok := strings.CutPrefix(f.Digest, "sha512:"); ok && h != "" {
-			byHash[strings.ToLower(h)] = f.Digest
+			h = strings.ToLower(h)
+			byHash[h] = f.Digest
+			stability := source.Stability(f.Channel)
+			groups[stability] = append(groups[stability], h)
 		}
 	}
 	if len(byHash) == 0 {
 		return out, nil
 	}
-	hashes := slices.Sorted(maps.Keys(byHash))
-	var newest map[string]versionResp
-	if err := d.post(ctx, "/version_files/update", struct {
-		Hashes       []string `json:"hashes"`
-		Algorithm    string   `json:"algorithm"`
-		Loaders      []string `json:"loaders"`
-		GameVersions []string `json:"game_versions"`
-	}{hashes, "sha512", nonNil(src.Loaders), nonNil(src.GameVersions)}, mortarVersion, &newest); err != nil {
-		return nil, err
+	newest := map[string]versionResp{}
+	for _, stability := range slices.Sorted(maps.Keys(groups)) {
+		var got map[string]versionResp
+		if err := d.post(ctx, "/version_files/update", struct {
+			Hashes       []string `json:"hashes"`
+			Algorithm    string   `json:"algorithm"`
+			Loaders      []string `json:"loaders"`
+			GameVersions []string `json:"game_versions"`
+			VersionTypes []string `json:"version_types"`
+		}{slices.Sorted(slices.Values(groups[stability])), "sha512", nonNil(src.Loaders), nonNil(src.GameVersions), versionTypes[:stability]}, mortarVersion, &got); err != nil {
+			return nil, err
+		}
+		maps.Copy(newest, got)
 	}
 	var older []string
 	for h, v := range newest {
@@ -456,6 +465,9 @@ func (Driver) Dependencies(_ context.Context, _, _ string, refs []source.Version
 	}
 	return out, nil
 }
+
+// versionTypes are Modrinth's version types from the most to the least stable, which a channel's stability cuts off.
+var versionTypes = []string{"release", "beta", "alpha"}
 
 // nonNil keeps an absent filter an empty JSON list, which the API reads as no filter, rather than null.
 func nonNil(list []string) []string {

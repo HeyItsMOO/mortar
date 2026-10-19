@@ -28,7 +28,7 @@ func (s *Service) release(ctx context.Context, it Item) (github.Release, []githu
 	if err != nil {
 		return github.Release{}, nil, usererr.Wrap(usererr.Network, err)
 	}
-	rel, assets, err := github.Select(all, cmp.Or(it.Tag, it.Version))
+	rel, assets, err := github.Select(all, cmp.Or(it.Tag, it.Version), false)
 	if err != nil {
 		return github.Release{}, nil, fmt.Errorf("%s: %w", it.Repo, err)
 	}

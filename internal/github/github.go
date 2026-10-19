@@ -563,11 +563,12 @@ func IsArchive(a Asset) bool {
 	return a.ContentType == "" || archiveTypes[strings.ToLower(a.ContentType)]
 }
 
-// Select picks the newest non-prerelease, non-draft release whose tag is version (any when version is empty)
-// and returns it with its archive assets: one when the release ships one, several when the user must choose.
-func Select(all []Release, version string) (Release, []Asset, error) {
+// Select picks the newest non-draft release whose tag is version (any when version is empty) and returns it with its
+// archive assets: one when the release ships one, several when the user must choose. A prerelease is picked only when
+// prereleases are asked for or its tag is named.
+func Select(all []Release, version string, prerelease bool) (Release, []Asset, error) {
 	for _, r := range all {
-		if r.Draft || r.Prerelease {
+		if r.Draft || (r.Prerelease && !prerelease && version == "") {
 			continue
 		}
 		if version != "" {

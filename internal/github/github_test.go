@@ -46,18 +46,21 @@ func TestSelect(t *testing.T) {
 	if err := json.Unmarshal([]byte(releasesJSON), &all); err != nil {
 		t.Fatal(err)
 	}
-	r, assets, err := Select(all, "")
+	r, assets, err := Select(all, "", false)
 	if err != nil || r.Tag != "v2.1.0" || len(assets) != 3 {
 		t.Fatalf("newest = %q %v %v", r.Tag, assets, err)
 	}
-	r, assets, err = Select(all, "2.0.0")
+	r, assets, err = Select(all, "2.0.0", false)
 	if err != nil || r.Tag != "v2.0.0" || len(assets) != 1 {
 		t.Fatalf("requested = %q %v %v", r.Tag, assets, err)
 	}
-	if _, _, err = Select(all, "3.0.0-beta"); !errors.Is(err, ErrNoRelease) {
-		t.Fatalf("prerelease must not match: %v", err)
+	if r, _, err = Select(all, "", true); err != nil || r.Tag != "v3.0.0-beta" {
+		t.Fatalf("prereleases asked for = %q %v", r.Tag, err)
 	}
-	if _, _, err = Select(all, "1.0.0"); !errors.Is(err, ErrNoArchive) {
+	if r, _, err = Select(all, "3.0.0-beta", false); err != nil || r.Tag != "v3.0.0-beta" {
+		t.Fatalf("a named prerelease = %q %v", r.Tag, err)
+	}
+	if _, _, err = Select(all, "1.0.0", false); !errors.Is(err, ErrNoArchive) {
 		t.Fatalf("no archive: %v", err)
 	}
 }
