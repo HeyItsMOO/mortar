@@ -13,6 +13,7 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/updater"
 	"github.com/wailsapp/wails/v3/pkg/updater/providers/endpoint"
 
+	"github.com/Rethunk-Tech/mortar/internal/appversion"
 	"github.com/Rethunk-Tech/mortar/internal/github"
 )
 
@@ -31,6 +32,8 @@ type Updater interface {
 // Info is what Settings shows before any check.
 type Info struct {
 	Version string `json:"version"`
+	// Commit is the short commit this build came from (appversion.Commit), empty when it carries no VCS stamp.
+	Commit string `json:"commit"`
 	// Off is "dev" when this build never checks for updates (development, server, or a dev version)
 	// and "packaged" when a distro package owns updates.
 	Off string `json:"off"`
@@ -102,7 +105,7 @@ func Configure(s *Service, u Updater, version string, publicKey []byte, isServer
 }
 
 func configure(s *Service, u Updater, version string, publicKey []byte, production bool, packaged string, includeBeta func() bool) error {
-	s.u, s.info = u, Info{Version: version}
+	s.u, s.info = u, Info{Version: version, Commit: appversion.Commit()}
 	if packaged != "" {
 		s.info.Off = "packaged"
 		return nil

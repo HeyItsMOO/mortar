@@ -5,7 +5,7 @@ let installs = 0
 
 mock.module('../../bindings/github.com/Rethunk-Tech/mortar/internal/updatesvc/service.ts', () => ({
   Check: async () => null,
-  Info: async () => ({ version: '1.0.0', off: '' }),
+  Info: async () => ({ version: '1.0.0', commit: '', off: '' }),
   Install: async () => {
     installs += 1
     await Promise.resolve()
@@ -29,7 +29,7 @@ test('checking again keeps a found or staged update on offer', async () => {
     useMortarUpdate.setState(
       {
         ...useMortarUpdate.getInitialState(),
-        info: { version: '1.0.0', off: '' } satisfies Info,
+        info: { version: '1.0.0', commit: '', off: '' } satisfies Info,
         phase,
       },
       true,

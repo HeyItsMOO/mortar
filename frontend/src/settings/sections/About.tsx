@@ -8,6 +8,7 @@ import { space } from '../../theme/density.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 import credits from '../generated/credits.json' with { type: 'json' }
 import { SettingRow, SettingsSection } from '../SettingsSection.tsx'
+import { useMortarUpdate } from '../updates.ts'
 import { Diagnostics } from './AboutDiagnostics.tsx'
 
 const LICENCE = 'https://github.com/Rethunk-Tech/mortar/blob/main/LICENSE'
@@ -60,6 +61,8 @@ function CreditList() {
 export function About() {
   const { t } = useLingui()
   const [creditsOpen, setCreditsOpen] = useState(false)
+  const version = useMortarUpdate((s) => s.info?.version ?? '')
+  const commit = useMortarUpdate((s) => s.info?.commit ?? '')
   return (
     <>
       <SettingsSection title={t`Mortar`}>
@@ -80,6 +83,14 @@ export function About() {
             <Box component="span" sx={{ color: 'var(--mortar-ink-sec)', fontSize: 14 }}>
               {t`AGPL-3.0 · Rethunk-Tech/mortar`}
             </Box>
+            {version ? (
+              <Box
+                component="span"
+                sx={{ color: 'var(--mortar-ink-sec)', fontSize: 14, userSelect: 'text' }}
+              >
+                {commit ? t`Version ${version} · build ${commit}` : t`Version ${version}`}
+              </Box>
+            ) : null}
           </Box>
           <Button variant="outlined" onClick={() => openPage(LICENCE)}>
             {t`Licence`}
