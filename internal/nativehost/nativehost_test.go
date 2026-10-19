@@ -609,7 +609,7 @@ func TestRepliesNameTheGamesBySource(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := readReply(t, &out)
-	if got.Protocol != 2 || got.ModIDs == nil || (*got.ModIDs)[0] != len("stardewvalley") {
+	if got.Protocol != Protocol || got.ModIDs == nil || (*got.ModIDs)[0] != len("stardewvalley") {
 		t.Fatalf("reply = %+v", got)
 	}
 	i := slices.IndexFunc(got.Games, func(g hostGame) bool { return g.ID == "stardew" })
@@ -708,5 +708,46 @@ func TestMortarRunningIgnoresAStalePortAnotherProgramReused(t *testing.T) {
 	}
 	if mortarRunning(dir) {
 		t.Fatal("a port that only accepts connections counted as a running Mortar")
+	}
+}
+
+func TestServeAnswersInstalledProjects(t *testing.T) {
+	h := handlers{
+		projects: func(source, key string) (string, string, []hostProject) {
+			if source != "vsmoddb" || key != "vintagestory" {
+				t.Fatalf("source %q key %q", source, key)
+			}
+			return stateReady, "Run", []hostProject{{ID: "12", Name: "Carry On"}}
+		},
+	}
+	in := append(frame(t, request{Type: "installedProjects", Source: "vsmoddb", SourceGameKey: "vintagestory"}),
+		frame(t, request{Type: "installedProjects", Source: "github"})...)
+	var out bytes.Buffer
+	if err := serveHandlers(bytes.NewReader(in), &out, h); err != nil {
+		t.Fatal(err)
+	}
+	got, refused := readReply(t, &out), readReply(t, &out)
+	if got.Projects == nil || !slices.Equal(*got.Projects, []hostProject{{ID: "12", Name: "Carry On"}}) || !got.Connected {
+		t.Errorf("reply = %+v", got)
+	}
+	if refused.Error == "" || refused.Projects != nil {
+		t.Errorf("github reply = %+v", refused)
+	}
+}
+
+func TestActiveProjectsReadsTheOpenProfile(t *testing.T) {
+	dir := listenControl(t, `{"global":{"lastProfile":{"stardew":"p1"}}}`)
+	writeProfileJSON(t, dir, "p1", map[string]any{"name": "Main", "entries": []map[string]any{
+		{"source": map[string]any{"kind": "curseforge", "name": "99", "modName": "Cool Mod"}},
+		{"source": map[string]any{"kind": "curseforge", "name": "100"}, "mods": []map[string]any{{"name": "Other"}}},
+		{"source": map[string]any{"kind": "nexus", "name": "x", "modId": 5}},
+	}})
+	st, name, got := activeProjects("curseforge", "4643")
+	want := []hostProject{{ID: "99", Name: "Cool Mod"}, {ID: "100", Name: "Other"}}
+	if st != stateReady || name != "Main" || !slices.Equal(got, want) {
+		t.Fatalf("got %q %q %v", st, name, got)
+	}
+	if st, _, got := activeProjects("curseforge", "unknown-key"); st != stateNoProfile || got != nil {
+		t.Fatalf("unknown key: %q %v", st, got)
 	}
 }

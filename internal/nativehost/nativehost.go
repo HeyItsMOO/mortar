@@ -42,9 +42,9 @@ const (
 	// Protocol is the native-messaging protocol Mortar speaks, sent in every reply; the extension checks it against
 	// its own range. MinProtocol and MaxProtocol are the extension protocols Mortar answers; a request that sends
 	// none counts as protocol 0.
-	Protocol    = 2
-	MinProtocol = 2
-	MaxProtocol = 2
+	Protocol    = 3
+	MinProtocol = 3
+	MaxProtocol = 3
 )
 
 // Protocol mismatches Mortar reports on a refused message and records for Settings.
@@ -114,7 +114,7 @@ type request struct {
 // gameKey is the page's game key for the source: a Nexus domain or a Thunderstore community, which the handlers
 // resolve to a Mortar game; empty for a source Mortar does not read pages of.
 func (r request) gameKey() string {
-	if r.Source != "nexus" && r.Source != "thunderstore" {
+	if r.Source != "nexus" && r.Source != "thunderstore" && r.Source != "curseforge" && r.Source != "vsmoddb" {
 		return ""
 	}
 	return r.SourceGameKey
@@ -145,11 +145,18 @@ type reply struct {
 	UpdateIDs     []int             `json:"updateIds,omitempty"`
 	// Packages are the Thunderstore "Namespace-Name" packages the open profile holds.
 	Packages *[]string `json:"packages,omitempty"`
+	// Projects are the CurseForge projects (id, name) or Mod DB mods (asset id, name) the open profile holds.
+	Projects *[]hostProject `json:"projects,omitempty"`
 	// Games are the games Mortar manages, so the extension draws its UI only on those and maps a page's source key
 	// to the Mortar game id.
 	Games []hostGame `json:"games,omitempty"`
 	// Accent is Mortar's accent colour, read on every reply so the extension follows a change in the app.
 	Accent string `json:"accent,omitempty"`
+}
+
+type hostProject struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type modUpdate struct {
@@ -195,10 +202,11 @@ type diskEntry struct {
 	SkipSources []string `json:"skipSources"`
 	Disabled    []mod.ID `json:"disabled"`
 	Source      struct {
-		Kind   string `json:"kind"`
-		Name   string `json:"name"`
-		ModID  int    `json:"modId"`
-		FileID int    `json:"fileId"`
+		Kind    string `json:"kind"`
+		Name    string `json:"name"`
+		ModName string `json:"modName"`
+		ModID   int    `json:"modId"`
+		FileID  int    `json:"fileId"`
 	} `json:"source"`
 	Mods []diskMod `json:"mods"`
 }
@@ -289,6 +297,8 @@ type handlers struct {
 	// packages and installPackage answer the Thunderstore requests; key is the community.
 	packages       func(key string) (state, profile string, packages []string)
 	installPackage func(key, pkg string) error
+	// projects answers installedProjects for a CurseForge or Mod DB game key.
+	projects func(source, key string) (state, profile string, projects []hostProject)
 }
 
 // ServeFrom answers messages from r until it closes, handing each message's link to open. args are those the browser
@@ -299,12 +309,15 @@ func ServeFrom(args []string, r io.Reader, w io.Writer, open func(link string) e
 		contact: func(mismatch string) { recordContact(browser, mismatch, time.Now()) },
 		open:    open, installed: activeNexusModIDs, im: nexusModProfiles, state: activeNexusState,
 		updates: activeNexusUpdates, broken: brokenNexusModIDs, problems: nexusModProblems,
-		requirements: nexusPageRequirements, packages: activePackages, installPackage: queuePackage,
+		requirements: nexusPageRequirements, packages: activePackages, installPackage: queuePackage, projects: activeProjects,
 	})
 }
 
 // answer is the reply to one data request; a link is handled by the caller.
 func (h handlers) answer(req request) reply {
+	if req.Type == "installedProjects" {
+		return h.answerProjects(req)
+	}
 	if req.Type == "installedPackages" || req.Type == "installPackage" {
 		return h.answerPackages(req)
 	}

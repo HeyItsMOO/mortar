@@ -50,6 +50,23 @@ func (h handlers) answerPackages(req request) reply {
 	return rep
 }
 
+// answerProjects replies to installedProjects for a CurseForge or Mod DB game key. A key Mortar does not manage (the
+// extension's probe sends none) still gets the games list.
+func (h handlers) answerProjects(req request) reply {
+	if (req.Source != "curseforge" && req.Source != "vsmoddb") || h.projects == nil {
+		return reply{Error: "Mortar does not read " + req.Source + " pages"}
+	}
+	st, name, found := h.projects(req.Source, req.SourceGameKey)
+	rep := reply{State: st, Connected: st == stateReady, Profile: name, Games: hostGames()}
+	if st != stateOff {
+		if found == nil {
+			found = []hostProject{}
+		}
+		rep.Projects = &found
+	}
+	return rep
+}
+
 func gameBySourceKey(source, key string) (components.GameInfo, bool) {
 	for _, g := range components.Games() {
 		for _, src := range g.Sources {
@@ -131,4 +148,54 @@ func queuePackage(key, pkg string) error {
 	return controlwire.CallDir(dataDir, "installPackage", map[string]any{
 		"game": info.ID, "profile": openProfile(info), "name": pkg,
 	}, nil, installTimeout)
+}
+
+// activeProjects lists the CurseForge projects or Mod DB mods the source's game holds in its open profile. A
+// CurseForge entry's Name is the project id; a Mod DB entry's is "<modid>-<assetid>", which pages are addressed by.
+func activeProjects(src, key string) (state, profile string, projects []hostProject) {
+	info, ok := gameBySourceKey(src, key)
+	if !ok {
+		return stateNoProfile, "", nil
+	}
+	state, profile = stateOf(info)
+	if state != stateReady {
+		return state, profile, nil
+	}
+	dataDir, err := datadir.Dir()
+	if err != nil {
+		return state, profile, nil
+	}
+	root, err := os.OpenRoot(dataDir)
+	if err != nil {
+		return state, profile, nil
+	}
+	defer func() { _ = root.Close() }()
+	data, err := root.ReadFile(filepath.Join("profiles", info.ID, openProfile(info), "profile.json"))
+	if err != nil {
+		return state, profile, nil
+	}
+	var p struct {
+		Entries []diskEntry `json:"entries"`
+	}
+	if json.Unmarshal(data, &p) != nil {
+		return state, profile, nil
+	}
+	for _, e := range p.Entries {
+		if e.Source.Kind != src || e.Source.Name == "" {
+			continue
+		}
+		id := e.Source.Name
+		if src == "vsmoddb" {
+			var found bool
+			if _, id, found = strings.Cut(id, "-"); !found || id == "" {
+				continue
+			}
+		}
+		name := e.Source.ModName
+		if name == "" && len(e.Mods) > 0 {
+			name = e.Mods[0].Name
+		}
+		projects = append(projects, hostProject{ID: id, Name: name})
+	}
+	return state, profile, projects
 }
