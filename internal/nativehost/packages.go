@@ -180,6 +180,7 @@ func activeProjects(src, key string) (state, profile string, projects []hostProj
 	if json.Unmarshal(data, &p) != nil {
 		return state, profile, nil
 	}
+	var driverIDs []string
 	for _, e := range p.Entries {
 		if e.Source.Kind != src || e.Source.Name == "" {
 			continue
@@ -191,11 +192,13 @@ func activeProjects(src, key string) (state, profile string, projects []hostProj
 				continue
 			}
 		}
+		driverIDs = append(driverIDs, e.Source.Name)
 		name := e.Source.ModName
 		if name == "" && len(e.Mods) > 0 {
 			name = e.Mods[0].Name
 		}
 		projects = append(projects, hostProject{ID: id, Name: name})
 	}
+	withSlugs(src, projects, driverIDs)
 	return state, profile, projects
 }

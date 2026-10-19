@@ -55,3 +55,9 @@ func (d Driver) Project(ctx context.Context, id int) (Project, error) {
 		Name: m.Name, GameID: m.GameID, Restricted: m.AllowModDistribution != nil && !*m.AllowModDistribution,
 	}, err
 }
+
+// PageURL is the project's page address, whose last segment is its slug; empty when the site gives none.
+func (d Driver) PageURL(ctx context.Context, id string) (string, error) {
+	m, err := d.mod(ctx, id)
+	return m.Links.WebsiteURL, err
+}

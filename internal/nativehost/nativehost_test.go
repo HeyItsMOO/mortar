@@ -751,3 +751,15 @@ func TestActiveProjectsReadsTheOpenProfile(t *testing.T) {
 		t.Fatalf("unknown key: %q %v", st, got)
 	}
 }
+
+func TestSlugOfReadsTheLastSegment(t *testing.T) {
+	for _, c := range []struct{ src, page, want string }{
+		{"curseforge", "https://www.curseforge.com/sims4/create-a-sim/aurum-heels/", "aurum-heels"},
+		{"vsmoddb", "https://mods.vintagestory.at/horsecartcompat", "horsecartcompat"},
+		{"vsmoddb", "https://mods.vintagestory.at/show/mod/42", ""},
+	} {
+		if got := slugOf(c.src, c.page); got != c.want {
+			t.Errorf("slugOf(%q, %q) = %q, want %q", c.src, c.page, got, c.want)
+		}
+	}
+}

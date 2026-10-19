@@ -154,9 +154,12 @@ type reply struct {
 	Accent string `json:"accent,omitempty"`
 }
 
+// hostProject is a profile mod as the site's pages name it: Slug is the CurseForge slug or the Mod DB alias once
+// the site has been asked (empty before, and for a Mod DB mod with no alias).
 type hostProject struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+	Slug string `json:"slug,omitempty"`
 }
 
 type modUpdate struct {
