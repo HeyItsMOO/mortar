@@ -11,7 +11,7 @@ import { space } from '../../theme/density.ts'
 import { reportUnexpected } from '../../toasts/report.ts'
 import { PresetsButton } from '../ConfigPresets.tsx'
 import { configApi } from './api.ts'
-import { showsOneFile } from './configList.ts'
+import { showsOneFile, useConfigList } from './configList.ts'
 import { filterFile, humanizeKey, isModified, modifiedCount } from './entries.ts'
 import { type Target, useTypedConfig } from './store.ts'
 import type { ConfigEntry } from './types.ts'
@@ -112,6 +112,7 @@ function Toolbar({
   onQuery,
   onSelect,
   onReset,
+  onDelete,
 }: {
   file: PaneFile | undefined
   files: PaneFile[]
@@ -121,6 +122,7 @@ function Toolbar({
   onQuery: (query: string) => void
   onSelect: (name: string) => void
   onReset: () => void
+  onDelete?: (() => void) | undefined
 }) {
   const { t } = useLingui()
   const labelOf = (f: PaneFile) => (f.format === 'gmcm' ? t`In-game menu` : f.label || f.name)
@@ -159,6 +161,11 @@ function Toolbar({
           </TextField>
         )}
       </Box>
+      {onDelete ? (
+        <Button variant="outlined" color="error" size="small" onClick={onDelete}>
+          {t`Delete file`}
+        </Button>
+      ) : null}
       {file?.format === 'text' ? null : (
         <>
           <SearchField
@@ -355,6 +362,7 @@ export function ConfigPane({
   const resetAll = useTypedConfig((s) => s.resetAll)
   const [query, setQuery] = useState(landing?.query ?? '')
   const [confirming, setConfirming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   // A preset applied from here rewrites the file, so the profile's change time rereads it.
   const updated = useProfiles((st) => openProfileOf(st)?.updated)
   const seenUpdated = useRef(updated)
@@ -387,6 +395,7 @@ export function ConfigPane({
           select(n).catch(() => undefined)
         }}
         onReset={() => setConfirming(true)}
+        onDelete={!mod && initialFile ? () => setDeleting(true) : undefined}
       />
       {loadError ? (
         <Alert
@@ -409,6 +418,24 @@ export function ConfigPane({
           <Sections shown={file ? filterFile(file, query) : null} />
         )}
       </Box>
+      <ConfirmDialog
+        open={deleting}
+        title={t`Delete ${name}?`}
+        body={t`No mod owns this file. It is removed from this profile, and the game makes a new one if it needs it.`}
+        confirmLabel={t`Delete`}
+        color="error"
+        onCancel={() => setDeleting(false)}
+        onConfirm={() => {
+          setDeleting(false)
+          configApi
+            .deleteUnowned(target, name)
+            .then(() => {
+              useConfigList.getState().select(profile, '')
+              return useConfigList.getState().load(game, profile, '', true)
+            })
+            .catch(reportUnexpected)
+        }}
+      />
       <ConfirmDialog
         open={confirming}
         title={t`Reset all entries?`}

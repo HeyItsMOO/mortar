@@ -1,4 +1,5 @@
 import {
+  DeleteUnowned,
   Files,
   OpenText,
   Reset,
@@ -28,6 +29,7 @@ const configApi = {
   resetAll: (t: Target, file: string) => ResetAll(t.game, t.profile, t.id, file),
   text: (t: Target, file: string) => Text(t.game, t.profile, t.id, file),
   setText: (t: Target, file: string, text: string) => SetText(t.game, t.profile, t.id, file, text),
+  deleteUnowned: (t: Target, file: string) => DeleteUnowned(t.game, t.profile, file),
   openText: (t: Target, file: string) => OpenText(t.game, t.profile, t.id, file),
 }
 

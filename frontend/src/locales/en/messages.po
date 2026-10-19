@@ -281,7 +281,7 @@ msgstr "Stop the game to change mods."
 msgid "Could not delete the template"
 msgstr "Could not delete the template"
 
-#: src/mods/typedConfig/ConfigPane.tsx:418
+#: src/mods/typedConfig/ConfigPane.tsx:445
 msgid "Every entry in {current} goes back to its default."
 msgstr "Every entry in {current} goes back to its default."
 
@@ -1660,8 +1660,8 @@ msgstr "The mod files can be copied directly from this Mortar."
 msgid "Newest lines kept in the Console"
 msgstr "Newest lines kept in the Console"
 
-#: src/mods/typedConfig/ConfigPane.tsx:179
-#: src/mods/typedConfig/ConfigPane.tsx:420
+#: src/mods/typedConfig/ConfigPane.tsx:186
+#: src/mods/typedConfig/ConfigPane.tsx:447
 #: src/settings/sections/Shortcuts.tsx:106
 #: src/settings/sections/Shortcuts.tsx:112
 msgid "Reset all"
@@ -1905,7 +1905,7 @@ msgstr "{path} depend on each other in a loop, so BepInEx stops before loading a
 #: src/launch/LaunchLayer.tsx:251
 #: src/mods/LoadOrderTab.tsx:421
 #: src/mods/ModsTab.tsx:111
-#: src/mods/typedConfig/ConfigPane.tsx:398
+#: src/mods/typedConfig/ConfigPane.tsx:407
 #: src/mods/updateReview/updateAll.ts:65
 #: src/profiles/GameModsDialog.tsx:195
 #: src/profiles/HealthDialog.tsx:245
@@ -2522,6 +2522,10 @@ msgstr "Prerelease"
 msgid "Follow new lines"
 msgstr "Follow new lines"
 
+#: src/profiles/PackFolderPrompt.tsx:33
+msgid "r2modman or Gale in another folder?"
+msgstr "r2modman or Gale in another folder?"
+
 #. placeholder {0}: view.identical
 #: src/profiles/CompareDialog.tsx:167
 msgid "{0} identical"
@@ -2572,7 +2576,7 @@ msgstr "Show the first-run tips again"
 msgid "Show"
 msgstr "Show"
 
-#: src/mods/typedConfig/ConfigPane.tsx:126
+#: src/mods/typedConfig/ConfigPane.tsx:128
 #: src/mods/typedConfig/ConfigTab.tsx:58
 #: src/mods/typedConfig/ConfigTab.tsx:105
 msgid "In-game menu"
@@ -3468,6 +3472,7 @@ msgstr "Search all runs…"
 
 #: src/firstrun/FindStep.tsx:270
 #: src/install/NeedsRootCallout.tsx:24
+#: src/profiles/PackFolderPrompt.tsx:35
 #: src/profiles/VortexFolderPrompt.tsx:60
 #: src/settings/sections/GameSettings.tsx:370
 #: src/tools/ToolEditorDialog.tsx:115
@@ -3816,7 +3821,7 @@ msgstr "Downloaded mods no profile uses"
 msgid "Needs a newer loader"
 msgstr "Needs a newer loader"
 
-#: src/profiles/ImportWizard.tsx:104
+#: src/profiles/ImportWizard.tsx:112
 msgid "Mortar found no other mod manager's profiles for this game on this computer."
 msgstr "Mortar found no other mod manager's profiles for this game on this computer."
 
@@ -4169,6 +4174,7 @@ msgstr "Custom categories"
 #: src/mods/OldFilesCallouts.tsx:119
 #: src/mods/problemFixButtons.tsx:201
 #: src/mods/problemFixButtons.tsx:206
+#: src/mods/typedConfig/ConfigPane.tsx:425
 #: src/profiles/HealthDialog.tsx:287
 #: src/profiles/LaunchPresetsBlock.tsx:54
 #: src/profiles/LaunchPresetTemplatesDialog.tsx:68
@@ -4525,7 +4531,7 @@ msgstr "Mortar already named the likely mod for the last crash."
 #: src/mods/SetNexusPageDialog.tsx:115
 #: src/profiles/EditProfileDialog.tsx:487
 #: src/profiles/GameModsDialog.tsx:219
-#: src/profiles/ImportWizard.tsx:139
+#: src/profiles/ImportWizard.tsx:160
 #: src/profiles/LaunchPresetDialog.tsx:91
 #: src/profiles/MergeDialog.tsx:238
 #: src/profiles/PackImportDialog.tsx:177
@@ -5005,7 +5011,7 @@ msgstr "Every mod in this profile is already off, so there is nothing to turn of
 msgid "This save has no recorded mod list yet."
 msgstr "This save has no recorded mod list yet."
 
-#: src/mods/typedConfig/ConfigPane.tsx:272
+#: src/mods/typedConfig/ConfigPane.tsx:279
 msgid "Could not open: {error}"
 msgstr "Could not open: {error}"
 
@@ -5152,6 +5158,10 @@ msgstr "Access granted"
 #: src/game/BackupMenuItems.tsx:27
 msgid "Back up to a file…"
 msgstr "Back up to a file…"
+
+#: src/mods/typedConfig/ConfigPane.tsx:424
+msgid "No mod owns this file. It is removed from this profile, and the game makes a new one if it needs it."
+msgstr "No mod owns this file. It is removed from this profile, and the game makes a new one if it needs it."
 
 #. placeholder {0}: row.host
 #: src/game/FarmMenuItem.tsx:100
@@ -5746,6 +5756,10 @@ msgstr "Pause downloads while the game runs"
 #: src/profiles/ProfileRow.tsx:124
 msgid "{0} of saves"
 msgstr "{0} of saves"
+
+#: src/mods/typedConfig/ConfigPane.tsx:423
+msgid "Delete {name}?"
+msgstr "Delete {name}?"
 
 #: src/settings/SettingsShell.tsx:91
 msgid "Try another word, or clear the search."
@@ -6873,7 +6887,7 @@ msgstr "Startup time by mod"
 msgid "{found, plural, one {# mod update} other {# mod updates}}"
 msgstr "{found, plural, one {# mod update} other {# mod updates}}"
 
-#: src/profiles/ImportWizard.tsx:103
+#: src/profiles/ImportWizard.tsx:111
 msgid "No profiles found."
 msgstr "No profiles found."
 
@@ -7244,7 +7258,7 @@ msgstr "That download is no longer waiting to retry."
 msgid "{0, plural, one {Update # mod} other {Update # mods}}"
 msgstr "{0, plural, one {Update # mod} other {Update # mods}}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:308
+#: src/mods/typedConfig/ConfigPane.tsx:315
 msgid "Open in editor"
 msgstr "Open in editor"
 
@@ -7636,7 +7650,7 @@ msgstr "Unity exception"
 
 #: src/mods/problemFixButtons.tsx:251
 #: src/mods/problemFixButtons.tsx:256
-#: src/mods/typedConfig/ConfigPane.tsx:316
+#: src/mods/typedConfig/ConfigPane.tsx:323
 #: src/profiles/HealthDialog.tsx:287
 msgid "Revert"
 msgstr "Revert"
@@ -7712,7 +7726,7 @@ msgstr "Asset map"
 msgid "Games starting with {letter}"
 msgstr "Games starting with {letter}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:417
+#: src/mods/typedConfig/ConfigPane.tsx:444
 msgid "Every change waiting for the next start is discarded."
 msgstr "Every change waiting for the next start is discarded."
 
@@ -7936,7 +7950,7 @@ msgstr "Installed and up to date"
 msgid "Regenerate token"
 msgstr "Regenerate token"
 
-#: src/mods/typedConfig/ConfigPane.tsx:375
+#: src/mods/typedConfig/ConfigPane.tsx:383
 msgid "Config of {name}"
 msgstr "Config of {name}"
 
@@ -8061,7 +8075,7 @@ msgid "Finding the mod that crashes the game"
 msgstr "Finding the mod that crashes the game"
 
 #: src/mods/typedConfig/ConfigPane.tsx:97
-#: src/mods/typedConfig/ConfigPane.tsx:272
+#: src/mods/typedConfig/ConfigPane.tsx:279
 msgid "Could not save: {error}"
 msgstr "Could not save: {error}"
 
@@ -8198,7 +8212,7 @@ msgstr "Could not dismiss the overlap"
 msgid "Proton version"
 msgstr "Proton version"
 
-#: src/profiles/ImportWizard.tsx:136
+#: src/profiles/ImportWizard.tsx:157
 msgid "Use a code or file…"
 msgstr "Use a code or file…"
 
@@ -8630,6 +8644,10 @@ msgstr "Optional"
 msgid "This network is set to Public in Windows"
 msgstr "This network is set to Public in Windows"
 
+#: src/profiles/useBatchImport.ts:29
+msgid "{done, plural, one {Imported # profile} other {Imported # profiles}}"
+msgstr "{done, plural, one {Imported # profile} other {Imported # profiles}}"
+
 #: src/commandPalette/CommandPalette.tsx:98
 msgid "Go to"
 msgstr "Go to"
@@ -8649,7 +8667,7 @@ msgstr "A download fails"
 msgid "{0} does not allow downloads outside its own page: get it there."
 msgstr "{0} does not allow downloads outside its own page: get it there."
 
-#: src/mods/typedConfig/ConfigPane.tsx:284
+#: src/mods/typedConfig/ConfigPane.tsx:291
 msgid "Contents of {name}"
 msgstr "Contents of {name}"
 
@@ -8708,6 +8726,7 @@ msgid "Choose a folder"
 msgstr "Choose a folder"
 
 #: src/profiles/PackImportDialog.tsx:101
+#: src/profiles/useBatchImport.ts:22
 msgid "Could not import"
 msgstr "Could not import"
 
@@ -8874,7 +8893,7 @@ msgstr "Save mod list"
 msgid "Update all ({wantedCount})"
 msgstr "Update all ({wantedCount})"
 
-#: src/mods/typedConfig/ConfigPane.tsx:218
+#: src/mods/typedConfig/ConfigPane.tsx:225
 msgid "No entries match."
 msgstr "No entries match."
 
@@ -11167,6 +11186,11 @@ msgstr "Links"
 msgid "The antivirus flagged it, so Mortar did not install it."
 msgstr "The antivirus flagged it, so Mortar did not install it."
 
+#. placeholder {0}: chosen.length
+#: src/profiles/ImportWizard.tsx:167
+msgid "{0, plural, one {Import # profile} other {Import # profiles}}"
+msgstr "{0, plural, one {Import # profile} other {Import # profiles}}"
+
 #: src/mods/problemText.ts:85
 msgid "Error in a patch"
 msgstr "Error in a patch"
@@ -12052,7 +12076,7 @@ msgstr "Beach farm"
 #: src/groups/SaveGroupToLibrary.tsx:48
 #: src/mods/CategoryEditor.tsx:163
 #: src/mods/ConfigPresets.tsx:135
-#: src/mods/typedConfig/ConfigPane.tsx:319
+#: src/mods/typedConfig/ConfigPane.tsx:326
 #: src/profiles/EditProfileDialog.tsx:490
 #: src/profiles/LaunchPresetDialog.tsx:96
 #: src/saves/SaveListRow.tsx:66
@@ -12217,7 +12241,7 @@ msgstr "Keep mine"
 msgid "Pinned: {pinned}"
 msgstr "Pinned: {pinned}"
 
-#: src/mods/typedConfig/ConfigPane.tsx:151
+#: src/mods/typedConfig/ConfigPane.tsx:153
 msgid "Config file"
 msgstr "Config file"
 
@@ -12514,6 +12538,10 @@ msgstr "Saved to {0}"
 msgid "{shared} of {total} mods"
 msgstr "{shared} of {total} mods"
 
+#: src/mods/typedConfig/ConfigPane.tsx:166
+msgid "Delete file"
+msgstr "Delete file"
+
 #: src/saves/saveName.ts:40
 msgid "Extra slot added by a mod"
 msgstr "Extra slot added by a mod"
@@ -12586,6 +12614,11 @@ msgstr "Tag"
 #: src/settings/sections/AboutDiagnostics.tsx:178
 msgid "Diagnostics"
 msgstr "Diagnostics"
+
+#: src/profiles/PackFolderPrompt.tsx:27
+#: src/profiles/PackFolderPrompt.tsx:37
+msgid "r2modman or Gale data folder"
+msgstr "r2modman or Gale data folder"
 
 #: src/profiles/HistoryEventRow.tsx:109
 #: src/profiles/MergeDialog.tsx:60
@@ -12939,7 +12972,7 @@ msgstr "Unknown mod"
 msgid "No changelog for this update"
 msgstr "No changelog for this update"
 
-#: src/profiles/ImportWizard.tsx:100
+#: src/profiles/ImportWizard.tsx:108
 #: src/share/ImportDialog.tsx:261
 msgid "Import a profile"
 msgstr "Import a profile"
@@ -13699,7 +13732,7 @@ msgstr "Replace {name}?"
 msgid "Mods you put there show up here to add."
 msgstr "Mods you put there show up here to add."
 
-#: src/mods/typedConfig/ConfigPane.tsx:414
+#: src/mods/typedConfig/ConfigPane.tsx:441
 msgid "Reset all entries?"
 msgstr "Reset all entries?"
 
@@ -14182,7 +14215,7 @@ msgstr "The game under the pointer or focus grows taller and shows more art"
 msgid "Settings sections"
 msgstr "Settings sections"
 
-#: src/mods/typedConfig/ConfigPane.tsx:165
+#: src/mods/typedConfig/ConfigPane.tsx:172
 msgid "Search entries"
 msgstr "Search entries"
 
