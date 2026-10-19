@@ -1743,7 +1743,7 @@ msgstr "Add preset"
 msgid "See load errors, missing dependencies, and other issues before you play."
 msgstr "See load errors, missing dependencies, and other issues before you play."
 
-#: src/games/GameSelect.tsx:509
+#: src/games/GameSelect.tsx:544
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -1905,7 +1905,7 @@ msgid "Copper"
 msgstr "Copper"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:83
+#: src/firstrun/FindStep.tsx:86
 msgid "found, without {0}"
 msgstr "found, without {0}"
 
@@ -2341,7 +2341,7 @@ msgid "Replaced {mods} in {profileName}"
 msgstr "Replaced {mods} in {profileName}"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:85
+#: src/firstrun/FindStep.tsx:88
 msgid "has {0}"
 msgstr "has {0}"
 
@@ -2644,7 +2644,7 @@ msgstr "Not signed in"
 msgid "{game} profile"
 msgstr "{game} profile"
 
-#: src/firstrun/FindStep.tsx:224
+#: src/firstrun/FindStep.tsx:227
 #: src/firstrun/GameSetup.tsx:77
 #: src/settings/sections/GameSettings.tsx:194
 #: src/settings/sections/GameSettings.tsx:196
@@ -3435,7 +3435,7 @@ msgstr "Connected from {0}, last seen "
 msgid "Search all runs…"
 msgstr "Search all runs…"
 
-#: src/firstrun/FindStep.tsx:267
+#: src/firstrun/FindStep.tsx:270
 #: src/install/NeedsRootCallout.tsx:24
 #: src/profiles/VortexFolderPrompt.tsx:60
 #: src/settings/sections/GameSettings.tsx:370
@@ -3877,7 +3877,7 @@ msgstr "Check store files"
 msgid "Imported {0}: {1}"
 msgstr "Imported {0}: {1}"
 
-#: src/firstrun/FindStep.tsx:168
+#: src/firstrun/FindStep.tsx:171
 #: src/settings/sections/GameSettings.tsx:190
 msgid "Found in {path}"
 msgstr "Found in {path}"
@@ -4028,7 +4028,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:113
-#: src/games/GameSelect.tsx:490
+#: src/games/GameSelect.tsx:448
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4405,11 +4405,11 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:512
+#: src/games/GameSelect.tsx:547
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
-#: src/games/GameSelect.tsx:276
+#: src/games/GameSelect.tsx:278
 msgid "Set up"
 msgstr "Set up"
 
@@ -4696,7 +4696,7 @@ msgid "In progress ({0})"
 msgstr "In progress ({0})"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:188
+#: src/firstrun/FindStep.tsx:191
 msgid "Choose your {0} folder"
 msgstr "Choose your {0} folder"
 
@@ -5025,7 +5025,7 @@ msgstr "Added the group {group}"
 msgid "Wheat"
 msgstr "Wheat"
 
-#: src/firstrun/FindStep.tsx:168
+#: src/firstrun/FindStep.tsx:171
 msgid "Folder chosen by you"
 msgstr "Folder chosen by you"
 
@@ -5322,7 +5322,7 @@ msgid "Include beta releases"
 msgstr "Include beta releases"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:280
+#: src/firstrun/FindStep.tsx:283
 msgid "{0} folder"
 msgstr "{0} folder"
 
@@ -6804,7 +6804,7 @@ msgid "No profiles found."
 msgstr "No profiles found."
 
 #. placeholder {0}: game.name
-#: src/games/GameSelect.tsx:212
+#: src/games/GameSelect.tsx:214
 msgid "Open {0}"
 msgstr "Open {0}"
 
@@ -6833,7 +6833,7 @@ msgstr "Could not move the old files to trash"
 msgid "No profiles yet"
 msgstr "No profiles yet"
 
-#: src/games/GameSelect.tsx:166
+#: src/games/GameSelect.tsx:167
 #: src/games/ProfileCards.tsx:48
 #: src/profiles/store.ts:280
 #: src/profiles/store.ts:361
@@ -7102,7 +7102,7 @@ msgstr "Mortar started with default settings. The damaged file was kept at {path
 msgid "Mod config"
 msgstr "Mod config"
 
-#: src/firstrun/FindStep.tsx:275
+#: src/firstrun/FindStep.tsx:278
 #: src/launchers/LauncherList.tsx:230
 msgid "Rescan"
 msgstr "Rescan"
@@ -8136,7 +8136,7 @@ msgstr "No account"
 msgid "{0} · {1} unique"
 msgstr "{0} · {1} unique"
 
-#: src/firstrun/FindStep.tsx:81
+#: src/firstrun/FindStep.tsx:84
 #: src/launchers/LauncherList.tsx:150
 #: src/launchers/LauncherList.tsx:187
 #: src/launchers/LauncherList.tsx:207
@@ -8339,7 +8339,7 @@ msgstr "{store} in the store ({shared} shared with other profiles)"
 msgid "Remove {0} from other profiles"
 msgstr "Remove {0} from other profiles"
 
-#: src/firstrun/FindStep.tsx:122
+#: src/firstrun/FindStep.tsx:125
 msgid "Found a copy outside your launchers:"
 msgstr "Found a copy outside your launchers:"
 
@@ -8636,7 +8636,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:111
-#: src/games/GameSelect.tsx:484
+#: src/games/GameSelect.tsx:447
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -8702,7 +8702,7 @@ msgstr "Minutes between background update checks"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/games/GameSelect.tsx:151
+#: src/games/GameSelect.tsx:152
 msgid "{playtime} played"
 msgstr "{playtime} played"
 
@@ -10152,7 +10152,7 @@ msgstr "A saved group keeps at least one mod; delete the saved group instead"
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:497
+#: src/games/GameSelect.tsx:449
 msgid "Other games"
 msgstr "Other games"
 
@@ -10348,7 +10348,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/FirstRun.tsx:47
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
-#: src/games/GameSelect.tsx:439
+#: src/games/GameSelect.tsx:478
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -10469,7 +10469,7 @@ msgid "Search run logs"
 msgstr "Search run logs"
 
 #. placeholder {0}: game.loader
-#: src/firstrun/FindStep.tsx:200
+#: src/firstrun/FindStep.tsx:203
 msgid "{0} not installed yet"
 msgstr "{0} not installed yet"
 
@@ -10649,7 +10649,7 @@ msgid "When {0}"
 msgstr "When {0}"
 
 #. placeholder {0}: game.name
-#: src/firstrun/FindStep.tsx:255
+#: src/firstrun/FindStep.tsx:258
 msgid "{0} was not found in your launchers"
 msgstr "{0} was not found in your launchers"
 
@@ -11783,7 +11783,7 @@ msgid "Stop the game to test a launch."
 msgstr "Stop the game to test a launch."
 
 #: src/firstrunTour/TourPopover.tsx:42
-#: src/games/GameSelect.tsx:263
+#: src/games/GameSelect.tsx:265
 #: src/launch/PlayControl.tsx:184
 #: src/mods/typedConfig/ConfigTab.tsx:317
 #: src/settings/GameSettingsPage.tsx:98
@@ -12095,7 +12095,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:497
+#: src/games/GameSelect.tsx:449
 msgid "All games"
 msgstr "All games"
 
@@ -12628,7 +12628,7 @@ msgstr "Sort: newest"
 msgid "Could not roll back {0}"
 msgstr "Could not roll back {0}"
 
-#: src/games/GameSelect.tsx:258
+#: src/games/GameSelect.tsx:260
 msgid "Play {playName}"
 msgstr "Play {playName}"
 
@@ -12828,7 +12828,7 @@ msgstr "Quota"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/firstrun/FindStep.tsx:245
+#: src/firstrun/FindStep.tsx:248
 #: src/settings/sections/Downloads.tsx:312
 #: src/settings/sections/GameSettings.tsx:206
 #: src/settings/sections/GameSettings.tsx:398
@@ -13032,7 +13032,7 @@ msgstr "Check mods and Mortar for updates (F5)"
 msgid "Games"
 msgstr "Games"
 
-#: src/firstrun/FindStep.tsx:139
+#: src/firstrun/FindStep.tsx:142
 msgid "Use {folder}"
 msgstr "Use {folder}"
 
@@ -13135,7 +13135,7 @@ msgstr "Record"
 msgid "Empty profile"
 msgstr "Empty profile"
 
-#: src/firstrun/FindStep.tsx:199
+#: src/firstrun/FindStep.tsx:202
 #: src/firstrun/LoaderStep.tsx:372
 msgid "{loader} {version} installed"
 msgstr "{loader} {version} installed"
@@ -13661,7 +13661,7 @@ msgstr "Compare with…"
 msgid "Could not update tags for the selected mods"
 msgstr "Could not update tags for the selected mods"
 
-#: src/firstrun/FindStep.tsx:288
+#: src/firstrun/FindStep.tsx:291
 #: src/firstrun/FirstRun.tsx:104
 #: src/firstrun/LoaderStep.tsx:187
 #: src/firstrun/LoaderStep.tsx:387
@@ -13697,7 +13697,7 @@ msgstr "Command-line control"
 msgid "Could not repair this profile"
 msgstr "Could not repair this profile"
 
-#: src/games/GameSelect.tsx:164
+#: src/games/GameSelect.tsx:165
 #: src/games/ProfileCards.tsx:46
 #: src/games/ProfileCards.tsx:59
 #: src/games/useOpenGame.ts:42
@@ -13885,7 +13885,7 @@ msgstr "See which mods slow the game"
 
 #. placeholder {0}: game.name
 #: src/firstrun/GameSetup.tsx:176
-#: src/games/GameSelect.tsx:271
+#: src/games/GameSelect.tsx:273
 msgid "Set up {0}"
 msgstr "Set up {0}"
 

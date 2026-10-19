@@ -241,3 +241,17 @@ func TestAnimatedBackdropsKeepTheirFrames(t *testing.T) {
 		}
 	}
 }
+
+// The system default's JPEG XL cannot be shrunk, so a page asking for its width gets the bundled JPEG of it.
+func TestASizedDefaultBackdropIsTheBundledJPEG(t *testing.T) {
+	dir := t.TempDir()
+	sys := write(t, dir, "sys.jxl", "jxl")
+	h := Middleware(func() settings.Settings { return settings.Settings{Background: settings.BackgroundImage} }, sys, none)(http.NotFoundHandler())
+	req := httptest.NewRequestWithContext(t.Context(), http.MethodGet, Path+"?w=1280", nil)
+	req.Header.Set("Accept", "image/jxl,image/*")
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if got := rec.Header().Get("Content-Type"); got != "image/jpeg" {
+		t.Errorf("type %q, want the bundled JPEG", got)
+	}
+}

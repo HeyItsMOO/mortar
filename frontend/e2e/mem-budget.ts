@@ -11,7 +11,7 @@ import { sandboxPort, selftest, serverEnv } from './sandbox.ts'
 // stands in for it. PSS divides shared pages between the processes sharing them, so the sum counts each page once.
 //
 //   MORTAR_MEM_DATA=<a Mortar data folder>   copy of the data to measure on (else the seeded sandbox, a small smoke run)
-//   MORTAR_MEM_ONLY=browse,problems          run only those scenarios (browse, install, problems, launch)
+//   MORTAR_MEM_ONLY=browse,problems          run only those scenarios (browse, install, problems, launch, games)
 //   MORTAR_MEM_PROFILE=<id or name>          the Stardew profile (else the one with the most mods)
 //   MORTAR_MEM_BUDGET_MIB=1152               the limit for Go and browser together, per scenario
 // Exits 1 when a scenario's total is over the budget.
@@ -27,6 +27,10 @@ const SCROLLS = 5
 const SCROLL_STEP_PX = 4000
 const SCROLL_WAIT_MS = 1200
 const SETTLE_MS = 3000
+// Enough wheel steps to pass every Game Selection row of a 280-game catalog (168 px each) quickly.
+const GAME_SCROLLS = 70
+const GAME_SCROLL_PX = 800
+const GAME_SCROLL_WAIT_MS = 150
 const LAUNCH_TIMEOUT_MS = 240_000
 
 const dir = `${BASE}/mortar-mem-${process.pid}`
@@ -59,11 +63,17 @@ async function domStats(page: Page): Promise<string> {
   const d = await page.evaluate(() => {
     const imgs = [...document.images]
     const px = imgs.reduce((t, i) => t + i.naturalWidth * i.naturalHeight, 0)
-    const big = imgs.reduce((m, i) => Math.max(m, i.naturalWidth * i.naturalHeight), 0)
-    return { nodes: document.getElementsByTagName('*').length, imgs: imgs.length, px, big }
+    const top = imgs.reduce<HTMLImageElement | undefined>(
+      (m, i) => (!m || i.naturalWidth * i.naturalHeight > m.naturalWidth * m.naturalHeight ? i : m),
+      undefined,
+    )
+    const largest = top
+      ? `${top.naturalWidth}x${top.naturalHeight} ${new URL(top.src).pathname}`
+      : 'none'
+    return { nodes: document.getElementsByTagName('*').length, imgs: imgs.length, px, largest }
   })
   const mib = (d.px * 4) / MIB / MIB
-  return `DOM ${d.nodes} nodes, ${d.imgs} images (${mib.toFixed(0)} MiB decoded, largest ${Math.sqrt(d.big).toFixed(0)}px square).`
+  return `DOM ${d.nodes} nodes, ${d.imgs} images (${mib.toFixed(0)} MiB decoded, largest ${d.largest}).`
 }
 
 /** The page's JS heap after a collection, and with MORTAR_PPROF set its heap snapshot beside the Go profiles, so the
@@ -258,6 +268,21 @@ const scenarios: Scenario[] = [
       if (r.status !== 0) {
         throw new Error(`launch failed: ${r.stderr || r.stdout}`)
       }
+    },
+  },
+  {
+    // Last: it leaves the page on Game Selection. Every catalog row passes by, as a player flicking through the list.
+    name: 'games',
+    async run(page) {
+      await page.getByRole('button', { name: /^(Switch game|Choose a game)/ }).click()
+      await page.getByRole('menuitem', { name: 'All games…' }).click()
+      await sleep(SETTLE_MS)
+      for (let n = 0; n < GAME_SCROLLS; n++) {
+        await page.mouse.move(700, 500)
+        await page.mouse.wheel(0, GAME_SCROLL_PX)
+        await sleep(GAME_SCROLL_WAIT_MS)
+      }
+      await sleep(SETTLE_MS)
     },
   },
 ]

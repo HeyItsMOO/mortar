@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Link, Typography } from '@mui/material'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { Play, Settings } from 'lucide-react'
 import { type MouseEvent, memo, useEffect, useRef, useState } from 'react'
 import type { GameInfo } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
@@ -205,10 +206,11 @@ function RowView({
   const playId = lastPlayedId || first?.id || ''
   const playName = lastPlayedName || first?.name || ''
   const playLast = usePlayLast(game, playId)
-  const hasArt = gameArt(game) !== ''
+  const art = gameArt(game, globalThis.innerWidth)
+  const hasArt = art !== ''
   const content = (
     <>
-      {gameArt(game) ? <Art src={gameArt(game)} openable={openable} /> : null}
+      {art ? <Art src={art} openable={openable} /> : null}
       {openable ? <CoverButton onClick={open} aria-label={t`Open ${game.name}`} /> : null}
       <Box
         sx={{
@@ -368,21 +370,31 @@ function GroupHeading({ children, count }: { children: string; count: number }) 
 // A shorter list fits without a rail to jump through it.
 const RAIL_MIN_GAMES = 8
 
-// Brings a game's row to the top of the list and focuses it, so Enter opens it.
-function reveal(scroller: HTMLElement | null, id: string) {
-  const tile = scroller?.querySelector<HTMLElement>(`[data-tile][data-game="${CSS.escape(id)}"]`)
-  if (!tile) {
-    return
+const HEADING_PX = 40
+
+// The list is virtual: with every catalog game mounted, scrolling through them all kept each row's decoded art.
+type Item =
+  | { kind: 'heading'; key: string; label: string; count: number }
+  | { kind: 'game'; key: string; game: Game }
+
+function listItems(groups: { label: string; games: Game[] }[]): Item[] {
+  const out: Item[] = []
+  for (const { label, games } of groups) {
+    if (games.length > 0) {
+      out.push({ kind: 'heading', key: `h:${label}`, label, count: games.length })
+      for (const game of games) {
+        out.push({ kind: 'game', key: game.id, game })
+      }
+    }
   }
-  tile.scrollIntoView({ block: 'start' })
-  tile.querySelector<HTMLElement>('button')?.focus({ preventScroll: true })
+  return out
 }
 
 // Typing a game's name anywhere on the page jumps to it. The listener reads the list through a ref so the letters
 // typed so far survive the page's re-renders.
-function useTypeToScroll(scroller: { current: HTMLElement | null }, games: Game[]) {
-  const list = useRef(games)
-  list.current = games
+function useTypeToScroll(games: Game[], reveal: (id: string) => void) {
+  const list = useRef({ games, reveal })
+  list.current = { games, reveal }
   useEffect(() => {
     let typed = ''
     let at = 0
@@ -408,14 +420,14 @@ function useTypeToScroll(scroller: { current: HTMLElement | null }, games: Game[
       }
       typed = fresh ? e.key : typed + e.key
       at = e.timeStamp
-      const hit = typedMatch(list.current, typed, (g) => g.name)
+      const hit = typedMatch(list.current.games, typed, (g) => g.name)
       if (hit) {
-        reveal(scroller.current, hit.id)
+        list.current.reveal(hit.id)
       }
     }
     globalThis.addEventListener('keydown', onKey)
     return () => globalThis.removeEventListener('keydown', onKey)
-  }, [scroller])
+  }, [])
 }
 
 function GameSelect() {
@@ -431,7 +443,34 @@ function GameSelect() {
   // Games found on this computer come before the rest of the catalog, most of which is not set up here.
   const found = ordered.rest.filter((g) => g.available && g.installed)
   const rest = ordered.rest.filter((g) => !(g.available && g.installed))
-  useTypeToScroll(scroller, [...recent, ...found, ...rest])
+  const items = listItems([
+    { label: t`Recently played`, games: recent },
+    { label: t`On this computer`, games: found },
+    { label: recent.length + found.length > 0 ? t`Other games` : t`All games`, games: rest },
+  ])
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => scroller.current,
+    estimateSize: (i) => (items[i]?.kind === 'heading' ? HEADING_PX : ROW_PX),
+    overscan: 3,
+    getItemKey: (i) => items[i]?.key ?? i,
+  })
+  // Brings a game's row to the top of the list and focuses it once rendered, so Enter opens it.
+  const reveal = (id: string) => {
+    const index = items.findIndex((it) => it.kind === 'game' && it.game.id === id)
+    if (index < 0) {
+      return
+    }
+    virtualizer.scrollToIndex(index, { align: 'start' })
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scroller.current
+          ?.querySelector<HTMLElement>(`[data-tile][data-game="${CSS.escape(id)}"] button`)
+          ?.focus({ preventScroll: true })
+      })
+    })
+  }
+  useTypeToScroll([...recent, ...found, ...rest], reveal)
   if (loadError) {
     return <LoadErrorRow error={loadError} onRetry={refresh} />
   }
@@ -441,22 +480,21 @@ function GameSelect() {
   const rail = rest.length >= RAIL_MIN_GAMES
   const letters = [...new Set(rest.map((g) => initialOf(g.name)))]
   // The rail marks the letter of the first alphabetical row still in view.
+  const restIds = new Set(rest.map((g) => g.id))
   const markLetter = () => {
-    const box = scroller.current
-    if (!box) {
-      return
-    }
-    const { top } = box.getBoundingClientRect()
-    const first = rest.find((g) => {
-      const tile = box.querySelector(`[data-tile][data-game="${CSS.escape(g.id)}"]`)
-      return tile ? tile.getBoundingClientRect().bottom > top + 1 : false
+    const offset = scroller.current?.scrollTop ?? 0
+    const shown = virtualizer.getVirtualItems().find((v) => {
+      const it = items[v.index]
+      return v.end > offset + 1 && it?.kind === 'game' && restIds.has(it.game.id)
     })
-    setCurrent(first && box.scrollTop > 0 ? initialOf(first.name) : '')
+    const it = shown ? items[shown.index] : undefined
+    const first = it?.kind === 'game' ? it.game : rest[0]
+    setCurrent(first && offset > 0 ? initialOf(first.name) : '')
   }
   const jump = (letter: string) => {
     const first = rest.find((g) => initialOf(g.name) === letter)
     if (first) {
-      reveal(scroller.current, first.id)
+      reveal(first.id)
     }
   }
   return (
@@ -469,8 +507,6 @@ function GameSelect() {
             minWidth: 0,
             overflowY: 'auto',
             overflowX: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
             // The rail stands in for the scrollbar.
             ...(rail
               ? { scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }
@@ -480,26 +516,25 @@ function GameSelect() {
           onScroll={rail ? markLetter : undefined}
           onKeyDown={(e) => arrowFocus(e, '[data-tile]')}
         >
-          {recent.length > 0 ? (
-            <GroupHeading count={recent.length}>{t`Recently played`}</GroupHeading>
-          ) : null}
-          {recent.map((g) => (
-            <Row key={g.id} {...tileProps(g)} />
-          ))}
-          {found.length > 0 ? (
-            <GroupHeading count={found.length}>{t`On this computer`}</GroupHeading>
-          ) : null}
-          {found.map((g) => (
-            <Row key={g.id} {...tileProps(g)} />
-          ))}
-          {rest.length > 0 ? (
-            <GroupHeading count={rest.length}>
-              {recent.length + found.length > 0 ? t`Other games` : t`All games`}
-            </GroupHeading>
-          ) : null}
-          {rest.map((g) => (
-            <Row key={g.id} {...tileProps(g)} />
-          ))}
+          <Box sx={{ position: 'relative', width: '100%', height: virtualizer.getTotalSize() }}>
+            {virtualizer.getVirtualItems().map((v) => {
+              const it = items[v.index]
+              return (
+                <Box
+                  key={v.key}
+                  data-index={v.index}
+                  ref={virtualizer.measureElement}
+                  sx={{ position: 'absolute', top: 0, left: 0, width: '100%' }}
+                  style={{ transform: `translateY(${v.start}px)` }}
+                >
+                  {it?.kind === 'heading' ? (
+                    <GroupHeading count={it.count}>{it.label}</GroupHeading>
+                  ) : null}
+                  {it?.kind === 'game' ? <Row {...tileProps(it.game)} /> : null}
+                </Box>
+              )
+            })}
+          </Box>
         </Box>
         {rail ? <LetterRail letters={letters} current={current} onJump={jump} /> : null}
       </Box>

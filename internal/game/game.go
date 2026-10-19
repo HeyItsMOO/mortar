@@ -2,6 +2,7 @@
 package game
 
 import (
+	"bytes"
 	"cmp"
 	"context"
 	"encoding/json"
@@ -23,6 +24,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
 	_ "github.com/Rethunk-Tech/mortar/internal/loader/all"
+	"github.com/Rethunk-Tech/mortar/internal/modpic"
 	"github.com/Rethunk-Tech/mortar/internal/nexus"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/shots"
@@ -282,6 +284,34 @@ var heroCDN = "https://cdn.cloudflare.steamstatic.com/steam/apps/%s/library_hero
 // maxHero bounds a fetched hero image; Steam's are a few hundred KB.
 const maxHero = 8 << 20
 
+// Widths a page may ask a hero for with ?w=. Steam's library hero is 3840 pixels wide, which the webview decodes
+// whole (about 19 MB of pixels) for a row a fraction of that size.
+const (
+	artMinPx = 320
+	artMaxPx = 2560
+)
+
+func artWidth(r *http.Request) int {
+	px, err := strconv.Atoi(r.URL.Query().Get("w"))
+	if err != nil || px < artMinPx || px > artMaxPx {
+		return 0
+	}
+	return px
+}
+
+// writeArt serves a hero image, shrunk to the asked width when the page named one.
+func writeArt(w http.ResponseWriter, r *http.Request, b []byte, modTime time.Time) {
+	typ := http.DetectContentType(b)
+	if px := artWidth(r); px > 0 {
+		if out, outTyp, err := modpic.Shrink(b, typ, px); err == nil {
+			b, typ = out, outTyp
+		}
+	}
+	w.Header().Set("Content-Type", typ)
+	w.Header().Set("Cache-Control", "max-age=86400")
+	http.ServeContent(w, r, "", modTime, bytes.NewReader(b))
+}
+
 // ArtMiddleware serves GET /steam-art/<appid> for listed games only, from Steam's cached hero image, else from
 // Steam's public copy fetched here: the webview does not follow a redirect from the app's own scheme to https.
 func ArtMiddleware(home string) func(http.Handler) http.Handler {
@@ -312,19 +342,17 @@ func ArtMiddleware(home string) func(http.Handler) http.Handler {
 				}
 				return
 			}
-			art, err := fsx.Open(path)
+			info, err := fsx.Stat(path)
 			if err != nil {
 				http.NotFound(w, r)
 				return
 			}
-			defer func() { _ = art.Close() }()
-			info, err := art.Stat()
+			b, err := fsx.ReadFile(path)
 			if err != nil {
 				http.NotFound(w, r)
 				return
 			}
-			w.Header().Set("Content-Type", "image/jpeg")
-			http.ServeContent(w, r, "", info.ModTime(), art)
+			writeArt(w, r, b, info.ModTime())
 		})
 	}
 }
@@ -381,9 +409,11 @@ func serveRemoteArt(w http.ResponseWriter, r *http.Request, src string) bool {
 	if resp.StatusCode != http.StatusOK {
 		return false
 	}
-	w.Header().Set("Content-Type", "image/jpeg")
-	w.Header().Set("Cache-Control", "max-age=86400")
-	_, _ = io.Copy(w, io.LimitReader(resp.Body, maxHero))
+	b, err := modpic.ReadCapped(resp.Body, maxHero)
+	if err != nil {
+		return false
+	}
+	writeArt(w, r, b, time.Time{})
 	return true
 }
 

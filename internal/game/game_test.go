@@ -1,6 +1,9 @@
 package game
 
 import (
+	"bytes"
+	"image"
+	"image/jpeg"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -42,7 +45,7 @@ func home(t *testing.T) string {
 		[]byte("\"libraryfolders\"\n{\n\"0\"\n{\n\"path\" \""+root+"\"\n}\n}\n"), 0o600))
 	must(os.WriteFile(filepath.Join(root, "steamapps", "appmanifest_413150.acf"),
 		[]byte("\"AppState\"\n{\n\"installdir\" \"Stardew Valley\"\n}\n"), 0o600))
-	must(os.WriteFile(filepath.Join(root, "appcache", "librarycache", "413150", "library_hero.jpg"), []byte("jpg"), 0o600))
+	must(os.WriteFile(filepath.Join(root, "appcache", "librarycache", "413150", "library_hero.jpg"), testJPEG(t, 640, 200), 0o600))
 	return h
 }
 
@@ -100,6 +103,21 @@ func TestListAndArt(t *testing.T) {
 	if ct := rec.Header().Get("Content-Type"); ct != "image/jpeg" {
 		t.Errorf("content type = %q", ct)
 	}
+	// A row asks for its own width, so the webview never decodes Steam's full 3840-pixel hero.
+	rec = httptest.NewRecorder()
+	h.ServeHTTP(rec, httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/steam-art/413150?w=320", nil))
+	if cfg, err := jpeg.DecodeConfig(rec.Body); err != nil || cfg.Width != 320 {
+		t.Errorf("shrunk art = %+v, %v", cfg, err)
+	}
+}
+
+func testJPEG(t *testing.T, w, h int) []byte {
+	t.Helper()
+	var b bytes.Buffer
+	if err := jpeg.Encode(&b, image.NewRGBA(image.Rect(0, 0, w, h)), nil); err != nil {
+		t.Fatal(err)
+	}
+	return b.Bytes()
 }
 
 func TestNoSteam(t *testing.T) {

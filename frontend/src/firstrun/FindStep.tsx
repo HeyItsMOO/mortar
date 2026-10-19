@@ -23,8 +23,11 @@ const shadow = '0 1px 2px var(--mortar-overlay-90), 0 0 18px var(--mortar-overla
 // The art is dimmed until the game is found.
 const artOpacity = { found: 0.8, missing: 0.4 }
 
+// The widest a first-run game card's art is drawn.
+const CARD_ART_PX = 640
+
 function Hero({ game, dim }: { game: GameInfo; dim?: boolean }) {
-  const art = gameArt(game)
+  const art = gameArt(game, CARD_ART_PX)
   return (
     <Box
       sx={{

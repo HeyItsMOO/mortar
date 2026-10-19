@@ -121,7 +121,9 @@ func Middleware(current func() settings.Settings, system string, desktop func() 
 				if err != nil {
 					continue
 				}
-				if typ == "image/jxl" && !jxl {
+				// JPEG XL cannot be shrunk here, so a page asking for its width gets the bundled JPEG of the same default
+				// image, shrunk, rather than decoding the system copy's 4096 pixels square.
+				if typ == "image/jxl" && (!jxl || (path == system && r.URL.Query().Get("w") != "")) {
 					_ = f.Close()
 					continue
 				}

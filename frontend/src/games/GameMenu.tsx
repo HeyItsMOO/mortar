@@ -9,7 +9,7 @@ import { useSettings } from '../settings/store.ts'
 import { MenuHeading, MenuRule, TitleMenu, TitleMenuItem } from '../shell/TitleMenu.tsx'
 import { useTitleMenu } from '../shell/titleMenus.ts'
 import { space } from '../theme/density.ts'
-import { gameArt } from './art.ts'
+import { gameArt, HERO_ASPECT } from './art.ts'
 import { useGameInfo, useGames } from './info.ts'
 import { gameOrder } from './order.ts'
 import { useOpenGame } from './useOpenGame.ts'
@@ -17,7 +17,7 @@ import { useOpenGame } from './useOpenGame.ts'
 const THUMB_PX = 22
 
 function Thumb({ game }: { game: GameInfo | undefined }) {
-  const art = gameArt(game)
+  const art = gameArt(game, THUMB_PX * HERO_ASPECT)
   return (
     <Box
       component={art ? 'img' : 'span'}
