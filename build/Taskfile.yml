@@ -87,6 +87,8 @@ tasks:
       - frontend/bindings/**/*
     cmds:
       - wails3 generate bindings -f '{{.BUILD_FLAGS}}' -clean=true{{if eq .OBFUSCATED "true"}} -obfuscated{{end}} -ts -i
+      # tsconfig sets erasableSyntaxOnly, and the generator emits enums; package.json's `bindings` script runs the same.
+      - bun scripts/erasable-bindings.ts
 
   generate:icons:
     summary: Generates the Windows `.ico` from appicon.png
