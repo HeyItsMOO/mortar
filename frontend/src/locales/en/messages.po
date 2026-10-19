@@ -3073,6 +3073,10 @@ msgstr "Medium"
 msgid "Flatpak"
 msgstr "Flatpak"
 
+#: src/browse/BrowseDetails.tsx:106
+msgid "Support the author"
+msgstr "Support the author"
+
 #: src/profiles/ProfilesPage.tsx:103
 msgid "Delete permanently"
 msgstr "Delete permanently"
@@ -4328,7 +4332,7 @@ msgstr "Open a .mortar file someone sent you. You see what it holds before anyth
 msgid "Already has {0}"
 msgstr "Already has {0}"
 
-#: src/browse/BrowseDetails.tsx:101
+#: src/browse/BrowseDetails.tsx:104
 #: src/mods/Sidebar.tsx:297
 #: src/mods/updateReview/Row.tsx:122
 msgid "Changelog"
@@ -5375,7 +5379,7 @@ msgstr "No backups to delete"
 msgid "Duplicate"
 msgstr "Duplicate"
 
-#: src/browse/BrowseDetails.tsx:61
+#: src/browse/BrowseDetails.tsx:62
 #: src/launch/PrePlayDialog.tsx:92
 #: src/share/Included.tsx:61
 msgid "and {count} more"
@@ -6071,7 +6075,7 @@ msgstr "Has problems"
 msgid "LAN port"
 msgstr "LAN port"
 
-#: src/browse/BrowseDetails.tsx:57
+#: src/browse/BrowseDetails.tsx:58
 msgid "{latest} (latest)"
 msgstr "{latest} (latest)"
 
@@ -7245,7 +7249,7 @@ msgstr "Save as template…"
 msgid "Modified outside Mortar"
 msgstr "Modified outside Mortar"
 
-#: src/browse/BrowseDetails.tsx:267
+#: src/browse/BrowseDetails.tsx:278
 #: src/mods/Sidebar.tsx:570
 msgid "Selected mod"
 msgstr "Selected mod"
@@ -7472,7 +7476,7 @@ msgstr "This log is {size}. Sharing copies it and opens {host}; paste it there t
 msgid "The loader's log shows this plugin did not start, so its features are missing in the game. A wrong game version or a missing requirement is the usual cause."
 msgstr "The loader's log shows this plugin did not start, so its features are missing in the game. A wrong game version or a missing requirement is the usual cause."
 
-#: src/browse/BrowseDetails.tsx:56
+#: src/browse/BrowseDetails.tsx:57
 #: src/mods/ModSections.tsx:61
 msgid "Versions"
 msgstr "Versions"
@@ -9137,7 +9141,7 @@ msgstr "No launchers found. Continue and choose each game's folder when you open
 msgid "Wine stopped on an error before {name} started: {0}"
 msgstr "Wine stopped on an error before {name} started: {0}"
 
-#: src/browse/BrowseDetails.tsx:109
+#: src/browse/BrowseDetails.tsx:119
 msgid "Reading the mod's page…"
 msgstr "Reading the mod's page…"
 
@@ -9684,7 +9688,7 @@ msgstr "Could not pin {0}"
 msgid "That request was not valid."
 msgstr "That request was not valid."
 
-#: src/browse/BrowseDetails.tsx:94
+#: src/browse/BrowseDetails.tsx:97
 #: src/mods/NexusDetails.tsx:267
 #: src/profiles/EditProfileDialog.tsx:301
 msgid "Description"
@@ -9702,7 +9706,7 @@ msgstr "Press Mod Manager Download on Nexus. Mortar picks it up and opens the ne
 msgid "Some checks could not run without a connection, so more problems may show up later."
 msgstr "Some checks could not run without a connection, so more problems may show up later."
 
-#: src/browse/BrowseDetails.tsx:93
+#: src/browse/BrowseDetails.tsx:96
 msgid "Categories"
 msgstr "Categories"
 
@@ -13902,7 +13906,7 @@ msgstr "Could not update tags for the selected mods"
 msgid "Continue"
 msgstr "Continue"
 
-#: src/browse/BrowseDetails.tsx:97
+#: src/browse/BrowseDetails.tsx:100
 #: src/mods/ModDependencyTree.tsx:246
 #: src/mods/NexusDetails.tsx:244
 msgid "Dependencies"

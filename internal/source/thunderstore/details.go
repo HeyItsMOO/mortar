@@ -27,7 +27,7 @@ func (d Driver) Details(ctx context.Context, key, id, mortarVersion string) (sou
 		if !strings.EqualFold(p.Owner, owner) || !strings.EqualFold(p.Name, name) || len(p.Versions) == 0 {
 			continue
 		}
-		out := source.Details{Versions: []string{}, Dependencies: []string{}, Categories: p.Categories}
+		out := source.Details{Versions: []string{}, Dependencies: []string{}, Categories: p.Categories, Donation: p.Donation}
 		for _, v := range p.Versions {
 			out.Versions = append(out.Versions, v.Number)
 		}

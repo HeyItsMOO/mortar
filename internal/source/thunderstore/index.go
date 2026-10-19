@@ -53,7 +53,9 @@ type pkg struct {
 	Downloads int    `json:"downloads"`
 	// Hidden is a deprecated package: not searchable, but still resolvable as a dependency.
 	// Repo is the GitHub repository the newest version's website links, as "owner/repo".
-	Repo     string    `json:"repo,omitempty"`
+	Repo string `json:"repo,omitempty"`
+	// Donation is the author's donation page, when the package lists one.
+	Donation string    `json:"donation,omitempty"`
 	Hidden   bool      `json:"hidden,omitempty"`
 	Adult    bool      `json:"adult,omitempty"`
 	Versions []version `json:"versions"`
@@ -72,6 +74,7 @@ type wirePackage struct {
 	RatingScore    int      `json:"rating_score"`
 	IsDeprecated   bool     `json:"is_deprecated"`
 	HasNSFWContent bool     `json:"has_nsfw_content"`
+	DonationLink   string   `json:"donation_link"`
 	Categories     []string `json:"categories"`
 	Versions       []struct {
 		Description   string   `json:"description"`
@@ -435,7 +438,7 @@ func slim(w *wirePackage, names *depNames) pkg {
 	p := pkg{
 		Owner: w.Owner, Name: w.Name, URL: w.PackageURL, Updated: w.DateUpdated, Created: w.DateCreated, Rating: w.RatingScore,
 		Hidden: w.IsDeprecated, Categories: w.Categories, Adult: w.HasNSFWContent, Summary: w.Versions[0].Description, Icon: w.Versions[0].Icon,
-		Repo: source.GitHubRepo(w.Versions[0].WebsiteURL),
+		Repo: source.GitHubRepo(w.Versions[0].WebsiteURL), Donation: source.WebLink(w.DonationLink),
 	}
 	p.Versions = make([]version, len(w.Versions))
 	for i, v := range w.Versions {

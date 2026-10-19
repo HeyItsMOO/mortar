@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Chip, Typography } from '@mui/material'
+import { Box, Chip, Link, Typography } from '@mui/material'
 import { memo, type ReactNode, useEffect, useState } from 'react'
 import { Details as ReadDetails } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/browse/service.ts'
 import type { Changelog } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/nexus/models.ts'
@@ -12,6 +12,7 @@ import { DetailsAside } from '../mods/DetailsAside.tsx'
 import { DetailsHeader } from '../mods/DetailsHeader.tsx'
 import { type Dependency, nexusDependencies } from '../mods/dependencies.ts'
 import { MarkdownView } from '../mods/MarkdownView.tsx'
+import { openPage } from '../mods/menu.ts'
 import { Rich } from '../mods/NexusDetails.tsx'
 import { loadDetails, useNexusEntry } from '../mods/nexusDetails.ts'
 import { heading } from '../mods/paper.ts'
@@ -84,6 +85,8 @@ interface Page {
   versions: string[]
   dependencies: Dependency[]
   changelog: ReactNode
+  // The author's donation page, when the site lists one.
+  donation?: string | undefined
 }
 
 function PageSections({ page }: { page: Page }) {
@@ -99,6 +102,13 @@ function PageSections({ page }: { page: Page }) {
         </Section>
       ) : null}
       {page.changelog ? <Section title={t`Changelog`}>{page.changelog}</Section> : null}
+      {page.donation ? (
+        <Section title={t`Support the author`}>
+          <Link component="button" onClick={() => openPage(page.donation ?? '')} sx={text}>
+            {page.donation}
+          </Link>
+        </Section>
+      ) : null}
     </>
   )
 }
@@ -191,6 +201,7 @@ function SitePage({ game, item }: { game: string; item: BrowseItem }) {
         versions: item.source === GITHUB ? logs.map((l) => l.version) : (details.versions ?? []),
         dependencies: (details.dependencies ?? []).map((name) => ({ name })),
         changelog: item.source === GITHUB ? changelogOf(logs) : changelog,
+        donation: details.donation,
       }}
     />
   )

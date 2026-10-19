@@ -49,3 +49,16 @@ func TestReportTargetIsThePackagePage(t *testing.T) {
 		t.Fatal("a package missing from the index answered")
 	}
 }
+
+func TestDetailsCarryOnlyAWebDonationLink(t *testing.T) {
+	f := newFake(t)
+	f.chunk0[0]["donation_link"] = "https://ko-fi.com/alice"
+	f.chunk0[1]["donation_link"] = "javascript:alert(1)"
+	d := Driver{URL: f.srv.URL, CacheDir: t.TempDir()}
+	for id, want := range map[string]string{"Alice-MoreCompany": "https://ko-fi.com/alice", "Bob-Cheaty": ""} {
+		got, err := d.Details(t.Context(), "lethal-company", id, "1.2.3")
+		if err != nil || got.Donation != want {
+			t.Errorf("%s: donation %q, err %v, want %q", id, got.Donation, err, want)
+		}
+	}
+}
