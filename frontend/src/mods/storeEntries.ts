@@ -373,7 +373,7 @@ export async function skipSourceMany(groups: ReadonlyMap<string, Mod[]>, skip: b
   }
 }
 
-// Gives the open profile's mods that lack one their Nexus page or file and says how many it found.
+// Gives the open profile's mods that lack one their page on a site the game has a matcher for, and says how many it found.
 export async function findSources() {
   const target = openTarget()
   if (!target) {
@@ -383,9 +383,9 @@ export async function findSources() {
   if (profile) {
     useProfiles.getState().replace(profile)
   }
-  const none = i18n._(msg`None of these mods is listed on Nexus`)
+  const none = i18n._(msg`None of these mods was found on a site`)
   const some = i18n._(
-    msg`${plural(found, { one: 'Found # mod on Nexus', other: 'Found # mods on Nexus' })}`,
+    msg`${plural(found, { one: 'Found a source for # mod', other: 'Found a source for # mods' })}`,
   )
   useToasts.getState().push({
     kind: found > 0 ? 'success' : 'info',

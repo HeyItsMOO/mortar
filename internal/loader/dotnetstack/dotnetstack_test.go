@@ -22,7 +22,7 @@ UnityEngine.SendMouseEvents:DoSendMouseEvents(Int32)
   at BepInEx.Bootstrap.Chainloader.Start () [0x00000] in <ghi>:0
 `, Unity, "CoolMod.Behaviours", "at CoolMod.Behaviours.Spawner.Awake ()"},
 		{"MelonLoader", `[12:01:02.345] [ERROR] System.InvalidOperationException: Sequence contains no elements
-   at System.Linq.Enumerable.First[TSource](IEnumerable`+"`1"+` source)
+   at System.Linq.Enumerable.First[TSource](IEnumerable` + "`1" + ` source)
    at BetterHands.Core.OnUpdate() in C:\src\Core.cs:line 41
    at MelonLoader.MelonBase.OnUpdate()
 `, Unity, "BetterHands", "at BetterHands.Core.OnUpdate()"},

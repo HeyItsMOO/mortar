@@ -92,34 +92,7 @@ func (s *Service) thunderstoreTwins(gameID string) map[string]string {
 	if s.profiles == nil {
 		return nil
 	}
-	profiles, err := s.profiles.List(gameID)
-	if err != nil {
-		return nil
-	}
-	byGUID := map[string]string{}
-	var others []profile.PackageRef
-	for _, p := range profiles {
-		pkgs, _ := s.profiles.EnabledPackages(gameID, p.ID)
-		for _, pk := range pkgs {
-			if pk.Source != profile.KindThunderstore {
-				others = append(others, pk)
-				continue
-			}
-			for _, pl := range pluginsIn(pk.Dir) {
-				byGUID[strings.ToLower(pl.GUID)] = pk.Name
-			}
-		}
-	}
-	twins := map[string]string{}
-	for _, pk := range others {
-		for _, pl := range pluginsIn(pk.Dir) {
-			if name, ok := byGUID[strings.ToLower(pl.GUID)]; ok && pl.GUID != "" {
-				twins[pk.Key] = name
-				break
-			}
-		}
-	}
-	return twins
+	return s.profiles.PluginTwins(gameID, pluginsIn)
 }
 
 // searchUpdates is one source's share of sourceUpdates. twins maps a package's key to its Thunderstore twin

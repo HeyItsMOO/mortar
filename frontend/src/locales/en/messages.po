@@ -3039,10 +3039,6 @@ msgstr "Mods and profiles"
 msgid "Imported {name}"
 msgstr "Imported {name}"
 
-#: src/mods/ModsGroupHeader.tsx:103
-msgid "Find on Nexus"
-msgstr "Find on Nexus"
-
 #: src/share/DestinationGrid.tsx:95
 msgid "Local archives can't go here"
 msgstr "Local archives can't go here"
@@ -3957,10 +3953,6 @@ msgstr "Found in {path}"
 #: src/firstrunTour/TourPopover.tsx:47
 msgid "Enable and disable mods, and update them for the open profile."
 msgstr "Enable and disable mods, and update them for the open profile."
-
-#: src/mods/storeEntries.ts:386
-msgid "None of these mods is listed on Nexus"
-msgstr "None of these mods is listed on Nexus"
 
 #: src/game/detailStates.tsx:17
 #: src/games/ProfileCards.tsx:54
@@ -6459,6 +6451,10 @@ msgstr "Crew"
 msgid "Remove filter {mod}"
 msgstr "Remove filter {mod}"
 
+#: src/mods/ModsGroupHeader.tsx:103
+msgid "Could not look these mods up"
+msgstr "Could not look these mods up"
+
 #: src/browse/CardAction.tsx:68
 msgid "Get"
 msgstr "Get"
@@ -8103,10 +8099,6 @@ msgstr "Only settings and options differ."
 msgid "From another mod manager"
 msgstr "From another mod manager"
 
-#: src/mods/ModsGroupHeader.tsx:101
-msgid "Could not look these mods up on Nexus"
-msgstr "Could not look these mods up on Nexus"
-
 #: src/queue/QueueBody.tsx:357
 msgid "Skip all"
 msgstr "Skip all"
@@ -8516,10 +8508,6 @@ msgstr "Found a copy outside your launchers:"
 #: src/browse/BrowsePage.tsx:141
 msgid "All sources"
 msgstr "All sources"
-
-#: src/mods/storeEntries.ts:388
-msgid "{found, plural, one {Found # mod on Nexus} other {Found # mods on Nexus}}"
-msgstr "{found, plural, one {Found # mod on Nexus} other {Found # mods on Nexus}}"
 
 #: src/toasts/HistoryButton.tsx:129
 msgid "Notification history"
@@ -11703,6 +11691,10 @@ msgstr "An empty profile. Add mods from {site} or from archives."
 msgid "{0, plural, one {{1}/# file · {2} / {3}} other {{4}/# files · {5} / {6}}}"
 msgstr "{0, plural, one {{1}/# file · {2} / {3}} other {{4}/# files · {5} / {6}}}"
 
+#: src/mods/storeEntries.ts:386
+msgid "None of these mods was found on a site"
+msgstr "None of these mods was found on a site"
+
 #: src/console/StartupPanel.tsx:38
 msgid "Press Play. The BepInEx Bridge times each plugin's load and the start up to the main menu, and shows the results here. Unity's Mono runtime cannot be sampled, so there is no Sampled column."
 msgstr "Press Play. The BepInEx Bridge times each plugin's load and the start up to the main menu, and shows the results here. Unity's Mono runtime cannot be sampled, so there is no Sampled column."
@@ -12997,6 +12989,10 @@ msgstr "{0, plural, one {Last run: {list}} other {Last # runs: {list}}}"
 msgid "You can roll back the completed updates from the profile history."
 msgstr "You can roll back the completed updates from the profile history."
 
+#: src/mods/storeEntries.ts:388
+msgid "{found, plural, one {Found a source for # mod} other {Found a source for # mods}}"
+msgstr "{found, plural, one {Found a source for # mod} other {Found a source for # mods}}"
+
 #: src/share/Included.tsx:124
 msgid "Its source is not known."
 msgstr "Its source is not known."
@@ -13409,6 +13405,10 @@ msgstr "Now needs {0}"
 #: src/saves/SaveRow.tsx:136
 msgid "New profile from this save"
 msgstr "New profile from this save"
+
+#: src/mods/ModsGroupHeader.tsx:105
+msgid "Find sources"
+msgstr "Find sources"
 
 #: src/mods/SetNexusPageDialog.tsx:122
 msgid "Set page"

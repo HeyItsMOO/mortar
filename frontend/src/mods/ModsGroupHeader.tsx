@@ -2,6 +2,7 @@ import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Switch, Typography } from '@mui/material'
 import { ChevronDown, ChevronRight, Search } from 'lucide-react'
 import { memo, type ReactNode } from 'react'
+import { useProfiles } from '../profiles/store.ts'
 import { CoverButton } from '../shell/CoverButton.tsx'
 import { space } from '../theme/density.ts'
 import { reportUnexpected } from '../toasts/report.ts'
@@ -85,7 +86,8 @@ function ModsGroupHeader({
   )
 }
 
-// The button on a source group that holds mods with no recorded site: looks each one up on Nexus.
+// The button on a source group that holds mods with no recorded site: looks each one up on the sites the game has a
+// matcher for.
 function FindSourcesButton() {
   const { t } = useLingui()
   const locked = useLocked()
@@ -98,9 +100,9 @@ function FindSourcesButton() {
         sx={{ height: 20, minHeight: 0, py: 0 }}
         disabled={locked || pending}
         startIcon={<Search size={14} aria-hidden={true} />}
-        onClick={() => run(findSources, { errorTitle: t`Could not look these mods up on Nexus` })}
+        onClick={() => run(findSources, { errorTitle: t`Could not look these mods up` })}
       >
-        {t`Find on Nexus`}
+        {t`Find sources`}
       </Button>
     </LockedReason>
   )
@@ -150,6 +152,7 @@ function GroupHeaderRowView({
           }
         : {})}
       {...(groupBy === 'source' &&
+      (useProfiles.getState().game?.findSources?.length ?? 0) > 0 &&
       groups.find((g) => g.key === groupKey)?.items.some((r) => r.unsourced === true) === true
         ? { menu: <FindSourcesButton /> }
         : {})}

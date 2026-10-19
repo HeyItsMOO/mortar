@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
+	"github.com/Rethunk-Tech/mortar/internal/metadata"
 	"github.com/Rethunk-Tech/mortar/internal/runtime"
 	"github.com/Rethunk-Tech/mortar/internal/saves"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
@@ -132,4 +134,21 @@ func StartupPreferencesPath(home string, s settings.Settings, id, pin string) (s
 func SaveLayout(id, dir string) saves.Layout {
 	g, _ := catalogGame(id)
 	return saves.Layout{Dir: dir, Files: g.SaveFiles, Companions: g.SaveCompanions, Copies: g.SaveCopies, CopyFolders: g.SaveCopyFolders, Linked: g.SaveLinked}
+}
+
+// FindSourceSites are the sites Mortar can look up a source-less mod on for the game: Nexus where the Stardew mod
+// dataset lists mods by id, Thunderstore where a BepInEx plugin's GUID can match a package installed elsewhere, and the
+// Vintage Story Mod DB, which answers for the mod id in modinfo.json.
+func FindSourceSites(g components.GameInfo) []string {
+	var out []string
+	if g.HasMetadata(metadata.StardewDataset) {
+		out = append(out, "nexus")
+	}
+	if len(g.Loaders) > 0 && g.Loaders[0].ID == "bepinex5" && slices.ContainsFunc(g.Sources, func(s components.GameSource) bool { return s.ID == "thunderstore" }) {
+		out = append(out, "thunderstore")
+	}
+	if slices.ContainsFunc(g.Sources, func(s components.GameSource) bool { return s.ID == "vsmoddb" }) {
+		out = append(out, "vsmoddb")
+	}
+	return out
 }

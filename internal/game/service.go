@@ -38,6 +38,8 @@ type GameInfo struct {
 	// Loaders are all the loaders the catalog lists for the game, the first being the primary.
 	Loaders []LoaderRef `json:"loaders"`
 	Sources []string    `json:"sources"`
+	// FindSources are the sites a mod with no recorded source can be looked up on (FindSourceSites); empty hides the button.
+	FindSources []string `json:"findSources"`
 	// SourceKeys maps a source id to the catalog's key for the game on it (Nexus domain, Thunderstore community); sources without a key are left out.
 	SourceKeys map[string]string `json:"sourceKeys"`
 	// Graphics is the game's graphics API choices, nil when the catalog offers none.
@@ -178,7 +180,7 @@ func List(home string, cur settings.Settings) ([]GameInfo, error) {
 	catalog := Catalog()
 	out := make([]GameInfo, 0, len(catalog))
 	for _, c := range catalog {
-		info := GameInfo{ID: c.ID, Name: c.Name, Deploy: c.Deploy, AppID: c.SteamAppID(), HasSaves: HasSaves(c.ID), StartupSettings: HasStartupSettings(c.ID), HasOptions: HasPath(c.ID, "options"), HasCaches: len(c.Caches) > 0, HasScreenshots: HasScreenshots(c.ID), Installs: []Install{}, Sources: make([]string, len(c.Sources)), SourceKeys: map[string]string{}, Graphics: c.Graphics}
+		info := GameInfo{ID: c.ID, Name: c.Name, Deploy: c.Deploy, AppID: c.SteamAppID(), HasSaves: HasSaves(c.ID), StartupSettings: HasStartupSettings(c.ID), HasOptions: HasPath(c.ID, "options"), HasCaches: len(c.Caches) > 0, HasScreenshots: HasScreenshots(c.ID), Installs: []Install{}, Sources: make([]string, len(c.Sources)), SourceKeys: map[string]string{}, FindSources: FindSourceSites(c), Graphics: c.Graphics}
 		info.Loader, info.LoaderID = c.Loaders[0].Name, c.Loaders[0].ID
 		for _, l := range c.Loaders {
 			info.Loaders = append(info.Loaders, loaderRef(c.ID, l))

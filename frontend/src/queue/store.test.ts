@@ -91,6 +91,7 @@ beforeEach(() => {
         hasOptions: false,
         hasCaches: false,
         hasScreenshots: false,
+        findSources: [],
         startupSettings: false,
         loader: '',
         deploy: '',

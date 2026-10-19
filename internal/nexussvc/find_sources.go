@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
+	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
 	"github.com/Rethunk-Tech/mortar/internal/metadata"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
@@ -29,11 +30,9 @@ type FoundSources struct {
 	Left    int             `json:"left"`
 }
 
-// FindSources gives each entry of the profile that has no source the Nexus page that publishes its mods, so mods
-// copied in from a folder or another manager get their page and update checks back, and gives each entry on a
-// Nexus page with no file recorded the file it was installed from, which a share needs. Where the mod dataset lists
-// several pages for an entry (reuploads, translations), the page is taken only when the installed version and the
-// author single one out.
+// FindSources gives each entry of the profile that has no source the page that publishes its mods on a site the game
+// has a matcher for (game.FindSourceSites), so mods copied in from a folder or another manager get their page and
+// update checks back.
 func (s *Service) FindSources(ctx context.Context, gameID, profileID string) (FoundSources, error) {
 	if s.Profiles == nil {
 		return FoundSources{}, errors.New("profiles are unavailable")
@@ -42,6 +41,26 @@ func (s *Service) FindSources(ctx context.Context, gameID, profileID string) (Fo
 	if err != nil {
 		return FoundSources{}, err
 	}
+	info, _ := components.Game(gameID)
+	sites := game.FindSourceSites(info)
+	out := FoundSources{Profile: p}
+	if slices.Contains(sites, "nexus") {
+		if out, err = s.findNexus(ctx, gameID, profileID, p); err != nil {
+			return FoundSources{}, err
+		}
+	}
+	more, err := s.findOnSites(ctx, gameID, profileID, out.Profile, sites)
+	if err != nil {
+		return FoundSources{}, err
+	}
+	out.Profile, out.Found, out.Left = more.Profile, out.Found+more.Found, more.Left+out.Left
+	return out, nil
+}
+
+// findNexus gives each source-less entry the Nexus page that publishes its mods, and each entry on a Nexus page with
+// no file recorded the file it was installed from, which a share needs. Where the mod dataset lists several pages for
+// an entry (reuploads, translations), the page is taken only when the installed version and the author single one out.
+func (s *Service) findNexus(ctx context.Context, gameID, profileID string, p profile.Profile) (FoundSources, error) {
 	index, err := s.meta.Index(ctx)
 	if err != nil {
 		return FoundSources{}, err
