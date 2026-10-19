@@ -1,5 +1,5 @@
 {
-  "serial": 1792268415,
+  "serial": 1792387675,
   "components": [
     {
       "game": "melonloader",
@@ -39,10 +39,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-smapi-bridge"
       },
-      "tag": "v0.2.4",
-      "asset": "MortarSmapiBridge-0.2.4.zip",
-      "version": "0.2.4",
-      "sha256": "5dc78a7616192819db90a12bdd26b41b88e863c059f23606cae762b848f6d07c"
+      "tag": "v0.2.7",
+      "asset": "MortarSmapiBridge-0.2.7.zip",
+      "version": "0.2.7",
+      "sha256": "49549f50cd008ffe7cc27cc19d2977822afa58a6fe11664b08102d5cc9b56c8f"
     },
     {
       "game": "lethal-company",
@@ -53,10 +53,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "tag": "v0.2.4",
-      "asset": "MortarBepInExBridge-0.2.4.zip",
-      "version": "0.2.4",
-      "sha256": "3d134d31dd4d5ba773af7addc7f2ad0692ace17782a6e751d46663c18d301dfa"
+      "tag": "v0.2.7",
+      "asset": "MortarBepInExBridge-0.2.7.zip",
+      "version": "0.2.7",
+      "sha256": "d7cfd919e0a151fb276f5066a2e26143c9c48c67e5d2988a5fc5f2bde23786b1"
     },
     {
       "game": "valheim",
@@ -67,10 +67,10 @@
         "owner": "Rethunk-Tech",
         "repo": "mortar-bepinex-bridge"
       },
-      "tag": "v0.2.4",
-      "asset": "MortarBepInExBridge-0.2.4.zip",
-      "version": "0.2.4",
-      "sha256": "3d134d31dd4d5ba773af7addc7f2ad0692ace17782a6e751d46663c18d301dfa"
+      "tag": "v0.2.7",
+      "asset": "MortarBepInExBridge-0.2.7.zip",
+      "version": "0.2.7",
+      "sha256": "d7cfd919e0a151fb276f5066a2e26143c9c48c67e5d2988a5fc5f2bde23786b1"
     }
   ],
   "games": [
@@ -492,6 +492,11 @@
         {
           "id": "thunderstore",
           "key": "content-warning"
+        },
+        {
+          "id": "nexus",
+          "key": "contentwarning",
+          "gameId": 6301
         }
       ]
     },
@@ -536,6 +541,11 @@
         {
           "id": "thunderstore",
           "key": "inscryption"
+        },
+        {
+          "id": "nexus",
+          "key": "inscryption",
+          "gameId": 7317
         }
       ]
     },
@@ -701,6 +711,11 @@
         {
           "id": "thunderstore",
           "key": "across-the-obelisk"
+        },
+        {
+          "id": "nexus",
+          "key": "acrosstheobelisk",
+          "gameId": 4797
         }
       ]
     },
@@ -739,6 +754,11 @@
         {
           "id": "thunderstore",
           "key": "against-the-storm"
+        },
+        {
+          "id": "nexus",
+          "key": "againstthestorm",
+          "gameId": 6001
         }
       ]
     },
@@ -1013,6 +1033,11 @@
         {
           "id": "thunderstore",
           "key": "enter-the-gungeon"
+        },
+        {
+          "id": "nexus",
+          "key": "enterthegungeon",
+          "gameId": 10624
         }
       ]
     },
@@ -1046,6 +1071,11 @@
         {
           "id": "thunderstore",
           "key": "erenshor"
+        },
+        {
+          "id": "nexus",
+          "key": "erenshor",
+          "gameId": 7620
         }
       ]
     },
@@ -1201,6 +1231,11 @@
         {
           "id": "thunderstore",
           "key": "mage-arena"
+        },
+        {
+          "id": "nexus",
+          "key": "magearena",
+          "gameId": 8041
         }
       ]
     },
@@ -1234,6 +1269,11 @@
         {
           "id": "thunderstore",
           "key": "monster-train-2"
+        },
+        {
+          "id": "nexus",
+          "key": "monstertrain2",
+          "gameId": 7766
         }
       ]
     },
@@ -1269,6 +1309,11 @@
         {
           "id": "thunderstore",
           "key": "muck"
+        },
+        {
+          "id": "nexus",
+          "key": "muck",
+          "gameId": 5362
         }
       ]
     },
@@ -1308,6 +1353,11 @@
         {
           "id": "thunderstore",
           "key": "mycopunk"
+        },
+        {
+          "id": "nexus",
+          "key": "mycopunk",
+          "gameId": 7967
         }
       ]
     },
@@ -1346,6 +1396,11 @@
         {
           "id": "thunderstore",
           "key": "nine-sols"
+        },
+        {
+          "id": "nexus",
+          "key": "ninesols",
+          "gameId": 6574
         }
       ]
     },
@@ -1464,6 +1519,11 @@
         {
           "id": "thunderstore",
           "key": "receiver-2"
+        },
+        {
+          "id": "nexus",
+          "key": "receiver2",
+          "gameId": 7636
         }
       ]
     },
@@ -1536,6 +1596,11 @@
         {
           "id": "thunderstore",
           "key": "sailwind"
+        },
+        {
+          "id": "nexus",
+          "key": "sailwind",
+          "gameId": 9659
         }
       ]
     },
@@ -1614,6 +1679,11 @@
         {
           "id": "thunderstore",
           "key": "stacklands"
+        },
+        {
+          "id": "nexus",
+          "key": "stacklands",
+          "gameId": 4444
         }
       ]
     },
@@ -1690,6 +1760,11 @@
         {
           "id": "thunderstore",
           "key": "super-battle-golf"
+        },
+        {
+          "id": "nexus",
+          "key": "superbattlegolf",
+          "gameId": 9062
         }
       ]
     },
@@ -1810,6 +1885,11 @@
         {
           "id": "thunderstore",
           "key": "techtonica"
+        },
+        {
+          "id": "nexus",
+          "key": "techtonica",
+          "gameId": 4698
         }
       ]
     },
@@ -1972,6 +2052,11 @@
         {
           "id": "thunderstore",
           "key": "ultimate-chicken-horse"
+        },
+        {
+          "id": "nexus",
+          "key": "ultimatechickenhorse",
+          "gameId": 6738
         }
       ]
     },
@@ -2143,6 +2228,11 @@
         {
           "id": "thunderstore",
           "key": "white-knuckle"
+        },
+        {
+          "id": "nexus",
+          "key": "whiteknuckle",
+          "gameId": 8881
         }
       ]
     },
@@ -2209,6 +2299,11 @@
         {
           "id": "thunderstore",
           "key": "yapyap"
+        },
+        {
+          "id": "nexus",
+          "key": "yapyap",
+          "gameId": 8424
         }
       ]
     },
@@ -2248,6 +2343,11 @@
         {
           "id": "thunderstore",
           "key": "cat-mail-co"
+        },
+        {
+          "id": "nexus",
+          "key": "catmailco",
+          "gameId": 9670
         }
       ]
     },
@@ -2282,6 +2382,11 @@
         {
           "id": "thunderstore",
           "key": "9-kings"
+        },
+        {
+          "id": "nexus",
+          "key": "9kings",
+          "gameId": 7814
         }
       ]
     },
@@ -2458,6 +2563,11 @@
         {
           "id": "thunderstore",
           "key": "aska"
+        },
+        {
+          "id": "nexus",
+          "key": "aska",
+          "gameId": 7531
         }
       ]
     },
@@ -2492,6 +2602,11 @@
         {
           "id": "thunderstore",
           "key": "big-walk"
+        },
+        {
+          "id": "nexus",
+          "key": "bigwalk",
+          "gameId": 9774
         }
       ]
     },
@@ -2597,6 +2712,11 @@
         {
           "id": "thunderstore",
           "key": "deep-rock-galactic-survivor"
+        },
+        {
+          "id": "nexus",
+          "key": "deeprockgalacticsurvivor",
+          "gameId": 6399
         }
       ]
     },
@@ -2835,6 +2955,11 @@
         {
           "id": "thunderstore",
           "key": "island-market-simulator"
+        },
+        {
+          "id": "nexus",
+          "key": "islandmarketsimulator",
+          "gameId": 9052
         }
       ]
     },
@@ -2869,6 +2994,11 @@
         {
           "id": "thunderstore",
           "key": "magicraft"
+        },
+        {
+          "id": "nexus",
+          "key": "magicraft",
+          "gameId": 9920
         }
       ]
     },
@@ -2903,6 +3033,11 @@
         {
           "id": "thunderstore",
           "key": "megabonk"
+        },
+        {
+          "id": "nexus",
+          "key": "megabonk",
+          "gameId": 7674
         }
       ]
     },
@@ -2937,6 +3072,11 @@
         {
           "id": "thunderstore",
           "key": "miside"
+        },
+        {
+          "id": "nexus",
+          "key": "miside",
+          "gameId": 7124
         }
       ]
     },
@@ -2971,6 +3111,11 @@
         {
           "id": "thunderstore",
           "key": "nivalis-nights"
+        },
+        {
+          "id": "nexus",
+          "key": "nivalisnights",
+          "gameId": 10401
         }
       ]
     },
@@ -3073,6 +3218,11 @@
         {
           "id": "thunderstore",
           "key": "roadside-research"
+        },
+        {
+          "id": "nexus",
+          "key": "roadsideresearch",
+          "gameId": 8610
         }
       ]
     },
@@ -3107,6 +3257,11 @@
         {
           "id": "thunderstore",
           "key": "shadows-of-doubt"
+        },
+        {
+          "id": "nexus",
+          "key": "shadowsofdoubt",
+          "gameId": 5352
         }
       ]
     },
@@ -3144,6 +3299,11 @@
         {
           "id": "thunderstore",
           "key": "shift-at-midnight"
+        },
+        {
+          "id": "nexus",
+          "key": "shiftatmidnight",
+          "gameId": 8915
         }
       ]
     },
@@ -3286,6 +3446,11 @@
         {
           "id": "thunderstore",
           "key": "vampire-crawlers"
+        },
+        {
+          "id": "nexus",
+          "key": "vampirecrawlerstheturbowildcardfromvampiresurvivors",
+          "gameId": 9148
         }
       ]
     },
@@ -3354,6 +3519,11 @@
         {
           "id": "thunderstore",
           "key": "waterpark-simulator"
+        },
+        {
+          "id": "nexus",
+          "key": "waterparksimulator",
+          "gameId": 7836
         }
       ]
     },
@@ -3418,6 +3588,11 @@
         {
           "id": "thunderstore",
           "key": "ale-and-tale-tavern"
+        },
+        {
+          "id": "nexus",
+          "key": "aleandtaletavern",
+          "gameId": 7645
         }
       ]
     },
@@ -3451,6 +3626,11 @@
         {
           "id": "thunderstore",
           "key": "aloft"
+        },
+        {
+          "id": "nexus",
+          "key": "aloft",
+          "gameId": 7271
         }
       ]
     },
@@ -3483,6 +3663,11 @@
         {
           "id": "thunderstore",
           "key": "another-crabs-treasure"
+        },
+        {
+          "id": "nexus",
+          "key": "anothercrabstreasure",
+          "gameId": 8489
         }
       ]
     },
@@ -3647,6 +3832,11 @@
         {
           "id": "thunderstore",
           "key": "bendy-and-the-ink-machine"
+        },
+        {
+          "id": "nexus",
+          "key": "bendyandtheinkmachine",
+          "gameId": 6423
         }
       ]
     },
@@ -3743,6 +3933,11 @@
         {
           "id": "thunderstore",
           "key": "carrier-deck"
+        },
+        {
+          "id": "nexus",
+          "key": "carrierdeck",
+          "gameId": 7373
         }
       ]
     },
@@ -3778,6 +3973,11 @@
         {
           "id": "thunderstore",
           "key": "cities-skylines-ii"
+        },
+        {
+          "id": "nexus",
+          "key": "citiesskylines2",
+          "gameId": 5833
         }
       ]
     },
@@ -3813,6 +4013,11 @@
         {
           "id": "thunderstore",
           "key": "clover-pit"
+        },
+        {
+          "id": "nexus",
+          "key": "cloverpit",
+          "gameId": 8219
         }
       ]
     },
@@ -3941,6 +4146,11 @@
         {
           "id": "thunderstore",
           "key": "crime-simulator"
+        },
+        {
+          "id": "nexus",
+          "key": "crimesimulator",
+          "gameId": 7885
         }
       ]
     },
@@ -3976,6 +4186,11 @@
         {
           "id": "thunderstore",
           "key": "cuphead"
+        },
+        {
+          "id": "nexus",
+          "key": "cuphead",
+          "gameId": 2756
         }
       ]
     },
@@ -4073,6 +4288,11 @@
         {
           "id": "thunderstore",
           "key": "dredge"
+        },
+        {
+          "id": "nexus",
+          "key": "dredge",
+          "gameId": 5295
         }
       ]
     },
@@ -4108,6 +4328,11 @@
         {
           "id": "thunderstore",
           "key": "dyson-sphere-program"
+        },
+        {
+          "id": "nexus",
+          "key": "dysonsphereprogram",
+          "gameId": 3641
         }
       ]
     },
@@ -4140,6 +4365,11 @@
         {
           "id": "thunderstore",
           "key": "easy-delivery-co"
+        },
+        {
+          "id": "nexus",
+          "key": "easydeliveryco",
+          "gameId": 8217
         }
       ]
     },
@@ -4204,6 +4434,11 @@
         {
           "id": "thunderstore",
           "key": "ena-dream-bbq"
+        },
+        {
+          "id": "nexus",
+          "key": "enadreambbq",
+          "gameId": 7505
         }
       ]
     },
@@ -4275,6 +4510,11 @@
         {
           "id": "thunderstore",
           "key": "for-the-king"
+        },
+        {
+          "id": "nexus",
+          "key": "fortheking",
+          "gameId": 2887
         }
       ]
     },
@@ -4339,6 +4579,11 @@
         {
           "id": "thunderstore",
           "key": "getting-over-it"
+        },
+        {
+          "id": "nexus",
+          "key": "gettingoveritwithbennettfoddy",
+          "gameId": 4316
         }
       ]
     },
@@ -4403,6 +4648,11 @@
         {
           "id": "thunderstore",
           "key": "gloomwood"
+        },
+        {
+          "id": "nexus",
+          "key": "gloomwood",
+          "gameId": 4796
         }
       ]
     },
@@ -4532,6 +4782,11 @@
         {
           "id": "thunderstore",
           "key": "graveyard-keeper-2"
+        },
+        {
+          "id": "nexus",
+          "key": "graveyardkeeper2",
+          "gameId": 10208
         }
       ]
     },
@@ -4733,6 +4988,11 @@
         {
           "id": "thunderstore",
           "key": "hollow-knight-silksong"
+        },
+        {
+          "id": "nexus",
+          "key": "hollowknightsilksong",
+          "gameId": 8136
         }
       ]
     },
@@ -5025,6 +5285,11 @@
         {
           "id": "thunderstore",
           "key": "lens-island"
+        },
+        {
+          "id": "nexus",
+          "key": "lensisland",
+          "gameId": 7605
         }
       ]
     },
@@ -5250,6 +5515,11 @@
         {
           "id": "thunderstore",
           "key": "moonlighter"
+        },
+        {
+          "id": "nexus",
+          "key": "moonlighter",
+          "gameId": 3706
         }
       ]
     },
@@ -5347,6 +5617,11 @@
         {
           "id": "thunderstore",
           "key": "nuclear-option"
+        },
+        {
+          "id": "nexus",
+          "key": "nuclearoption",
+          "gameId": 8893
         }
       ]
     },
@@ -5412,6 +5687,11 @@
         {
           "id": "thunderstore",
           "key": "ostranauts"
+        },
+        {
+          "id": "nexus",
+          "key": "ostranauts",
+          "gameId": 4431
         }
       ]
     },
@@ -5476,6 +5756,11 @@
         {
           "id": "thunderstore",
           "key": "paralives"
+        },
+        {
+          "id": "nexus",
+          "key": "paralives",
+          "gameId": 9002
         }
       ]
     },
@@ -5508,6 +5793,11 @@
         {
           "id": "thunderstore",
           "key": "peaks-of-yore"
+        },
+        {
+          "id": "nexus",
+          "key": "peaksofyore",
+          "gameId": 10544
         }
       ]
     },
@@ -5573,6 +5863,11 @@
         {
           "id": "thunderstore",
           "key": "pigface"
+        },
+        {
+          "id": "nexus",
+          "key": "pigface",
+          "gameId": 10001
         }
       ]
     },
@@ -5704,6 +5999,11 @@
         {
           "id": "thunderstore",
           "key": "raft"
+        },
+        {
+          "id": "nexus",
+          "key": "raft",
+          "gameId": 3240
         }
       ]
     },
@@ -5737,6 +6037,11 @@
         {
           "id": "thunderstore",
           "key": "ravenfield"
+        },
+        {
+          "id": "nexus",
+          "key": "ravenfield",
+          "gameId": 4740
         }
       ]
     },
@@ -5801,6 +6106,11 @@
         {
           "id": "thunderstore",
           "key": "return-of-the-obra-dinn"
+        },
+        {
+          "id": "nexus",
+          "key": "returnoftheobradinn",
+          "gameId": 4953
         }
       ]
     },
@@ -5900,6 +6210,11 @@
         {
           "id": "thunderstore",
           "key": "shapez-2"
+        },
+        {
+          "id": "nexus",
+          "key": "shapez2",
+          "gameId": 8962
         }
       ]
     },
@@ -6064,6 +6379,11 @@
         {
           "id": "thunderstore",
           "key": "stonewards"
+        },
+        {
+          "id": "nexus",
+          "key": "stonewards",
+          "gameId": 9882
         }
       ]
     },
@@ -6160,6 +6480,11 @@
         {
           "id": "thunderstore",
           "key": "sulfur"
+        },
+        {
+          "id": "nexus",
+          "key": "sulfur",
+          "gameId": 6991
         }
       ]
     },
@@ -6193,6 +6518,11 @@
         {
           "id": "thunderstore",
           "key": "sunkenland"
+        },
+        {
+          "id": "nexus",
+          "key": "sunkenland",
+          "gameId": 5704
         }
       ]
     },
@@ -6289,6 +6619,11 @@
         {
           "id": "thunderstore",
           "key": "tcg-card-shop-simulator"
+        },
+        {
+          "id": "nexus",
+          "key": "tcgcardshopsimulator",
+          "gameId": 6826
         }
       ]
     },
@@ -6321,6 +6656,11 @@
         {
           "id": "thunderstore",
           "key": "the-farmer-was-replaced"
+        },
+        {
+          "id": "nexus",
+          "key": "thefarmerwasreplaced",
+          "gameId": 8278
         }
       ]
     },
@@ -6417,6 +6757,11 @@
         {
           "id": "thunderstore",
           "key": "the-planet-crafter"
+        },
+        {
+          "id": "nexus",
+          "key": "planetcrafter",
+          "gameId": 4284
         }
       ]
     },
@@ -6450,6 +6795,11 @@
         {
           "id": "thunderstore",
           "key": "thronefall"
+        },
+        {
+          "id": "nexus",
+          "key": "thronefall",
+          "gameId": 7508
         }
       ]
     },
@@ -6514,6 +6864,11 @@
         {
           "id": "thunderstore",
           "key": "vertigo-2"
+        },
+        {
+          "id": "nexus",
+          "key": "vertigo2",
+          "gameId": 4679
         }
       ]
     },
@@ -6679,6 +7034,11 @@
         {
           "id": "thunderstore",
           "key": "wobbly-life"
+        },
+        {
+          "id": "nexus",
+          "key": "wobblylife",
+          "gameId": 4726
         }
       ]
     },
@@ -6780,6 +7140,11 @@
         {
           "id": "thunderstore",
           "key": "20-minutes-till-dawn"
+        },
+        {
+          "id": "nexus",
+          "key": "20minutestildawn",
+          "gameId": 4555
         }
       ]
     },
@@ -6814,6 +7179,11 @@
         {
           "id": "thunderstore",
           "key": "stick-fight-the-game"
+        },
+        {
+          "id": "nexus",
+          "key": "stickfightthegame",
+          "gameId": 3691
         }
       ]
     },
@@ -6848,6 +7218,11 @@
         {
           "id": "thunderstore",
           "key": "sineus-arena-survivors"
+        },
+        {
+          "id": "nexus",
+          "key": "sineusarenasurvivors",
+          "gameId": 9551
         }
       ]
     },
@@ -6916,6 +7291,11 @@
         {
           "id": "thunderstore",
           "key": "bombanana"
+        },
+        {
+          "id": "nexus",
+          "key": "bombanana",
+          "gameId": 10561
         }
       ]
     },
@@ -6953,6 +7333,11 @@
         {
           "id": "thunderstore",
           "key": "among-us"
+        },
+        {
+          "id": "curseforge",
+          "key": "4808",
+          "gameId": 69761
         }
       ]
     },
@@ -6987,6 +7372,11 @@
         {
           "id": "thunderstore",
           "key": "lost-skies"
+        },
+        {
+          "id": "nexus",
+          "key": "lostskies",
+          "gameId": 7740
         }
       ]
     },
@@ -7021,6 +7411,11 @@
         {
           "id": "thunderstore",
           "key": "v-rising"
+        },
+        {
+          "id": "nexus",
+          "key": "vrising",
+          "gameId": 4527
         }
       ]
     },
@@ -7172,6 +7567,11 @@
         {
           "id": "thunderstore",
           "key": "gtfo"
+        },
+        {
+          "id": "nexus",
+          "key": "gtfo",
+          "gameId": 3657
         }
       ]
     },
@@ -7211,6 +7611,11 @@
         {
           "id": "thunderstore",
           "key": "ultrakill"
+        },
+        {
+          "id": "nexus",
+          "key": "ultrakill",
+          "gameId": 3515
         }
       ]
     },
@@ -7302,6 +7707,11 @@
         {
           "id": "thunderstore",
           "key": "subnautica"
+        },
+        {
+          "id": "nexus",
+          "key": "subnautica",
+          "gameId": 1155
         }
       ]
     },
@@ -7341,6 +7751,11 @@
         {
           "id": "thunderstore",
           "key": "subnautica-below-zero"
+        },
+        {
+          "id": "nexus",
+          "key": "subnauticabelowzero",
+          "gameId": 2706
         }
       ]
     },
@@ -7381,6 +7796,11 @@
         {
           "id": "thunderstore",
           "key": "timberborn"
+        },
+        {
+          "id": "nexus",
+          "key": "timberborn",
+          "gameId": 4074
         }
       ]
     },
@@ -7588,6 +8008,11 @@
         {
           "id": "thunderstore",
           "key": "mine-mogul"
+        },
+        {
+          "id": "nexus",
+          "key": "minemogul",
+          "gameId": 8537
         }
       ]
     },
@@ -7789,6 +8214,11 @@
         {
           "id": "thunderstore",
           "key": "bonelab"
+        },
+        {
+          "id": "nexus",
+          "key": "bonelab",
+          "gameId": 4832
         }
       ]
     },
@@ -7886,6 +8316,11 @@
         {
           "id": "thunderstore",
           "key": "boneworks"
+        },
+        {
+          "id": "nexus",
+          "key": "boneworks",
+          "gameId": 3119
         }
       ]
     },
@@ -7952,6 +8387,11 @@
         {
           "id": "thunderstore",
           "key": "gang-beasts"
+        },
+        {
+          "id": "nexus",
+          "key": "gangbeasts",
+          "gameId": 5298
         }
       ]
     },
@@ -8047,6 +8487,11 @@
         {
           "id": "thunderstore",
           "key": "labyrinthine"
+        },
+        {
+          "id": "nexus",
+          "key": "labyrinthine",
+          "gameId": 8935
         }
       ]
     },
@@ -8196,6 +8641,11 @@
         {
           "id": "thunderstore",
           "key": "rumble"
+        },
+        {
+          "id": "nexus",
+          "key": "rumble",
+          "gameId": 7472
         }
       ]
     },
@@ -8229,6 +8679,11 @@
         {
           "id": "thunderstore",
           "key": "schedule-i"
+        },
+        {
+          "id": "nexus",
+          "key": "schedule1",
+          "gameId": 7381
         }
       ]
     },
@@ -8328,6 +8783,11 @@
         {
           "id": "thunderstore",
           "key": "baby-steps"
+        },
+        {
+          "id": "nexus",
+          "key": "babysteps",
+          "gameId": 8244
         }
       ]
     },
@@ -8394,6 +8854,11 @@
         {
           "id": "thunderstore",
           "key": "big-ambitions"
+        },
+        {
+          "id": "nexus",
+          "key": "bigambitions",
+          "gameId": 8666
         }
       ]
     },
@@ -8427,6 +8892,11 @@
         {
           "id": "thunderstore",
           "key": "bloons-td-6"
+        },
+        {
+          "id": "nexus",
+          "key": "bloonstd6",
+          "gameId": 3417
         }
       ]
     },
@@ -8493,6 +8963,11 @@
         {
           "id": "thunderstore",
           "key": "cairn"
+        },
+        {
+          "id": "nexus",
+          "key": "cairn",
+          "gameId": 8515
         }
       ]
     },
@@ -8559,6 +9034,11 @@
         {
           "id": "thunderstore",
           "key": "cryo"
+        },
+        {
+          "id": "nexus",
+          "key": "cryo",
+          "gameId": 8409
         }
       ]
     },
@@ -8691,6 +9171,11 @@
         {
           "id": "thunderstore",
           "key": "frukt"
+        },
+        {
+          "id": "nexus",
+          "key": "frukt",
+          "gameId": 10411
         }
       ]
     },
@@ -8757,6 +9242,11 @@
         {
           "id": "thunderstore",
           "key": "home-safety-hotline"
+        },
+        {
+          "id": "nexus",
+          "key": "homesafetyhotline",
+          "gameId": 7450
         }
       ]
     },
@@ -8823,6 +9313,11 @@
         {
           "id": "thunderstore",
           "key": "iron-nest"
+        },
+        {
+          "id": "nexus",
+          "key": "ironnest",
+          "gameId": 9467
         }
       ]
     },
@@ -8856,6 +9351,11 @@
         {
           "id": "thunderstore",
           "key": "jump-space"
+        },
+        {
+          "id": "nexus",
+          "key": "jumpspace",
+          "gameId": 8193
         }
       ]
     },
@@ -8889,6 +9389,11 @@
         {
           "id": "thunderstore",
           "key": "mimesis"
+        },
+        {
+          "id": "nexus",
+          "key": "mimesis",
+          "gameId": 9157
         }
       ]
     },
@@ -9054,6 +9559,11 @@
         {
           "id": "thunderstore",
           "key": "superhot-mind-control-delete"
+        },
+        {
+          "id": "nexus",
+          "key": "superhotmindcontroldelete",
+          "gameId": 7729
         }
       ]
     },
@@ -9087,6 +9597,11 @@
         {
           "id": "thunderstore",
           "key": "superhot"
+        },
+        {
+          "id": "nexus",
+          "key": "superhot",
+          "gameId": 6774
         }
       ]
     },
@@ -9361,6 +9876,11 @@
           "id": "nexus",
           "key": "darkestdungeon",
           "gameId": 804
+        },
+        {
+          "id": "curseforge",
+          "key": "4613",
+          "gameId": 608
         }
       ]
     },
@@ -9439,6 +9959,11 @@
           "id": "nexus",
           "key": "hogwartslegacy",
           "gameId": 5113
+        },
+        {
+          "id": "curseforge",
+          "key": "7466",
+          "gameId": 87986
         }
       ]
     },
@@ -9519,6 +10044,11 @@
         {
           "id": "thunderstore",
           "key": "northstar"
+        },
+        {
+          "id": "nexus",
+          "key": "titanfall2",
+          "gameId": 2532
         }
       ]
     },
@@ -9556,6 +10086,11 @@
         {
           "id": "thunderstore",
           "key": "hades-ii"
+        },
+        {
+          "id": "nexus",
+          "key": "hades2",
+          "gameId": 6354
         }
       ]
     },
@@ -9655,6 +10190,11 @@
         {
           "id": "thunderstore",
           "key": "balatro"
+        },
+        {
+          "id": "nexus",
+          "key": "balatro",
+          "gameId": 6217
         }
       ]
     },
@@ -10197,6 +10737,11 @@
           "id": "nexus",
           "key": "inzoi",
           "gameId": 7480
+        },
+        {
+          "id": "curseforge",
+          "key": "8372",
+          "gameId": 88849
         }
       ]
     },
@@ -10446,6 +10991,11 @@
         {
           "id": "thunderstore",
           "key": "broforce"
+        },
+        {
+          "id": "nexus",
+          "key": "broforce",
+          "gameId": 3695
         }
       ]
     },

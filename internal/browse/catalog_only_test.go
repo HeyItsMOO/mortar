@@ -40,7 +40,7 @@ func TestACatalogOnlyGameBrowsesAndAdds(t *testing.T) {
 		t.Fatal(err)
 	}
 	m.Games = append(slices.Clone(m.Games), components.GameInfo{
-		ID: "content-warning", Name: "Content Warning", Enabled: true, Marker: "Content Warning.exe",
+		ID: "catalog-only-game", Name: "Content Warning", Enabled: true, Marker: "Content Warning.exe",
 		R2modmanFolder: "ContentWarning", Deploy: "profile",
 		Targets: []components.TargetDef{{ID: "profile", Root: "{profile}"}},
 		Stores:  components.GameStores{Steam: &components.SteamStore{AppID: "2881650"}},
@@ -68,28 +68,28 @@ func TestACatalogOnlyGameBrowsesAndAdds(t *testing.T) {
 	t.Cleanup(func() { source.Register(thunderstore.Driver{}) })
 
 	s := &Service{Version: "1"}
-	if got := s.SearchableSources("content-warning"); len(got) != 1 || got[0].ID != "thunderstore" {
+	if got := s.SearchableSources("catalog-only-game"); len(got) != 1 || got[0].ID != "thunderstore" {
 		t.Fatalf("sources = %+v", got)
 	}
-	page, err := s.Search(t.Context(), "content-warning", "thunderstore", "emotes", 1, "", Filter{})
+	page, err := s.Search(t.Context(), "catalog-only-game", "thunderstore", "emotes", 1, "", Filter{})
 	if err != nil || len(page.Items) != 1 || page.Items[0].ID != "Ns-MoreEmotes" {
 		t.Fatalf("search = %+v, %v", page, err)
 	}
 	// Add resolves the package in the game's community (main.go's queue Closure reads this key).
-	if key := share.SourceKeys("content-warning")["thunderstore"]; key != "content-warning" {
+	if key := share.SourceKeys("catalog-only-game")["thunderstore"]; key != "content-warning" {
 		t.Fatalf("thunderstore key = %q", key)
 	}
 
 	base := t.TempDir()
 	profiles := profile.OpenIn(filepath.Join(base, "profiles"), store.OpenAt(filepath.Join(base, "store")))
-	p, err := profiles.Create("content-warning", "CW")
+	p, err := profiles.Create("catalog-only-game", "CW")
 	if err != nil {
 		t.Fatal(err)
 	}
 	zip := testfs.WriteZip(t, filepath.Join(t.TempDir(), "p.zip"), map[string]string{
 		"manifest.json": `{"name":"MoreEmotes","version_number":"1.0.0"}`, "MoreEmotes.dll": "x",
 	})
-	res, err := profiles.InstallSource(t.Context(), "content-warning", p.ID, zip,
+	res, err := profiles.InstallSource(t.Context(), "catalog-only-game", p.ID, zip,
 		profile.Source{Kind: profile.KindThunderstore, Name: "Ns-MoreEmotes", Version: "1.0.0"})
 	if err != nil || len(res.Profile.Entries) != 1 || res.Profile.Entries[0].Mods[0].ID != "thunderstore:Ns-MoreEmotes" {
 		t.Fatalf("install = %+v, %v", res, err)
