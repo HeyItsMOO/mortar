@@ -72,7 +72,7 @@
 
     <main class="wrap dl prose" data-pagefind-body>
       <h1 class="ext-title">Mortar bot privacy policy</h1>
-<p>Effective 18 October 2026.</p>
+<p>Effective 19 October 2026.</p>
 <p>The Mortar bot is the Discord app Rethunk.Tech uses on the Mortar Mod Manager Discord server. It is installed in that one server; nobody else can add it. This policy covers the bot only. <a href="/privacy/">Mortar's privacy policy</a> covers the app; <a href="https://discord.com/privacy">Discord's</a> covers Discord.</p>
 <h2 id="what-the-bot-reads-and-why">What the bot reads, and why</h2>
 <div class="table-wrap"><table>
@@ -81,18 +81,27 @@
 </thead>
 <tbody>
 <tr><td>The server's settings, channels, categories, roles, permissions, onboarding, welcome screen, AutoMod rules and events</td><td>To keep the server as its maintainers decided</td></tr>
-<tr><td>Who is in the server: user IDs, names, roles and when members join or leave</td><td>Welcome, roles, moderator actions</td></tr>
-<tr><td>Messages in channels the bot can see</td><td>Requests to the bot, and helping moderators enforce rules</td></tr>
-<tr><td>Members' online status</td><td>Discord sends it with the member list; the bot does not use or keep it</td></tr>
+<tr><td>Who is in the server: user IDs, usernames, display names, nicknames, roles, account age, and when members join or leave</td><td>Welcome, roles, moderator actions and the moderators' log</td></tr>
+<tr><td>Messages in channels the bot can see, including edits and deletions</td><td>Requests to the bot, private tickets, and the moderators' log of edits and deletions</td></tr>
+<tr><td>The server's audit log</td><td>To record which moderator changed a member's roles</td></tr>
 </tbody>
 </table></div>
+<p>The bot does not receive members' online status.</p>
 <p>Discord sends this as the server is used. The bot acts on it as it arrives and does not keep it, except as below.</p>
 <h2 id="what-the-bot-keeps">What the bot keeps</h2>
-<p>No database of members or messages. Server layout (channel, role and rule names and IDs, and the bot's own posts) lives in a private Rethunk.Tech repository for review. A moderation action records the member's user ID and reason in Discord's audit log or the moderators' channel.</p>
+<p>The bot keeps a short-lived local cache of recent messages and member names on Rethunk.Tech's own machine, to log edits and deletions and to reduce requests to Discord. Message text leaves the cache after 30 days; a member's names and roles stay while they are in the server. It is never shared.</p>
+<p>In staff-only channels on the server, the bot posts:</p>
+<ul>
+<li>a log of edited and deleted messages (with their text), name changes, joins and leaves, and role changes with who made them, kept indefinitely so moderators can look back;</li>
+<li>each ban, kick and timeout made through the bot, with the moderator and the reason;</li>
+<li>one thread per member who has needed moderation, with those actions and moderators' notes.</li>
+</ul>
+<p>A private ticket is a thread only its member and staff can see, and stays in the server after it is closed.</p>
+<p>Server layout (channel, role and rule names and IDs, and the bot's own posts) lives in a private Rethunk.Tech repository for review.</p>
 <h2 id="sharing">Sharing</h2>
 <p>Nothing the bot reads is sold, shared, used for advertising or used to train AI models. Discord processes it as the platform.</p>
 <h2 id="your-choices">Your choices</h2>
-<p>Leaving the server ends the bot's access to anything about you. To ask what it holds or to have it removed: <a href="mailto:legal@rethunk.tech">legal@rethunk.tech</a>. Audit log entries follow Discord's retention.</p>
+<p>Leaving the server stops the bot reading anything new about you; what is already in the moderators' log stays unless you ask for it to be removed. To ask what it holds or to have it removed: <a href="mailto:legal@rethunk.tech">legal@rethunk.tech</a>. Audit log entries follow Discord's retention.</p>
 <h2 id="changes">Changes</h2>
 <p>A change to what the bot reads or keeps updates this page and its date before the bot starts doing it.</p>
 
