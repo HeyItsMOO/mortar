@@ -895,7 +895,7 @@ func (s *Service) begin(ctx context.Context, g game.Game, t launchTarget, direct
 	if plan, err = s.planProfile(ctx, g, inst, profileID, mode, spec.Options, spec.Prefix, spec.Env); err != nil {
 		return err
 	}
-	env.LogFile, _, _ = s.logPath(g.ID(), profileID)
+	env.LogFile = s.followLog(g.ID(), profileID)
 	// The install is locked from the preparing claim until the waiter has unwound: a second launch finds the game busy.
 	dep, err := s.deployProfile(ctx, g.ID(), inst, profileID, plan)
 	if err != nil {

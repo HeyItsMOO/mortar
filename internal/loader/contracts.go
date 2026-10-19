@@ -112,6 +112,12 @@ type WithLogs interface {
 	Analyzers() []Analyzer
 }
 
+// RotatingLog is a loader that starts a log file of a new name each run, so the launch follows a glob instead of a path.
+type RotatingLog interface {
+	// LogGlob matches the loader's log files in the profile.
+	LogGlob(p ProfileView) string
+}
+
 // Blame is one exception a loader's log holds whose stack runs through a mod's code.
 type Blame struct {
 	// Exception is the exception's first line, such as "System.NullReferenceException: Object reference not set".

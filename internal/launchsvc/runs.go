@@ -648,6 +648,20 @@ func (s *Service) crashReport(gameID string, since time.Time) string {
 	return "\n\n" + filepath.Base(path) + ":\n" + text
 }
 
+// followLog is what a launch follows for the loader's log: its path, or a glob for a loader that names each run's log
+// anew.
+func (s *Service) followLog(gameID, profileID string) string {
+	if l, ok := s.loaderOf(gameID, profileID); ok && s.profiles != nil && profileID != "" {
+		if r, rotates := l.(loader.RotatingLog); rotates {
+			if dir, err := s.profiles.ProfileDir(gameID, profileID); err == nil {
+				return r.LogGlob(loader.ProfileView{Game: gameID, Dir: dir})
+			}
+		}
+	}
+	path, _, _ := s.logPath(gameID, profileID)
+	return path
+}
+
 // logPath is the loader log of the profile's loader. own is true when the loader writes it inside the profile's folder,
 // where it can only be this profile's; a log in a shared place must say which mods folder it loaded.
 func (s *Service) logPath(gameID, profileID string) (path string, own bool, err error) {

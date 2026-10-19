@@ -140,6 +140,12 @@ func (p *Parser) Parse(line string) (Entry, bool) {
 		p.last, p.seen, p.hidden = e, true, false
 		return e, true
 	}
+	for _, parse := range []func(string) (Entry, bool){parseLovely, parseSerilog, parseROM, parseNorthstar} {
+		if e, ok := parse(line); ok {
+			p.last, p.seen, p.hidden = e, true, false
+			return e, true
+		}
+	}
 	if !p.seen {
 		return Entry{Level: Info, Message: line}, true
 	}

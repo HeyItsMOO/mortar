@@ -138,3 +138,18 @@ func TestParserReadsVintageStoryLevels(t *testing.T) {
 		}
 	}
 }
+
+func TestThunderpackLogLinesParse(t *testing.T) {
+	var p Parser
+	for line, want := range map[string]Entry{
+		"WARN - [♥] Pattern did not match":                                {Level: Warn, Mod: "Lovely", Message: "Pattern did not match"},
+		"INFO - [G] Game says hi":                                         {Level: Info, Mod: "Game", Message: "Game says hi"},
+		"2024-05-01 12:00:01.123 +00:00 [WRN] Duplicate mod ID: a":        {Time: "12:00:01", Level: Warn, Mod: "GDWeave", Message: "Duplicate mod ID: a"},
+		"[12:3:45.0000001][ERROR/lua_module.cpp:156] X failed to load: e": {Time: "12:3:45", Level: Error, Mod: "lua_module.cpp", Message: "X failed to load: e"},
+		"[2024-05-01] [12:00:00] [NORTHSTAR] [warning] hello":             {Time: "12:00:00", Level: Warn, Mod: "NORTHSTAR", Message: "hello"},
+	} {
+		if got, _ := p.Parse(line); got != want {
+			t.Errorf("%q: %+v, want %+v", line, got, want)
+		}
+	}
+}

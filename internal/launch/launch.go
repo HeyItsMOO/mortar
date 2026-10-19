@@ -11,6 +11,7 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -324,6 +325,8 @@ type tailer struct {
 	since   time.Time
 	onLines func([]string)
 	offset  int64
+	// followed is the file a glob path currently names.
+	followed string
 	// rest is a trailing partial line, held until its newline arrives.
 	rest string
 }
@@ -333,11 +336,26 @@ func (t *tailer) poll() bool {
 	if t.path == "" {
 		return false
 	}
-	st, err := os.Stat(t.path)
+	if strings.ContainsAny(t.path, "*?[") {
+		// A loader that starts a log file of its own name each run: follow the newest one written since the launch.
+		path := NewestMatch(t.path, t.since)
+		if path == "" {
+			return false
+		}
+		if path != t.followed {
+			t.followed, t.offset, t.rest = path, 0, ""
+		}
+		return t.pollFile(path)
+	}
+	return t.pollFile(t.path)
+}
+
+func (t *tailer) pollFile(path string) bool {
+	st, err := os.Stat(path)
 	if err != nil || !st.ModTime().After(t.since) {
 		return false
 	}
-	f, err := fsx.Open(t.path)
+	f, err := fsx.Open(path)
 	if err != nil {
 		return false
 	}
@@ -365,4 +383,17 @@ func (t *tailer) poll() bool {
 		t.onLines(batch)
 	}
 	return true
+}
+
+// NewestMatch is the file matching the glob pattern that was written last, "" when none was written after since (the
+// zero time takes any).
+func NewestMatch(pattern string, since time.Time) string {
+	names, _ := filepath.Glob(pattern)
+	best, bestTime := "", since
+	for _, n := range names {
+		if st, err := os.Stat(n); err == nil && st.Mode().IsRegular() && (best == "" && since.IsZero() || st.ModTime().After(bestTime)) {
+			best, bestTime = n, st.ModTime()
+		}
+	}
+	return best
 }

@@ -3,6 +3,7 @@ package thunderpack
 import (
 	"path"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -28,6 +29,7 @@ var specs = []Spec{
 			return []string{"--rom_modding_root_folder", hostPath(dir, proton)}
 		},
 		VanillaArgs: []string{"--rom_enabled", "false"},
+		Log:         &LogSpec{Pattern: "ReturnOfModding/LogOutput.log", Analyze: analyzeROM},
 		Overrides:   topDLLs,
 		ImportDirs:  []string{"ReturnOfModding"}, ConfigFolders: []string{"ReturnOfModding/config"},
 		Route: perFile(func(p, pkg string) string {
@@ -48,6 +50,7 @@ var specs = []Spec{
 			return []string{"--gdweave-folder-override=" + hostPath(filepath.Join(dir, "GDWeave"), proton)}
 		},
 		VanillaArgs: []string{"--gdweave-disable"},
+		Log:         &LogSpec{Pattern: "GDWeave/GDWeave.log", Analyze: analyzeGDWeave},
 		Overrides:   topDLLs, ProxyDLL: "winmm",
 		ImportDirs: []string{"GDWeave"},
 		Route:      gdweaveRoute,
@@ -63,6 +66,7 @@ var specs = []Spec{
 			return []string{"--mod-dir", hostPath(filepath.Join(dir, "mods"), proton)}
 		},
 		VanillaArgs: []string{"--vanilla"},
+		Log:         &LogSpec{Pattern: "mods/lovely/log/lovely-*.log", Analyze: analyzeLovely, Ready: regexp.MustCompile(`Initialization complete in`)},
 		Overrides:   topDLLs, ProxyDLL: "winmm",
 		ImportDirs: []string{"mods"},
 		Route:      perFile(func(p, pkg string) string { return path.Join("mods", pkg, p) }),
@@ -113,6 +117,7 @@ var specs = []Spec{
 		Args: func(dir string, proton bool) []string {
 			return []string{"-northstar", "-profile=" + hostPath(filepath.Join(dir, "R2Northstar"), proton)}
 		},
+		Log:       &LogSpec{Pattern: "R2Northstar/logs/nslog*.txt", Analyze: analyzeNorthstar},
 		Overrides: func([]string) []string { return []string{"wsock32"} },
 		Exe:       "NorthstarLauncher.exe", ImportDirs: []string{"R2Northstar"},
 	},
@@ -147,7 +152,7 @@ func gdweaveRoute(files []string, pkg string) map[string]string {
 	return out
 }
 
-type northstarLoader struct{ Loader }
+type northstarLoader struct{ logged }
 
 // ProcessNames are the launcher and the game it starts, since the launcher is the process Mortar starts.
 func (northstarLoader) ProcessNames() []string {
@@ -159,7 +164,11 @@ var _ = register()
 func register() bool {
 	for _, s := range specs {
 		if s.LoaderID == "northstar" {
-			loader.Register(northstarLoader{Loader{Spec: s}})
+			loader.Register(northstarLoader{logged{Loader{Spec: s}}})
+			continue
+		}
+		if s.Log != nil {
+			loader.Register(logged{Loader{Spec: s}})
 			continue
 		}
 		loader.Register(Loader{Spec: s})

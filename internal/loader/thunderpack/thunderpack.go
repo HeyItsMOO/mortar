@@ -58,6 +58,8 @@ type Spec struct {
 	// ImportDirs and ConfigFolders are folders of the profile: where an imported pack's loose files go and where mods
 	// keep settings.
 	ImportDirs, ConfigFolders []string
+	// Log is the loader's log; nil for a loader that keeps none Mortar reads.
+	Log *LogSpec
 	// Route is where each file of package pkg goes in the profile; nil means the catalog's routes.
 	Route func(files []string, pkg string) map[string]string
 }
