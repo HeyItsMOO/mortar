@@ -241,14 +241,18 @@ func bepinexConfigs(profileDir string) ([]File, error) {
 	return out, nil
 }
 
-// DataDirs lists the r2modman data folders that exist on this machine: r2modmanPlus-local, and the Thunderstore Mod
-// Manager's DataFolder. Both live under the user config directory (~/.config on Linux, %AppData% on Windows).
-func DataDirs() []string {
+// DataDirs lists the r2modman data folders that exist on this machine: extra (the player's own choice, empty for none),
+// r2modmanPlus-local, and the Thunderstore Mod Manager's DataFolder. The last two live under the user config directory
+// (~/.config on Linux, %AppData% on Windows).
+func DataDirs(extra string) []string {
+	var out []string
+	if extra != "" && fsx.IsDir(extra) {
+		out = append(out, extra)
+	}
 	base, err := os.UserConfigDir()
 	if err != nil {
-		return nil
+		return out
 	}
-	var out []string
 	for _, p := range []string{
 		filepath.Join(base, "r2modmanPlus-local"),
 		filepath.Join(base, "Thunderstore Mod Manager", "DataFolder"),

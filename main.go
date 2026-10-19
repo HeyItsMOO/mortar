@@ -881,7 +881,7 @@ func run() error {
 	problemsSvc.Damage = items.Damaged
 
 	browseSvc := browse.NewService(version, profileSvc)
-	packs := &packsvc.Service{Profiles: profiles, Queue: queueSvc}
+	packs := &packsvc.Service{Profiles: profiles, Queue: queueSvc, Folder: func() string { return store.Get().PackFolder }}
 	browseSvc.ShowAdult = func() bool { return store.Get().ShowAdultContent }
 	browseSvc.Installed = profiles.Installed
 	browseSvc.Compat = func(game string) func(ctx context.Context) (meta.CompatIndex, error) {

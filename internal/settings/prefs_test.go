@@ -130,6 +130,11 @@ func TestPrefsExportImportRoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 	overrides["vortexFolder"] = vortex
+	managers := t.TempDir()
+	if err := os.WriteFile(filepath.Join(managers, "data.sqlite3"), nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	overrides["packFolder"] = managers
 	if len(overrides) != len(registry) {
 		t.Fatalf("%d overrides for %d registered keys", len(overrides), len(registry))
 	}
@@ -288,6 +293,24 @@ func TestVortexFolderMustHoldState(t *testing.T) {
 	}
 	if err := p.set(&s, "", ""); err != nil || s.VortexFolder != "" {
 		t.Fatalf("clear: %v, %q", err, s.VortexFolder)
+	}
+}
+
+func TestPackFolderMustHoldAManagersData(t *testing.T) {
+	dir := t.TempDir()
+	var s Settings
+	p := packFolderPref()
+	if err := p.set(&s, "", dir); err == nil {
+		t.Fatal("an empty folder accepted")
+	}
+	if err := os.MkdirAll(filepath.Join(dir, "LethalCompany", "profiles"), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := p.set(&s, "", dir); err != nil || s.PackFolder != dir {
+		t.Fatalf("an r2modman data folder: %v, %q", err, s.PackFolder)
+	}
+	if err := p.set(&s, "", ""); err != nil || s.PackFolder != "" {
+		t.Fatalf("clear: %v, %q", err, s.PackFolder)
 	}
 }
 

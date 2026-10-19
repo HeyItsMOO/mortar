@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
@@ -51,7 +52,13 @@ func (g Gale) dbFile() string {
 	if g.DB != "" {
 		return g.DB
 	}
-	if dirs := GaleDataDirs(); len(dirs) > 0 {
+	return GaleDB("")
+}
+
+// GaleDB is the path of the first Gale database found, looking in extra (the player's own folder, empty for none)
+// before the default place, or "" when there is none.
+func GaleDB(extra string) string {
+	if dirs := GaleDataDirs(extra); len(dirs) > 0 {
 		return filepath.Join(dirs[0], galeDB)
 	}
 	return ""
@@ -141,28 +148,45 @@ func (g Gale) Parse(ctx context.Context, in Input) (Draft, error) {
 	return d, nil
 }
 
-// GaleDataDirs lists Gale's data folder when it exists on this machine: <user data dir>/com.kesomannen.gale, with the
-// user data dir as the dirs crate resolves it (XDG data home on Linux, %AppData% on Windows, Application Support on
-// macOS).
-func GaleDataDirs() []string {
+// GaleDataDirs lists Gale's data folders that exist on this machine: extra when it holds Gale's database (the player's
+// own choice, empty for none), then <user data dir>/com.kesomannen.gale, with the user data dir as the dirs crate
+// resolves it (XDG data home on Linux, %AppData% on Windows, Application Support on macOS).
+func GaleDataDirs(extra string) []string {
+	var out []string
+	if extra != "" && fsx.IsFile(filepath.Join(extra, galeDB)) {
+		out = append(out, extra)
+	}
 	var base string
 	if runtime.GOOS == "linux" {
 		if base = os.Getenv("XDG_DATA_HOME"); base == "" {
 			home, err := os.UserHomeDir()
 			if err != nil {
-				return nil
+				return out
 			}
 			base = filepath.Join(home, ".local", "share")
 		}
 	} else {
 		var err error
 		if base, err = os.UserConfigDir(); err != nil {
-			return nil
+			return out
 		}
 	}
 	p := filepath.Join(base, galeAppID)
 	if st, err := fsx.Stat(p); err == nil && st.IsDir() {
-		return []string{p}
+		out = append(out, p)
 	}
-	return nil
+	return out
+}
+
+// IsManagerFolder reports a folder r2modman or Gale could keep its data in: Gale's database, or r2modman's per-game
+// folders each holding profiles.
+func IsManagerFolder(dir string) bool {
+	if fsx.IsFile(filepath.Join(dir, galeDB)) {
+		return true
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return false
+	}
+	return slices.ContainsFunc(entries, func(e os.DirEntry) bool { return fsx.IsDir(filepath.Join(dir, e.Name(), "profiles")) })
 }

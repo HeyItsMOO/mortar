@@ -1,7 +1,8 @@
+import { plural } from '@lingui/core/macro'
 import { useLingui } from '@lingui/react/macro'
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import { Inbox } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { LocalProfiles } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/packsvc/service.ts'
 import {
   ExternalPreview,
@@ -12,6 +13,8 @@ import { EmptyState } from '../shell/EmptyState.tsx'
 import { reportUnexpected } from '../toasts/report.ts'
 import { useExternalImportSources } from './externalImportSources.ts'
 import { FoundProfileRow } from './FoundProfileRow.tsx'
+import { PackFolderPrompt } from './PackFolderPrompt.tsx'
+import { useBatchImport } from './useBatchImport.ts'
 import { VortexFolderPrompt } from './VortexFolderPrompt.tsx'
 import { offerVortexFolder } from './vortexFolderOffer.ts'
 
@@ -49,11 +52,8 @@ export function ImportWizard({
   }, [game])
   // null until this game's manager profiles are listed, so opening never flashes "No profiles found".
   const [packs, setPacks] = useState<Found[] | null>(null)
-  useEffect(() => {
-    if (!open) {
-      setPacks(null)
-      return
-    }
+  const { chosen, setChosen, busy, importChosen } = useBatchImport(game, onClose)
+  const loadPacks = useCallback(() => {
     LocalProfiles(game)
       .then((found) =>
         setPacks(
@@ -67,7 +67,15 @@ export function ImportWizard({
         ),
       )
       .catch(reportUnexpected)
-  }, [open, game])
+  }, [game])
+  useEffect(() => {
+    if (open) {
+      loadPacks()
+    } else {
+      setPacks(null)
+      setChosen([])
+    }
+  }, [open, loadPacks, setChosen])
   const all: Found[] = [
     ...(packs ?? []),
     ...external.flatMap((s) =>
@@ -110,6 +118,18 @@ export function ImportWizard({
               name={f.name}
               source={f.source}
               mods={f.mods}
+              disabled={busy}
+              {...(f.pack
+                ? {
+                    check: {
+                      checked: chosen.includes(f.pack),
+                      onChange: (on: boolean) =>
+                        setChosen((c) =>
+                          on ? [...c, f.pack as string] : c.filter((x) => x !== f.pack),
+                        ),
+                    },
+                  }
+                : {})}
               onClick={() => pick(f)}
             />
           ))
@@ -121,6 +141,7 @@ export function ImportWizard({
               {`${s.name}: ${s.error}`}
             </Alert>
           ))}
+        {onOwnCode ? <PackFolderPrompt onChosen={loadPacks} /> : null}
         {offerVortexFolder(vortexSupported, external) ? (
           <VortexFolderPrompt game={game} onChosen={reload} />
         ) : null}
@@ -137,6 +158,15 @@ export function ImportWizard({
           </Button>
         ) : null}
         <Button onClick={onClose}>{t`Cancel`}</Button>
+        {chosen.length > 0 ? (
+          <Button
+            variant="contained"
+            disabled={busy}
+            onClick={() => importChosen().catch(reportUnexpected)}
+          >
+            {plural(chosen.length, { one: 'Import # profile', other: 'Import # profiles' })}
+          </Button>
+        ) : null}
       </DialogActions>
     </Dialog>
   )

@@ -225,6 +225,28 @@ func TestLocalProfilesListsTheGamesR2modmanProfiles(t *testing.T) {
 	}
 }
 
+func TestLocalProfilesReadsTheFolderThePlayerChose(t *testing.T) {
+	empty := t.TempDir()
+	t.Setenv("XDG_CONFIG_HOME", empty)
+	t.Setenv("XDG_DATA_HOME", empty)
+	t.Setenv("APPDATA", empty)
+	chosen := t.TempDir()
+	profile := filepath.Join(chosen, "LethalCompany", "profiles", "Crew")
+	if err := os.MkdirAll(profile, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(profile, "mods.yml"), []byte("- name: Ns-Mod\n- name: Ns-Two\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if got, _ := (&Service{}).LocalProfiles("lethal-company"); len(got) != 0 {
+		t.Fatalf("a folder nobody chose was read: %+v", got)
+	}
+	got, err := (&Service{Folder: func() string { return chosen }}).LocalProfiles("lethal-company")
+	if err != nil || len(got) != 1 || got[0].Name != "Crew" || got[0].Path != profile || got[0].Mods != 2 {
+		t.Fatalf("LocalProfiles = %+v, %v", got, err)
+	}
+}
+
 func TestExportCodeCarriesTheConfigFolder(t *testing.T) {
 	dir := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(dir, "BepInEx", "config", "Sub"), 0o750); err != nil {

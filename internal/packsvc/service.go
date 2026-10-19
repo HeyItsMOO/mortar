@@ -48,6 +48,16 @@ type Service struct {
 	Code pack.Code
 	// App asks where to save an exported modpack; nil outside the window.
 	App winhost.Host
+	// Folder is the player's own r2modman or Gale data folder, for managers kept outside their default places; nil
+	// or empty means the defaults only.
+	Folder func() string
+}
+
+func (s *Service) folder() string {
+	if s.Folder == nil {
+		return ""
+	}
+	return s.Folder()
 }
 
 // Source is what the player handed over: a file or folder path, or pasted text (a code or a bare key).
@@ -85,7 +95,7 @@ type Result struct {
 
 func (s *Service) read(ctx context.Context, src Source) (pack.Draft, error) {
 	return pack.Read(ctx, pack.Input{Path: src.Path, Text: src.Text},
-		s.Code, pack.Profile{GameByFolder: game.ByR2modmanFolder}, pack.Gale{GameBySlug: gameByThunderstoreKey}, pack.Modpack{})
+		s.Code, pack.Profile{GameByFolder: game.ByR2modmanFolder}, pack.Gale{GameBySlug: gameByThunderstoreKey, DB: pack.GaleDB(s.folder())}, pack.Modpack{})
 }
 
 // gameByThunderstoreKey is the catalog game whose Thunderstore community key is slug, which is what Gale names a game.
@@ -109,7 +119,8 @@ type LocalProfile struct {
 }
 
 // LocalProfiles lists the game's profiles in the data folders of r2modman (the folders below
-// <data>/<the game's r2modman folder>/profiles that hold a mods.yml) and in Gale's database, found on this computer.
+// <data>/<the game's r2modman folder>/profiles that hold a mods.yml) and in Gale's database, found on this computer or
+// in the folder the player chose.
 // Pass a profile's Path as Source.Path.
 func (s *Service) LocalProfiles(gameID string) ([]LocalProfile, error) {
 	info, ok := components.Game(gameID)
@@ -133,12 +144,12 @@ func (s *Service) LocalProfiles(gameID string) ([]LocalProfile, error) {
 			}
 		}
 	}
-	for _, data := range pack.DataDirs() {
+	for _, data := range pack.DataDirs(s.folder()) {
 		scan(data, info.R2modmanFolder, pack.IsProfileFolder)
 	}
 	if src, ok := info.Source("thunderstore"); ok && src.Key != "" {
-		if dirs := pack.GaleDataDirs(); len(dirs) > 0 {
-			all, err := pack.GaleProfiles(context.Background(), filepath.Join(dirs[0], "data.sqlite3"))
+		if db := pack.GaleDB(s.folder()); db != "" {
+			all, err := pack.GaleProfiles(context.Background(), db)
 			if err != nil {
 				return out, err
 			}

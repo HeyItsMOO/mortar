@@ -7,6 +7,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/Rethunk-Tech/mortar/internal/pack"
 )
 
 // Pref scopes: app (global), source (ScopeSource), loader (ScopeLoader), game (under Settings.Games[gameID]) and profile overrides.
@@ -160,6 +162,7 @@ var registry = withDefaults([]pref{
 	strPref("downloadFolder", ScopeApp, func(s Settings, _ string) string { return s.DownloadFolder }, func(s *Settings, _, v string) { s.DownloadFolder = v }),
 	strPref("syncFolder", ScopeApp, func(s Settings, _ string) string { return s.SyncFolder }, func(s *Settings, _, v string) { s.SyncFolder = v }),
 	vortexFolderPref(),
+	packFolderPref(),
 	strPref("watchFolders", ScopeApp, func(s Settings, _ string) string { return s.WatchFolders }, func(s *Settings, _, v string) { s.WatchFolders = v }),
 	enumPref("profileOrder", ScopeApp, profileOrderValues, func(s Settings, _ string) string { return s.ProfileOrder }, func(s *Settings, _, v string) { s.ProfileOrder = v }),
 	enumPref("autoRetryDownloads", ScopeApp, autoRetryValues, func(s Settings, _ string) string { return s.AutoRetryDownloads }, func(s *Settings, _, v string) { s.AutoRetryDownloads = v }),
@@ -724,6 +727,22 @@ func strPref(key, scope string, get func(Settings, string) string, set func(*Set
 		get:  get,
 		set: func(s *Settings, game, raw string) error {
 			set(s, game, raw)
+			return nil
+		},
+	}
+}
+
+// packFolderPref accepts only an existing folder that holds Gale's database or r2modman's per-game folders, or "" to
+// clear it.
+func packFolderPref() pref {
+	return pref{
+		spec: PrefSpec{Key: "packFolder", Scope: ScopeApp, Type: TypeString},
+		get:  func(s Settings, _ string) string { return s.PackFolder },
+		set: func(s *Settings, _, raw string) error {
+			if raw != "" && !pack.IsManagerFolder(raw) {
+				return fmt.Errorf("%s has no r2modman or Gale data", raw)
+			}
+			s.PackFolder = raw
 			return nil
 		},
 	}

@@ -217,7 +217,9 @@ type Settings struct {
 	// SyncFolder is the folder profile state is shared through between this machine and others; empty is off.
 	SyncFolder string `json:"syncFolder,omitempty"`
 	// VortexFolder is the Vortex data folder (holding state.v2) to import from when it is not in a default place.
-	VortexFolder               string `json:"vortexFolder,omitempty"`
+	VortexFolder string `json:"vortexFolder,omitempty"`
+	// PackFolder is the r2modman or Gale data folder to import profiles from when it is not in a default place.
+	PackFolder                 string `json:"packFolder,omitempty"`
 	ProfileOrder               string `json:"profileOrder"`
 	AutoRetryDownloads         string `json:"autoRetryDownloads"`
 	PauseDownloadsWhilePlaying bool   `json:"pauseDownloadsWhilePlaying"`
@@ -258,9 +260,9 @@ func Defaults() Settings {
 	s.Accent = "sand"
 	s.Background = BackgroundImage
 	s.LastProfile = map[string]string{}
+	s.HiddenGames = []string{}
 	s.LastPlayed = map[string]Played{}
 	s.GameFolders = map[string]string{}
-	s.HiddenGames = []string{}
 	s.GameStores = map[string]string{}
 	s.LauncherRoots = map[string][]string{}
 	s.Loaders = map[string]string{}
