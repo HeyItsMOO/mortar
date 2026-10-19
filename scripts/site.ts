@@ -1,6 +1,6 @@
 // Writes every generated part of site/ so nothing there is kept by hand twice: the nav, footer and search metadata of
 // the hand-written pages, the landing page's game list and count, a page and a share page per playable game, the
-// changelog, the user guide, the 404 page, robots.txt and sitemap.xml.
+// changelog, the user guide, the 404 page, the Discord redirects under /go/, robots.txt and sitemap.xml.
 // `--check` fails instead of writing when anything is stale; the gate runs it that way.
 // Either way it fails when a picture under site/ is linked from no page, stylesheet or script, so none ships unused.
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -124,6 +124,38 @@ function notFoundPage(): string {
   })
 }
 
+// Permanent invites, by the route the app opens; a moved channel needs only a change here.
+const INVITES: Record<string, string> = {
+  'bug-reports': 'https://discord.gg/9hKFwB8xGW',
+  help: 'https://discord.gg/4ZNKgGwYdw',
+  suggestions: 'https://discord.gg/sgp8MHXpH8',
+}
+
+/** A page the app opens that forwards to a Discord invite: unlisted, unindexed, with a link for browsers that stay. */
+function redirectPage(invite: string): string {
+  return `<!doctype html>
+<!-- Written by scripts/site.ts; edit the generator, not this file. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content="0; url=${invite}" />
+    <link rel="canonical" href="${invite}" />
+    <title>Opening Mortar's Discord</title>
+    <link rel="icon" href="/favicon.png" />
+    <link rel="stylesheet" href="/base.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <p><a href="${invite}">Open Mortar's Discord</a></p>
+    </main>
+  </body>
+</html>
+`
+}
+
 const games = playableGames()
 if (process.argv.includes('--refresh')) {
   await refreshRivalFacts()
@@ -181,6 +213,9 @@ for (const [doc, description] of botDocs) {
   )
 }
 files.set('site/404.html', notFoundPage())
+for (const [route, invite] of Object.entries(INVITES)) {
+  files.set(`site/go/${route}/index.html`, redirectPage(invite))
+}
 const listedPages = [
   ...PAGES.map((p) => p.path),
   'site/games/index.html',
