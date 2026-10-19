@@ -1,7 +1,11 @@
 package bepinex5
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
+	"io"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -123,5 +127,42 @@ func TestANativeLinuxBuildStartsDirectlyWithDoorstopPreloaded(t *testing.T) {
 	}
 	if !(Loader{}).Owns(loader.Process{Args: append([]string{plan.Exe}, plan.Args...)}, view) {
 		t.Fatal("the profile does not own its own native process")
+	}
+}
+
+func TestSendHandsTheLineToTheBridgeConsole(t *testing.T) {
+	var _ loader.Console = Loader{}
+	ln, err := (&net.ListenConfig{}).Listen(t.Context(), "tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = ln.Close() })
+	got := make(chan string, 1)
+	go func() {
+		c, err := ln.Accept()
+		if err != nil {
+			return
+		}
+		defer func() { _ = c.Close() }()
+		r := bufio.NewReader(c)
+		token, _ := r.ReadString('\n')
+		line, _ := r.ReadString('\n')
+		got <- token + line
+		_, _ = io.WriteString(c, "ok\n")
+	}()
+	dir := t.TempDir()
+	state := filepath.Join(dir, "BepInEx", "config", "mortar-bepinex-bridge.json")
+	if err := os.MkdirAll(filepath.Dir(state), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	port := ln.Addr().(*net.TCPAddr).Port
+	if err := os.WriteFile(state, []byte(fmt.Sprintf(`{"port":%d,"token":"tok"}`, port)), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := (Loader{}).Send(t.Context(), loader.Target{}, loader.ProfileView{Dir: dir}, "Spawn Boar"); err != nil {
+		t.Fatal(err)
+	}
+	if line := <-got; line != "tok\nconsole Spawn Boar\n" {
+		t.Fatalf("bridge got %q", line)
 	}
 }

@@ -48,3 +48,9 @@ func (l Loader) RunningState(ctx context.Context, p loader.ProfileView) (loader.
 	}
 	return live, nil
 }
+
+// Send runs a line in the game's own console through the bridge (Valheim's; a game without one answers with an error
+// the Console tab shows). The bridge keeps the line's case.
+func (Loader) Send(ctx context.Context, _ loader.Target, p loader.ProfileView, command string) (string, error) {
+	return "", bridge.Send(ctx, filepath.Join(p.Dir, filepath.FromSlash(bridge.BepInEx.StateFile)), "console "+command)
+}

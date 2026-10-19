@@ -328,7 +328,8 @@
           "name": "BepInEx 5",
           "nexusModId": 3605,
           "companion": "bridge",
-          "package": "denikson-BepInExPack_Valheim"
+          "package": "denikson-BepInExPack_Valheim",
+          "console": true
         }
       ],
       "sources": [

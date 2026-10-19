@@ -274,6 +274,10 @@ func TestLoaderRefsSayWhichTabsApply(t *testing.T) {
 	if c := caps["cat-mail-co"]; !c.Order || !c.Console || c.Commands || c.Startup || c.Perf || c.Overlay || c.IntroSkip {
 		t.Fatalf("BepInEx without a bridge = %+v", c)
 	}
+	// Valheim's console is the one a BepInEx bridge can run lines in.
+	if v := caps["valheim"]; !v.Commands {
+		t.Fatalf("Valheim's BepInEx = %+v", v)
+	}
 	if _, err := opener.Web(caps["lethal-company"].Paste); err != nil || caps["stardew"].Paste != "" {
 		t.Fatalf("paste sites: BepInEx %q (%v), SMAPI %q", caps["lethal-company"].Paste, err, caps["stardew"].Paste)
 	}

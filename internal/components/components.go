@@ -438,6 +438,9 @@ type GameLoader struct {
 	// Companion names the game's component (kind bridge) that Mortar installs alongside the loader so the running game
 	// can talk to Mortar.
 	Companion string `json:"companion,omitempty"`
+	// Console is whether the game has a command console its companion can run lines in (Valheim's), which the Console
+	// tab's input needs on a BepInEx game.
+	Console bool `json:"console,omitempty"`
 	// Package is the Thunderstore package (Namespace-Name) the loader ships as, for a community that packs its own
 	// build of it (Valheim's denikson-BepInExPack_Valheim); empty means DefaultLoaderPackage.
 	Package string `json:"package,omitempty"`

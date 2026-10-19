@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
@@ -94,7 +95,8 @@ func loaderRef(gameID string, l components.GameLoader) LoaderRef {
 		bridge := l.Companion != "" && components.HasComponent(gameID, l.Companion)
 		_, hasConsole := d.(loader.Console)
 		_, hasCompanion := d.(loader.WithCompanion)
-		ref.Commands = bridge && hasConsole && hasCompanion
+		// A BepInEx game takes commands only where the bridge knows the game's console; SMAPI always has one.
+		ref.Commands = bridge && hasConsole && hasCompanion && (l.Console || !strings.HasPrefix(l.ID, "bepinex"))
 		_, ref.Startup = d.(loader.StartupTimings)
 		_, ref.Perf = d.(loader.InGamePerf)
 		_, ref.Overlay = d.(loader.StreamOverlay)
