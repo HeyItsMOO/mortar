@@ -29,6 +29,7 @@ func TestOnlyTheGuardedCallersStartTheSystemHandler(t *testing.T) {
 		"internal/lan/firewall_windows.go": true, // elevates Mortar's own executable with a fixed argument
 		"webview2_windows.go":              true, // opener.Web on Microsoft's fixed download address, before any window exists
 		"internal/game/epiclink.go":        true, // the Epic launcher's fixed scheme around an AppName checked as a plain name
+		"internal/game/launcherlink.go":    true, // Heroic's fixed scheme around a runner from a two-name list and an AppName checked as a plain name; the arguments are query-escaped
 		"internal/opener/callers_test.go":  true,
 	}
 	var offenders []string
