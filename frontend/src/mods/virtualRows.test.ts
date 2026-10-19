@@ -142,13 +142,13 @@ test('the header above the top stays named until the next header pushes it out',
 })
 
 test('a collapsed group hides the groups inside it only when groups are nested', () => {
-  const groups = [
+  const tree = [
     { key: 'Looks', items: [] as number[] },
     { key: 'Looks/Hats', items: [1] },
     { key: 'Core', items: [2] },
   ]
   const keys = (nested: boolean) =>
-    flattenModGroups(groups, {
+    flattenModGroups(tree, {
       grouped: true,
       nested,
       collapsed: { Looks: true },
