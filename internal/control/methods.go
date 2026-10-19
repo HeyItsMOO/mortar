@@ -1655,6 +1655,10 @@ func playIssueGroups(prof profile.Profile, res problems.Result, upd problems.Upd
 			broken = append(broken, b.Name)
 		}
 	}
+	var longPaths []string
+	for _, l := range res.LongPaths {
+		longPaths = append(longPaths, l.Name)
+	}
 	var out []PlayIssueGroup
 	for _, g := range []struct {
 		kind   string
@@ -1664,6 +1668,7 @@ func playIssueGroups(prof profile.Profile, res problems.Result, upd problems.Upd
 		{"conflicts", conflicts},
 		{"updates", updates},
 		{"broken", broken},
+		{"longPaths", longPaths},
 	} {
 		if len(g.labels) == 0 {
 			continue

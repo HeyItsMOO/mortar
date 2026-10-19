@@ -381,6 +381,7 @@ func (s *Service) ProblemsWithEvidence(ctx context.Context, gameID, id string) (
 		}
 		r.PluginClashes = pluginClashes(pkgs, deprecated)
 		r.Broken = append(r.Broken, knownBrokenMods(gameID, pkgs, enabledMods)...)
+		r.LongPaths = s.longPaths(gameID, id, mods)
 		if all, err := s.profiles.Packages(gameID, id); err == nil {
 			missing, incompatible := pluginDeps(all, mods)
 			declared := map[string]dotnet.Declared{}

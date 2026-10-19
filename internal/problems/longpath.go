@@ -1,0 +1,172 @@
+package problems
+
+import (
+	"io/fs"
+	"maps"
+	"os"
+	"path"
+	"path/filepath"
+	"runtime"
+	"slices"
+	"strings"
+	"unicode/utf16"
+
+	"github.com/Rethunk-Tech/mortar/internal/components"
+	"github.com/Rethunk-Tech/mortar/internal/framework"
+	"github.com/Rethunk-Tech/mortar/internal/game"
+	"github.com/Rethunk-Tech/mortar/internal/loader"
+)
+
+// maxPath is Windows' MAX_PATH. It counts the terminating NUL, so 259 characters is the longest full path a program
+// opens unless it passes \\?\ paths or its manifest declares longPathAware; LongPathsEnabled in the registry lifts the
+// limit only for the latter, and games seldom declare it. Mortar's own copies are not limited, so such a file is laid
+// out without an error and only the game fails to open it.
+const maxPath = 260
+
+// checkLongPaths is set on Windows, where the game reads the paths. Wine opens a path past MAX_PATH (the BepInEx
+// matrix's edge.longpath launch), and Linux and macOS allow far longer ones.
+var checkLongPaths = runtime.GOOS == "windows"
+
+// LongPath is an entry with files whose full path, where the game reads it, is at least MAX_PATH characters long, so
+// the game may not open them. Placed is set when that path is in a folder of the game (a folder loader's mods), which
+// only a shorter game folder fixes; otherwise the file is read in the profile, inside Mortar's data folder. Longest is
+// the longest of them and Length its length as Windows counts it.
+type LongPath struct {
+	Key     string `json:"key"`
+	Name    string `json:"name"`
+	Files   int    `json:"files"`
+	Longest string `json:"longest"`
+	Length  int    `json:"length"`
+	Placed  bool   `json:"placed"`
+}
+
+// readPath is a file the game reads for a launch of the profile, with the entry that holds it.
+type readPath struct {
+	key, path string
+	placed    bool
+}
+
+// pathLength is the length of p in UTF-16 code units, which is how MAX_PATH is counted.
+func pathLength(p string) int {
+	n := 0
+	for _, r := range p {
+		n += utf16.RuneLen(r)
+	}
+	return n
+}
+
+// longPathRows is one row per entry with a path past the limit, in the order the entries' files first come up.
+func longPathRows(mods []framework.Mod, files []readPath) []LongPath {
+	var out []LongPath
+	for _, f := range files {
+		n := pathLength(f.path)
+		if n < maxPath {
+			continue
+		}
+		i := slices.IndexFunc(out, func(x LongPath) bool { return x.Key == f.key })
+		if i < 0 {
+			name := f.key
+			if m := slices.IndexFunc(mods, func(x framework.Mod) bool { return x.Key == f.key }); m >= 0 && mods[m].Name != "" {
+				name = mods[m].Name
+			}
+			out = append(out, LongPath{Key: f.key, Name: name})
+			i = len(out) - 1
+		}
+		row := &out[i]
+		row.Files++
+		row.Placed = row.Placed || f.placed
+		if n > row.Length {
+			row.Longest, row.Length = f.path, n
+		}
+	}
+	return out
+}
+
+// placedPaths turns the files the profile's packages lay out, by slash path below dir with their entry's key, into the
+// paths the game reads them at: a file below the loader's placed folder at the same path below root, every other file
+// where it is. An empty root places nothing.
+func placedPaths(dir string, owners map[string]string, placedFolder, root string) []readPath {
+	out := make([]readPath, 0, len(owners))
+	for _, rel := range slices.Sorted(maps.Keys(owners)) {
+		f := readPath{key: owners[rel], path: filepath.Join(dir, filepath.FromSlash(rel))}
+		if below, ok := underFolder(rel, placedFolder); ok && root != "" {
+			f.path, f.placed = filepath.Join(root, filepath.FromSlash(below)), true
+		}
+		out = append(out, f)
+	}
+	return out
+}
+
+// underFolder is rel below folder, both slash paths; every path is below the empty folder.
+func underFolder(rel, folder string) (string, bool) {
+	if folder == "" {
+		return rel, true
+	}
+	return strings.CutPrefix(rel, folder+"/")
+}
+
+// longModsFolderPaths lists the files of a redirected profile's mods folder, which the game reads in place, whose path
+// is past the limit, each held by the mod whose folder holds it, else by its top folder. Only those are matched to a
+// mod, since an 800-mod profile holds tens of thousands of files.
+func longModsFolderPaths(modsDir string, mods []framework.Mod) []readPath {
+	var out []readPath
+	// A folder that cannot be read is skipped: its files are no worse off than before the check. So is one whose name
+	// starts with a dot, which is how a switched-off mod is kept and which the loader does not read.
+	_ = fs.WalkDir(os.DirFS(modsDir), ".", func(rel string, d fs.DirEntry, err error) error {
+		if err == nil && d.IsDir() && rel != "." && strings.HasPrefix(d.Name(), ".") {
+			return fs.SkipDir
+		}
+		if p := filepath.Join(modsDir, filepath.FromSlash(rel)); err == nil && d.Type().IsRegular() && pathLength(p) >= maxPath {
+			out = append(out, readPath{key: holder(rel, p, mods), path: p})
+		}
+		return nil
+	})
+	return out
+}
+
+// holder is the key of the mod whose folder holds p, else the top folder of rel, p's slash path below the mods folder.
+func holder(rel, p string, mods []framework.Mod) string {
+	key, _, _ := strings.Cut(rel, "/")
+	folder := ""
+	for _, m := range mods {
+		if len(m.Folder) > len(folder) && strings.HasPrefix(p, m.Folder+string(filepath.Separator)) {
+			folder, key = m.Folder, m.Key
+		}
+	}
+	return key
+}
+
+// longPaths is the profile's entries with a file the game would read at a path past MAX_PATH. A game whose profile
+// holds its packages (deploy "profile") is checked against the files they lay out, the list a launch syncs, so before
+// the first launch too; a redirected one against its mods folder.
+func (s *Service) longPaths(gameID, id string, mods []framework.Mod) []LongPath {
+	if !checkLongPaths || s.profiles == nil {
+		return nil
+	}
+	if info, ok := components.Game(gameID); !ok || info.Deploy != components.DeployProfile {
+		modsDir, err := s.profiles.ModsDir(gameID, id)
+		if err != nil {
+			return nil
+		}
+		return longPathRows(mods, longModsFolderPaths(modsDir, mods))
+	}
+	dir, err := s.profiles.ProfileDir(gameID, id)
+	if err != nil {
+		return nil
+	}
+	owners, err := s.profiles.PackageFileOwners(gameID, id)
+	if err != nil {
+		return nil
+	}
+	folder, root := "", ""
+	if l, ok := game.LoaderOf(gameID, s.profiles.LoaderID(gameID, id)); ok && s.settings != nil {
+		if p, ok := l.(loader.PlacesFolder); ok {
+			if f, role, ok := p.PlacedFolder(gameID); ok {
+				if r, err := game.PathFor(s.home, s.settings.Get(), gameID, "", role); err == nil {
+					folder, root = strings.TrimPrefix(path.Clean("/"+f), "/"), r
+				}
+			}
+		}
+	}
+	return longPathRows(mods, placedPaths(dir, owners, folder, root))
+}
