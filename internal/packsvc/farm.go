@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
+	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
@@ -15,7 +17,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 )
 
-// farmGame is the game whose multiplayer the list serves.
+// farmGame is the game Share's mod list text is read for, and the one whose mods SMAPI tells apart by unique id.
 const farmGame = "stardew"
 
 // maxFarmBytes bounds a pasted list; a profile of a thousand mods is far smaller.
@@ -31,7 +33,8 @@ const (
 	FarmDifferent = "different"
 )
 
-// FarmMod is a mod the host's farm runs: the id SMAPI reports to peers, its version, and where it came from.
+// FarmMod is a mod the host runs: the id the game's loader reports to peers (SMAPI's unique id, a Thunderstore
+// package's Namespace-Name, a Vintage Story mod id), its version, and where it came from.
 type FarmMod struct {
 	ID      mod.ID `json:"id"`
 	Name    string `json:"name"`
@@ -40,7 +43,7 @@ type FarmMod struct {
 	Source profile.Source `json:"source"`
 }
 
-// FarmList is what a guest needs to join a host's farm. SMAPI sends every loaded mod's id, name and version to its
+// FarmList is what a guest needs to join a host's game. SMAPI sends every loaded mod's id, name and version to its
 // peers and enforces no match itself (SMultiplayer.GetContextSyncMessageFields); many mods refuse a peer on another
 // version, and the manifest has no client-only flag. So the list holds every enabled mod and content pack but SMAPI's
 // bundled ones, and a guest ignores a mod of its own that the list lacks.
@@ -72,10 +75,50 @@ type FarmFix struct {
 	Manual []string `json:"manual"`
 }
 
-// ExportFarm lists the mods of a Stardew profile that a guest's must match.
+// farmSupported is whether the game's mods can be matched exactly across computers: Stardew by SMAPI unique id, a
+// Thunderstore game by package id, Vintage Story by the mod id its modinfo.json gives.
+func farmSupported(gameID string) bool {
+	if gameID == farmGame {
+		return true
+	}
+	i := slices.IndexFunc(game.Catalog(), func(g components.GameInfo) bool { return g.ID == gameID })
+	if i < 0 {
+		return false
+	}
+	g := game.Catalog()[i]
+	_, thunderstore := g.Source(profile.KindThunderstore)
+	_, vintage := g.Source(profile.KindVSModDB)
+	return thunderstore || vintage
+}
+
+func errNoFarm() error {
+	return usererr.New(usererr.OtherGame, "mod lists are not offered for this game")
+}
+
+// farmID is the id a mod is matched by across computers. A Vintage Story mod is its modinfo.json id (its component
+// id names a store item, which differs per computer); a mod with no id of its own is matched by name.
+func farmID(c profile.Component) mod.ID {
+	switch {
+	case c.ModID != "":
+		return mod.NewID(mod.FormatModInfo, c.ModID)
+	case c.ID.Format() == mod.FormatFolder:
+		return mod.NewID(formatName, strings.ToLower(c.Name))
+	}
+	return c.ID
+}
+
+// sameFarmID compares ids as the games do: Thunderstore package ids and mod ids ignore case, as SMAPI's do.
+func sameFarmID(a, b mod.ID) bool {
+	if a.Format() == b.Format() && (a.Format() == mod.FormatThunderstore || a.Format() == mod.FormatModInfo) {
+		return strings.EqualFold(a.Local(), b.Local())
+	}
+	return mod.Equal(a, b)
+}
+
+// ExportFarm lists the mods of a profile that a guest's must match.
 func (s *Service) ExportFarm(gameID, profileID string) (FarmList, error) {
-	if gameID != farmGame {
-		return FarmList{}, usererr.New(usererr.OtherGame, "multiplayer lists are for Stardew Valley")
+	if !farmSupported(gameID) {
+		return FarmList{}, errNoFarm()
 	}
 	p, err := s.find(gameID, profileID)
 	if err != nil {
@@ -88,7 +131,7 @@ func (s *Service) ExportFarm(gameID, profileID string) (FarmList, error) {
 		}
 		for _, c := range e.Mods {
 			if e.Enabled(c.ID) {
-				out.Mods = append(out.Mods, FarmMod{ID: c.ID, Name: c.Name, Version: c.Version, Source: shareable(e.Source)})
+				out.Mods = append(out.Mods, FarmMod{ID: farmID(c), Name: c.Name, Version: c.Version, Source: shareable(e.Source)})
 			}
 		}
 	}
@@ -166,8 +209,7 @@ func parseModList(text string) FarmList {
 	return l
 }
 
-// ParseFarm reads a list a host copied out, either the multiplayer list or Share's mod list text, refusing one for
-// another game.
+// ParseFarm reads a list a host copied out, either the multiplayer list or Share's mod list text (Stardew's).
 func ParseFarm(text string) (FarmList, error) {
 	if len(text) > maxFarmBytes {
 		return FarmList{}, usererr.New(usererr.Invalid, "the list is too large")
@@ -179,8 +221,20 @@ func ParseFarm(text string) (FarmList, error) {
 	if len(l.Mods) == 0 || len(l.Mods) > maxFarmMods {
 		return FarmList{}, usererr.New(usererr.Invalid, "this is not a mod list")
 	}
-	if l.Game != farmGame {
-		return FarmList{}, usererr.New(usererr.OtherGame, "multiplayer lists are for Stardew Valley")
+	return l, nil
+}
+
+// parseFarmFor is ParseFarm for a guest of gameID, refusing a list made for another game.
+func parseFarmFor(gameID, text string) (FarmList, error) {
+	if !farmSupported(gameID) {
+		return FarmList{}, errNoFarm()
+	}
+	l, err := ParseFarm(text)
+	if err != nil {
+		return FarmList{}, err
+	}
+	if l.Game != gameID {
+		return FarmList{}, usererr.New(usererr.OtherGame, "this list is for another game")
 	}
 	return l, nil
 }
@@ -188,12 +242,9 @@ func ParseFarm(text string) (FarmList, error) {
 // CheckFarm compares the host's list with the profile and returns the mods that are missing, switched off or on
 // another version.
 func (s *Service) CheckFarm(gameID, profileID, text string) (FarmCheck, error) {
-	l, err := ParseFarm(text)
+	l, err := parseFarmFor(gameID, text)
 	if err != nil {
 		return FarmCheck{}, err
-	}
-	if gameID != farmGame {
-		return FarmCheck{}, usererr.New(usererr.OtherGame, "multiplayer lists are for Stardew Valley")
 	}
 	p, err := s.find(gameID, profileID)
 	if err != nil {
@@ -225,8 +276,7 @@ func farmRows(l FarmList, p profile.Profile) []FarmRow {
 // findComponent finds the profile's mod with the host's id. A host's mod known only by name is the mod of that
 // name, the one on the host's version when several share it.
 func findComponent(p profile.Profile, m FarmMod) (profile.Entry, profile.Component, bool) {
-	id := m.ID
-	if id.Format() == formatName {
+	if m.ID.Format() == formatName {
 		var (
 			entry profile.Entry
 			named profile.Component
@@ -242,7 +292,7 @@ func findComponent(p profile.Profile, m FarmMod) (profile.Entry, profile.Compone
 		return entry, named, found
 	}
 	for _, e := range p.Entries {
-		if i := slices.IndexFunc(e.Mods, func(c profile.Component) bool { return mod.Equal(c.ID, id) }); i >= 0 {
+		if i := slices.IndexFunc(e.Mods, func(c profile.Component) bool { return sameFarmID(farmID(c), m.ID) }); i >= 0 {
 			return e, e.Mods[i], true
 		}
 	}
@@ -264,12 +314,9 @@ func installable(s profile.Source) bool {
 // FixFarm queues the host's file of each missing mod and each mod on another version, all of them when ids is empty,
 // through the same download queue an import uses; a different version replaces the guest's entry, as an update does.
 func (s *Service) FixFarm(ctx context.Context, gameID, profileID, text string, ids []mod.ID) (FarmFix, error) {
-	l, err := ParseFarm(text)
+	l, err := parseFarmFor(gameID, text)
 	if err != nil {
 		return FarmFix{}, err
-	}
-	if gameID != farmGame {
-		return FarmFix{}, usererr.New(usererr.OtherGame, "multiplayer lists are for Stardew Valley")
 	}
 	p, err := s.find(gameID, profileID)
 	if err != nil {
@@ -280,10 +327,10 @@ func (s *Service) FixFarm(ctx context.Context, gameID, profileID, text string, i
 	// Several mods of one download are fixed by one request.
 	queued := map[profile.Source]bool{}
 	for _, row := range farmRows(l, p) {
-		if row.State == FarmOff || (len(ids) > 0 && !slices.ContainsFunc(ids, func(id mod.ID) bool { return mod.Equal(id, row.ID) })) {
+		if row.State == FarmOff || (len(ids) > 0 && !slices.ContainsFunc(ids, func(id mod.ID) bool { return sameFarmID(id, row.ID) })) {
 			continue
 		}
-		i := slices.IndexFunc(l.Mods, func(m FarmMod) bool { return mod.Equal(m.ID, row.ID) })
+		i := slices.IndexFunc(l.Mods, func(m FarmMod) bool { return sameFarmID(m.ID, row.ID) })
 		src := shareable(l.Mods[i].Source)
 		req, ok := restoreRequest(gameID, profileID, profile.Entry{Source: src})
 		if queued[src] {
@@ -295,7 +342,8 @@ func (s *Service) FixFarm(ctx context.Context, gameID, profileID, text string, i
 		}
 		if row.State == FarmDifferent {
 			e, _, _ := findComponent(p, l.Mods[i])
-			req.Kind, req.CurrentKey = queue.KindUpdate, e.Key
+			// The host's version is the one to reach, though the guest's may be newer.
+			req.Kind, req.CurrentKey, req.Exact = queue.KindUpdate, e.Key, true
 		}
 		queued[src] = true
 		reqs = append(reqs, req)

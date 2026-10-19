@@ -44,7 +44,7 @@ msgstr "Launch method"
 #. placeholder {0}: mark.date
 #: src/mods/NexusDetails.tsx:218
 #: src/mods/parts.tsx:295
-#: src/mods/Sidebar.tsx:139
+#: src/mods/Sidebar.tsx:140
 msgid "Hidden on Nexus · {0}"
 msgstr "Hidden on Nexus · {0}"
 
@@ -159,7 +159,7 @@ msgstr "Priority Default"
 msgid "Show failed"
 msgstr "Show failed"
 
-#: src/game/FarmMenuItem.tsx:131
+#: src/game/FarmMenuItem.tsx:133
 msgid "This profile matches that list."
 msgstr "This profile matches that list."
 
@@ -171,7 +171,7 @@ msgstr "Streaming"
 msgid "Could not back up {label}"
 msgstr "Could not back up {label}"
 
-#: src/game/FarmMenuItem.tsx:65
+#: src/game/FarmMenuItem.tsx:67
 msgid "Could not read that file"
 msgstr "Could not read that file"
 
@@ -232,7 +232,7 @@ msgid "Manage tools…"
 msgstr "Manage tools…"
 
 #: src/game/Home.tsx:84
-#: src/mods/Sidebar.tsx:162
+#: src/mods/Sidebar.tsx:163
 msgid "Updated"
 msgstr "Updated"
 
@@ -289,14 +289,14 @@ msgstr "Every entry in {current} goes back to its default."
 msgid "The game could not apply the last change: {reason}"
 msgstr "The game could not apply the last change: {reason}"
 
-#: src/game/FarmMenuItem.tsx:88
+#: src/game/FarmMenuItem.tsx:90
 msgid "Could not queue the downloads"
 msgstr "Could not queue the downloads"
 
 #. placeholder {0}: plan.copy.length
 #. placeholder {1}: to.name
 #. placeholder {2}: to.name
-#: src/profiles/CompareDialog.tsx:59
+#: src/profiles/CompareDialog.tsx:60
 msgid "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 msgstr "{0, plural, one {Copied # mod to {1}} other {Copied # mods to {2}}}"
 
@@ -908,7 +908,7 @@ msgstr "More languages are coming."
 msgid "other checks"
 msgstr "other checks"
 
-#: src/game/FarmMenuItem.tsx:110
+#: src/game/FarmMenuItem.tsx:112
 msgid "Copy this profile's list"
 msgstr "Copy this profile's list"
 
@@ -1072,7 +1072,7 @@ msgid "Rename"
 msgstr "Rename"
 
 #. placeholder {0}: listNames(manual)
-#: src/game/FarmMenuItem.tsx:85
+#: src/game/FarmMenuItem.tsx:87
 msgid "Install by hand: {0}"
 msgstr "Install by hand: {0}"
 
@@ -1341,7 +1341,7 @@ msgstr "This save was last played with {0, plural, one {# mod this profile lacks
 
 #: src/mods/NexusDetails.tsx:217
 #: src/mods/parts.tsx:294
-#: src/mods/Sidebar.tsx:138
+#: src/mods/Sidebar.tsx:139
 msgid "Hidden on Nexus"
 msgstr "Hidden on Nexus"
 
@@ -2200,7 +2200,7 @@ msgid "Actions"
 msgstr "Actions"
 
 #. placeholder {0}: view.onlyA
-#: src/profiles/CompareDialog.tsx:166
+#: src/profiles/CompareDialog.tsx:167
 msgid "{0} only in {aName}"
 msgstr "{0} only in {aName}"
 
@@ -2428,7 +2428,7 @@ msgstr "Mortar is up to date"
 #: src/mods/Toolbar.tsx:416
 #: src/mods/Toolbar.tsx:434
 #: src/mods/typedConfig/ConfigTab.tsx:512
-#: src/profiles/CompareDialog.tsx:284
+#: src/profiles/CompareDialog.tsx:285
 #: src/profiles/CompareTop.tsx:182
 msgid "Filter mods"
 msgstr "Filter mods"
@@ -2466,7 +2466,7 @@ msgstr "Skip the game's boot animations on Play. Choices the game asks at start-
 msgid "Will update"
 msgstr "Will update"
 
-#: src/profiles/CompareDialog.tsx:125
+#: src/profiles/CompareDialog.tsx:126
 msgid "{count} selected"
 msgstr "{count} selected"
 
@@ -2543,7 +2543,7 @@ msgid "r2modman or Gale in another folder?"
 msgstr "r2modman or Gale in another folder?"
 
 #. placeholder {0}: view.identical
-#: src/profiles/CompareDialog.tsx:167
+#: src/profiles/CompareDialog.tsx:168
 msgid "{0} identical"
 msgstr "{0} identical"
 
@@ -2581,7 +2581,7 @@ msgstr "Show the first-run tips again"
 #: src/mods/Toolbar.tsx:196
 #: src/mods/typedConfig/ConfigTab.tsx:119
 #: src/nxm/store.ts:57
-#: src/profiles/CompareDialog.tsx:185
+#: src/profiles/CompareDialog.tsx:186
 #: src/profiles/LaunchPresetDialog.tsx:85
 #: src/queue/actions.ts:99
 #: src/queue/store.ts:247
@@ -2638,7 +2638,7 @@ msgstr "Skip {0}"
 
 #: src/mods/columnLabel.ts:9
 #: src/mods/NexusDetails.tsx:102
-#: src/mods/Sidebar.tsx:153
+#: src/mods/Sidebar.tsx:154
 msgid "Latest on Nexus"
 msgstr "Latest on Nexus"
 
@@ -2679,7 +2679,7 @@ msgstr "Copy load order"
 msgid "Try a different search."
 msgstr "Try a different search."
 
-#: src/mods/Sidebar.tsx:520
+#: src/mods/Sidebar.tsx:522
 msgid "Installed as a dependency"
 msgstr "Installed as a dependency"
 
@@ -2813,7 +2813,7 @@ msgstr "Skipped"
 msgid "Edit profile"
 msgstr "Edit profile"
 
-#: src/game/FarmMenuItem.tsx:122
+#: src/game/FarmMenuItem.tsx:124
 msgid "The host's list"
 msgstr "The host's list"
 
@@ -2838,7 +2838,7 @@ msgstr "Could not prepare the data folder move"
 msgid "Compact"
 msgstr "Compact"
 
-#: src/game/FarmMenuItem.tsx:159
+#: src/game/FarmMenuItem.tsx:161
 msgid "Check"
 msgstr "Check"
 
@@ -2870,7 +2870,7 @@ msgstr "A mod you enabled needs another mod that is not in this profile, or is d
 #: src/mods/storeEntries.ts:55
 #: src/mods/storeEntries.ts:93
 #: src/profiles/collectionUnlink.ts:36
-#: src/profiles/CompareDialog.tsx:45
+#: src/profiles/CompareDialog.tsx:46
 #: src/profiles/historyRevert.ts:111
 #: src/profiles/store.ts:190
 #: src/profiles/store.ts:233
@@ -2897,7 +2897,7 @@ msgid "Data to copy: {0}"
 msgstr "Data to copy: {0}"
 
 #. placeholder {0}: neededBy.length.toLocaleString(i18n.locale)
-#: src/mods/Sidebar.tsx:316
+#: src/mods/Sidebar.tsx:317
 msgid "Required by ({0})"
 msgstr "Required by ({0})"
 
@@ -3006,7 +3006,7 @@ msgid "Could not restore the warning"
 msgstr "Could not restore the warning"
 
 #: src/console/RunProblems.tsx:263
-#: src/game/FarmMenuItem.tsx:155
+#: src/game/FarmMenuItem.tsx:157
 msgid "Fix all"
 msgstr "Fix all"
 
@@ -3378,7 +3378,7 @@ msgid "Import from {manager}"
 msgstr "Import from {manager}"
 
 #: src/mods/listRows.ts:140
-#: src/mods/Sidebar.tsx:498
+#: src/mods/Sidebar.tsx:500
 msgid "Archive"
 msgstr "Archive"
 
@@ -3555,7 +3555,7 @@ msgstr " · {0} more required"
 
 #. placeholder {0}: row.host
 #. placeholder {1}: row.mine
-#: src/game/FarmMenuItem.tsx:100
+#: src/game/FarmMenuItem.tsx:102
 msgid "Host {0}, yours {1}"
 msgstr "Host {0}, yours {1}"
 
@@ -3601,7 +3601,7 @@ msgstr "Measuring… {0}"
 msgid "Check again"
 msgstr "Check again"
 
-#: src/mods/Sidebar.tsx:434
+#: src/mods/Sidebar.tsx:435
 msgid "More from the Nexus page"
 msgstr "More from the Nexus page"
 
@@ -3645,7 +3645,7 @@ msgstr "Search GitHub for mods published as releases. Add puts the latest releas
 msgid "And {0} more on the Nexus page"
 msgstr "And {0} more on the Nexus page"
 
-#: src/profiles/CompareDialog.tsx:323
+#: src/profiles/CompareDialog.tsx:324
 msgid "Neither profile has a mod that matches the filter."
 msgstr "Neither profile has a mod that matches the filter."
 
@@ -3855,7 +3855,7 @@ msgid "{0, plural, one {# other mod} other {# other mods}}"
 msgstr "{0, plural, one {# other mod} other {# other mods}}"
 
 #. placeholder {0}: profileA.name
-#: src/profiles/CompareDialog.tsx:382
+#: src/profiles/CompareDialog.tsx:383
 msgid "Pick what to compare {0} with"
 msgstr "Pick what to compare {0} with"
 
@@ -3911,7 +3911,7 @@ msgstr "{who} both load {target}.{winner}"
 msgid "config.json, changed from the mod's own"
 msgstr "config.json, changed from the mod's own"
 
-#: src/game/FarmMenuItem.tsx:98
+#: src/game/FarmMenuItem.tsx:100
 #: src/launch/SaveWarnDialog.tsx:62
 #: src/mods/updateReview/Row.tsx:36
 #: src/share/Included.tsx:122
@@ -3996,7 +3996,7 @@ msgstr "Skip sharing"
 msgid "The game is using this profile. Stop the game to change mods."
 msgstr "The game is using this profile. Stop the game to change mods."
 
-#: src/profiles/CompareDialog.tsx:408
+#: src/profiles/CompareDialog.tsx:409
 msgid "Compare against a friend's profile or a multiplayer host's list."
 msgstr "Compare against a friend's profile or a multiplayer host's list."
 
@@ -4287,7 +4287,7 @@ msgid "Downloading {0}%"
 msgstr "Downloading {0}%"
 
 #. placeholder {0}: optionalFor.length.toLocaleString(i18n.locale)
-#: src/mods/Sidebar.tsx:320
+#: src/mods/Sidebar.tsx:321
 msgid "Optional for ({0})"
 msgstr "Optional for ({0})"
 
@@ -4336,7 +4336,7 @@ msgid "Already has {0}"
 msgstr "Already has {0}"
 
 #: src/browse/BrowseDetails.tsx:108
-#: src/mods/Sidebar.tsx:297
+#: src/mods/Sidebar.tsx:298
 #: src/mods/updateReview/Row.tsx:122
 msgid "Changelog"
 msgstr "Changelog"
@@ -4661,7 +4661,7 @@ msgstr "time in its patches {ms}"
 msgid "Post on"
 msgstr "Post on"
 
-#: src/game/FarmMenuItem.tsx:52
+#: src/game/FarmMenuItem.tsx:54
 msgid "List copied"
 msgstr "List copied"
 
@@ -4711,7 +4711,7 @@ msgstr "Could not preview the template"
 msgid "Done"
 msgstr "Done"
 
-#: src/mods/Sidebar.tsx:261
+#: src/mods/Sidebar.tsx:262
 msgid "Content pack for {hostName}"
 msgstr "Content pack for {hostName}"
 
@@ -4719,7 +4719,7 @@ msgstr "Content pack for {hostName}"
 msgid "Untrack the {gameName} mods none of your profiles use, out of {trackedCount} tracked? Nexus has no undo for this."
 msgstr "Untrack the {gameName} mods none of your profiles use, out of {trackedCount} tracked? Nexus has no undo for this."
 
-#: src/game/FarmMenuItem.tsx:73
+#: src/game/FarmMenuItem.tsx:75
 msgid "Could not read that list"
 msgstr "Could not read that list"
 
@@ -4735,7 +4735,7 @@ msgstr "More ways to add mods"
 msgid "Downloads paused"
 msgstr "Downloads paused"
 
-#: src/game/FarmMenuItem.tsx:58
+#: src/game/FarmMenuItem.tsx:60
 msgid "Open the host's list"
 msgstr "Open the host's list"
 
@@ -4833,7 +4833,7 @@ msgstr "A mod with several tags appears under its first tag."
 msgid "Game setting off"
 msgstr "Game setting off"
 
-#: src/mods/Sidebar.tsx:148
+#: src/mods/Sidebar.tsx:149
 msgid "Summary"
 msgstr "Summary"
 
@@ -4871,8 +4871,8 @@ msgstr "Needs a CurseForge key, or the file from its page"
 #: src/mods/ModDependencyTree.tsx:138
 #: src/mods/OptionalFileRows.tsx:123
 #: src/mods/PreviewPick.tsx:23
-#: src/mods/Sidebar.tsx:232
-#: src/mods/Sidebar.tsx:245
+#: src/mods/Sidebar.tsx:233
+#: src/mods/Sidebar.tsx:246
 #: src/mods/Toolbar.tsx:64
 #: src/mods/useListHeading.ts:19
 #: src/profiles/CompareTable.tsx:77
@@ -4984,7 +4984,7 @@ msgid "Add or remove the tag"
 msgstr "Add or remove the tag"
 
 #: src/mods/parts.tsx:338
-#: src/mods/Sidebar.tsx:196
+#: src/mods/Sidebar.tsx:197
 msgid "Last run: {summary}"
 msgstr "Last run: {summary}"
 
@@ -5066,7 +5066,7 @@ msgstr "Link copied"
 #: src/browse/BrowseShow.tsx:39
 #: src/mods/columnLabel.ts:8
 #: src/mods/ModDisplayEdit.tsx:81
-#: src/mods/Sidebar.tsx:380
+#: src/mods/Sidebar.tsx:381
 msgid "Version"
 msgstr "Version"
 
@@ -5166,7 +5166,7 @@ msgid "Delete group {name}?"
 msgstr "Delete group {name}?"
 
 #: src/console/RunProblems.tsx:140
-#: src/game/FarmMenuItem.tsx:102
+#: src/game/FarmMenuItem.tsx:104
 #: src/loader/Banner.tsx:44
 #: src/mods/problemFix/LoadFailureFix.tsx:37
 #: src/mods/runErrorFixButtons.tsx:49
@@ -5196,7 +5196,7 @@ msgid "No mod owns this file. It is removed from this profile, and the game make
 msgstr "No mod owns this file. It is removed from this profile, and the game makes a new one if it needs it."
 
 #. placeholder {0}: row.host
-#: src/game/FarmMenuItem.tsx:100
+#: src/game/FarmMenuItem.tsx:102
 msgid "Host {0}"
 msgstr "Host {0}"
 
@@ -5679,7 +5679,7 @@ msgstr "Could not check the store files"
 msgid "Rename…"
 msgstr "Rename…"
 
-#: src/game/FarmMenuItem.tsx:131
+#: src/game/FarmMenuItem.tsx:133
 msgid "This profile matches {host}."
 msgstr "This profile matches {host}."
 
@@ -5855,7 +5855,7 @@ msgstr "Added from an archive, so it only exists on this computer."
 #: src/commandPalette/CommandPalette.tsx:188
 #: src/mods/columnLabel.ts:15
 #: src/mods/NexusDetails.tsx:118
-#: src/mods/Sidebar.tsx:161
+#: src/mods/Sidebar.tsx:162
 #: src/queue/QueueSheet.tsx:83
 #: src/queue/QueueSheet.tsx:197
 #: src/settings/SettingsPage.tsx:42
@@ -5963,7 +5963,7 @@ msgstr "Copy the command"
 msgid "Background preview"
 msgstr "Background preview"
 
-#: src/profiles/CompareDialog.tsx:393
+#: src/profiles/CompareDialog.tsx:394
 #: src/profiles/CompareTop.tsx:92
 msgid "A friend's link or file…"
 msgstr "A friend's link or file…"
@@ -6758,7 +6758,7 @@ msgstr "Enter 1 or more"
 
 #: src/mods/columnLabel.ts:14
 #: src/mods/NexusDetails.tsx:117
-#: src/mods/Sidebar.tsx:410
+#: src/mods/Sidebar.tsx:411
 #: src/settings/sections/NexusMods.tsx:178
 msgid "Endorsements"
 msgstr "Endorsements"
@@ -7128,7 +7128,7 @@ msgstr "Premium downloads come from this Nexus server when it offers the file."
 msgid "Open page"
 msgstr "Open page"
 
-#: src/game/FarmMenuItem.tsx:84
+#: src/game/FarmMenuItem.tsx:86
 #: src/share/ImportPreview.tsx:278
 msgid "{count} to download"
 msgstr "{count} to download"
@@ -7224,7 +7224,7 @@ msgstr "Unity starts"
 msgid "There is not enough free space at the destination."
 msgstr "There is not enough free space at the destination."
 
-#: src/profiles/CompareDialog.tsx:402
+#: src/profiles/CompareDialog.tsx:403
 #: src/profiles/CompareTop.tsx:98
 msgid "A multiplayer host's list…"
 msgstr "A multiplayer host's list…"
@@ -7270,7 +7270,7 @@ msgid "Modified outside Mortar"
 msgstr "Modified outside Mortar"
 
 #: src/browse/BrowseDetails.tsx:310
-#: src/mods/Sidebar.tsx:570
+#: src/mods/Sidebar.tsx:572
 msgid "Selected mod"
 msgstr "Selected mod"
 
@@ -7586,7 +7586,7 @@ msgstr "{0} and {count} more"
 
 #: src/mods/ModMenu.tsx:213
 #: src/mods/SelectionBarActions.tsx:122
-#: src/mods/Sidebar.tsx:445
+#: src/mods/Sidebar.tsx:446
 msgid "Also add to…"
 msgstr "Also add to…"
 
@@ -7713,7 +7713,7 @@ msgstr "Unity exception"
 msgid "Revert"
 msgstr "Revert"
 
-#: src/game/FarmMenuItem.tsx:177
+#: src/game/FarmMenuItem.tsx:178
 msgid "Multiplayer mod list…"
 msgstr "Multiplayer mod list…"
 
@@ -8032,7 +8032,7 @@ msgstr "Large"
 #: src/mods/columnLabel.ts:13
 #: src/mods/NexusDetails.tsx:107
 #: src/mods/SelectionBarDialogs.tsx:122
-#: src/mods/Sidebar.tsx:158
+#: src/mods/Sidebar.tsx:159
 #: src/mods/Toolbar.tsx:254
 #: src/settings/prefCopyModsView.ts:42
 msgid "Category"
@@ -8108,7 +8108,7 @@ msgid "Could not list backups: {error}"
 msgstr "Could not list backups: {error}"
 
 #. placeholder {0}: target.name
-#: src/profiles/CompareDialog.tsx:133
+#: src/profiles/CompareDialog.tsx:134
 msgid "Nothing selected would change {0}."
 msgstr "Nothing selected would change {0}."
 
@@ -8372,7 +8372,7 @@ msgid "Results"
 msgstr "Results"
 
 #: src/mods/ModMenu.tsx:173
-#: src/mods/Sidebar.tsx:385
+#: src/mods/Sidebar.tsx:386
 msgid "Show skipped update"
 msgstr "Show skipped update"
 
@@ -8600,7 +8600,7 @@ msgstr "Its folder is removed from this profile. You can undo this."
 msgid "Run logs kept"
 msgstr "Run logs kept"
 
-#: src/game/FarmMenuItem.tsx:53
+#: src/game/FarmMenuItem.tsx:55
 msgid "Send it to the people joining you."
 msgstr "Send it to the people joining you."
 
@@ -8708,7 +8708,7 @@ msgstr "Go to"
 
 #: src/mods/NexusDetails.tsx:219
 #: src/mods/parts.tsx:296
-#: src/mods/Sidebar.tsx:140
+#: src/mods/Sidebar.tsx:141
 msgid "Removed from Nexus"
 msgstr "Removed from Nexus"
 
@@ -8899,7 +8899,7 @@ msgstr "Bosses defeated"
 #: src/browse/CardAction.tsx:84
 #: src/console/RunProblems.tsx:138
 #: src/downloads/newDownloads.ts:35
-#: src/game/FarmMenuItem.tsx:102
+#: src/game/FarmMenuItem.tsx:104
 #: src/mods/AddToGroupDialog.tsx:105
 #: src/mods/ModDependencyTree.tsx:86
 #: src/mods/ModDependencyTree.tsx:86
@@ -8909,7 +8909,7 @@ msgstr "Bosses defeated"
 #: src/mods/problemFix/MissingFix.tsx:43
 #: src/mods/SelectionBar.tsx:120
 #: src/mods/SelectionBarDialogs.tsx:82
-#: src/mods/Sidebar.tsx:455
+#: src/mods/Sidebar.tsx:456
 #: src/mods/TrackedNotInProfile.tsx:83
 #: src/mods/typedConfig/Widgets.tsx:189
 #: src/profiles/LaunchPresetTemplatesDialog.tsx:67
@@ -9042,7 +9042,7 @@ msgstr "Add {0} to a profile"
 #. placeholder {0}: plan.moves.length
 #. placeholder {1}: to.name
 #. placeholder {2}: to.name
-#: src/profiles/CompareDialog.tsx:69
+#: src/profiles/CompareDialog.tsx:70
 msgid "{0, plural, one {Matched # version in {1}} other {Matched # versions in {2}}}"
 msgstr "{0, plural, one {Matched # version in {1}} other {Matched # versions in {2}}}"
 
@@ -9216,7 +9216,7 @@ msgstr "Signed out of Nexus"
 
 #. placeholder {0}: mod.name
 #: src/mods/ModMenu.tsx:380
-#: src/mods/Sidebar.tsx:453
+#: src/mods/Sidebar.tsx:454
 msgid "Also add {0} to…"
 msgstr "Also add {0} to…"
 
@@ -9509,7 +9509,7 @@ msgstr "A file it needs could not be opened."
 msgid "Windowed resolution width"
 msgstr "Windowed resolution width"
 
-#: src/game/FarmMenuItem.tsx:56
+#: src/game/FarmMenuItem.tsx:58
 msgid "Could not make the list"
 msgstr "Could not make the list"
 
@@ -9989,8 +9989,8 @@ msgstr "Xbox"
 #. placeholder {0}: profileB.name
 #. placeholder {1}: profileA.name
 #. placeholder {1}: profileB.name
-#: src/profiles/CompareDialog.tsx:104
-#: src/profiles/CompareDialog.tsx:109
+#: src/profiles/CompareDialog.tsx:105
+#: src/profiles/CompareDialog.tsx:110
 msgid "Make {0} match {1}"
 msgstr "Make {0} match {1}"
 
@@ -10704,7 +10704,7 @@ msgid "Signed in"
 msgstr "Signed in"
 
 #. placeholder {0}: view.differences
-#: src/profiles/CompareDialog.tsx:177
+#: src/profiles/CompareDialog.tsx:178
 msgid "{0, plural, one {# difference} other {# differences}}"
 msgstr "{0, plural, one {# difference} other {# differences}}"
 
@@ -10937,7 +10937,7 @@ msgstr "Focus the search"
 msgid "No app opens these links now."
 msgstr "No app opens these links now."
 
-#: src/profiles/CompareDialog.tsx:321
+#: src/profiles/CompareDialog.tsx:322
 msgid "These profiles have the same mods."
 msgstr "These profiles have the same mods."
 
@@ -11219,7 +11219,7 @@ msgstr "{count, plural, one {Trimmed history, dropped # older change} other {Tri
 msgid "Whole file"
 msgstr "Whole file"
 
-#: src/mods/Sidebar.tsx:405
+#: src/mods/Sidebar.tsx:406
 msgid "SMAPI UniqueID"
 msgstr "SMAPI UniqueID"
 
@@ -11283,7 +11283,7 @@ msgid "Report it so it can be fixed."
 msgstr "Report it so it can be fixed."
 
 #: src/mods/listRows.ts:142
-#: src/mods/Sidebar.tsx:500
+#: src/mods/Sidebar.tsx:502
 #: src/settings/sections/Accounts.tsx:17
 #: src/shell/BugReportDialog.tsx:105
 #: src/shell/SuggestDialog.tsx:42
@@ -11376,7 +11376,7 @@ msgstr "Optional: {label}"
 msgid "Combine with…"
 msgstr "Combine with…"
 
-#: src/profiles/CompareDialog.tsx:321
+#: src/profiles/CompareDialog.tsx:322
 msgid "No matching mods"
 msgstr "No matching mods"
 
@@ -11388,7 +11388,7 @@ msgstr "A file a mod wrote is too large to copy into the profile and stays in th
 #. placeholder {0}: mark.date
 #: src/mods/NexusDetails.tsx:220
 #: src/mods/parts.tsx:297
-#: src/mods/Sidebar.tsx:141
+#: src/mods/Sidebar.tsx:142
 msgid "Removed from Nexus · {0}"
 msgstr "Removed from Nexus · {0}"
 
@@ -11504,8 +11504,8 @@ msgstr "Auto-enable requirements"
 #: src/mods/AuthorDialog.tsx:134
 #: src/mods/listRows.ts:164
 #: src/mods/ModDependencyTree.tsx:136
-#: src/mods/Sidebar.tsx:232
-#: src/mods/Sidebar.tsx:245
+#: src/mods/Sidebar.tsx:233
+#: src/mods/Sidebar.tsx:246
 #: src/mods/useListHeading.ts:18
 #: src/profiles/CompareTable.tsx:77
 #: src/profiles/ProfilesPage.tsx:269
@@ -11528,7 +11528,7 @@ msgstr "The crash check could not finish."
 msgid "Could not unpin {0}"
 msgstr "Could not unpin {0}"
 
-#: src/mods/Sidebar.tsx:530
+#: src/mods/Sidebar.tsx:532
 msgid "In the same download"
 msgstr "In the same download"
 
@@ -11630,7 +11630,7 @@ msgstr "the mod"
 msgid "Searching…"
 msgstr "Searching…"
 
-#: src/game/FarmMenuItem.tsx:105
+#: src/game/FarmMenuItem.tsx:107
 msgid "Multiplayer mod list"
 msgstr "Multiplayer mod list"
 
@@ -11952,7 +11952,7 @@ msgid "If they stay there, the game goes on loading them even when a profile swi
 msgstr "If they stay there, the game goes on loading them even when a profile switches them off."
 
 #. placeholder {0}: profile.name
-#: src/profiles/CompareDialog.tsx:40
+#: src/profiles/CompareDialog.tsx:41
 msgid "{0} is in use by the running game. Close the game to change its mods."
 msgstr "{0} is in use by the running game. Close the game to change its mods."
 
@@ -12533,7 +12533,7 @@ msgstr "Markdown"
 msgid "Could not cancel transfer"
 msgstr "Could not cancel transfer"
 
-#: src/game/FarmMenuItem.tsx:113
+#: src/game/FarmMenuItem.tsx:115
 msgid "Load the host's list from a file…"
 msgstr "Load the host's list from a file…"
 
@@ -12794,7 +12794,7 @@ msgstr "{0, plural, one {{1} of # mod · {2} · {3}/s} other {{4} of # mods · {
 msgid "Installed: Mortar {0}"
 msgstr "Installed: Mortar {0}"
 
-#: src/mods/Sidebar.tsx:202
+#: src/mods/Sidebar.tsx:203
 msgid "Show in Console"
 msgstr "Show in Console"
 
@@ -13219,7 +13219,7 @@ msgstr "Did not load"
 
 #: src/browse/BrowseShow.tsx:53
 #: src/launch/LaunchLayer.tsx:175
-#: src/profiles/CompareDialog.tsx:185
+#: src/profiles/CompareDialog.tsx:186
 #: src/profiles/LaunchPresetDialog.tsx:86
 #: src/saves/SaveGapLine.tsx:57
 msgid "Hide"
@@ -13745,7 +13745,7 @@ msgstr "On the other computer, choose Enter code and type this. It works once, f
 msgid "Restored {0} to before that change"
 msgstr "Restored {0} to before that change"
 
-#: src/mods/Sidebar.tsx:227
+#: src/mods/Sidebar.tsx:228
 msgid "Also in these profiles"
 msgstr "Also in these profiles"
 
@@ -13780,7 +13780,7 @@ msgstr "{0} was installed from another site. Updating installs {1} from {2} inst
 
 #: src/firstrun/GameSetup.tsx:78
 #: src/mods/listRows.ts:141
-#: src/mods/Sidebar.tsx:499
+#: src/mods/Sidebar.tsx:501
 #: src/settings/sections/NexusMods.tsx:312
 #: src/share/DestinationGrid.tsx:57
 #: src/share/ShareDialog.tsx:42
@@ -13862,7 +13862,7 @@ msgstr "Tips"
 msgid "Failed, retry"
 msgstr "Failed, retry"
 
-#: src/profiles/CompareDialog.tsx:176
+#: src/profiles/CompareDialog.tsx:177
 #: src/profiles/HistoryDiffView.tsx:30
 msgid "No differences."
 msgstr "No differences."
@@ -14055,8 +14055,8 @@ msgstr "Welcome to Mortar"
 msgid "{unblocked} can load now."
 msgstr "{unblocked} can load now."
 
-#: src/mods/Sidebar.tsx:405
-#: src/mods/Sidebar.tsx:407
+#: src/mods/Sidebar.tsx:406
+#: src/mods/Sidebar.tsx:408
 msgid "Mod id"
 msgstr "Mod id"
 
@@ -14487,7 +14487,7 @@ msgid "Reinstall"
 msgstr "Reinstall"
 
 #: src/console/StartupSections.tsx:62
-#: src/profiles/CompareDialog.tsx:209
+#: src/profiles/CompareDialog.tsx:210
 #: src/profiles/CompareTop.tsx:144
 #: src/profiles/HistoryToolbar.tsx:59
 msgid "Compare"
@@ -14743,7 +14743,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/console/BisectDialog.tsx:199
 #: src/console/HelpDialog.tsx:257
 #: src/console/SearchRunsDialog.tsx:177
-#: src/game/FarmMenuItem.tsx:152
+#: src/game/FarmMenuItem.tsx:154
 #: src/launch/LaunchLayer.tsx:227
 #: src/launch/SweepDialog.tsx:137
 #: src/mods/AssetMapDialog.tsx:283
@@ -14780,7 +14780,7 @@ msgstr "Link"
 msgid "{name} now comes from that Nexus page"
 msgstr "{name} now comes from that Nexus page"
 
-#: src/mods/Sidebar.tsx:394
+#: src/mods/Sidebar.tsx:395
 msgid "Stop ignoring {ignoredSource} updates"
 msgstr "Stop ignoring {ignoredSource} updates"
 
@@ -14858,7 +14858,7 @@ msgid "Start measuring first."
 msgstr "Start measuring first."
 
 #. placeholder {0}: to.name
-#: src/profiles/CompareDialog.tsx:77
+#: src/profiles/CompareDialog.tsx:78
 msgid "Could not change {0}"
 msgstr "Could not change {0}"
 
@@ -14877,7 +14877,7 @@ msgid "No saves yet"
 msgstr "No saves yet"
 
 #: src/mods/listRows.ts:143
-#: src/mods/Sidebar.tsx:501
+#: src/mods/Sidebar.tsx:503
 #: src/share/DestinationGrid.tsx:62
 #: src/share/ListFormat.tsx:36
 #: src/share/ShareDialog.tsx:43

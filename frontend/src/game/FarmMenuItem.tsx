@@ -26,6 +26,7 @@ import { MenuAction } from '../shell/MenuAction.tsx'
 import { space } from '../theme/density.ts'
 import { toastError } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
+import { hasModList } from './modList.ts'
 import { openProfileDialog } from './profileDialog.ts'
 
 export function FarmDialog({
@@ -38,13 +39,14 @@ export function FarmDialog({
   onClose: () => void
 }) {
   const { t } = useLingui()
+  const game = useProfiles((s) => s.game?.id ?? '')
   const [text, setText] = useState('')
   const [host, setHost] = useState('')
   const [rows, setRows] = useState<FarmRow[] | null>(null)
   const [busy, setBusy] = useState(false)
   const { push } = useToasts.getState()
   const copyList = () =>
-    ExportFarm('stardew', profile.id)
+    ExportFarm(game, profile.id)
       .then(async (list) => {
         await Clipboard.SetText(JSON.stringify(list))
         push({
@@ -65,7 +67,7 @@ export function FarmDialog({
       .catch((error: unknown) => toastError(t`Could not read that file`, error))
   const check = () => {
     setBusy(true)
-    CheckFarm('stardew', profile.id, text)
+    CheckFarm(game, profile.id, text)
       .then((result) => {
         setHost(result.host)
         setRows(result.rows ?? [])
@@ -75,7 +77,7 @@ export function FarmDialog({
   }
   const fix = (only: FarmRow | null) => {
     setBusy(true)
-    FixFarm('stardew', profile.id, text, only ? [only.id] : null)
+    FixFarm(game, profile.id, text, only ? [only.id] : null)
       .then((result) => {
         const manual = result.manual ?? []
         const count = result.queued
@@ -163,12 +165,11 @@ export function FarmDialog({
   )
 }
 
-// Stardew multiplayer: copy the mods a guest must match, or check a host's list against this profile and fetch what
-// differs.
+// Multiplayer: copy the mods a guest must match, or check a host's list against this profile and fetch what differs.
 export function FarmMenuItem({ profile, close }: { profile: Profile; close: () => void }) {
   const { t } = useLingui()
-  const stardew = useProfiles((s) => s.game?.id === 'stardew')
-  if (!stardew) {
+  const listed = useProfiles((s) => hasModList(s.game ?? undefined))
+  if (!listed) {
     return null
   }
   return (

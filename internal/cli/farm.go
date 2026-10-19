@@ -9,7 +9,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/packsvc"
 )
 
-// profileFarm shares a Stardew profile's mods for multiplayer and compares them with a host's list: export prints the
+// profileFarm shares a profile's mods for multiplayer and compares them with a host's list: export prints the
 // list, check names what differs, fix queues the downloads.
 func (c *cmd) profileFarm() error {
 	if len(c.args) < 3 {

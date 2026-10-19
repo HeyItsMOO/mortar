@@ -9,6 +9,7 @@ import {
   UpdateEntries,
 } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/service.ts'
 import { FarmDialog } from '../game/FarmMenuItem.tsx'
+import { hasModList } from '../game/modList.ts'
 import { applyWithUndo } from '../mods/menu.ts'
 import { lockedIn, useLaunchLocks } from '../mods/useLocked.ts'
 import { openImport } from '../share/store.ts'
@@ -361,7 +362,7 @@ function CompareChoose({
   onHost,
 }: Picks & { profileA: Profile; open: boolean; onClose: () => void }) {
   const { t } = useLingui()
-  const gameId = useProfiles((s) => s.game?.id ?? '')
+  const listed = useProfiles((s) => hasModList(s.game ?? undefined))
   return (
     <CompareFrame open={open} onClose={onClose}>
       <CompareTop
@@ -392,7 +393,7 @@ function CompareChoose({
               >
                 {t`A friend's link or file…`}
               </Button>
-              {gameId === 'stardew' ? (
+              {listed ? (
                 <Button
                   variant="outlined"
                   color="inherit"

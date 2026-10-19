@@ -2528,7 +2528,7 @@ takes --game <id>, which may be left out when exactly one game is installed. Out
                                           write a Thunderstore modpack of the profile's Thunderstore packages
   profile export <game> <profile> <file.r2z> --format r2z
                                           write an r2modman/Gale .r2z of the profile's Thunderstore packages (no public code)
-  profile farm export <game> <profile>   the mods a Stardew guest must match, as JSON to share
+  profile farm export <game> <profile>   the mods a guest must match, as JSON to share
   profile farm check|fix <game> <profile> <list.json|json>
                                           what differs from the host's list; fix queues the downloads
   profile backup <game> <profile> <file.zip> [--no-mods]

@@ -74,7 +74,7 @@ func TestFarmListChecksAndFixesAGuest(t *testing.T) {
 	for _, r := range q.got {
 		switch r.ModID {
 		case 3:
-			if r.Kind != queue.KindUpdate || r.CurrentKey != "nexus-3-3" || r.FileID != 4 || r.Latest {
+			if r.Kind != queue.KindUpdate || r.CurrentKey != "nexus-3-3" || r.FileID != 4 || r.Latest || !r.Exact {
 				t.Errorf("update = %+v", r)
 			}
 		case 5:
@@ -89,12 +89,12 @@ func TestFarmListChecksAndFixesAGuest(t *testing.T) {
 
 func TestFarmListRefusesWhatIsNotOne(t *testing.T) {
 	for _, text := range []string{"", "nope", `{"game":"stardew","mods":[]}`, `{"game":"lethal-company","mods":[{"id":"smapi:A"}]}`} {
-		if _, err := ParseFarm(text); err == nil {
+		if _, err := parseFarmFor("stardew", text); err == nil {
 			t.Errorf("accepted %q", text)
 		}
 	}
-	if _, err := (&Service{Profiles: &fakeProfiles{}}).ExportFarm("lethal-company", "p"); err == nil {
-		t.Error("exported a list for another game")
+	if _, err := (&Service{Profiles: &fakeProfiles{}}).ExportFarm("sims4", "p"); err == nil {
+		t.Error("exported a list for a game with no mod ids to match")
 	}
 }
 
@@ -138,7 +138,52 @@ func TestFarmCheckReadsShareModListText(t *testing.T) {
 			t.Errorf("%s: fix = %+v, %v, queued %+v", form, fix, err, q.got)
 		}
 	}
-	if _, err := ParseFarm("- [Elden Mod](https://www.nexusmods.com/eldenring/mods/3) 1.0"); err == nil {
+	if _, err := parseFarmFor("stardew", "- [Elden Mod](https://www.nexusmods.com/eldenring/mods/3) 1.0"); err == nil {
 		t.Error("accepted a list of another game's Nexus pages")
+	}
+}
+
+func TestFarmListMatchesThunderstoreAndVintageStoryMods(t *testing.T) {
+	pkg := func(key, id, version string) profile.Entry {
+		return profile.Entry{
+			Key:    key,
+			Source: profile.Source{Kind: profile.KindThunderstore, Name: id, Version: version},
+			Mods:   []profile.Component{{ID: mod.NewID(mod.FormatThunderstore, id), Name: id, Version: version}},
+		}
+	}
+	vs := func(key, version string) profile.Entry {
+		return profile.Entry{
+			Key:    key,
+			Source: profile.Source{Kind: profile.KindVSModDB, Name: "7-8", FileID: 9, Version: version},
+			Mods:   []profile.Component{{ID: mod.NewID(mod.FormatFolder, key), Name: "Carry", Version: version, ModID: "carryon"}},
+		}
+	}
+	host := profile.Profile{ID: "h", Entries: []profile.Entry{pkg("a", "Ns-Same", "1.0.0"), pkg("b", "Ns-Old", "2.0.0"), pkg("c", "Ns-New", "1.0.0")}}
+	guest := profile.Profile{ID: "g", Entries: []profile.Entry{pkg("a", "ns-same", "1.0.0"), pkg("b", "Ns-Old", "3.0.0")}}
+	svc := &Service{Profiles: &fakeProfiles{list: []profile.Profile{host, guest}}, Queue: &fakeQueue{}}
+	list, err := svc.ExportFarm("lethal-company", "h")
+	if err != nil {
+		t.Fatal(err)
+	}
+	text, _ := json.Marshal(list)
+	check, err := svc.CheckFarm("lethal-company", "g", string(text))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(check.Rows) != 2 || check.Rows[0].State != FarmDifferent || check.Rows[0].Mine != "3.0.0" || check.Rows[1].State != FarmMissing {
+		t.Errorf("rows = %+v", check.Rows)
+	}
+	if _, err := svc.CheckFarm("valheim", "g", `{"game":"stardew","mods":[{"id":"smapi:A"}]}`); err == nil {
+		t.Error("checked a list made for another game")
+	}
+
+	svc.Profiles = &fakeProfiles{list: []profile.Profile{{ID: "h", Entries: []profile.Entry{vs("x", "1.2.0")}}, {ID: "g", Entries: []profile.Entry{vs("y", "1.1.0")}}}}
+	list, err = svc.ExportFarm("vintage-story", "h")
+	if err != nil || len(list.Mods) != 1 || list.Mods[0].ID != mod.NewID(mod.FormatModInfo, "carryon") {
+		t.Fatalf("vintage story list = %+v, %v", list, err)
+	}
+	text, _ = json.Marshal(list)
+	if check, err = svc.CheckFarm("vintage-story", "g", string(text)); err != nil || len(check.Rows) != 1 || check.Rows[0].Mine != "1.1.0" || !check.Rows[0].Fixable {
+		t.Errorf("vintage story rows = %+v, %v", check.Rows, err)
 	}
 }
