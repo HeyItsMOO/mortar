@@ -1,5 +1,5 @@
 // Package secret keeps credentials in the operating system's keyring (Secret Service on Linux, Credential Manager
-// on Windows), never in Mortar's files.
+// on Windows), never in Mortar's data folder. Inside a Flatpak they live in a sealed file instead (flatpak.go).
 package secret
 
 import (
@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Rethunk-Tech/mortar/internal/sandbox"
 	"github.com/Rethunk-Tech/mortar/internal/usererr"
 	"github.com/zalando/go-keyring"
 )
@@ -25,8 +26,11 @@ const getTimeout = 3 * time.Second
 // and OnUnlocked fires when it completes.
 var ErrWaitingForUnlock = usererr.New(usererr.Locked, "Waiting for you to unlock the keyring.")
 
-// keyringGet is the backend read, replaced in tests.
-var keyringGet = func(name string) (string, error) { return keyring.Get(service, name) }
+// keyringGet and keyringDelete are the backend calls, replaced in tests.
+var (
+	keyringGet    = func(name string) (string, error) { return keyring.Get(service, name) }
+	keyringDelete = func(name string) error { return keyring.Delete(service, name) }
+)
 
 // OnUnlocked is called after a read that outlived getTimeout completes, so the app can retry what it deferred.
 var OnUnlocked = func() {}
@@ -83,7 +87,11 @@ func Get(name string) (string, error) {
 }
 
 func run(name string, f *flight) {
-	v, err := keyringGet(name)
+	read := keyringGet
+	if sandbox.InFlatpak() {
+		read = flatpakGet
+	}
+	v, err := read(name)
 	mu.Lock()
 	f.value, f.err = v, err
 	delete(inflight, name)
@@ -101,6 +109,9 @@ func run(name string, f *flight) {
 // Set stores value under name, replacing any earlier one.
 func Set(name, value string) error {
 	forget(name)
+	if sandbox.InFlatpak() {
+		return flatpakSet(name, value)
+	}
 	return explain(keyring.Set(service, name, value))
 }
 
@@ -113,7 +124,10 @@ func forget(name string) {
 // Delete removes the secret under name; one that is already gone is not an error.
 func Delete(name string) error {
 	forget(name)
-	if err := keyring.Delete(service, name); err != nil && !errors.Is(err, ErrNotFound) {
+	if sandbox.InFlatpak() {
+		return flatpakDelete(name)
+	}
+	if err := keyringDelete(name); err != nil && !errors.Is(err, ErrNotFound) {
 		return explain(err)
 	}
 	return nil

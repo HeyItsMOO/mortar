@@ -6,6 +6,7 @@ Decided work, short enough to build cold. Delete an item in the change that land
 
 - Drop the `Rethunk-AI/wails` replace in `go.mod` and pin a tagged beta once one carries: upstream #6202 (OnUpdateApplied, with WEP #6203), #6239 (service methods fall back to `Options.MarshalError`; `errorkind_test.go` relies on it), #6240 (single-instance lock released at the start of shutdown), WEPs #6243 (local linuxdeploy) and #6244 (`-nopack`), the WebKit helper fix offered on #6213, and the fork-only commits on `mortar/v3.0.0-beta.30` (AppImage `/usr/lib` search, session-bus fallbacks, tray Menu property, server-mode shutdown hooks, GTK4 drop motion, pre-Run main-thread queue, apply-on-exit).
 - **NOMAD-only** (Windows Steam with Stardew and SMAPI): set `"<game>\StardewModdingAPI.exe" %command%`, Play once from an account whose user name has a space, and check that `%APPDATA%\StardewValley\ErrorLogs\SMAPI-latest.txt` names the profile's `mods` folder as one path. Otherwise the Steam hand-off needs another form ([architecture.md](architecture.md#launch)). In the same sitting, check that a direct launch with **SMAPI console window** on shows SMAPI's output.
+- **The release after Flatpak secrets move to the portal file:** drop `--talk-name=org.freedesktop.secrets` from `build/linux/flatpak/tech.rethunk.Mortar.yml` and the keyring migration in `internal/secret`, so the Flathub build no longer needs the finish-arg its reviewer asked about.
 
 ## Ready to build
 
@@ -26,7 +27,6 @@ Parked; take up when asked.
 
 - **Translucent window** through the fork's GTK4 `setTransparent()` fix (upstream #6197). Trap: a fading or `backdrop-filter` full-window layer turns WebKitGTK's translucent window opaque, and stacked alphas compound toward opaque, so images and overlays each need their own alpha. Windows needs Acrylic with the frameless window.
 - **Frosted glass on Linux** once the desktop runs GNOME 51: in the fork beside `setTransparent()` (`v3/pkg/application/linux_cgo.go`), bind Wayland `ext_background_effect_manager_v1` and set the toplevel surface's blur region to the whole window, updated on resize, only while the translucent window is on.
-- **Flatpak tokens without the Secret Service:** OAuth tokens go to `org.freedesktop.secrets` (`internal/nexussso/oauth.go` `Save`); the portal secret or an encrypted file under the data folder would drop the finish-arg.
 - **Vintage Story dedicated server** profiles (`dotnet VintagestoryServer.dll --dataPath <folder>`), keeping Mods and ModConfig as for a client so a group's server and clients share one mod list.
 - **Bridge for IL2CPP games:** a BepInEx 6 IL2CPP build of the BepInEx bridge (`BasePlugin`, .NET 6, Il2CppInterop) with its own packages.
 - **MelonLoader beyond 64-bit Windows builds:** a 32-bit game needs `MelonLoader.x86.zip` (read the executable's PE machine type), a native Linux build `MelonLoader.Linux.x64.zip`. A game with MelonLoader as a second loader needs `installerGame` (`internal/profile/layout.go`) and `thunderstoreRules` (`internal/installer/thunderstore.go` `route`) to take the profile's own loader first.
