@@ -8,6 +8,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
@@ -193,5 +194,34 @@ func TestADedicatedServerLaunchesWithItsProfilesSettings(t *testing.T) {
 	client := launchplan.New(launchplan.ModeProfile)
 	if err := (Loader{}).Contribute(t.Context(), client, loader.ProfileView{Game: "valheim", Dir: t.TempDir(), Runtime: "proton"}); err != nil || strings.Contains(strings.Join(client.Args, " "), "-world") {
 		t.Fatalf("the client got server arguments: %v %v", client.Args, err)
+	}
+}
+
+func TestARiskOfRainServerIsConfiguredByFile(t *testing.T) {
+	dir := t.TempDir()
+	g, _ := components.Game("riskofrain2-server")
+	if err := serverargs.Set(dir, *g.Server, "password", "open sesame"); err != nil {
+		t.Fatal(err)
+	}
+	if err := serverargs.Set(dir, *g.Server, "port", "27020"); err != nil {
+		t.Fatal(err)
+	}
+	if err := serverargs.Set(dir, *g.Server, "name", `bad";name`); err == nil {
+		t.Fatal("a name that breaks out of its quotes was accepted")
+	}
+	plan := launchplan.New(launchplan.ModeProfile)
+	if err := (Loader{}).Contribute(t.Context(), plan, loader.ProfileView{Game: "riskofrain2-server", Dir: dir, Runtime: "proton"}); err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(strings.Join(plan.Args, " "), "sv_") {
+		t.Fatalf("cvars on the command line: %v", plan.Args)
+	}
+	i := slices.IndexFunc(plan.Files, func(f launchplan.PlanFile) bool { return strings.HasSuffix(f.Dst, "server.cfg") })
+	if i < 0 || plan.Files[i].Dst != filepath.FromSlash("Risk of Rain 2_Data/Config/server.cfg") {
+		t.Fatalf("files %+v", plan.Files)
+	}
+	b, err := os.ReadFile(plan.Files[i].Src)
+	if err != nil || !strings.Contains(string(b), "sv_port 27020;") || !strings.Contains(string(b), `sv_password "open sesame";`) {
+		t.Fatalf("server.cfg = %q, %v", b, err)
 	}
 }

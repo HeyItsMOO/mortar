@@ -62,3 +62,20 @@ func TestSetValidatesStoresAndClears(t *testing.T) {
 		t.Fatalf("clear: %v %v", err, Load(dir))
 	}
 }
+
+func TestConfigRendersCvarsQuotedUnlessNumeric(t *testing.T) {
+	cfgSpec := components.ServerSpec{Clients: "x", ConfigFile: "Data/Config/server.cfg", Args: []components.ServerArg{
+		{ID: "name", Name: "Name", Cvar: "sv_hostname", Default: "Mortar server"},
+		{ID: "port", Name: "Port", Cvar: "sv_port", Default: "27015"},
+		{ID: "password", Name: "Password", Cvar: "sv_password"},
+		{ID: "flag", Name: "Flag", Flag: "-x", Default: "1"},
+	}}
+	got, err := Config(cfgSpec, map[string]string{"password": "pw"})
+	want := "sv_hostname \"Mortar server\";\nsv_port 27015;\nsv_password \"pw\";\n"
+	if err != nil || got != want {
+		t.Fatalf("Config = %q, %v; want %q", got, err, want)
+	}
+	if args, _ := Args(cfgSpec, nil); !slices.Equal(args, []string{"-x", "1"}) {
+		t.Fatalf("cvars leaked onto the command line: %v", args)
+	}
+}

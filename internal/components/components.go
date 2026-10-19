@@ -208,6 +208,9 @@ type ServerSpec struct {
 	Clients string `json:"clients"`
 	// Fixed are arguments every launch passes (-batchmode, -nographics).
 	Fixed []string `json:"fixed,omitempty"`
+	// ConfigFile is the slash path below the install of a file Mortar writes from the settings that have a Cvar, for a
+	// server configured by file rather than command line.
+	ConfigFile string `json:"configFile,omitempty"`
 	// Args are the arguments a profile's server settings fill, in order.
 	Args []ServerArg `json:"args,omitempty"`
 }
@@ -217,8 +220,10 @@ type ServerArg struct {
 	// ID names the setting in the profile (server.json) and on the command line of `profile set`.
 	ID   string `json:"id"`
 	Name string `json:"name"`
-	// Flag precedes the value as its own argument ("-world", "+sv_port").
-	Flag string `json:"flag"`
+	// Flag precedes the value as its own argument ("-world"); Cvar instead names a line of the server's ConfigFile.
+	// Exactly one is set.
+	Flag string `json:"flag,omitempty"`
+	Cvar string `json:"cvar,omitempty"`
 	// Default is the value used while the profile sets none; an argument with neither a default nor Required is left out.
 	Default string `json:"default,omitempty"`
 	// Required makes a launch without a value fail, naming the setting.
@@ -646,8 +651,8 @@ func (sp ServerSpec) validate() error {
 	}
 	seen := map[string]bool{}
 	for _, a := range sp.Args {
-		if a.ID == "" || a.Flag == "" || seen[a.ID] {
-			return fmt.Errorf("server argument %q needs a unique id and a flag", a.ID)
+		if a.ID == "" || (a.Flag == "") == (a.Cvar == "") || seen[a.ID] || (a.Cvar != "" && sp.ConfigFile == "") {
+			return fmt.Errorf("server argument %q needs a unique id and either a flag or a cvar with a config file", a.ID)
 		}
 		seen[a.ID] = true
 		if _, err := regexp.Compile("^(?:" + a.Pattern + ")$"); err != nil {

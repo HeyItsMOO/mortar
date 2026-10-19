@@ -259,10 +259,23 @@ func contributeServer(plan *launchplan.Plan, p loader.ProfileView) error {
 	if !ok || g.Server == nil {
 		return nil
 	}
-	args, err := serverargs.Args(*g.Server, serverargs.Load(p.Dir))
+	values := serverargs.Load(p.Dir)
+	args, err := serverargs.Args(*g.Server, values)
 	if err != nil {
 		return err
 	}
 	plan.AddArgs(args...)
+	if g.Server.ConfigFile == "" {
+		return nil
+	}
+	cfg, err := serverargs.Config(*g.Server, values)
+	if err != nil {
+		return err
+	}
+	src := filepath.Join(p.Dir, serverargs.ConfigName)
+	if err := os.WriteFile(src, []byte(cfg), 0o600); err != nil {
+		return err
+	}
+	plan.AddFile(launchplan.PlanFile{Src: src, Dst: filepath.FromSlash(g.Server.ConfigFile)})
 	return nil
 }

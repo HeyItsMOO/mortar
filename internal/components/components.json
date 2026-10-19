@@ -11437,38 +11437,35 @@
       ],
       "server": {
         "clients": "riskofrain2",
-        "fixed": [
-          "-batchmode",
-          "-nographics"
-        ],
+        "configFile": "Risk of Rain 2_Data/Config/server.cfg",
         "args": [
           {
             "id": "name",
             "name": "Server name",
-            "flag": "+sv_hostname",
             "default": "Mortar server",
-            "pattern": ".{1,64}"
+            "pattern": "[^\";\\n]{1,64}",
+            "cvar": "sv_hostname"
           },
           {
             "id": "port",
             "name": "Port",
-            "flag": "+sv_port",
             "default": "27015",
-            "pattern": "[0-9]{1,5}"
+            "pattern": "[0-9]{1,5}",
+            "cvar": "sv_port"
           },
           {
             "id": "password",
             "name": "Password",
-            "flag": "+sv_password",
             "secret": true,
-            "pattern": ".{1,64}"
+            "pattern": "[^\";\\n]{1,64}",
+            "cvar": "sv_password"
           },
           {
             "id": "maxplayers",
             "name": "Player limit",
-            "flag": "+sv_maxplayers",
             "default": "4",
-            "pattern": "[0-9]{1,2}"
+            "pattern": "[0-9]{1,2}",
+            "cvar": "sv_maxplayers"
           }
         ]
       }
