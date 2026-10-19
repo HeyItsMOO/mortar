@@ -59,7 +59,7 @@ var verbs = map[string]bool{
 	"templates": true, "library": true, "archive": true,
 	"browse": true,
 	"groups": true, "source": true, "trash": true, "cache": true, "data": true, "store": true, "bisect": true, "lan": true, "app": true, "support": true, "links": true,
-	"update": true, "backups": true, "doctor": true, "launchers": true, "tools": true, "settings": true, "antivirus": true, "loader": true, "sweep": true, "uninstall-cleanup": true, "quit": true, "version": true, "--version": true, "completion": true, "help": true, "--help": true, "-h": true, "__complete": true,
+	"update": true, "backups": true, "doctor": true, "launchers": true, "tools": true, "console": true, "screenshots": true, "endorse": true, "sync": true, "settings": true, "antivirus": true, "loader": true, "sweep": true, "uninstall-cleanup": true, "quit": true, "version": true, "--version": true, "completion": true, "help": true, "--help": true, "-h": true, "__complete": true,
 }
 
 // Is reports whether args (without the program name) are a command-line call: a known verb, or a bare word that
@@ -623,6 +623,14 @@ func (c *cmd) dispatch() error {
 		return c.historyCmd()
 	case "tools":
 		return c.tools()
+	case "console":
+		return c.console()
+	case "screenshots":
+		return c.screenshots()
+	case "endorse":
+		return c.endorse()
+	case "sync":
+		return c.syncCmd()
 	case "profile":
 		if len(c.args) > 1 {
 			switch c.args[1] {
@@ -2553,8 +2561,14 @@ takes --game <id>, which may be left out when exactly one game is installed. Out
   mods combine <game> <profile> <mod> <into-mod>
   mods win <game> <profile> <winner> <loser> [--undo]
   mods files <game> <profile> <mod>       linked extra files (keys for mods split)
-  mods config <game> <profile> <mod> [<field> <value>]  print or set one config field
+  mods config <game> <profile> <mod> [<field> <value>]  print or set one config field (BepInEx and Vintage Story
+                                          files list as file/section/key)
   mods preset <game> <profile> <mod> list|save|apply|delete [name]  config.json presets
+  console <game> <command>                run a console command in the running game
+  screenshots <game>                      the game's screenshots, newest first
+  endorse <game> <nexus mod id> <version> [--remove]  endorse a Nexus mod, or withdraw it
+  sync [status]                           revisions waiting in the sync folder
+  sync apply <game> <synced profile id> theirs|mine  answer one waiting change
   mods menu <game> <profile> <mod> [--set <page>/<index>=<value>|--set=<page>/<index>=<value>]  captured GMCM menu
   sweep <game> [--install <id>] [--json]                   patch-day check after a game or SMAPI change
   mods compat <game> <profile>            non-ok SMAPI compatibility-list rows

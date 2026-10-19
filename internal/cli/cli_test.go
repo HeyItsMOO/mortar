@@ -361,7 +361,7 @@ func TestCompleteOffersVerbsGamesAndProfiles(t *testing.T) {
 		"profiles":     []profile.Profile{{ID: "1", Name: "Spring"}, {ID: "2", Name: "Winter"}},
 		"settings.get": [][2]string{{"onPlay", "stay"}, {"theme", "dark"}},
 	}
-	if r := invoke(t, results, "__complete", "con"); strings.TrimSpace(r.out) != "conflicts" {
+	if r := invoke(t, results, "__complete", "conf"); strings.TrimSpace(r.out) != "conflicts" {
 		t.Errorf("verb: %q", r.out)
 	}
 	if r := invoke(t, results, "__complete", "mods", ""); !strings.Contains(r.out, "disable") || !strings.Contains(r.out, "stardew") {

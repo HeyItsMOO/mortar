@@ -37,6 +37,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/share"
 	"github.com/Rethunk-Tech/mortar/internal/sharesvc"
+	"github.com/Rethunk-Tech/mortar/internal/syncsvc"
 	"github.com/Rethunk-Tech/mortar/internal/shortcut"
 	"github.com/Rethunk-Tech/mortar/internal/store"
 	"github.com/Rethunk-Tech/mortar/internal/storecheck"
@@ -96,6 +97,8 @@ type Services struct {
 	Nxm        *nxmsvc.Service
 	Support    *support.Service
 	Packs      *packsvc.Service
+	// Sync is nil in tests that do not need it.
+	Sync *syncsvc.Service
 	// Emit is nil in tests that do not watch events.
 	Emit func(name string, data any)
 	// Quit closes the app without asking; nil in tests.
@@ -803,15 +806,30 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 			return nil, err
 		}
 		ref := refs[0]
+		cfg := s.configs()
 		if p.Key != "" {
 			return s.changed(p.Game, func() (any, error) {
+				if ok, err := cfg.SetField(p.Game, id, string(ref.ID), p.Key, p.Value); ok || err != nil {
+					if err != nil {
+						return nil, err
+					}
+					return s.modConfigFields(cfg, p.Game, id, ref)
+				}
 				if err := s.Profiles.SetConfigValue(p.Game, id, ref.Key, ref.ID, p.Key, p.Value); err != nil {
 					return nil, err
 				}
-				return s.Profiles.ListConfigFields(p.Game, id, ref.Key, ref.ID)
+				return s.modConfigFields(cfg, p.Game, id, ref)
 			})
 		}
-		return s.Profiles.ListConfigFields(p.Game, id, ref.Key, ref.ID)
+		return s.modConfigFields(cfg, p.Game, id, ref)
+	case "console.send":
+		return nil, s.Launches.Send(p.Game, p.Value)
+	case "screenshots":
+		return s.Games.Screenshots(p.Game)
+	case "nexus.endorse":
+		return s.nexusEndorse(ctx, p)
+	case "sync.status", "sync.apply":
+		return s.syncCall(ctx, method, p)
 	case "mods.menu":
 		return s.modsMenu(p)
 	case "mods.report":
