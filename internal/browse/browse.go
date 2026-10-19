@@ -63,6 +63,8 @@ type Client struct {
 	Bundled InstalledFunc
 	// ShowAdult keeps hits their source flags as adult content; by default they are dropped.
 	ShowAdult bool
+	// Hidden reports a hit the player hid from Browse; those are dropped from every page.
+	Hidden func(Item) bool
 	// Prefer lists source ids that rank ahead of the rest of the game's sources, which keep catalog order.
 	Prefer []string
 	// Compat is the game's compatibility list; nil when the game has none, so nothing is marked broken.
@@ -319,6 +321,11 @@ func (c *Client) fetchMarked(ctx context.Context, info components.GameInfo, id s
 	if !c.ShowAdult {
 		before := len(result.Items)
 		result.Items = slices.DeleteFunc(result.Items, func(i Item) bool { return i.Adult })
+		result.Total = max(result.Total-(before-len(result.Items)), 0)
+	}
+	if c.Hidden != nil {
+		before := len(result.Items)
+		result.Items = slices.DeleteFunc(result.Items, c.Hidden)
 		result.Total = max(result.Total-(before-len(result.Items)), 0)
 	}
 	c.markInstalled(result.Items)

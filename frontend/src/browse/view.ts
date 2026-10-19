@@ -14,6 +14,9 @@ const useBrowseView = create<{
   setPendingQuery: (query: string) => void
   /** The search box's text before it settles; only the box reads it, so typing re-renders the box alone. */
   draft: string
+  /** Counts hides, so a result list asks again once a hit is gone. */
+  hides: number
+  noteHide: () => void
   setDraft: (draft: string) => void
 }>((set) => ({
   view: 'grid',
@@ -23,6 +26,8 @@ const useBrowseView = create<{
   pendingQuery: '',
   setPendingQuery: (pendingQuery) => set({ pendingQuery }),
   draft: '',
+  hides: 0,
+  noteHide: () => set((s) => ({ hides: s.hides + 1 })),
   setDraft: (draft) => set({ draft }),
 }))
 

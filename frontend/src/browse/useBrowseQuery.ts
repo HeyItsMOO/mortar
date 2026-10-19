@@ -55,6 +55,7 @@ function useBrowseQuery({
   const [text, setText] = useState('')
   const [page, setPage] = useState(FIRST_PAGE)
   const [retry, setRetry] = useState(0)
+  const hides = useBrowseView((s) => s.hides)
   const [result, setResult] = useState<BrowseResult>(EMPTY_RESULT)
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<InlineError | null>(null)
@@ -70,7 +71,7 @@ function useBrowseQuery({
   useEffect(() => () => useBrowseView.getState().setDraft(''), [])
 
   useEffect(() => {
-    if (source === '' || retry < 0) {
+    if (source === '' || retry + hides < 0) {
       setResult(EMPTY_RESULT)
       setStatus('idle')
       return
@@ -94,7 +95,7 @@ function useBrowseQuery({
     return () => {
       cancelled = true
     }
-  }, [game, source, text, page, profileID, search, retry, filter])
+  }, [game, source, text, page, profileID, search, retry, hides, filter])
 
   return {
     filter,

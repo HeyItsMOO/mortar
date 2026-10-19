@@ -365,3 +365,24 @@ func TestRangeBoundsAreInclusive(t *testing.T) {
 		}
 	}
 }
+
+func TestHidingAModFromBrowseIsPerGameAndUndoable(t *testing.T) {
+	st, _ := open(t)
+	svc := NewService(st)
+	m := HiddenMod{Source: "thunderstore", ID: "Me-Mod", Name: "Mod"}
+	for range 2 {
+		if err := svc.HideBrowseMod("a", m); err != nil {
+			t.Fatal(err)
+		}
+	}
+	got := st.Get()
+	if len(got.GamePrefs("a").HiddenMods) != 1 || !got.GamePrefs("a").HidesMod("Thunderstore", "me-mod") || got.GamePrefs("b").HidesMod(m.Source, m.ID) {
+		t.Fatalf("hidden = %+v", got.Games)
+	}
+	if err := svc.UnhideBrowseMod("a", "thunderstore", "ME-MOD"); err != nil {
+		t.Fatal(err)
+	}
+	if st.Get().GamePrefs("a").HidesMod(m.Source, m.ID) {
+		t.Fatal("still hidden")
+	}
+}

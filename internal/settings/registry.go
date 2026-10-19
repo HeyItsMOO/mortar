@@ -68,6 +68,8 @@ type GameSettings struct {
 	// BrowseFilters is Browse's "Show" choice for this game: space-separated row=mode pairs (installed, obsolete,
 	// broken; off, gray or hide).
 	BrowseFilters string `json:"browseFilters,omitempty"`
+	// HiddenMods are the mods the player hid from Browse; they stay installable from links and imports.
+	HiddenMods []HiddenMod `json:"hiddenMods,omitempty"`
 	// ListColumns are this game's Mods list columns; empty follows the global default.
 	ListColumns []string `json:"listColumns,omitempty"`
 }
@@ -409,6 +411,7 @@ func mergeGame(dst *GameSettings, src GameSettings) {
 	dst.ExtraModsFolder = src.ExtraModsFolder
 	dst.ShowDotHiddenMods = src.ShowDotHiddenMods
 	dst.ListColumns = slices.Clone(src.ListColumns)
+	dst.HiddenMods = slices.Clone(src.HiddenMods)
 	if src.OldFilesOnUpdate != "" {
 		dst.OldFilesOnUpdate = src.OldFilesOnUpdate
 	}

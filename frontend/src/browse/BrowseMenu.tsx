@@ -1,13 +1,17 @@
 import { useLingui } from '@lingui/react/macro'
 import { Menu } from '@mui/material'
-import { ExternalLink, Info, Link2, Plus } from 'lucide-react'
+import { ExternalLink, EyeOff, Info, Link2, Plus } from 'lucide-react'
 import { memo } from 'react'
+import { HideBrowseMod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
+import { useCurrentGame } from '../nav/currentGame.ts'
 import { copyText } from '../share/copyText.ts'
 import { MenuAction } from '../shell/MenuAction.tsx'
+import { reportError } from '../toasts/report.ts'
 import { NEXUS } from './browseConstants.ts'
 import type { BrowseItem } from './browseTypes.ts'
 import { useBrowseSelection } from './selection.ts'
 import { type ActionProps, useCardAction } from './useCardAction.tsx'
+import { useBrowseView } from './view.ts'
 
 function Items({
   item,
@@ -23,6 +27,7 @@ function Items({
   close: () => void
 }) {
   const { t } = useLingui()
+  const game = useCurrentGame()
   const { shownItem, url, installed, add } = useCardAction(card, item, source)
   const choices = [{ source: item.source, url: item.url }, ...(item.alts ?? [])]
   const run = (fn: () => void) => () => {
@@ -74,6 +79,16 @@ function Items({
       label={t`Copy link`}
       onClick={run(() => {
         copyText(url, t`Link copied`)
+      })}
+    />,
+    <MenuAction
+      key="hide"
+      icon={<EyeOff size={16} />}
+      label={t`Hide from Browse`}
+      onClick={run(() => {
+        HideBrowseMod(game, { source: item.source, id: item.id, name: item.name })
+          .then(() => useBrowseView.getState().noteHide())
+          .catch(reportError(t`Could not hide that mod`))
       })}
     />,
   ]

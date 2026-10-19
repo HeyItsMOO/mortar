@@ -278,3 +278,14 @@ func TestAPartlyFailedSourceNamesItsFailedPartsInEverySearchShape(t *testing.T) 
 		t.Fatal("a partial answer was cached")
 	}
 }
+
+func TestHiddenHitsAreDroppedAndNotCounted(t *testing.T) {
+	c := &Client{Hidden: func(it Item) bool { return it.Source == "fake" && it.ID == "1" }}
+	page, err := c.search(context.Background(), catalog, "fake", "", 1, Filter{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(page.Items) != 1 || page.Items[0].ID != "2" || page.Total != 1 {
+		t.Fatalf("page %+v", page)
+	}
+}
