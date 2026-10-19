@@ -10820,7 +10820,8 @@
             "name": "Port",
             "flag": "-port",
             "default": "2456",
-            "pattern": "[0-9]{1,5}"
+            "pattern": "[0-9]{1,5}",
+            "hint": "Valheim also uses the next two ports."
           },
           {
             "id": "world",
@@ -10835,14 +10836,16 @@
             "flag": "-password",
             "required": true,
             "secret": true,
-            "pattern": ".{5,64}"
+            "pattern": ".{5,64}",
+            "hint": "At least 5 characters, and not part of the world name."
           },
           {
             "id": "public",
             "name": "List publicly (0 or 1)",
             "flag": "-public",
             "default": "0",
-            "pattern": "[01]"
+            "pattern": "[01]",
+            "hint": "1 lists the server in the in-game browser; 0 keeps it private."
           }
         ]
       }
@@ -10895,14 +10898,16 @@
             "name": "Port",
             "default": "27015",
             "pattern": "[0-9]{1,5}",
-            "cvar": "sv_port"
+            "cvar": "sv_port",
+            "hint": "Players join on this port."
           },
           {
             "id": "password",
             "name": "Password",
             "secret": true,
             "pattern": "[^\";\\n]{1,64}",
-            "cvar": "sv_password"
+            "cvar": "sv_password",
+            "hint": "Leave empty for an open server."
           },
           {
             "id": "maxplayers",

@@ -33,6 +33,7 @@ import { LoaderPicker } from './LoaderPicker.tsx'
 import { OverridesSection } from './OverrideRows.tsx'
 import { foldedOverrides } from './overrideValue.ts'
 import { SeparateSavesRow } from './SeparateSavesRow.tsx'
+import { ServerSettings } from './ServerSettings.tsx'
 import { saveProfile } from './saveProfile.ts'
 import { useProfiles } from './store.ts'
 import { useNameField } from './useNameField.ts'
@@ -330,6 +331,7 @@ function ProfileFields({
               launchError={launchError}
               onLaunchError={onLaunchError}
             />
+            <ServerSettings gameId={gameId} profileId={profile.id} />
             <LoaderLaunchSettings
               key={profile.loader ?? ''}
               gameId={gameId}

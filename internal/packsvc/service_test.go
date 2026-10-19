@@ -365,3 +365,35 @@ func TestMirrorClientQueuesTheClientsPackagesIntoTheServerProfile(t *testing.T) 
 		t.Fatal("a client game was treated as a server")
 	}
 }
+
+func TestServerSettingsFormKeepsSecretsInsideMortar(t *testing.T) {
+	ps := &fakeProfiles{dir: t.TempDir()}
+	s := &Service{Profiles: ps}
+	if err := s.SetServerSetting("valheim-server", "srv", "password", "abc"); err == nil {
+		t.Fatal("a password shorter than the catalog's pattern was saved")
+	}
+	for id, v := range map[string]string{"password": "hunter22", "world": "Mine"} {
+		if err := s.SetServerSetting("valheim-server", "srv", id, v); err != nil {
+			t.Fatal(err)
+		}
+	}
+	form, err := s.ServerSettings("valheim-server", "srv")
+	if err != nil || form.Clients != "valheim" || form.ClientName != "Valheim" {
+		t.Fatalf("form = %+v, %v", form, err)
+	}
+	for _, set := range form.Settings {
+		switch set.ID {
+		case "password":
+			if set.Value != "" || !set.Set || !set.Secret || !set.Required {
+				t.Errorf("password = %+v", set)
+			}
+		case "world":
+			if set.Value != "Mine" || set.Default != "Dedicated" {
+				t.Errorf("world = %+v", set)
+			}
+		}
+	}
+	if plain, err := s.ServerSettings("valheim", "p"); err != nil || plain.Clients != "" || len(plain.Settings) != 0 {
+		t.Fatalf("client game form = %+v, %v", plain, err)
+	}
+}

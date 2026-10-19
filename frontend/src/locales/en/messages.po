@@ -36,6 +36,10 @@ msgstr "Mod: {mod}"
 msgid "Switched {name} to the {detail} update channel"
 msgstr "Switched {name} to the {detail} update channel"
 
+#: src/profiles/ServerSettings.tsx:36
+msgid "Required before the server can start."
+msgstr "Required before the server can start."
+
 #: src/profiles/OverrideRows.tsx:41
 msgid "Launch method"
 msgstr "Launch method"
@@ -1282,6 +1286,10 @@ msgstr "{0} lists itself as a dependency, so SMAPI skips it."
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
+#: src/profiles/ServerSettings.tsx:132
+msgid "{queued} to install."
+msgstr "{queued} to install."
+
 #: src/settings/prefCopyAntivirus.ts:50
 msgid "Used with Custom command. {path} stands for the folder to scan; exit code 0 means clean, any other code a detection, and the first line it prints names it."
 msgstr "Used with Custom command. {path} stands for the folder to scan; exit code 0 means clean, any other code a detection, and the first line it prints names it."
@@ -2093,7 +2101,7 @@ msgstr "Running for {time}"
 #: src/mods/CategoryEditor.tsx:42
 #: src/mods/columnLabel.ts:7
 #: src/mods/ModDisplayEdit.tsx:79
-#: src/profiles/EditProfileDialog.tsx:272
+#: src/profiles/EditProfileDialog.tsx:273
 #: src/profiles/LaunchPresetDialog.tsx:60
 #: src/settings/prefCopy.ts:361
 #: src/share/ModpackDialog.tsx:174
@@ -2192,7 +2200,7 @@ msgstr "Clears the list of past downloads; downloads in progress are unaffected.
 msgid "Launch presets"
 msgstr "Launch presets"
 
-#: src/profiles/EditProfileDialog.tsx:107
+#: src/profiles/EditProfileDialog.tsx:108
 msgid "{pickedName} is used after Save."
 msgstr "{pickedName} is used after Save."
 
@@ -2823,7 +2831,7 @@ msgstr "Track a Nexus mod when Mortar installs it"
 msgid "Skipped"
 msgstr "Skipped"
 
-#: src/profiles/EditProfileDialog.tsx:456
+#: src/profiles/EditProfileDialog.tsx:458
 msgid "Edit profile"
 msgstr "Edit profile"
 
@@ -2909,6 +2917,11 @@ msgstr "Changed loader"
 #: src/settings/sections/DataMove.tsx:82
 msgid "Data to copy: {0}"
 msgstr "Data to copy: {0}"
+
+#. placeholder {0}: form.clientName
+#: src/profiles/ServerSettings.tsx:111
+msgid "Queues the mods of a {0} profile into this server profile."
+msgstr "Queues the mods of a {0} profile into this server profile."
 
 #. placeholder {0}: neededBy.length.toLocaleString(i18n.locale)
 #: src/mods/Sidebar.tsx:317
@@ -3004,7 +3017,7 @@ msgid "Add tool"
 msgstr "Add tool"
 
 #: src/commandPalette/CommandPalette.tsx:186
-#: src/profiles/EditProfileDialog.tsx:168
+#: src/profiles/EditProfileDialog.tsx:169
 #: src/settings/sections/DataImport.tsx:17
 #: src/settings/SettingsPage.tsx:40
 msgid "Appearance"
@@ -3773,7 +3786,7 @@ msgstr "API key set for {itch}"
 msgid "a newer copy is kept"
 msgstr "a newer copy is kept"
 
-#: src/profiles/EditProfileDialog.tsx:171
+#: src/profiles/EditProfileDialog.tsx:172
 #: src/profiles/GameSettings.tsx:378
 msgid "Game settings"
 msgstr "Game settings"
@@ -4541,7 +4554,7 @@ msgstr "Could not trim history"
 msgid "Performance report"
 msgstr "Performance report"
 
-#: src/profiles/EditProfileDialog.tsx:99
+#: src/profiles/EditProfileDialog.tsx:100
 msgid "Cover image"
 msgstr "Cover image"
 
@@ -4590,7 +4603,7 @@ msgstr "Mortar already named the likely mod for the last crash."
 #: src/mods/SelectionBarDialogs.tsx:87
 #: src/mods/SelectionBarDialogs.tsx:137
 #: src/mods/SetNexusPageDialog.tsx:115
-#: src/profiles/EditProfileDialog.tsx:487
+#: src/profiles/EditProfileDialog.tsx:489
 #: src/profiles/GameModsDialog.tsx:219
 #: src/profiles/ImportWizard.tsx:160
 #: src/profiles/LaunchPresetDialog.tsx:91
@@ -4666,8 +4679,8 @@ msgstr "{name} is abandoned: {summary}"
 msgid "The stats each Browse card shows under its summary; choose them from Browse's Show menu"
 msgstr "The stats each Browse card shows under its summary; choose them from Browse's Show menu"
 
-#: src/profiles/EditProfileDialog.tsx:113
-#: src/profiles/EditProfileDialog.tsx:121
+#: src/profiles/EditProfileDialog.tsx:114
+#: src/profiles/EditProfileDialog.tsx:122
 #: src/settings/sections/Appearance.tsx:244
 msgid "Choose image…"
 msgstr "Choose image…"
@@ -6170,6 +6183,10 @@ msgstr "{total} messages"
 msgid "Reading the versions…"
 msgstr "Reading the versions…"
 
+#: src/profiles/ServerSettings.tsx:50
+msgid "Saved. Type to change it."
+msgstr "Saved. Type to change it."
+
 #: src/settings/sections/DataMove.tsx:27
 msgid "Stop the game before moving the data folder."
 msgstr "Stop the game before moving the data folder."
@@ -6528,7 +6545,7 @@ msgstr "Title intro"
 msgid "Mortar cannot download {0} again."
 msgstr "Mortar cannot download {0} again."
 
-#: src/profiles/EditProfileDialog.tsx:106
+#: src/profiles/EditProfileDialog.tsx:107
 msgid "The automatic cover is used after Save."
 msgstr "The automatic cover is used after Save."
 
@@ -8418,7 +8435,7 @@ msgstr "{0} · {1} unique"
 msgid "Not found"
 msgstr "Not found"
 
-#: src/profiles/EditProfileDialog.tsx:123
+#: src/profiles/EditProfileDialog.tsx:124
 #: src/profiles/GameSettings.tsx:182
 #: src/profiles/OverrideRows.tsx:138
 #: src/settings/sections/Appearance.tsx:254
@@ -9869,7 +9886,7 @@ msgstr "That request was not valid."
 
 #: src/browse/BrowseDetails.tsx:101
 #: src/mods/NexusDetails.tsx:267
-#: src/profiles/EditProfileDialog.tsx:301
+#: src/profiles/EditProfileDialog.tsx:302
 #: src/share/ModpackDialog.tsx:197
 msgid "Description"
 msgstr "Description"
@@ -9921,6 +9938,10 @@ msgstr "The download queue is empty."
 #: src/share/ImportPreview.tsx:87
 msgid "unverified until downloaded"
 msgstr "unverified until downloaded"
+
+#: src/profiles/ServerSettings.tsx:127
+msgid "Use mods"
+msgstr "Use mods"
 
 #: src/mods/ModDependencyTree.tsx:132
 msgid "already listed"
@@ -10122,7 +10143,7 @@ msgstr "Spring"
 msgid "Arguments"
 msgstr "Arguments"
 
-#: src/profiles/EditProfileDialog.tsx:151
+#: src/profiles/EditProfileDialog.tsx:152
 msgid "Profile settings"
 msgstr "Profile settings"
 
@@ -11750,7 +11771,7 @@ msgstr "Maximise"
 msgid "Handle \"Mod Manager Download\" links"
 msgstr "Handle \"Mod Manager Download\" links"
 
-#: src/profiles/EditProfileDialog.tsx:488
+#: src/profiles/EditProfileDialog.tsx:490
 msgid "Loading game settings…"
 msgstr "Loading game settings…"
 
@@ -11860,6 +11881,10 @@ msgstr "None of these mods was found on a site"
 msgid "Press Play. The BepInEx Bridge times each plugin's load and the start up to the main menu, and shows the results here. Unity's Mono runtime cannot be sampled, so there is no Sampled column."
 msgstr "Press Play. The BepInEx Bridge times each plugin's load and the start up to the main menu, and shows the results here. Unity's Mono runtime cannot be sampled, so there is no Sampled column."
 
+#: src/profiles/ServerSettings.tsx:92
+msgid "Server"
+msgstr "Server"
+
 #: src/firstrun/LoaderStep.tsx:172
 msgid "Mortar checks Steam's settings for it: not found yet."
 msgstr "Mortar checks Steam's settings for it: not found yet."
@@ -11914,7 +11939,7 @@ msgstr "README"
 msgid "{0} adds {time} to startup (through {1})"
 msgstr "{0} adds {time} to startup (through {1})"
 
-#: src/profiles/EditProfileDialog.tsx:170
+#: src/profiles/EditProfileDialog.tsx:171
 #: src/profiles/OverrideRows.tsx:97
 msgid "Overrides"
 msgstr "Overrides"
@@ -12332,7 +12357,7 @@ msgstr "Beach farm"
 #: src/mods/ConfigPresets.tsx:135
 #: src/mods/ModDisplayEdit.tsx:97
 #: src/mods/typedConfig/ConfigPane.tsx:337
-#: src/profiles/EditProfileDialog.tsx:490
+#: src/profiles/EditProfileDialog.tsx:492
 #: src/profiles/LaunchPresetDialog.tsx:96
 #: src/saves/SaveListRow.tsx:66
 #: src/templates/TemplateDialogs.tsx:71
@@ -12550,6 +12575,10 @@ msgstr "No startup measured yet"
 #: src/install/RemapDialog.tsx:61
 msgid "Collapse {0}"
 msgstr "Collapse {0}"
+
+#: src/profiles/ServerSettings.tsx:108
+msgid "Use mods from…"
+msgstr "Use mods from…"
 
 #: src/game/Sidebar.tsx:297
 msgid "Expand sidebar"
@@ -12773,7 +12802,7 @@ msgstr "Send other games' links to {redirectName}"
 msgid "Set Nexus page…"
 msgstr "Set Nexus page…"
 
-#: src/profiles/EditProfileDialog.tsx:122
+#: src/profiles/EditProfileDialog.tsx:123
 msgid "The automatic cover is already in use."
 msgstr "The automatic cover is already in use."
 
@@ -13158,6 +13187,10 @@ msgstr "Preset name"
 msgid "Steam may not be running or signed in. Start Steam, sign in and try again."
 msgstr "Steam may not be running or signed in. Start Steam, sign in and try again."
 
+#: src/profiles/ServerSettings.tsx:37
+msgid "This value is not allowed."
+msgstr "This value is not allowed."
+
 #. placeholder {0}: info.version
 #: src/settings/sections/Updates.tsx:64
 msgid "This is a development build of Mortar {0}, so it does not check for updates."
@@ -13275,7 +13308,7 @@ msgid "Move data folder"
 msgstr "Move data folder"
 
 #: src/game/ProfileMenuItems.tsx:185
-#: src/profiles/EditProfileDialog.tsx:443
+#: src/profiles/EditProfileDialog.tsx:445
 msgid "Could not use that image"
 msgstr "Could not use that image"
 
@@ -14935,6 +14968,10 @@ msgstr "Downloads finished"
 msgid "{count, plural, one {# update} other {# updates}}"
 msgstr "{count, plural, one {# update} other {# updates}}"
 
+#: src/profiles/ServerSettings.tsx:101
+msgid "Applied the next time the server starts. The password stays in this profile's folder."
+msgstr "Applied the next time the server starts. The password stays in this profile's folder."
+
 #: src/console/BisectDialog.tsx:188
 #: src/console/BisectDialog.tsx:199
 #: src/console/HelpDialog.tsx:257
@@ -15143,7 +15180,7 @@ msgstr "Your antivirus ({0}) reports {1}{where}. Mod loaders and their DLLs ofte
 
 #: src/console/PerformanceTab.tsx:32
 #: src/game/LaunchMenu.tsx:35
-#: src/profiles/EditProfileDialog.tsx:169
+#: src/profiles/EditProfileDialog.tsx:170
 msgid "Launch"
 msgstr "Launch"
 

@@ -228,7 +228,9 @@ type ServerArg struct {
 	Default string `json:"default,omitempty"`
 	// Required makes a launch without a value fail, naming the setting.
 	Required bool `json:"required,omitempty"`
-	// Secret keeps the value out of messages.
+	// Hint is a line of help under the field in the profile's server settings.
+	Hint string `json:"hint,omitempty"`
+	// Secret keeps the value out of messages and out of the settings form.
 	Secret bool `json:"secret,omitempty"`
 	// Pattern is a regular expression the whole value must match.
 	Pattern string `json:"pattern,omitempty"`
