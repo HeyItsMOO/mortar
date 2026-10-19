@@ -240,6 +240,40 @@
           "id": "github",
           "key": "lethal-company-mod"
         }
+      ],
+      "templates": [
+        {
+          "id": "vanilla-plus-qol",
+          "name": "Vanilla+ quality of life",
+          "description": "Small helpers for the base game: a config menu, cause-of-death notes, spectating monsters, culling and tidier controls.",
+          "packages": [
+            {
+              "source": "thunderstore",
+              "ref": "AinaVT-LethalConfig",
+              "name": "LethalConfig"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "ShaosilGaming-GeneralImprovements",
+              "name": "GeneralImprovements"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "EliteMasterEric-Coroner",
+              "name": "Coroner"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "AllToasters-SpectateEnemies",
+              "name": "SpectateEnemies"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "fumiko-CullFactory",
+              "name": "CullFactory"
+            }
+          ]
+        }
       ]
     },
     {
@@ -305,6 +339,35 @@
         {
           "id": "github",
           "key": "valheim-mod"
+        }
+      ],
+      "templates": [
+        {
+          "id": "vanilla-plus-qol",
+          "name": "Vanilla+ quality of life",
+          "description": "Small helpers that make the base game easier to manage, without changing how it plays.",
+          "packages": [
+            {
+              "source": "thunderstore",
+              "ref": "shudnal-ConfigurationManager",
+              "name": "Configuration Manager"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "Goldenrevolver-Quick_Stack_Store_Sort_Trash_Restock",
+              "name": "Quick Stack, Store, Sort, Trash, Restock"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "MSchmoecker-MultiUserChest",
+              "name": "MultiUserChest"
+            },
+            {
+              "source": "thunderstore",
+              "ref": "Advize-PlantEasily",
+              "name": "PlantEasily"
+            }
+          ]
         }
       ]
     },
@@ -2157,6 +2220,35 @@
         {
           "id": "github",
           "key": "vintagestory-mod"
+        }
+      ],
+      "templates": [
+        {
+          "id": "vanilla-plus-qol",
+          "name": "Vanilla+ quality of life",
+          "description": "Small helpers that make the base game easier to manage, without changing how it plays.",
+          "packages": [
+            {
+              "source": "vsmoddb",
+              "ref": "890-4405",
+              "name": "Carry On"
+            },
+            {
+              "source": "vsmoddb",
+              "ref": "604-2751",
+              "name": "QP's Chisel Tools"
+            },
+            {
+              "source": "vsmoddb",
+              "ref": "253-797",
+              "name": "Auto Map Markers"
+            },
+            {
+              "source": "vsmoddb",
+              "ref": "1324-6932",
+              "name": "ProspectTogether"
+            }
+          ]
         }
       ]
     },
