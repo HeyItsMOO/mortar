@@ -19,7 +19,7 @@ Discord sends this as the server is used. The bot acts on it as it arrives and d
 
 ## What the bot keeps
 
-On Rethunk.Tech's own machine, the bot keeps a cache of recent message text (deleted after 30 days), members' current and previous names (deleted when they leave the server), and a list of the moderation actions taken through it. None of it is shared.
+On Rethunk.Tech's own machine, the bot keeps a cache of recent message text (deleted after 30 days), members' current and previous names (deleted when they leave the server), a transcript of each private ticket when it closes, and a list of the moderation actions taken through it. None of it is shared.
 
 In staff-only channels, it keeps copies of edited and deleted messages and of messages a moderator writes a member up for, so moderators can see them after the original changes or disappears. When a moderator opens a case, the case post also quotes the member's last few cached messages and their previous names.
 
@@ -27,7 +27,7 @@ Server layout (channel, role and rule names and IDs, and the bot's own posts) li
 
 ## Sharing
 
-Nothing the bot reads is sold, shared, used for advertising or used to train AI models. Discord processes it as the platform.
+Nothing the bot reads is sold, used for advertising or used to train AI models. It is shared only when a moderator copies a bug report post into a public issue on Mortar's GitHub. Discord processes it as the platform.
 
 ## Your choices
 
