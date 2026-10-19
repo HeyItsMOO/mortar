@@ -2,6 +2,7 @@ package nexussvc
 
 import (
 	"context"
+	"maps"
 	"slices"
 
 	"github.com/Rethunk-Tech/mortar/internal/dotnet"
@@ -19,18 +20,14 @@ type ModDBResolver interface {
 func (s *Service) findOnSites(ctx context.Context, gameID, profileID string, p profile.Profile, sites []string) (FoundSources, error) {
 	found := map[string]profile.Source{}
 	if slices.Contains(sites, "thunderstore") {
-		for k, src := range thunderstoreSources(p.Entries, s.Profiles.PluginTwins(gameID, func(dir string) []dotnet.Plugin { return dotnet.ScanDir(dir).Plugins })) {
-			found[k] = src
-		}
+		maps.Copy(found, thunderstoreSources(p.Entries, s.Profiles.PluginTwins(gameID, func(dir string) []dotnet.Plugin { return dotnet.ScanDir(dir).Plugins })))
 	}
 	if slices.Contains(sites, "vsmoddb") {
 		var r ModDBResolver = vsmoddb.Driver{}
 		if s.ModDB != nil {
 			r = s.ModDB
 		}
-		for k, src := range modDBSources(ctx, p.Entries, r) {
-			found[k] = src
-		}
+		maps.Copy(found, modDBSources(ctx, p.Entries, r))
 	}
 	left := 0
 	for _, e := range p.Entries {

@@ -66,10 +66,14 @@ func parseMelon(text string) melonDoc {
 				continue
 			}
 			value, suffix := splitInline(strings.TrimSpace(raw[eq+1:]))
-			e := melonEntry{section: section, line: i, prefix: raw[:eq+1] + " ", suffix: suffix}
-			e.Key = strings.Trim(strings.TrimSpace(raw[:eq]), `"'`)
-			e.Description = strings.Join(desc, "\n")
-			e.Type, e.Value = melonType(value)
+			typ, val := melonType(value)
+			e := melonEntry{
+				section: section, line: i, prefix: raw[:eq+1] + " ", suffix: suffix,
+				Key:         strings.Trim(strings.TrimSpace(raw[:eq]), `"'`),
+				Description: strings.Join(desc, "\n"),
+				Type:        typ,
+				Value:       val,
+			}
 			d.entries = append(d.entries, e)
 			desc = nil
 		}

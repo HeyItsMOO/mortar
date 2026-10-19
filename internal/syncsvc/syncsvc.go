@@ -127,7 +127,7 @@ type tracked struct {
 	Missing []string `json:"missing,omitempty"`
 	// Pins are the mods and config files this computer keeps its own way. They live in this computer's state alone:
 	// a push carries the synced value of each, and an apply keeps the local one.
-	Pins Pins `json:"pins,omitempty"`
+	Pins Pins `json:"pins,omitzero"`
 }
 
 type state struct {

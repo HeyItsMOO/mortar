@@ -152,11 +152,11 @@ func (s *Service) ModpackChangelog(gameID, profileID, version string, includeDis
 
 // splitDependency is the package id and version of a Namespace-Name-version string.
 func splitDependency(dep string) (id, version string) {
-	i := strings.LastIndex(dep, "-")
-	if i < 0 {
+	id, version, ok := strings.CutLast(dep, "-")
+	if !ok {
 		return dep, ""
 	}
-	return dep[:i], dep[i+1:]
+	return id, version
 }
 
 // modpackChangelog is the "## version" section listing what differs between two exports' packages, then the older
