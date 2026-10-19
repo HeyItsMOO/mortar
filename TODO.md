@@ -7,7 +7,7 @@ Sections are unordered.
 
 ## Report a bug and Help have no Discord route
 
-Decided 2026-10-18 (NOMAD) in `docs/design.md:21`. Blocked on the Discord
+Decided 2026-10-18 (NOMAD) in `docs/design.md` (Discord routes). Blocked on the Discord
 remake in Rethunk-Tech/mortar-discord creating the forum channels. Not a
 CLI gap: the Help menu is GitHub-only today.
 
@@ -24,7 +24,7 @@ the forum channels.
 
 ### Read
 
-1. `docs/design.md:21` — the decided shape; do not relitigate.
+1. `docs/design.md` (Discord routes) — the decided shape; do not relitigate.
 2. `frontend/src/shell/BugReportDialog.tsx:15` `BugURL` and `:24` the dialog.
 3. `frontend/src/shell/AppMenu.tsx:225` Help items.
 4. `internal/support/service.go` `BugURL`.
