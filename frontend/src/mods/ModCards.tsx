@@ -19,12 +19,12 @@ import { showModId, useDetail } from './detail.ts'
 import { ExtraFilesChip } from './ExtraFilesChip.tsx'
 import { firstTag } from './group.ts'
 import type { ListRow } from './listColumns.ts'
-import { entryOf, modId, nexusIdOf } from './lookup.ts'
+import { entryOf, modId } from './lookup.ts'
 import { ModMenu } from './ModMenu.tsx'
 import { GroupHeaderRow, StickyGroupSlot } from './ModsGroupHeader.tsx'
 import { useMarked, useRowFocus, useTabStop } from './marked.ts'
 import { contextMenuProps, openModPage } from './menu.ts'
-import { useNexusFresh } from './nexusDetails.ts'
+import { useModFresh } from './modFresh.ts'
 import { OverlayCountChip } from './OverlayRow.tsx'
 import { ownSlice } from './overlayRows.ts'
 import { MIDDLE, opensPage } from './pageClick.ts'
@@ -124,7 +124,7 @@ function ModCardView({
   const id = modId(m)
   const marked = useMarked(id)
   const tabStop = useTabStop(id, first)
-  const fresh = useNexusFresh(nexusIdOf(profile, m))
+  const fresh = useModFresh(profile, m)
   const tag = firstTag(entryOf(profile, m.key)?.tags)
   const cardSize = useSettings((s) => s.gridCardSize) || 'medium'
   const statsLine =

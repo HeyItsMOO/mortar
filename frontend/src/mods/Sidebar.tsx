@@ -51,8 +51,9 @@ import { ModVersionsAndSettings } from './ModSections.tsx'
 import { ModUpdateControls } from './ModUpdateControls.tsx'
 import { openPage } from './menu.ts'
 import { hostOf, openPageLabel } from './modActions.ts'
+import { useModFresh, useSourceLooked } from './modFresh.ts'
 import { NexusDetails } from './NexusDetails.tsx'
-import { useLookedSnapshot, useNexusEntry, useNexusFresh } from './nexusDetails.ts'
+import { useLookedSnapshot, useNexusEntry } from './nexusDetails.ts'
 import { formatCount, isNewer } from './nexusFormat.ts'
 import { goneCaption, nexusPageMark } from './nexusMark.ts'
 import { OptionalFiles } from './OptionalFiles.tsx'
@@ -493,7 +494,8 @@ function Inspector({ mod, profile }: { mod: Mod; profile: Profile }) {
   const others = siblingsOf(all, mod)
   const dependency = readsImplicit(entryOf(profile, mod.key)?.implicit, mod, all)
   const kind = sourceKind(profile, mod)
-  const fresh = useNexusFresh(nexusIdOf(profile, mod))
+  const fresh = useModFresh(profile, mod)
+  useSourceLooked(profile, mod)
   const sourceName = kindLabel(kind, {
     archive: t`Archive`,
     nexus: t`Nexus Mods`,

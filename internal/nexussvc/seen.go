@@ -2,7 +2,6 @@ package nexussvc
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/Rethunk-Tech/mortar/internal/nexus"
 )
@@ -24,7 +23,7 @@ func (s *Service) UseDataDir(dir string) error {
 	return nil
 }
 
-// Seen is the newest file upload time and changelog version the user has looked at, keyed by Nexus mod id.
+// Seen is the newest file upload time and changelog version the user has looked at, keyed by Nexus mod id or "source:id".
 func (s *Service) Seen() map[string]nexus.SeenEntry {
 	if s.seen == nil {
 		return map[string]nexus.SeenEntry{}
@@ -32,13 +31,11 @@ func (s *Service) Seen() map[string]nexus.SeenEntry {
 	return s.seen.Snapshot()
 }
 
-// MarkSeen records that the user looked at this Nexus mod's details.
-func (s *Service) MarkSeen(modID int, newestFileUnix int64, newestChange string) error {
+// MarkSeen records that the user looked at this mod's details. key is the Nexus mod id, or "source:id" for a mod from
+// another source (the favourites key, such as "github:me/mod").
+func (s *Service) MarkSeen(key string, newestFileUnix int64, newestChange string) error {
 	if s.seen == nil {
 		return errors.New("nexus: seen store not open")
 	}
-	if modID <= 0 {
-		return errors.New("nexus: invalid mod id")
-	}
-	return s.seen.MarkSeen(strconv.Itoa(modID), newestFileUnix, newestChange)
+	return s.seen.MarkSeen(key, newestFileUnix, newestChange)
 }

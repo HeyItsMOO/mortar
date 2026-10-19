@@ -42,11 +42,11 @@ import {
   sanitizeListColumns,
   visibleListColumns,
 } from './listColumns.ts'
-import { entryOf, modId, nexusIdOf } from './lookup.ts'
+import { entryOf, modId } from './lookup.ts'
 import { ModListTable } from './ModListVirtual.tsx'
 import { useMarked, useRowFocus, useTabStop } from './marked.ts'
 import { contextMenuProps, openModPage } from './menu.ts'
-import { useNexusFresh } from './nexusDetails.ts'
+import { useModFresh } from './modFresh.ts'
 import { formatCount, isNewer } from './nexusFormat.ts'
 import { OverlayCountChip } from './OverlayRow.tsx'
 import { nestOverlays, overlaysByBase, ownSlice } from './overlayRows.ts'
@@ -317,7 +317,7 @@ function ModRowView({ row, cols, locale, first, orderedRef, profile, onArrow }: 
   const marked = useMarked(rowId)
   const tabStop = useTabStop(rowId, first)
   const menu = contextMenuProps(m)
-  const fresh = useNexusFresh(nexusIdOf(profile, m))
+  const fresh = useModFresh(profile, m)
   return (
     <TableRow
       role="row"

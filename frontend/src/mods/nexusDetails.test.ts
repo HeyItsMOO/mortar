@@ -4,6 +4,8 @@ import type { Details } from '../../bindings/github.com/Rethunk-Tech/mortar/inte
 import { useNexus } from '../settings/nexus.ts'
 import {
   isNewSinceLooked,
+  isNewSource,
+  newestOffered,
   primeDetails,
   useNexusDetails,
   useNexusSeen,
@@ -125,4 +127,13 @@ test('isNewSinceLooked is true when a changelog version is newer than last look'
     changelogs: [{ version: '1.1.0', notes: [] }],
   })
   expect(isNewSinceLooked(seen, now)).toBe(true)
+})
+
+test('a mod from another source is new only once a later version than the one looked at is offered', () => {
+  expect(isNewSource(undefined, '2.0')).toBe(false)
+  expect(isNewSource('1.0', '1.0')).toBe(false)
+  expect(isNewSource('1.0', undefined)).toBe(false)
+  expect(isNewSource('1.0', '1.1')).toBe(true)
+  expect(newestOffered('1.0', '1.1')).toBe('1.1')
+  expect(newestOffered('1.2', '1.1')).toBe('1.2')
 })

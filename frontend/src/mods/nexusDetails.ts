@@ -187,6 +187,7 @@ interface SeenWatermark {
 }
 
 const MS_PER_SEC = 1000
+const NEXUS_KEY = /^\d+$/
 
 const fileUnix = (iso: string) => {
   const t = Date.parse(iso)
@@ -245,26 +246,53 @@ const useNexusSeen = create<{ byId: Record<number, SeenWatermark | undefined> }>
   byId: {},
 }))
 
+// The newest version the user has looked at for each mod of a source other than Nexus, keyed by the favourites key.
+const useSourceSeen = create<{ bySource: Record<string, string | undefined> }>(() => ({
+  bySource: {},
+}))
+
+const newestOffered = (installed: string, offered: string | undefined) =>
+  offered && isNewer(offered, installed) ? offered : installed
+
+// Whether the source offers a version newer than the one last looked at; a mod never looked at is not new.
+const isNewSource = (seen: string | undefined, offered: string | undefined) =>
+  Boolean(seen && offered && isNewer(offered, seen))
+
+const markSourceLooked = (key: string, version: string) => {
+  if (!(key && version) || useSourceSeen.getState().bySource[key] === version) {
+    return
+  }
+  useSourceSeen.setState((s) => ({ bySource: { ...s.bySource, [key]: version } }))
+  MarkSeen(key, 0, version).catch(reportUnexpected)
+}
+
 const initNexusSeen = () =>
   Seen()
     .then((snap) => {
       const byId: Record<number, SeenWatermark | undefined> = {}
+      const bySource: Record<string, string> = {}
       for (const [key, entry] of Object.entries(snap ?? {})) {
-        if (entry) {
+        if (!entry) {
+          continue
+        }
+        if (NEXUS_KEY.test(key)) {
           byId[Number(key)] = {
             newestFileUnix: entry.newestFileUnix,
             newestChange: entry.newestChange,
           }
+        } else {
+          bySource[key] = entry.newestChange
         }
       }
       useNexusSeen.setState({ byId })
+      useSourceSeen.setState({ bySource })
     })
     .catch(reportUnexpected)
 
 const markLooked = (modId: number, details: Details) => {
   const w = watermarkOf(details)
   useNexusSeen.setState((s) => ({ byId: { ...s.byId, [modId]: w } }))
-  MarkSeen(modId, w.newestFileUnix, w.newestChange).catch(reportUnexpected)
+  MarkSeen(String(modId), w.newestFileUnix, w.newestChange).catch(reportUnexpected)
 }
 
 const useLookedSnapshot = (modId: number, details: Details | undefined) => {
@@ -292,7 +320,10 @@ export {
   initNexusSeen,
   isFull,
   isNewSinceLooked,
+  isNewSource,
   loadDetails,
+  markSourceLooked,
+  newestOffered,
   nexusChanged,
   primeDetails,
   useLookedSnapshot,
@@ -301,6 +332,7 @@ export {
   useNexusFresh,
   useNexusPage,
   useNexusSeen,
+  useSourceSeen,
   watermarkOf,
 }
 
