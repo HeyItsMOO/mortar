@@ -57,18 +57,18 @@ func TestLaunchBackupLocationFollowsGameSetting(t *testing.T) {
 	}
 }
 
-func TestBackupNeededWhenGameVersionChanged(t *testing.T) {
+func TestBackupNeededWhenTheGameWasUpdated(t *testing.T) {
 	lastRun := time.Date(2026, 10, 2, 12, 0, 0, 0, time.UTC)
-	if !backupNeeded("", nil, lastRun, "1.6.14", "1.6.15") {
+	if !backupNeeded("", nil, lastRun, true) {
 		t.Fatal("a changed game version must trigger a launch backup")
 	}
-	if backupNeeded("", nil, lastRun, "1.6.15", "1.6.15") {
+	if backupNeeded("", nil, lastRun, false) {
 		t.Fatal("an unchanged game version must not trigger a launch backup")
 	}
-	if backupNeeded("never", nil, lastRun, "1.6.14", "1.6.15") {
+	if backupNeeded("never", nil, lastRun, true) {
 		t.Fatal("never must skip a launch backup")
 	}
-	if !backupNeeded("always", nil, lastRun, "1.6.15", "1.6.15") {
+	if !backupNeeded("always", nil, lastRun, false) {
 		t.Fatal("always must take a launch backup")
 	}
 }

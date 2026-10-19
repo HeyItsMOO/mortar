@@ -4,8 +4,10 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
+	"github.com/Rethunk-Tech/mortar/internal/components"
 	"github.com/Rethunk-Tech/mortar/internal/datadir/datadirtest"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 
@@ -117,5 +119,69 @@ func TestSweepVersionIsPerGame(t *testing.T) {
 	}
 	if !svc.sweepVersionsChanged("valheim", "", "5.4.2100") {
 		t.Fatal("valheim took lethal company's bepinex sweep version")
+	}
+}
+
+// A loader that reads no game version is swept when the Steam build of the install changes: the first look is only
+// the baseline, and the next build triggers.
+func TestSweepNoticesASteamBuildForALoaderWithoutAGameVersion(t *testing.T) {
+	m, err := components.BundledManifest()
+	if err != nil {
+		t.Fatal(err)
+	}
+	const id = "build-game"
+	m.Games = append(slices.Clone(m.Games), components.GameInfo{
+		ID: id, Name: "Build Game", Enabled: true, Marker: "G.dll", Deploy: "profile",
+		Targets: []components.TargetDef{{ID: "mods", Root: "{profile}/Mods", MaxDepth: map[string]int{"pkg": 1}}},
+		Stores:  components.GameStores{Steam: &components.SteamStore{AppID: "7"}},
+		Loaders: []components.GameLoader{{ID: "folder", Name: "Mod folder"}},
+	})
+	if err := m.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	c := components.NewClient(nil)
+	c.SetManifest(m)
+	components.Use(c)
+	t.Cleanup(func() { components.Use(nil) })
+
+	svc, _ := sweepEnv(t)
+	svc.SweepVersions = nil
+	lib := t.TempDir()
+	folder := filepath.Join(lib, "steamapps", "common", "Build Game")
+	if err := os.MkdirAll(folder, 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(folder, "G.dll"), []byte("x"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	build := func(n string) {
+		manifest := "\"AppState\"\n{\n\t\"buildid\"\t\t\"" + n + "\"\n}\n"
+		if err := os.WriteFile(filepath.Join(lib, "steamapps", "appmanifest_7.acf"), []byte(manifest), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := svc.settings.Update(func(v *settings.Settings) { v.GameFolders[id] = folder }); err != nil {
+		t.Fatal(err)
+	}
+	sweep := func() SweepReport {
+		rep, err := svc.Sweep(t.Context(), id, "")
+		if err != nil {
+			t.Fatal(err)
+		}
+		return rep
+	}
+	build("100")
+	if rep := sweep(); rep.Triggered || rep.GameVersion != "build 100" {
+		t.Fatalf("the first look must only record the build: %+v", rep)
+	}
+	if rep := sweep(); rep.Triggered {
+		t.Fatalf("the same build triggered: %+v", rep)
+	}
+	build("101")
+	if rep := sweep(); !rep.Triggered || rep.GameVersion != "build 101" {
+		t.Fatalf("a patch went unnoticed: %+v", rep)
+	}
+	if rep := sweep(); rep.Triggered {
+		t.Fatalf("a swept build triggered again: %+v", rep)
 	}
 }

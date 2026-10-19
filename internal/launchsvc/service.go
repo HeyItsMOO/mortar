@@ -250,6 +250,7 @@ func (s *Service) set(st Status) {
 	s.emit(StateEvent, st)
 	if st.State == Running && st.Profile != "" && !profile.IsScratch(st.Profile) && s.settings != nil {
 		_, _ = s.settings.RecordLastPlayed(st.Game, st.Profile, time.Now(), launchGameVersion(s, key))
+		_, _ = s.settings.RecordBuild(st.Game, s.installBuild(st.Game, st.Install))
 	}
 	if stored.State == Idle && had && prev.State != Idle && s.Unlocked != nil {
 		s.Unlocked()
@@ -1039,12 +1040,12 @@ func (s *Service) backupChangedSaves(ctx context.Context, gameID, profileID, ins
 		}
 	}
 	set := s.settings.Get()
-	recorded := set.LastPlayed[gameID].GameVersion
+	played := set.LastPlayed[gameID]
 	installedStatus, _ := game.LoaderStatus(gameID, s.profileLoader(gameID, profileID), installDir, set.Loaders)
-	installed := installedStatus.GameVersion
+	updated := loader.GameChanged(played.GameVersion, installedStatus.GameVersion, played.Build, game.InstallBuild(gameID, installDir))
 	ov := launchOverrides(s.profiles, gameID, profileID)
 	mode := settings.ResolveAt(set, "backupBeforePlay", settings.Scope{Game: gameID, Install: s.pinOf(gameID, profileID, installID), Profile: profileID}, ov)
-	if !backupNeeded(mode, events, lastRun, recorded, installed) {
+	if !backupNeeded(mode, events, lastRun, updated) {
 		return nil
 	}
 	savesDir, err := s.playedSavesDir(set, gameID, profileID, installID)
@@ -1086,8 +1087,17 @@ func launchOverrides(profiles *profile.Store, gameID, profileID string) map[stri
 	return nil
 }
 
-func backupNeeded(mode string, events []profile.HistoryEvent, lastRun time.Time, recorded, installed string) bool {
-	return settings.ShouldBackupBeforePlay(mode, changedSinceLastRun(events, lastRun), loader.VersionChanged(recorded, installed))
+func backupNeeded(mode string, events []profile.HistoryEvent, lastRun time.Time, gameUpdated bool) bool {
+	return settings.ShouldBackupBeforePlay(mode, changedSinceLastRun(events, lastRun), gameUpdated)
+}
+
+// installBuild is the Steam build of the install with this id ("" is the selected one), "" when it has none.
+func (s *Service) installBuild(gameID, installID string) string {
+	inst, err := game.ResolveInstall(s.home, s.settings.Get(), gameID, installID)
+	if err != nil {
+		return ""
+	}
+	return game.InstallBuild(gameID, inst.Dir)
 }
 
 func changedSinceLastRun(events []profile.HistoryEvent, lastRun time.Time) bool {

@@ -1,6 +1,7 @@
 package launchsvc
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"runtime"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/loader/smapi"
 	"github.com/Rethunk-Tech/mortar/internal/meta"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
@@ -65,18 +67,27 @@ func (s *Service) Sweep(ctx context.Context, gameID, installID string) (SweepRep
 	}
 	rep := SweepReport{Game: gameID, GameName: g.Name(), GameVersion: gameVer, Loader: loaderID(gameID), LoaderVersion: smapiVer}
 	if !s.sweepVersionsChanged(gameID, gameVer, smapiVer) {
+		// The first look at a game version is the baseline the next patch is compared with, not a patch.
+		if s.settings.Get().GamePrefs(gameID).LastSweepGameVersion == "" && gameVer != "" {
+			_ = s.settings.RecordLastSweep(gameID, gameVer, rep.Loader, smapiVer)
+		}
 		return rep, nil
 	}
 	rep.Triggered = true
-	idx, err := s.sweepCompat(ctx)
-	if err != nil {
-		return SweepReport{}, err
-	}
 	profiles, err := s.profiles.List(gameID)
 	if err != nil {
 		return SweepReport{}, err
 	}
-	updates := s.sweepUpdateSet(ctx, gameID, gameVer, smapiVer, profiles)
+	// The compatibility list and the update API are SMAPI's; another loader's profiles are swept for missing
+	// dependencies alone.
+	var idx meta.CompatIndex
+	updates := map[string]bool{}
+	if rep.Loader == smapi.ID {
+		if idx, err = s.sweepCompat(ctx); err != nil {
+			return SweepReport{}, err
+		}
+		updates = s.sweepUpdateSet(ctx, gameID, gameVer, smapiVer, profiles)
+	}
 	rep.Profiles = s.scanSweepProfiles(gameID, profiles, idx, updates)
 	if err := s.settings.RecordLastSweep(gameID, gameVer, rep.Loader, smapiVer); err != nil {
 		return SweepReport{}, err
@@ -119,7 +130,8 @@ func (s *Service) installedSweepVersions(gameID, installID string) (string, stri
 		return "", "", err
 	}
 	st, err := game.LoaderStatus(gameID, "", inst.Dir, set.Loaders)
-	return st.GameVersion, st.Version, err
+	// A loader that reads no game version leaves the install's Steam build to notice a patch by.
+	return cmp.Or(st.GameVersion, game.BuildLabel(game.InstallBuild(gameID, inst.Dir))), st.Version, err
 }
 
 func (s *Service) sweepVersionsChanged(gameID, gameVer, smapiVer string) bool {

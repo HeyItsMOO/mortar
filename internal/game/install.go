@@ -101,6 +101,24 @@ func (in Install) readVersion(info components.GameInfo) string {
 	return ""
 }
 
+// InstallBuild is the Steam build of the install in dir, "" when the game has no Steam app or dir is not in a Steam
+// library. It stands in for the game version of a game whose loader cannot read one.
+func InstallBuild(gameID, dir string) string {
+	info, ok := catalogGame(gameID)
+	if !ok || dir == "" || info.SteamAppID() == "" {
+		return ""
+	}
+	return steam.BuildID(dir, info.SteamAppID())
+}
+
+// BuildLabel is how a Steam build reads where a game version would: "build 123456", "" for no build.
+func BuildLabel(build string) string {
+	if build == "" {
+		return ""
+	}
+	return "build " + build
+}
+
 // CompatData is the Steam compatdata folder of a Proton install, the parent of its Wine prefix.
 func (in Install) CompatData(home string) (string, bool) {
 	info, ok := catalogGame(in.Game)

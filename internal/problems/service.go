@@ -712,19 +712,40 @@ type UpdateWarning struct {
 	Broken    []Broken `json:"broken"`
 }
 
-// UpdateWarning reports whether the installed game version differs from the last successful launch,
-// and which of this profile's mods the compatibility data marks broken for the installed version.
+// UpdateWarning reports whether the installed game differs from the last successful launch, and which of this
+// profile's mods the compatibility data marks broken for it. A loader that cannot read the game's version is compared
+// by the Steam build of the install.
 func (s *Service) UpdateWarning(ctx context.Context, gameID, id string) (UpdateWarning, error) {
 	env := s.Environment(gameID)
-	recorded := s.settings.Get().LastPlayed[gameID].GameVersion
-	if !loader.VersionChanged(recorded, env.GameVersion) {
-		return versionChangeWarning(recorded, env.GameVersion, nil), nil
+	set := s.settings.Get()
+	played := set.LastPlayed[gameID]
+	read, build := s.installedGame(set, gameID)
+	recorded, installed := played.GameVersion, read
+	if read == "" {
+		recorded, installed = game.BuildLabel(played.Build), game.BuildLabel(build)
+	}
+	if !loader.VersionChanged(recorded, installed) {
+		return versionChangeWarning(recorded, installed, nil), nil
 	}
 	mods, err := s.installed(gameID, id)
 	if err != nil {
 		return UpdateWarning{}, err
 	}
-	return versionChangeWarning(recorded, env.GameVersion, Check(ctx, s.metaFor(gameID), env, mods, nil).Broken), nil
+	return versionChangeWarning(recorded, installed, Check(ctx, s.metaFor(gameID), env, mods, nil).Broken), nil
+}
+
+// installedGame is the game version the loader reads from the install, "" when it reads none, and the Steam build of
+// the install.
+func (s *Service) installedGame(set settings.Settings, gameID string) (version, build string) {
+	if game.Find(gameID) == nil {
+		return "", ""
+	}
+	dir, err := game.InstallDir(s.home, set, gameID)
+	if err != nil || dir == "" {
+		return "", ""
+	}
+	st, _ := game.LoaderStatus(gameID, "", dir, set.Loaders)
+	return st.GameVersion, game.InstallBuild(gameID, dir)
 }
 
 func versionChangeWarning(recorded, installed string, broken []Broken) UpdateWarning {

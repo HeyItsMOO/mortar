@@ -30,6 +30,8 @@ type Played struct {
 	At      string `json:"at"`
 	// GameVersion is the Stardew version from the SMAPI log header of that launch.
 	GameVersion string `json:"gameVersion,omitempty"`
+	// Build is the Steam build of the install at that launch, the stand-in for a game version a loader cannot read.
+	Build string `json:"build,omitempty"`
 	// PlaytimeMs totals the duration of every Mortar-started run of the game that exited cleanly.
 	PlaytimeMs int64 `json:"playtimeMs,omitempty"`
 }
@@ -586,7 +588,21 @@ func (s *Store) RecordLastPlayed(game, profile string, at time.Time, gameVersion
 		}
 		prev := cur.LastPlayed[game]
 		ver := cmp.Or(gameVersion, prev.GameVersion)
-		cur.LastPlayed[game] = Played{Profile: profile, At: at.UTC().Format(time.RFC3339), GameVersion: ver, PlaytimeMs: prev.PlaytimeMs}
+		cur.LastPlayed[game] = Played{Profile: profile, At: at.UTC().Format(time.RFC3339), GameVersion: ver, Build: prev.Build, PlaytimeMs: prev.PlaytimeMs}
+	})
+}
+
+// RecordBuild stores the Steam build the game's last successful launch ran on. A game never launched has no entry to
+// hold it.
+func (s *Store) RecordBuild(game, build string) (Settings, error) {
+	if build == "" {
+		return s.Get(), nil
+	}
+	return s.Update(func(cur *Settings) {
+		if p, ok := cur.LastPlayed[game]; ok {
+			p.Build = build
+			cur.LastPlayed[game] = p
+		}
 	})
 }
 
