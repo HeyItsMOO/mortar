@@ -1080,15 +1080,11 @@ func run() error {
 				x, y := w.Position()
 				saveWindowGeom(dataDir, windowGeom{X: x, Y: y, W: w.Width(), H: w.Height()})
 			}
-			// A play-mode window closed to the tray would leave the process, and the game Steam counts, running forever.
-			if !store.Get().KeepInTray || plays.PlayMode() {
-				if quitSvc.AllowWindowClose() {
-					return
-				}
-				// The window stays until the quit is confirmed: closed now, it would take with it the page that answers
-				// the request, and with DisableQuitOnLastWindowClosed nothing would ever end the process.
+			if !quitSvc.OnWindowClose(store.Get().KeepInTray, plays.PlayMode()) {
 				e.Cancel()
-				quitSvc.RequestQuit()
+				return
+			}
+			if !store.Get().KeepInTray || plays.PlayMode() {
 				return
 			}
 			windowMu.Lock()

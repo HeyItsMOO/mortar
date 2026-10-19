@@ -42,10 +42,12 @@ type QuitService struct {
 	lan    *lan.Service
 	launch *launchsvc.Service
 	// show brings the window up, building a new one when closing to the tray removed it; closed reports that it did.
-	show    func()
-	closed  func() bool
-	mu      sync.Mutex
-	allowed bool
+	show   func()
+	closed func() bool
+	mu     sync.Mutex
+	// quitting is set once a quit is confirmed and stays set: the process is ending, and every close click after it
+	// must let the window go instead of starting another quit.
+	quitting bool
 	// pending is a quit question waiting for a window that was rebuilt to answer it, whose page missed the event.
 	pending string
 }
@@ -99,7 +101,7 @@ func (s *QuitService) PendingQuit() string {
 
 func (s *QuitService) ConfirmQuit() {
 	s.mu.Lock()
-	s.allowed = true
+	s.quitting = true
 	s.mu.Unlock()
 	s.armWatchdog()
 	s.app.Quit()
@@ -133,15 +135,51 @@ func (s *QuitService) armWatchdog() {
 	})
 }
 
-//wails:ignore
-func (s *QuitService) AllowWindowClose() bool {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if s.allowed {
-		s.allowed = false
-		return true
+type closeAction int
+
+const (
+	// closeHide lets the window go and keeps Mortar running in the tray.
+	closeHide closeAction = iota
+	// closeQuit lets the window go and ends Mortar, with nothing to ask.
+	closeQuit
+	// closeAsk keeps the window up to ask before ending Mortar.
+	closeAsk
+	// closeAllow lets the window go because Mortar is already ending.
+	closeAllow
+)
+
+// decideClose is what one click on the window's close button does.
+func decideClose(keepInTray, playMode, quitting, busy bool) closeAction {
+	switch {
+	case quitting:
+		return closeAllow
+	// A play-mode window closed to the tray would leave the process, and the game Steam counts, running forever.
+	case keepInTray && !playMode:
+		return closeHide
+	case busy:
+		return closeAsk
 	}
-	return false
+	return closeQuit
+}
+
+// OnWindowClose handles the window's close button and reports whether the window may close now. An idle quit lets the
+// window close at once and finishes in the background; a busy one keeps the window to ask first, since closed now it
+// would take with it the page that answers.
+//
+//wails:ignore
+func (s *QuitService) OnWindowClose(keepInTray, playMode bool) bool {
+	s.mu.Lock()
+	quitting := s.quitting
+	s.mu.Unlock()
+	switch decideClose(keepInTray, playMode, quitting, s.BusySummary() != "") {
+	case closeAsk:
+		s.RequestQuit()
+		return false
+	case closeQuit:
+		go s.ConfirmQuit()
+	case closeHide, closeAllow:
+	}
+	return true
 }
 
 // otherInstance reports a Mortar already serving dataDir. A server build has no single-instance lock, and a desktop

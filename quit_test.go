@@ -39,3 +39,24 @@ func TestWatchdogExitsOnceAfterGraceAndWaitsForInstalls(t *testing.T) {
 	case <-time.After(100 * time.Millisecond):
 	}
 }
+
+func TestOneClickOnCloseDecides(t *testing.T) {
+	cases := []struct {
+		name                             string
+		keepInTray, play, quitting, busy bool
+		want                             closeAction
+	}{
+		{"tray on hides", true, false, false, false, closeHide},
+		{"tray on hides even while busy", true, false, false, true, closeHide},
+		{"tray off and idle quits at once", false, false, false, false, closeQuit},
+		{"tray off and busy asks", false, false, false, true, closeAsk},
+		{"play mode never hides", true, true, false, false, closeQuit},
+		{"a quit already under way lets every later click through", false, false, true, true, closeAllow},
+		{"also with the tray on", true, false, true, false, closeAllow},
+	}
+	for _, c := range cases {
+		if got := decideClose(c.keepInTray, c.play, c.quitting, c.busy); got != c.want {
+			t.Errorf("%s: got %d, want %d", c.name, got, c.want)
+		}
+	}
+}
