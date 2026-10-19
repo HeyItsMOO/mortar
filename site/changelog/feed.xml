@@ -4,8 +4,37 @@
   <id>https://mortar.rethunk.tech/changelog/</id>
   <link href="https://mortar.rethunk.tech/changelog/" />
   <link rel="self" href="https://mortar.rethunk.tech/changelog/feed.xml" />
-  <updated>2026-10-17T00:00:00Z</updated>
+  <updated>2026-10-18T00:00:00Z</updated>
   <author><name>Rethunk.Tech</name></author>
+  <entry>
+    <title>Mortar 0.3.6</title>
+    <id>https://mortar.rethunk.tech/changelog/#v0.3.6</id>
+    <link href="https://mortar.rethunk.tech/changelog/#v0.3.6" />
+    <updated>2026-10-18T00:00:00Z</updated>
+    <content type="html">        &#60;h3&#62;New&#60;/h3&#62;
+        &#60;h4&#62;Profiles and sharing&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Share can save an r2modman .r2z file without posting a public code&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Launching and loaders&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Play can start several direct-launch instances of a game, a set delay apart&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h4&#62;Interface and settings&#60;/h4&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Settings › About shows the version and the build it came from&#60;/li&#62;
+        &#60;/ul&#62;
+        &#60;h3&#62;Fixed&#60;/h3&#62;
+        &#60;ul&#62;
+        &#60;li&#62;Collapsing the group that holds the open mod keeps it collapsed instead of scrolling back to the mod&#60;/li&#62;
+        &#60;li&#62;Mod categories and Nexus requirements load while the keyring is locked or missing&#60;/li&#62;
+        &#60;li&#62;The problem count in the tray and the command line matches the count on the Problems chip&#60;/li&#62;
+        &#60;li&#62;Reordering list columns keeps a column added while the window was too narrow to show it&#60;/li&#62;
+        &#60;li&#62;A save&#38;#39;s &#38;#34;Last played with&#38;#34; and a crash&#38;#39;s Update fix follow profile renames and newly found updates&#60;/li&#62;
+        &#60;li&#62;README images on a mod&#38;#39;s page load&#60;/li&#62;
+        &#60;li&#62;Download names taken from a link stay inside the downloads folder, and screenshot names Windows cannot store are refused&#60;/li&#62;
+        &#60;/ul&#62;</content>
+  </entry>
   <entry>
     <title>Mortar 0.3.5</title>
     <id>https://mortar.rethunk.tech/changelog/#v0.3.5</id>

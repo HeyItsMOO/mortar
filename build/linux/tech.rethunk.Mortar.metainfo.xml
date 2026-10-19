@@ -52,6 +52,26 @@
     <content_attribute id="social-info">mild</content_attribute>
   </content_rating>
   <releases>
+    <release version="0.3.6" date="2026-10-18">
+      <description>
+        <p>New</p>
+        <ul>
+          <li>Share can save an r2modman .r2z file without posting a public code</li>
+          <li>Play can start several direct-launch instances of a game, a set delay apart</li>
+          <li>Settings › About shows the version and the build it came from</li>
+        </ul>
+        <p>Fixed</p>
+        <ul>
+          <li>Collapsing the group that holds the open mod keeps it collapsed instead of scrolling back to the mod</li>
+          <li>Mod categories and Nexus requirements load while the keyring is locked or missing</li>
+          <li>The problem count in the tray and the command line matches the count on the Problems chip</li>
+          <li>Reordering list columns keeps a column added while the window was too narrow to show it</li>
+          <li>A save's "Last played with" and a crash's Update fix follow profile renames and newly found updates</li>
+          <li>README images on a mod's page load</li>
+          <li>Download names taken from a link stay inside the downloads folder, and screenshot names Windows cannot store are refused</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.5" date="2026-10-17">
       <description>
         <p>New</p>
