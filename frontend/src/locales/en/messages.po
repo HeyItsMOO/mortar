@@ -4983,10 +4983,6 @@ msgstr "Include disabled mods"
 msgid "slow Entry {ms}"
 msgstr "slow Entry {ms}"
 
-#: src/mods/ChangeVersionDialog.tsx:92
-msgid "installed"
-msgstr "installed"
-
 #: src/settings/sections/StreamOverlay.tsx:431
 msgid "Show live game info in OBS. Changes apply the next time you press Play."
 msgstr "Show live game info in OBS. Changes apply the next time you press Play."
@@ -5329,6 +5325,7 @@ msgstr "Working directory"
 
 #: src/browse/CardProgress.tsx:28
 #: src/mods/ChangelogDialog.tsx:35
+#: src/mods/ChangeVersionDialog.tsx:92
 #: src/mods/columnLabel.ts:17
 #: src/mods/OptionalFileRows.tsx:122
 #: src/share/ImportPreview.tsx:71
