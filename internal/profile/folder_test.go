@@ -19,15 +19,7 @@ func TestProfileMovesToAFolderAndHome(t *testing.T) {
 	if err := os.WriteFile(mod, []byte("dll"), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	base := "/var/tmp"
-	if _, err := os.Stat(base); err != nil {
-		base = t.TempDir()
-	}
-	parent, err := os.MkdirTemp(base, "mortar-folder-test-")
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { _ = os.RemoveAll(parent) })
+	parent := t.TempDir()
 
 	if _, err := s.MoveToFolder("stardew", p.ID, "relative"); err == nil {
 		t.Error("a relative folder was accepted")
@@ -40,7 +32,7 @@ func TestProfileMovesToAFolderAndHome(t *testing.T) {
 	if err != nil || moved.Folder != want {
 		t.Fatalf("moved = %+v, %v", moved, err)
 	}
-	if b, err := os.ReadFile(filepath.Join(want, "mods", "x", "file.dll")); err != nil || string(b) != "dll" {
+	if b, err := os.ReadFile(filepath.Clean(filepath.Join(want, "mods", "x", "file.dll"))); err != nil || string(b) != "dll" {
 		t.Fatalf("file in the folder = %q, %v", b, err)
 	}
 	if _, err := s.SetAppearance("stardew", p.ID, "teal", "", ""); err != nil {
