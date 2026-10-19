@@ -131,9 +131,17 @@ func (lutrisStore) Launchers(goos string) []LauncherSpec {
 
 func (lutrisStore) Discover(home string, roots map[string][]string, g components.GameInfo) []Install {
 	var out []Install
-	game := lutris.Game{Slug: g.Stores.Lutris.Slug, Keyword: g.Stores.Lutris.Keyword, Marker: g.MarkerPath()}
-	for _, in := range lutris.Locate(home, game, roots[LauncherLutris]...) {
-		out = append(out, Install{Store: StoreLutris, Dir: in.Dir})
+	// Lutris runs the Windows build under Wine or, for a game with a native Linux build, that build.
+	for _, marker := range []string{g.MarkerPath(), g.LinuxMarker} {
+		if marker == "" {
+			continue
+		}
+		game := lutris.Game{Slug: g.Stores.Lutris.Slug, Keyword: g.Stores.Lutris.Keyword, Marker: marker}
+		for _, in := range lutris.Locate(home, game, roots[LauncherLutris]...) {
+			if !slices.ContainsFunc(out, func(o Install) bool { return o.Dir == in.Dir }) {
+				out = append(out, Install{Store: StoreLutris, Dir: in.Dir})
+			}
+		}
 	}
 	return out
 }

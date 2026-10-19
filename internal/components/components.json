@@ -2195,6 +2195,10 @@
         }
       ],
       "stores": {
+        "lutris": {
+          "slug": "vintage-story",
+          "keyword": "vintagestory"
+        },
         "standalone": {
           "folders": [
             {
