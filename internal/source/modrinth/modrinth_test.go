@@ -27,6 +27,8 @@ func fake(t *testing.T) Driver {
 				t.Errorf("search params %v", q)
 			}
 			_, _ = w.Write([]byte(`{"total_hits":41,"hits":[{"project_id":"AANobbMI","slug":"sodium","title":"Sodium","description":"fast","author":"jelly","downloads":9,"follows":3,"date_modified":"2026-09-20T00:00:00Z","latest_version":"v2"}]}`))
+		case "/project/AANobbMI":
+			_, _ = w.Write([]byte(`{"body":"# Sodium\n\nFast.","categories":["fabric"],"additional_categories":["Fabric","optimization"]}`))
 		case "/project/AANobbMI/version":
 			_, _ = w.Write([]byte(`[{"id":"v2","project_id":"AANobbMI","version_number":"2.0","dependencies":[{"project_id":"P1","version_id":"V1","dependency_type":"required"},{"project_id":"P2","dependency_type":"optional"},{"version_id":"V3","dependency_type":"required"}],"files":[{"hashes":{"sha512":"ab"},"url":"https://cdn/x.jar","filename":"x.jar","primary":false,"size":1},{"hashes":{"sha512":"cd"},"url":"https://cdn/y.jar","filename":"y.jar","primary":true,"size":7}]},{"id":"v1","project_id":"AANobbMI","version_number":"1.0","files":[{"hashes":{},"url":"https://cdn/o.jar","filename":"o.jar","size":2}]}]`))
 		case "/versions":
@@ -180,5 +182,14 @@ func TestResolvePassesLoadersThrough(t *testing.T) {
 	}
 	if got != `["fabric","quilt"]` {
 		t.Fatalf("loaders param = %q", got)
+	}
+}
+
+func TestDetailsReadsTheProjectBody(t *testing.T) {
+	t.Parallel()
+	det, err := fake(t).Details(context.Background(), "", "AANobbMI", "")
+	if err != nil || det.Description != "# Sodium\n\nFast." || strings.Join(det.Versions, ",") != "2.0,1.0" ||
+		strings.Join(det.Dependencies, ",") != "P1" || strings.Join(det.Categories, ",") != "fabric,optimization" {
+		t.Fatalf("%+v %v", det, err)
 	}
 }

@@ -464,3 +464,35 @@ func nonNil(list []string) []string {
 	}
 	return list
 }
+
+// Details reads the project's page: its description (already Markdown), categories, every version number and the
+// required projects of the newest version.
+func (d Driver) Details(ctx context.Context, _, id, mortarVersion string) (source.Details, error) {
+	var project struct {
+		Body       string   `json:"body"`
+		Categories []string `json:"categories"`
+		Additional []string `json:"additional_categories"`
+	}
+	if err := d.get(ctx, "/project/"+url.PathEscape(id), nil, mortarVersion, &project); err != nil {
+		return source.Details{}, err
+	}
+	all, err := d.versions(ctx, id, mortarVersion, nil)
+	if err != nil {
+		return source.Details{}, err
+	}
+	out := source.Details{
+		Description: project.Body, Versions: []string{}, Dependencies: []string{},
+		Categories: source.UniqueNames(append(project.Categories, project.Additional...)),
+	}
+	for _, v := range all {
+		out.Versions = append(out.Versions, v.VersionNumber)
+	}
+	if len(all) > 0 {
+		for _, dep := range all[0].Dependencies {
+			if dep.DependencyType == "required" && dep.ProjectID != "" {
+				out.Dependencies = append(out.Dependencies, dep.ProjectID)
+			}
+		}
+	}
+	return out, nil
+}

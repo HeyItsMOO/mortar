@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -239,6 +240,8 @@ type modDetail struct {
 	Author   string    `json:"author"`
 	URLAlias string    `json:"urlalias"`
 	Logo     string    `json:"logofile"`
+	Text     string    `json:"text"`
+	Tags     []string  `json:"tags"`
 	Releases []release `json:"releases"`
 }
 
@@ -359,6 +362,31 @@ func (d Driver) Changelog(ctx context.Context, _, id, installed, latest, _ strin
 		}
 		date, _, _ := strings.Cut(r.Created, " ")
 		out = append(out, source.Note{Version: r.ModVersion, Date: date, Body: source.HTMLText(r.Changelog)})
+	}
+	return out, nil
+}
+
+// Details reads the mod's page: its description (HTML on the site, Markdown here), its tags, every release's version
+// and the changelog of the release a player on stable builds gets. The site lists no dependencies apart from the mod
+// archive.
+func (d Driver) Details(ctx context.Context, _, id, _ string) (source.Details, error) {
+	ref := id
+	if modID, _, ok := splitID(id); ok {
+		ref = modID
+	}
+	m, err := d.mod(ctx, ref)
+	if err != nil {
+		return source.Details{}, err
+	}
+	out := source.Details{
+		Description: source.HTMLMarkdown(m.Text), Versions: []string{}, Dependencies: []string{},
+		Categories: slices.DeleteFunc(slices.Clone(m.Tags), func(t string) bool { return t == "" }),
+	}
+	for _, r := range m.Releases {
+		out.Versions = append(out.Versions, r.ModVersion)
+	}
+	if r, ok := m.newest(); ok {
+		out.Changelog = source.HTMLMarkdown(r.Changelog)
 	}
 	return out, nil
 }

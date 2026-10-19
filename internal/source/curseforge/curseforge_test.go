@@ -50,6 +50,8 @@ func fake(t *testing.T) Driver {
 			_, _ = w.Write([]byte(`{"data":[{"id":10,"name":"Open Mod","summary":"s","downloadCount":9,"thumbsUpCount":3,"dateModified":"2026-01-01T00:00:00Z","mainFileId":102,"links":{"websiteUrl":"https://www.curseforge.com/stardewvalley/mods/open","sourceUrl":"https://github.com/me/open"},"authors":[{"name":"me"}],"logo":{"thumbnailUrl":"https://img/t.png"},"latestFiles":[` + file2 + `]},{"id":20,"name":"Shut Mod","allowModDistribution":false,"links":{"websiteUrl":"https://www.curseforge.com/stardewvalley/mods/shut"}}],"pagination":{"totalCount":41}}`))
 		case "/mods/10":
 			_, _ = w.Write([]byte(modOpen))
+		case "/mods/10/description":
+			_, _ = w.Write([]byte(`{"data":"<h2>About</h2><p>An <em>open</em> mod.</p>"}`))
 		case "/mods/20":
 			_, _ = w.Write([]byte(modShut))
 		case "/mods/10/files":
@@ -158,7 +160,8 @@ func TestLatestSkipsInstalledAndBeta(t *testing.T) {
 func TestDetailsAndLinks(t *testing.T) {
 	t.Parallel()
 	det, err := fake(t).Details(context.Background(), "4643", "10", "")
-	if err != nil || strings.Join(det.Versions, ",") != "Open 3.0b,Open 2.0,Open 1.0" || strings.Join(det.Dependencies, ",") != "11" {
+	if err != nil || strings.Join(det.Versions, ",") != "Open 3.0b,Open 2.0,Open 1.0" || strings.Join(det.Dependencies, ",") != "11" ||
+		det.Description != "## About\n\nAn *open* mod." {
 		t.Fatalf("%+v %v", det, err)
 	}
 	if got := (Driver{}).ModPageURL("", "10"); got != "https://www.curseforge.com/projects/10" {

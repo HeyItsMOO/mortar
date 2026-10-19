@@ -684,8 +684,8 @@ func (d Driver) ProjectName(ctx context.Context, id string) (string, error) {
 	return m.Name, nil
 }
 
-// Details reads the mod's summary, its file names and the required mods of its newest file. The site's long
-// description is HTML, which Details does not carry, so the summary stands in for it.
+// Details reads the mod's description, its file names and the required mods of its newest file. The long description
+// is HTML on the site and becomes Markdown here; the summary stands in when the project has none.
 func (d Driver) Details(ctx context.Context, _, id, _ string) (source.Details, error) {
 	m, err := d.mod(ctx, id)
 	if err != nil {
@@ -695,8 +695,14 @@ func (d Driver) Details(ctx context.Context, _, id, _ string) (source.Details, e
 	if err != nil {
 		return source.Details{}, err
 	}
+	var long struct {
+		Data string `json:"data"`
+	}
+	if err := d.get(ctx, "/mods/"+url.PathEscape(id)+"/description", nil, &long); err != nil {
+		return source.Details{}, err
+	}
 	slices.SortStableFunc(files, func(a, b fileResp) int { return strings.Compare(b.FileDate, a.FileDate) })
-	out := source.Details{Description: m.Summary, Versions: []string{}, Dependencies: []string{}, Categories: []string{}}
+	out := source.Details{Description: cmp.Or(source.HTMLMarkdown(long.Data), m.Summary), Versions: []string{}, Dependencies: []string{}, Categories: []string{}}
 	for _, f := range files {
 		if f.IsAvailable {
 			out.Versions = append(out.Versions, f.version())
