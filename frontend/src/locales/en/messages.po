@@ -5777,6 +5777,10 @@ msgstr "Pause downloads while the game runs"
 msgid "{0} of saves"
 msgstr "{0} of saves"
 
+#: src/mods/typedConfig/ConfigPane.tsx:423
+msgid "Delete {name}?"
+msgstr "Delete {name}?"
+
 #: src/settings/SettingsShell.tsx:91
 msgid "Try another word, or clear the search."
 msgstr "Try another word, or clear the search."
