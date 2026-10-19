@@ -1,6 +1,7 @@
 package problems
 
 import (
+	"cmp"
 	"io/fs"
 	"maps"
 	"os"
@@ -40,10 +41,11 @@ type LongPath struct {
 	Placed  bool   `json:"placed"`
 }
 
-// readPath is a file the game reads for a launch of the profile, with the entry that holds it.
+// readPath is a file the game reads for a launch of the profile, with the entry that holds it. A file no entry holds
+// has no key and names the top folder it is in instead.
 type readPath struct {
-	key, path string
-	placed    bool
+	key, folder, path string
+	placed            bool
 }
 
 // pathLength is the length of p in UTF-16 code units, which is how MAX_PATH is counted, for a path of at least maxPath
@@ -60,7 +62,8 @@ func pathLength(p string) int {
 	return n
 }
 
-// longPathRows is one row per entry with a path past the limit, in the order the entries' files first come up.
+// longPathRows is one row per entry, or per folder no entry holds, with a path past the limit, in the order their files
+// first come up.
 func longPathRows(mods []framework.Mod, files []readPath) []LongPath {
 	var out []LongPath
 	for _, f := range files {
@@ -68,9 +71,9 @@ func longPathRows(mods []framework.Mod, files []readPath) []LongPath {
 		if n < maxPath {
 			continue
 		}
-		i := slices.IndexFunc(out, func(x LongPath) bool { return x.Key == f.key })
+		i := slices.IndexFunc(out, func(x LongPath) bool { return x.Key == f.key && (f.key != "" || x.Name == f.folder) })
 		if i < 0 {
-			name := f.key
+			name := cmp.Or(f.key, f.folder)
 			if m := slices.IndexFunc(mods, func(x framework.Mod) bool { return x.Key == f.key }); m >= 0 && mods[m].Name != "" {
 				name = mods[m].Name
 			}
@@ -111,9 +114,15 @@ func underFolder(rel, folder string) (string, bool) {
 }
 
 // longModsFolderPaths lists the files of a redirected profile's mods folder, which the game reads in place, whose path
-// is past the limit, each held by the mod whose folder holds it, else by its top folder. Only those are matched to a
-// mod, since an 800-mod profile holds tens of thousands of files.
+// is past the limit, each held by the mod whose folder holds it, else by no mod and named by its top folder. Only those
+// are matched to a mod, since an 800-mod profile holds tens of thousands of files.
 func longModsFolderPaths(modsDir string, mods []framework.Mod) []readPath {
+	folders := map[string]string{}
+	for _, m := range mods {
+		if rel, err := filepath.Rel(modsDir, m.Folder); err == nil && rel != "." && filepath.IsLocal(rel) {
+			folders[filepath.ToSlash(rel)] = m.Key
+		}
+	}
 	var out []readPath
 	// A folder that cannot be read is skipped: its files are no worse off than before the check. So is one whose name
 	// starts with a dot, which is how a switched-off mod is kept and which the loader does not read.
@@ -122,23 +131,26 @@ func longModsFolderPaths(modsDir string, mods []framework.Mod) []readPath {
 			return fs.SkipDir
 		}
 		if p := filepath.Join(modsDir, filepath.FromSlash(rel)); err == nil && d.Type().IsRegular() && pathLength(p) >= maxPath {
-			out = append(out, readPath{key: holder(rel, p, mods), path: p})
+			f := readPath{key: ownerKey(rel, folders), path: p}
+			if f.key == "" {
+				f.folder, _, _ = strings.Cut(rel, "/")
+			}
+			out = append(out, f)
 		}
 		return nil
 	})
 	return out
 }
 
-// holder is the key of the mod whose folder holds p, else the top folder of rel, p's slash path below the mods folder.
-func holder(rel, p string, mods []framework.Mod) string {
-	key, _, _ := strings.Cut(rel, "/")
-	folder := ""
-	for _, m := range mods {
-		if len(m.Folder) > len(folder) && strings.HasPrefix(p, m.Folder+string(filepath.Separator)) {
-			folder, key = m.Folder, m.Key
+// ownerKey is the key of the mod whose folder, in folders by slash path below the mods folder, is nearest above rel, a
+// file's slash path there; empty when no mod's folder holds it.
+func ownerKey(rel string, folders map[string]string) string {
+	for dir := path.Dir(rel); dir != "."; dir = path.Dir(dir) {
+		if key, ok := folders[dir]; ok {
+			return key
 		}
 	}
-	return key
+	return ""
 }
 
 // longPaths is the profile's entries with a file the game would read at a path past MAX_PATH. A game whose profile

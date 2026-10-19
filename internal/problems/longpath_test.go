@@ -35,7 +35,7 @@ func TestALongPathIsARowAndOneJustUnderIsNot(t *testing.T) {
 		{key: "nexus-1-2", path: pathOf(t, base, maxPath)},
 		{key: "nexus-1-2", path: pathOf(t, base, maxPath+5)},
 		{key: "nexus-3-4", path: pathOf(t, base, maxPath-1)},
-		{key: "loose", path: pathOf(t, base, maxPath+1), placed: true},
+		{folder: "loose", path: pathOf(t, base, maxPath+1), placed: true},
 	})
 	if len(rows) != 2 {
 		t.Fatalf("rows = %+v", rows)
@@ -43,8 +43,8 @@ func TestALongPathIsARowAndOneJustUnderIsNot(t *testing.T) {
 	if r := rows[0]; r.Name != "Pack" || r.Files != 2 || r.Length != maxPath+5 || len(r.Longest) != maxPath+5 || r.Placed {
 		t.Fatalf("the entry's row counts both files and names the longest: %+v", r)
 	}
-	if r := rows[1]; r.Name != "loose" || !r.Placed {
-		t.Fatalf("a file no mod holds is named by its key and keeps where it is read: %+v", r)
+	if r := rows[1]; r.Key != "" || r.Name != "loose" || !r.Placed {
+		t.Fatalf("a file no mod holds has no key and is named by its folder: %+v", r)
 	}
 	if (Result{LongPaths: rows}).Count() != 2 {
 		t.Fatal("long paths are counted problems")
@@ -97,6 +97,35 @@ func TestOnlyLongFilesOfTheModsFolderAreListedWithTheirMod(t *testing.T) {
 	got := longModsFolderPaths(modsDir, []framework.Mod{{Key: "nexus-1-2", Folder: deep}})
 	if len(got) != 1 || got[0].key != "nexus-1-2" || got[0].path != long {
 		t.Fatalf("longModsFolderPaths = %+v", got)
+	}
+}
+
+// A mod's folder can sit inside another's, as a pack's parts do, and a folder Mortar did not install is no mod's.
+func TestAModsFolderFileIsHeldByTheNearestModFolderOrByNone(t *testing.T) {
+	modsDir := t.TempDir()
+	outer := filepath.Join(modsDir, "Pack")
+	inner := filepath.Join(outer, "Parts", "Inner")
+	files := []string{
+		pathOf(t, filepath.Join(inner, "assets"), maxPath+1),
+		pathOf(t, filepath.Join(outer, "shared"), maxPath+2),
+		pathOf(t, filepath.Join(modsDir, "Unknown", "deep"), maxPath+3),
+	}
+	for _, p := range files {
+		if err := os.MkdirAll(filepath.Dir(p), 0o750); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte("x"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	got := longModsFolderPaths(modsDir, []framework.Mod{{Key: "nexus-1-2", Folder: outer}, {Key: "nexus-3-4", Folder: inner}})
+	want := []readPath{
+		{key: "nexus-3-4", path: files[0]},
+		{key: "nexus-1-2", path: files[1]},
+		{folder: "Unknown", path: files[2]},
+	}
+	if !slices.Equal(got, want) {
+		t.Fatalf("longModsFolderPaths = %+v, want %+v", got, want)
 	}
 }
 

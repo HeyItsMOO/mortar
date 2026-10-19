@@ -471,6 +471,10 @@ msgstr "Could not hide that mod"
 msgid "Kept at this version ({0})"
 msgstr "Kept at this version ({0})"
 
+#: src/mods/describe.ts:310
+msgid "{name}, a folder no mod owns, has a file path {count} characters long, more than most Windows games can open."
+msgstr "{name}, a folder no mod owns, has a file path {count} characters long, more than most Windows games can open."
+
 #: src/profiles/HistoryPanel.tsx:61
 #: src/queue/QueueSheet.tsx:83
 #: src/queue/QueueSheet.tsx:90
@@ -5072,7 +5076,7 @@ msgstr "Just this mod"
 msgid "Links for games Mortar does not manage open in the app that had them before."
 msgstr "Links for games Mortar does not manage open in the app that had them before."
 
-#: src/mods/describe.ts:358
+#: src/mods/describe.ts:360
 msgid "{name} was changed outside Mortar."
 msgstr "{name} was changed outside Mortar."
 
@@ -5914,7 +5918,7 @@ msgid "Could not add the saved group"
 msgstr "Could not add the saved group"
 
 #. placeholder {0}: copies.length
-#: src/mods/describe.ts:323
+#: src/mods/describe.ts:325
 msgid "{names} all {0} ship the plugin {guid}, and BepInEx loads only one."
 msgstr "{names} all {0} ship the plugin {guid}, and BepInEx loads only one."
 
@@ -7851,11 +7855,11 @@ msgstr "Use theirs"
 msgid "Direct launch preview"
 msgstr "Direct launch preview"
 
-#: src/mods/describe.ts:322
+#: src/mods/describe.ts:324
 msgid "{names} both ship the plugin {guid}, and BepInEx loads only one."
 msgstr "{names} both ship the plugin {guid}, and BepInEx loads only one."
 
-#: src/mods/describe.ts:309
+#: src/mods/describe.ts:311
 msgid "{name} has a file path {count} characters long, more than most Windows games can open."
 msgstr "{name} has a file path {count} characters long, more than most Windows games can open."
 
@@ -11147,7 +11151,7 @@ msgid "Needs a file from its itch.io page"
 msgstr "Needs a file from its itch.io page"
 
 #. placeholder {0}: d.folder
-#: src/mods/describe.ts:352
+#: src/mods/describe.ts:354
 msgid "{0} was added to this profile's mods folder by hand, not installed by Mortar."
 msgstr "{0} was added to this profile's mods folder by hand, not installed by Mortar."
 
@@ -11420,7 +11424,7 @@ msgstr "Whole file"
 msgid "SMAPI UniqueID"
 msgstr "SMAPI UniqueID"
 
-#: src/mods/describe.ts:315
+#: src/mods/describe.ts:317
 msgid "{name} is deprecated on Thunderstore."
 msgstr "{name} is deprecated on Thunderstore."
 
@@ -11967,7 +11971,7 @@ msgstr "Import…"
 msgid "Install {name}?"
 msgstr "Install {name}?"
 
-#: src/mods/describe.ts:314
+#: src/mods/describe.ts:316
 msgid "{name} is deprecated on Thunderstore; its page points to {replacement}."
 msgstr "{name} is deprecated on Thunderstore; its page points to {replacement}."
 
@@ -13403,7 +13407,7 @@ msgstr "No problems found"
 msgid "Manage templates…"
 msgstr "Manage templates…"
 
-#: src/mods/describe.ts:356
+#: src/mods/describe.ts:358
 msgid "{name} was removed from this profile's mods folder."
 msgstr "{name} was removed from this profile's mods folder."
 
