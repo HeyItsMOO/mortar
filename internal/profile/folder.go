@@ -105,7 +105,7 @@ func (s *Store) MoveToFolder(game, id, parent string) (Profile, error) {
 	if _, err := os.Lstat(target); err == nil {
 		return Profile{}, usererr.New(usererr.Invalid, "that folder already holds a profile folder of this name")
 	}
-	if err := s.relocate(game, id, home, target); err != nil {
+	if err := s.relocate(home, target); err != nil {
 		return Profile{}, err
 	}
 	return s.read(game, id)
@@ -122,14 +122,14 @@ func (s *Store) MoveHome(game, id string) (Profile, error) {
 	if err != nil {
 		return Profile{}, err
 	}
-	if err := s.bringHome(game, id, home); err != nil {
+	if err := s.bringHome(home); err != nil {
 		return Profile{}, err
 	}
 	return s.read(game, id)
 }
 
 // relocate copies the profile's folder to target, then makes home a link to it.
-func (s *Store) relocate(game, id, home, target string) error {
+func (s *Store) relocate(home, target string) error {
 	cur, err := fsx.EvalSymlinks(home)
 	if err != nil {
 		return err
@@ -168,7 +168,7 @@ func (s *Store) relocate(game, id, home, target string) error {
 }
 
 // bringHome copies a linked profile back to its usual place and removes the other folder.
-func (s *Store) bringHome(game, id, home string) error {
+func (s *Store) bringHome(home string) error {
 	cur := folderOf(home)
 	if cur == "" {
 		return nil
