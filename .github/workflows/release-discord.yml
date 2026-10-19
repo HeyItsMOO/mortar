@@ -1,29 +1,43 @@
 name: Release announcement
 
+# Called by release.yml after the release is published: a release published with the workflow token fires no
+# `release` event. A manual dispatch announces an already-published tag.
 on:
-  release:
-    types: [published]
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+    secrets:
+      DISCORD_RELEASES_WEBHOOK:
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published release tag to announce, e.g. v0.3.7
+        type: string
+        required: true
 
 permissions:
   contents: read
 
 jobs:
   announce:
-    if: startsWith(github.event.release.tag_name, 'v') && !github.event.release.prerelease
+    if: startsWith(inputs.tag, 'v')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Checkout release notes
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ inputs.tag }}
           sparse-checkout: build/release/notes
           persist-credentials: false
 
       - name: Post to Discord
         env:
-          TAG: ${{ github.event.release.tag_name }}
-          RELEASE_URL: ${{ github.event.release.html_url }}
+          TAG: ${{ inputs.tag }}
+          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ inputs.tag }}
           WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
           ROLE: ${{ vars.DISCORD_RELEASE_PINGS_ROLE }}
         run: |

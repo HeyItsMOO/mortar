@@ -427,3 +427,12 @@ jobs:
       tag: ${{ github.ref_name }}
     secrets:
       MORTAR_REPO_GPG_KEY: ${{ secrets.MORTAR_REPO_GPG_KEY }}
+
+  announce:
+    needs: finalize
+    if: github.ref_type == 'tag'
+    uses: ./.github/workflows/release-discord.yml
+    with:
+      tag: ${{ github.ref_name }}
+    secrets:
+      DISCORD_RELEASES_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
