@@ -20,7 +20,8 @@ export function PlayInstances({ game }: { game: string }) {
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: 'auto 1fr',
         alignItems: 'center',
         gap: space.gap,
         px: space.pad,
@@ -35,7 +36,7 @@ export function PlayInstances({ game }: { game: string }) {
         label={t`Instances`}
         onCommit={(n) => SetByKey('instances', String(n), game)}
       />
-      <Typography sx={{ fontSize: 12, color: 'var(--mortar-ink-soft)' }}>{t`Delay s`}</Typography>
+      <Typography sx={{ fontSize: 12, color: 'var(--mortar-ink-soft)' }}>{t`Delay (s)`}</Typography>
       <PrefNumber
         value={prefAsNumber(delayRaw, delay, game)}
         min={delay.min ?? 1}

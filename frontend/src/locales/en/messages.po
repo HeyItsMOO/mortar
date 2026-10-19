@@ -3213,8 +3213,8 @@ msgstr "Not loaded in the running game"
 msgid "Get help"
 msgstr "Get help"
 
-#: src/launch/PlayInstances.tsx:30
-#: src/launch/PlayInstances.tsx:35
+#: src/launch/PlayInstances.tsx:31
+#: src/launch/PlayInstances.tsx:36
 #: src/settings/prefCopyGame.ts:73
 msgid "Instances"
 msgstr "Instances"
@@ -4047,7 +4047,7 @@ msgstr "Keep downloaded archives"
 msgid "Duplicates"
 msgstr "Duplicates"
 
-#: src/launch/PlayInstances.tsx:43
+#: src/launch/PlayInstances.tsx:44
 #: src/settings/prefCopyGame.ts:79
 msgid "Delay seconds"
 msgstr "Delay seconds"
@@ -10835,6 +10835,10 @@ msgstr "Move up"
 msgid "Open download page"
 msgstr "Open download page"
 
+#: src/launch/PlayInstances.tsx:39
+msgid "Delay (s)"
+msgstr "Delay (s)"
+
 #: src/profiles/HistoryEventRow.tsx:109
 #: src/profiles/MergeDialog.tsx:60
 #: src/share/Included.tsx:158
@@ -12188,10 +12192,6 @@ msgstr "Changes from your other machines"
 #: src/settings/GraphicsApiRow.tsx:19
 msgid "Ask when I press Play"
 msgstr "Ask when I press Play"
-
-#: src/launch/PlayInstances.tsx:38
-msgid "Delay s"
-msgstr "Delay s"
 
 #. placeholder {0}: loader.name
 #: src/loader/Banner.tsx:29
