@@ -524,6 +524,9 @@
       "r2modmanFolder": "ContentWarning",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/Landfall Games/Content Warning"
+        },
         "unityLog": {
           "windows": "{localLow}/Landfall Games/Content Warning/Player.log"
         }
@@ -616,6 +619,9 @@
       "r2modmanFolder": "COTL",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/Massive Monster/Cult Of The Lamb/saves"
+        },
         "unityLog": {
           "windows": "{localLow}/Massive Monster/Cult Of The Lamb/Player.log"
         }
@@ -660,6 +666,9 @@
       "r2modmanFolder": "SunHaven",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/Pixel Sprout Studios/Sun Haven/Saves"
+        },
         "unityLog": {
           "windows": "{localLow}/Pixel Sprout Studios/Sun Haven/Player.log"
         }
@@ -703,6 +712,9 @@
       "r2modmanFolder": "PotionCraft",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/niceplay games/Potion Craft"
+        },
         "unityLog": {
           "windows": "{localLow}/niceplay games/Potion Craft/Player.log"
         }
@@ -786,6 +798,9 @@
       "r2modmanFolder": "AgainstTheStorm",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/Eremite Games/Against the Storm"
+        },
         "unityLog": {
           "windows": "{localLow}/Eremite Games/Against the Storm/Player.log"
         }
@@ -1061,6 +1076,10 @@
       "r2modmanFolder": "ETG",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/Dodge Roll/Enter the Gungeon",
+          "linux": "{xdgConfig}/unity3d/Dodge Roll/Enter the Gungeon"
+        },
         "unityLog": {
           "windows": "{localLow}/Dodge Roll/Enter the Gungeon/Player.log"
         }
@@ -1228,6 +1247,9 @@
       "r2modmanFolder": "LethalLeagueBlaze",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/Team Reptile/LLBlaze"
+        },
         "unityLog": {
           "windows": "{localLow}/Team Reptile/LLBlaze/Player.log",
           "linux": "{xdgConfig}/unity3d/Team Reptile/LLBlaze/Player.log"
@@ -1428,6 +1450,9 @@
       "r2modmanFolder": "NineSols",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{localLow}/RedCandleGames/NineSols"
+        },
         "unityLog": {
           "windows": "{localLow}/RedCandleGames/NineSols/Player.log"
         }
@@ -4394,6 +4419,11 @@
       "marker": "DSPGAME.exe",
       "r2modmanFolder": "DysonSphereProgram",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{documents}/Dyson Sphere Program"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -5056,6 +5086,12 @@
       "marker": "Hollow Knight Silksong.exe",
       "r2modmanFolder": "HollowKnightSilksong",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{localLow}/Team Cherry/Hollow Knight Silksong",
+          "linux": "{xdgConfig}/unity3d/Team Cherry/Hollow Knight Silksong"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7676,6 +7712,12 @@
       "marker": "ULTRAKILL.exe",
       "r2modmanFolder": "ULTRAKILL",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{install}/Saves",
+          "linux": "{install}/Saves"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7776,6 +7818,11 @@
       "marker": "Subnautica.exe",
       "r2modmanFolder": "Subnautica",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{install}/SNAppData/SavedGames"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -7824,6 +7871,11 @@
       "marker": "SubnauticaZero.exe",
       "r2modmanFolder": "SubnauticaBZ",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{install}/SNAppData/SavedGames"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -8761,6 +8813,11 @@
       "marker": "Schedule I.exe",
       "r2modmanFolder": "ScheduleI",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{localLow}/TVGS/Schedule I/Saves"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -9918,6 +9975,9 @@
       "markerDir": "bin/x64_DX12",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{documents}/The Witcher 3/gamesaves"
+        },
         "mods": {
           "windows": "{install}"
         }
@@ -10094,6 +10154,9 @@
       "markerDir": "bin/x64",
       "metadata": [],
       "paths": {
+        "saves": {
+          "windows": "{home}/Saved Games/CD Projekt Red/Cyberpunk 2077"
+        },
         "mods": {
           "windows": "{install}"
         }
@@ -10178,6 +10241,11 @@
       "markerDir": "Ship",
       "r2modmanFolder": "HadesII",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{home}/Saved Games/Hades II"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -10219,6 +10287,11 @@
       "marker": "Risk of Rain Returns.exe",
       "r2modmanFolder": "RiskofRainReturns",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{appData}/Risk_of_Rain_Returns"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -10285,6 +10358,11 @@
       "marker": "Balatro.exe",
       "r2modmanFolder": "Balatro",
       "metadata": [],
+      "paths": {
+        "saves": {
+          "windows": "{appData}/Balatro"
+        }
+      },
       "deploy": "profile",
       "targets": [
         {
@@ -10326,6 +10404,12 @@
       "marker": "7DaysToDie.exe",
       "metadata": [],
       "paths": { "mods": { "windows": "{install}/Mods" } },
+      "paths": {
+        "saves": {
+          "windows": "{appData}/7DaysToDie/Saves",
+          "linux": "{xdgData}/7DaysToDie/Saves"
+        }
+      },
       "deploy": "profile",
       "targets": [{ "id": "mods", "root": "{profile}/Mods", "modRoot": "ModInfo.xml" }],
       "stores": { "steam": { "appId": "251570" } },
