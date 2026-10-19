@@ -2,12 +2,12 @@ package game
 
 import (
 	"fmt"
-	"github.com/Rethunk-Tech/mortar/internal/customgame"
 	"log"
 	"path/filepath"
 	"strings"
 
 	"github.com/Rethunk-Tech/mortar/internal/components"
+	"github.com/Rethunk-Tech/mortar/internal/customgame"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
 	"github.com/Rethunk-Tech/mortar/internal/framework"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
