@@ -160,7 +160,7 @@ func (s *Service) Files(game, profileID, modID string) ([]ConfigFile, error) {
 		}
 		out = append(out, d.file())
 	}
-	return out, nil
+	return append(out, s.melonFile(game, profileID, modID, names)...), nil
 }
 
 // cfgOnDisk is one .cfg of the profile's BepInEx config folder, read once, one JSON file of its mod config folder, or
@@ -451,6 +451,9 @@ func (s *Service) Schema(game, profileID, modID, file string) (Schema, error) {
 	if f.Format == FormatText {
 		return Schema{File: f, Sections: []Section{}}, nil
 	}
+	if f.Format == FormatMelon {
+		return s.melonSchema(game, profileID, modID, f)
+	}
 	if f.Format == FormatJSON {
 		path, err := s.jsonPath(game, profileID, f.Name)
 		if err != nil {
@@ -574,6 +577,9 @@ func (s *Service) write(game, profileID, modID string, f ConfigFile, edits []edi
 	}
 	if f.Format == FormatJSON {
 		return s.writeJSON(game, profileID, f.Name, edits)
+	}
+	if f.Format == FormatMelon {
+		return s.writeMelon(game, profileID, edits)
 	}
 	p, err := s.cfgPath(game, profileID, f.Name)
 	if err != nil {

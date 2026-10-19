@@ -5,7 +5,9 @@ package configsvc
 // Config file formats.
 const (
 	FormatBepInEx = "bepinex"
-	FormatSMAPI   = "smapi"
+	// FormatMelon is MelonLoader's UserData/MelonPreferences.cfg, a TOML file typed by its values.
+	FormatMelon = "melon"
+	FormatSMAPI = "smapi"
 	// FormatGMCM is a mod's in-game settings menu as the bridge captured it; edits wait for the next start.
 	FormatGMCM = "gmcm"
 	// FormatJSON is a JSON file a mod writes to the game's mod config folder (Vintage Story's ModConfig), of which

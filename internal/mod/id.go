@@ -10,6 +10,7 @@ import (
 const (
 	FormatSMAPI        = "smapi"
 	FormatBepInEx      = "bepinex"
+	FormatMelon        = "melon"
 	FormatThunderstore = "thunderstore"
 	// FormatFolder names a mod of a game with no loader, by the store item that holds its files.
 	FormatFolder = "folder"
