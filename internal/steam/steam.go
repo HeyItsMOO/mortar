@@ -216,13 +216,13 @@ func (s Steam) CurrentAccount() (Account, error) {
 		if !ok {
 			continue
 		}
-		name, _ := e["AccountName"].(string)
-		persona, _ := e["PersonaName"].(string)
+		name, _ := vdfKey(e, "AccountName").(string)
+		persona, _ := vdfKey(e, "PersonaName").(string)
 		acct := Account{ID: id, AccountName: name, PersonaName: persona}
-		if e["MostRecent"] == "1" {
+		if vdfKey(e, "MostRecent") == "1" {
 			return acct, nil
 		}
-		ts, _ := e["Timestamp"].(string)
+		ts, _ := vdfKey(e, "Timestamp").(string)
 		if at, err := strconv.ParseInt(ts, 10, 64); err == nil && (at > bestAt || at == bestAt && id < best.ID) {
 			best, bestAt = acct, at
 		}
@@ -231,6 +231,20 @@ func (s Steam) CurrentAccount() (Account, error) {
 		return Account{}, errors.New("no Steam account is signed in")
 	}
 	return best, nil
+}
+
+// vdfKey looks a key up the way Steam does, ignoring case: current clients write loginusers.vdf's "timestamp" in
+// lower case where older ones wrote "Timestamp".
+func vdfKey(m map[string]any, key string) any {
+	if v, ok := m[key]; ok {
+		return v
+	}
+	for k, v := range m {
+		if strings.EqualFold(k, key) {
+			return v
+		}
+	}
+	return nil
 }
 
 // HeroArt returns the path of appID's library_hero.jpg, or "" when Steam has not cached it.
