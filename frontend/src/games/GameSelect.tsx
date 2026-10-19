@@ -2,7 +2,7 @@ import { useLingui } from '@lingui/react/macro'
 import { Box, Button, Link, Typography } from '@mui/material'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { Play, Settings } from 'lucide-react'
-import { type MouseEvent, memo, useEffect, useRef, useState } from 'react'
+import { type MouseEvent, memo, useRef, useState } from 'react'
 import type { GameInfo } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/game/models.ts'
 import type { Profile } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import type { Played } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/models.ts'
@@ -18,15 +18,14 @@ import { useNow } from '../i18n/useNow.ts'
 import { playDirect } from '../launch/directPref.ts'
 import { useLaunch } from '../launch/store.ts'
 import { type GameId, openSettings, useNav } from '../nav/store.ts'
-import { isTypingTarget } from '../settings/shortcuts.ts'
 import { useSettings } from '../settings/store.ts'
 import { arrowFocus } from '../shell/arrowFocus.ts'
 import { CoverButton } from '../shell/CoverButton.tsx'
 import { LoadErrorRow, LoadingRow } from '../shell/LoadingRow.tsx'
 import { Tooltip } from '../shell/Tooltip.tsx'
-import { TYPE_RESET_MS, typedKey, typedMatch } from '../shell/typeahead.ts'
 import { reportError } from '../toasts/report.ts'
 import { gameArt } from './art.ts'
+import { listItems, useTypeToScroll } from './gameList.ts'
 import { LetterRail } from './LetterRail.tsx'
 import { gameOrder, initialOf } from './order.ts'
 import { ProfileCards } from './ProfileCards.tsx'
@@ -38,6 +37,7 @@ import { useOpenGame } from './useOpenGame.ts'
 type Game = GameInfo
 
 const ROW_PX = 168
+const ART_OPACITY = 0.72
 // How much taller the row under the pointer, or holding focus, stands.
 const ROW_GROW_PX = 72
 const HOVER_MS = 450
@@ -74,6 +74,10 @@ function Art({ src, openable }: { src: string; openable: boolean }) {
         // dark base showing in place of a broken-image mark.
         loading="lazy"
         decoding="async"
+        // Shown once whole: a half-loaded picture paints its top over a black band.
+        onLoad={(e) => {
+          e.currentTarget.style.opacity = String(ART_OPACITY)
+        }}
         onError={(e) => {
           e.currentTarget.style.display = 'none'
         }}
@@ -83,7 +87,7 @@ function Art({ src, openable }: { src: string; openable: boolean }) {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          opacity: 0.72,
+          opacity: 0,
           filter: openable ? 'none' : 'saturate(0.6)',
         }}
       />
@@ -372,64 +376,6 @@ const RAIL_MIN_GAMES = 8
 
 const HEADING_PX = 40
 
-// The list is virtual: with every catalog game mounted, scrolling through them all kept each row's decoded art.
-type Item =
-  | { kind: 'heading'; key: string; label: string; count: number }
-  | { kind: 'game'; key: string; game: Game }
-
-function listItems(groups: { label: string; games: Game[] }[]): Item[] {
-  const out: Item[] = []
-  for (const { label, games } of groups) {
-    if (games.length > 0) {
-      out.push({ kind: 'heading', key: `h:${label}`, label, count: games.length })
-      for (const game of games) {
-        out.push({ kind: 'game', key: game.id, game })
-      }
-    }
-  }
-  return out
-}
-
-// Typing a game's name anywhere on the page jumps to it. The listener reads the list through a ref so the letters
-// typed so far survive the page's re-renders.
-function useTypeToScroll(games: Game[], reveal: (id: string) => void) {
-  const list = useRef({ games, reveal })
-  list.current = { games, reveal }
-  useEffect(() => {
-    let typed = ''
-    let at = 0
-    const onKey = (e: KeyboardEvent) => {
-      const { target } = e
-      if (
-        e.ctrlKey ||
-        e.metaKey ||
-        e.altKey ||
-        e.key.length !== 1 ||
-        isTypingTarget(target instanceof HTMLElement ? target : null) ||
-        document.querySelector('[role="dialog"], [role="menu"]')
-      ) {
-        return
-      }
-      const fresh = e.timeStamp - at > TYPE_RESET_MS
-      if (!typedKey(e.key)) {
-        // A space inside a name being typed would otherwise press the row that typing just focused.
-        if (e.key === ' ' && !fresh) {
-          e.preventDefault()
-        }
-        return
-      }
-      typed = fresh ? e.key : typed + e.key
-      at = e.timeStamp
-      const hit = typedMatch(list.current.games, typed, (g) => g.name)
-      if (hit) {
-        list.current.reveal(hit.id)
-      }
-    }
-    globalThis.addEventListener('keydown', onKey)
-    return () => globalThis.removeEventListener('keydown', onKey)
-  }, [])
-}
-
 function GameSelect() {
   const { t } = useLingui()
   const { status, loadError, refresh, tileProps } = useGameTiles()
@@ -481,14 +427,18 @@ function GameSelect() {
   const letters = [...new Set(rest.map((g) => initialOf(g.name)))]
   // The rail marks the letter of the first alphabetical row still in view.
   const restIds = new Set(rest.map((g) => g.id))
+  // At the end of the list the last letters' rows all fit on one screen, so the bottom marks the last letter.
   const markLetter = () => {
-    const offset = scroller.current?.scrollTop ?? 0
+    const box = scroller.current
+    const offset = box?.scrollTop ?? 0
+    const atEnd = box ? offset + box.clientHeight >= box.scrollHeight - 1 : false
     const shown = virtualizer.getVirtualItems().find((v) => {
       const it = items[v.index]
       return v.end > offset + 1 && it?.kind === 'game' && restIds.has(it.game.id)
     })
     const it = shown ? items[shown.index] : undefined
-    const first = it?.kind === 'game' ? it.game : rest[0]
+    const inView = it?.kind === 'game' ? it.game : rest[0]
+    const first = atEnd ? rest.at(-1) : inView
     setCurrent(first && offset > 0 ? initialOf(first.name) : '')
   }
   const jump = (letter: string) => {
