@@ -19,13 +19,13 @@ Discord sends this as the server is used. The bot acts on it as it arrives and d
 
 ## What the bot keeps
 
-The bot keeps a short-lived local cache of recent messages and member names on Rethunk.Tech's own machine, to log edits and deletions and to reduce requests to Discord. Message text leaves the cache after 30 days; a member's names and roles stay while they are in the server. It is never shared.
+The bot keeps a short-lived local cache of recent messages and member names on Rethunk.Tech's own machine, to log edits and deletions and to reduce requests to Discord. Message text leaves the cache after 30 days. A member's names and roles, and the names they used before (username, display name and nickname changes the bot has seen), stay while they are in the server. A list of the moderation actions taken through the bot (which action, by whom, and when) is kept for as long as the case threads below. None of it is shared.
 
 In staff-only channels on the server, the bot posts:
 
 - a log of edited and deleted messages (with their text), name changes, joins and leaves, and role changes with who made them, kept indefinitely so moderators can look back;
 - each ban, kick and timeout made through the bot, with the moderator and the reason;
-- one thread per member who has needed moderation, with those actions and moderators' notes.
+- one thread per member who has needed moderation, with those actions and moderators' notes. Each entry includes a snapshot of the member: their names and previous names, roles, join and account dates, status such as a timeout or having rejoined, their earlier moderation record, and their last few messages still in the cache, and any message a moderator wrote them up for.
 
 A private ticket is a thread only its member and staff can see, and stays in the server after it is closed.
 
