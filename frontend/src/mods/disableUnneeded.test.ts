@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
-import { unneededImplicit } from './disableUnneeded.ts'
+import { dependentsStillOn, unneededImplicit } from './disableUnneeded.ts'
 
 const mod = (id: string, needs: string[] = [], over: Partial<Mod> = {}) =>
   ({ key: id, id, name: id, enabled: true, needs, ...over }) as Mod
@@ -33,4 +33,17 @@ test('removing also takes switched-off libraries, and keeps what a switched-off 
   expect(unneededImplicit(all, [pack], implicit, true).map((m) => m.id)).toEqual(['Lib.Off'])
   // Switching off instead leaves a library only switched-off mods need free to go off too.
   expect(unneededImplicit(all, [pack], implicit).map((m) => m.id)).toEqual(['Lib.Kept'])
+})
+
+test('switching a mod off finds the enabled mods that need it, through what needs them in turn', () => {
+  const core = mod('Core.Lib', [], { enabled: false })
+  const all = [
+    core,
+    mod('Uses.Core', ['Core.Lib']),
+    mod('Uses.Uses', ['Uses.Core']),
+    mod('Optional.User', ['Core.Lib'], { optional: ['Core.Lib'] }),
+    mod('Already.Off', ['Core.Lib'], { enabled: false }),
+    mod('Unrelated'),
+  ]
+  expect(dependentsStillOn(all, [core]).map((m) => m.id)).toEqual(['Uses.Core', 'Uses.Uses'])
 })

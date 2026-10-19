@@ -35,7 +35,7 @@ import {
   fieldsStillUndoable,
   type UndoEntry,
 } from '../toasts/undo.ts'
-import { offerUnneeded } from './disableUnneeded.ts'
+import { offerDependents, offerUnneeded } from './disableUnneeded.ts'
 import { enableRequirementsDecision, pendingRequired } from './enableRequirements.ts'
 import { considerEnableRequirements, enableRequirementsMode } from './enableRequirementsApply.ts'
 import { modId } from './lookup.ts'
@@ -196,6 +196,7 @@ export async function enableMany(
   if (enabled) {
     await afterEnable(set, get, pending, mods)
   } else {
+    offerDependents(get().mods, mods, (list) => enableMany(set, get, list, false))
     offerUnneeded(get().mods, mods, (list) => enableMany(set, get, list, false))
   }
   await get().loadProblems()
@@ -265,6 +266,7 @@ export async function setEnabledAction(
     if (enabled) {
       await afterEnable(set, get, pending, [mod])
     } else {
+      offerDependents(get().mods, [mod], (list) => enableMany(set, get, list, false))
       offerUnneeded(get().mods, [mod], (list) => enableMany(set, get, list, false))
     }
     await get().loadProblems()

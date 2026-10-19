@@ -6762,6 +6762,10 @@ msgstr "Keep forever"
 msgid "Delete the unreadable changes from history?"
 msgstr "Delete the unreadable changes from history?"
 
+#: src/mods/disableUnneeded.ts:123
+msgid "Switch them off too"
+msgstr "Switch them off too"
+
 #: src/mods/updateReview/undoAll.ts:42
 msgid "Downloaded versions stay in the store for re-use."
 msgstr "Downloaded versions stay in the store for re-use."
@@ -14247,6 +14251,11 @@ msgstr "a few seconds ago"
 #: src/templates/TemplateDialogs.tsx:119
 msgid "Delete {name}"
 msgstr "Delete {name}"
+
+#. placeholder {0}: dependents.length
+#: src/mods/disableUnneeded.ts:117
+msgid "{0, plural, one {# mod still on needs a mod you switched off} other {# mods still on need a mod you switched off}}"
+msgstr "{0, plural, one {# mod still on needs a mod you switched off} other {# mods still on need a mod you switched off}}"
 
 #. placeholder {0}: found.length
 #: src/downloads/newDownloads.ts:44

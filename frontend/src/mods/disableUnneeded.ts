@@ -1,10 +1,11 @@
 import { msg, plural } from '@lingui/core/macro'
 import type { Mod } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/profile/models.ts'
 import { i18n } from '../i18n/index.ts'
+import { listNames } from '../i18n/list.ts'
 import { openProfileOf, useProfiles } from '../profiles/store.ts'
 import { reportUnexpected } from '../toasts/report.ts'
 import { useToasts } from '../toasts/store.ts'
-import { idKey, requiredIdsOf } from './dependents.ts'
+import { dependentsOf, idKey, requiredIdsOf } from './dependents.ts'
 import { readsImplicit } from './installReason.ts'
 import { entryOf } from './lookup.ts'
 
@@ -81,6 +82,46 @@ export function offerUnneeded(
     action: {
       label: i18n._(msg`Switch off`),
       run: () => switchOff(unneeded).catch(reportUnexpected),
+    },
+  })
+}
+
+/**
+ * The mods still on that need the mods just switched off, and the mods that need those in turn: with a required mod
+ * off they cannot work, so one click can switch the whole chain off.
+ */
+export function dependentsStillOn(all: readonly Mod[], off: readonly Mod[]): Mod[] {
+  const out: Mod[] = []
+  for (
+    let next = dependentsOf(all, off);
+    next.length > 0;
+    next = dependentsOf(all, [...off, ...out])
+  ) {
+    out.push(...next)
+  }
+  return out
+}
+
+// After mods are switched off, warns about the mods that need them and offers to switch those off too.
+export function offerDependents(
+  all: readonly Mod[],
+  off: readonly Mod[],
+  switchOff: (mods: Mod[]) => Promise<void>,
+) {
+  const dependents = dependentsStillOn(all, off)
+  if (dependents.length === 0) {
+    return
+  }
+  useToasts.getState().push({
+    kind: 'warning',
+    title: plural(dependents.length, {
+      one: '# mod still on needs a mod you switched off',
+      other: '# mods still on need a mod you switched off',
+    }),
+    body: listNames(dependents.map((m) => m.name)),
+    action: {
+      label: i18n._(msg`Switch them off too`),
+      run: () => switchOff(dependents).catch(reportUnexpected),
     },
   })
 }
