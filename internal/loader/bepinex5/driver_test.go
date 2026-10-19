@@ -154,10 +154,14 @@ func TestSendHandsTheLineToTheBridgeConsole(t *testing.T) {
 	}()
 	dir := t.TempDir()
 	state := filepath.Join(dir, "BepInEx", "config", "mortar-bepinex-bridge.json")
-	if err := os.MkdirAll(filepath.Dir(state), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(state), 0o750); err != nil {
 		t.Fatal(err)
 	}
-	port := ln.Addr().(*net.TCPAddr).Port
+	tcp, ok := ln.Addr().(*net.TCPAddr)
+	if !ok {
+		t.Fatal("listener has no TCP address")
+	}
+	port := tcp.Port
 	if err := os.WriteFile(state, []byte(fmt.Sprintf(`{"port":%d,"token":"tok"}`, port)), 0o600); err != nil {
 		t.Fatal(err)
 	}
