@@ -1274,8 +1274,12 @@ func run() error {
 		trayMenu.Add("Show Mortar").OnClick(func(*application.Context) {
 			showWindow()
 		})
+		busy := map[string]bool{}
+		for _, id := range launches.BusyAmong(implemented) {
+			busy[id] = true
+		}
 		for _, id := range implemented {
-			if !launches.Busy(id) {
+			if !busy[id] {
 				continue
 			}
 			name := id
@@ -1301,7 +1305,7 @@ func run() error {
 			recent, _ := launches.RecentLaunches(id, 3)
 			for _, row := range recent {
 				item := trayMenu.Add("Play " + row.Name)
-				if launches.Busy(id) {
+				if busy[id] {
 					item.SetEnabled(false)
 				} else {
 					profileID := row.ProfileID

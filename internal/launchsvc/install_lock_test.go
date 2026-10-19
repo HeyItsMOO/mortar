@@ -7,6 +7,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -221,4 +222,23 @@ func waitSettled(t *testing.T, svc *Service) {
 		time.Sleep(10 * time.Millisecond)
 	}
 	t.Error("the launches did not finish")
+}
+
+func TestBusyAmongNamesTheBusyGamesFromOneScan(t *testing.T) {
+	pair := twoInstalls(t)
+	svc := pair.svc
+	svc.procDir = t.TempDir()
+	ids := []string{"stardew", "valheim", "lethal-company"}
+	if got := svc.BusyAmong(ids); len(got) != 0 {
+		t.Fatalf("an idle machine has busy games: %v", got)
+	}
+	svc.set(Status{Game: "lethal-company", State: Launching, Profile: "p"})
+	if got := svc.BusyAmong(ids); !slices.Equal(got, []string{"lethal-company"}) {
+		t.Fatalf("a game launching from Mortar: %v", got)
+	}
+	svc.set(Status{Game: "lethal-company", State: Idle})
+	fakeProc(t, svc, "7", pair.gogDir+"/StardewValley", pair.gogDir+"/StardewValley")
+	if got := svc.BusyAmong(ids); !slices.Equal(got, []string{"stardew"}) {
+		t.Fatalf("a game running outside Mortar: %v", got)
+	}
 }

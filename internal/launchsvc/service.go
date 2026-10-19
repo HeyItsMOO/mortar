@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -520,7 +519,40 @@ func (s *Service) findInstall(installID string) (slot, bool) {
 
 // AnyBusy reports whether any implemented game is launching or running.
 func (s *Service) AnyBusy() bool {
-	return slices.ContainsFunc(game.Implemented(), s.Busy)
+	return len(s.BusyAmong(game.Implemented())) > 0
+}
+
+// BusyAmong lists the games among ids that are launching or running. Asking Busy of each reads the whole process
+// table once per game, which for the catalog's few hundred games is over a second; this reads it once, and asks Busy
+// only of a game with a state of its own or, when any game's process is alive, of every game.
+func (s *Service) BusyAmong(ids []string) []string {
+	var names []string
+	for _, id := range ids {
+		if g := game.Find(id); g != nil {
+			names = append(names, game.ProcessNames(g)...)
+		}
+	}
+	procs, err := launch.Processes(s.procDir, names...)
+	anyAlive := err != nil || len(procs) > 0
+	var out []string
+	for _, id := range ids {
+		if (anyAlive || s.hasActiveState(id)) && s.Busy(id) {
+			out = append(out, id)
+		}
+	}
+	return out
+}
+
+// hasActiveState reports whether any install of the game is recorded as launching or running.
+func (s *Service) hasActiveState(gameID string) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for key, st := range s.status {
+		if strings.HasPrefix(key, gameID+"/") && st.State.Active() {
+			return true
+		}
+	}
+	return false
 }
 
 // statusOf is the install's launch state after looking for a game Mortar did not start.
