@@ -17,6 +17,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/launchplan"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/loader/dotnetstack"
 	"github.com/Rethunk-Tech/mortar/internal/source/thunderstore"
 )
 
@@ -240,4 +241,9 @@ func (Loader) ModArchive(names []string) bool {
 		return false
 	}
 	return root("manifest.json") && root("icon.png")
+}
+
+// StackBlame names the plugin frame nearest the throw of each exception stack in BepInEx's log or Unity's Player.log.
+func (Loader) StackBlame(log string) []loader.Blame {
+	return dotnetstack.Blames(log, dotnetstack.Unity)
 }

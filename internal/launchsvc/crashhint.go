@@ -7,6 +7,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/game"
 	"github.com/Rethunk-Tech/mortar/internal/launch"
 	"github.com/Rethunk-Tech/mortar/internal/loader"
+	"github.com/Rethunk-Tech/mortar/internal/loader/dotnetstack"
 	"github.com/Rethunk-Tech/mortar/internal/mod"
 	"github.com/Rethunk-Tech/mortar/internal/profile"
 )
@@ -111,22 +112,41 @@ func (s *Service) loaderLog(logs loader.WithLogs, gameID, profileID string) (str
 	return string(raw), err == nil
 }
 
-// stackBlames reads the exception stacks of the loader's log that run through a mod; nil for a loader without them.
+// stackBlames reads the exception stacks of the run's logs that run through a mod: the loader's log and Unity's
+// player log for a loader that parses stacks, else the game's own crash report and log. Nil when the game keeps none.
 func (s *Service) stackBlames(gameID, profileID string) []loader.Blame {
 	l, ok := s.loaderOf(gameID, profileID)
 	if !ok {
 		return nil
 	}
-	logs, isLogs := l.(loader.WithLogs)
-	stacks, hasStacks := l.(loader.WithStackBlame)
-	if !isLogs || !hasStacks {
-		return nil
+	if stacks, has := l.(loader.WithStackBlame); has {
+		var text string
+		if logs, isLogs := l.(loader.WithLogs); isLogs {
+			text, _ = s.loaderLog(logs, gameID, profileID)
+		}
+		if w, has := l.(loader.WithPlayerLog); has {
+			text += "\n" + s.gamePathText(gameID, w.PlayerLogRole())
+		}
+		return stacks.StackBlame(text)
 	}
-	raw, ok := s.loaderLog(logs, gameID, profileID)
-	if !ok {
-		return nil
+	// Vintage Story's mods are .NET code in the game's own process, and its logs are the crash report and main log.
+	if game.HasPath(gameID, game.PathCrashLog) {
+		return dotnetstack.Blames(s.gamePathText(gameID, game.PathLog)+"\n"+s.gamePathText(gameID, game.PathCrashLog), dotnetstack.VintageStory)
 	}
-	return stacks.StackBlame(raw)
+	return nil
+}
+
+// gamePathText is the text of the file the catalog places under role, empty when the game keeps none.
+func (s *Service) gamePathText(gameID, role string) string {
+	if s.settings == nil || !game.HasPath(gameID, role) {
+		return ""
+	}
+	path, err := game.PathFor(s.home, s.settings.Get(), gameID, "", role)
+	if err != nil {
+		return ""
+	}
+	b, _ := fsx.ReadFile(path)
+	return strings.ToValidUTF8(string(b), "")
 }
 
 // pickCulprit is the first finding, in log order, whose plugin is an enabled installed mod. A log names a plugin by
