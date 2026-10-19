@@ -37,6 +37,7 @@ Mortar is a desktop mod manager for several games (`mortar games` lists the cata
 - Flatpak: Mortar hosts its own repo until Flathub approves it.
 - The CLI exists for agents and automation; end users are GUI-only, so GUI work ranks above CLI parity.
 - Share links name their game ([form](docs/architecture.md#sharing)).
+- Store or launcher behaviour the maintainers cannot test (EA/Origin, Epic, Xbox, a game they do not own) follows the source of r2modman (ebkr/r2modmanPlus), Gale (Kesomannen/gale) or another established manager, cited by file.
 - LAN sharing accepts only local-network peers by default; "Accept connections from any network address" opens it to VPN and tailnet peers (NOMAD 2026-10-19: keep this default).
 - Mortar never re-hosts mod files; downloads come from each mod's own source. Exception: a profile sent between the user's own computers over the LAN, paired with a code, carries its mod files from every source.
 - Nexus downloads start only from Nexus's own Mod Manager Download button (or a Premium API download the user asked for in Mortar). The browser extension reads and marks Nexus pages and relays those clicks; it never starts downloads or opens Nexus pages itself.
