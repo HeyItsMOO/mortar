@@ -163,7 +163,7 @@ msgstr "Show failed"
 msgid "This profile matches that list."
 msgstr "This profile matches that list."
 
-#: src/settings/GameSettingsPage.tsx:105
+#: src/settings/GameSettingsPage.tsx:106
 msgid "Streaming"
 msgstr "Streaming"
 
@@ -2052,6 +2052,10 @@ msgstr "Name"
 msgid "Loader and other"
 msgstr "Loader and other"
 
+#: src/settings/prefCopyGame.ts:48
+msgid "Dependency versions"
+msgstr "Dependency versions"
+
 #: src/console/StartupTable.tsx:285
 msgid "Total"
 msgstr "Total"
@@ -2706,7 +2710,7 @@ msgstr "Error while loading"
 msgid "Downloading"
 msgstr "Downloading"
 
-#: src/profiles/OverrideRows.tsx:146
+#: src/profiles/OverrideRows.tsx:147
 msgid "Free Nexus accounts click each download on Nexus; those updates do not block Play."
 msgstr "Free Nexus accounts click each download on Nexus; those updates do not block Play."
 
@@ -3215,7 +3219,7 @@ msgstr "Get help"
 
 #: src/launch/PlayInstances.tsx:31
 #: src/launch/PlayInstances.tsx:36
-#: src/settings/prefCopyGame.ts:73
+#: src/settings/prefCopyGame.ts:91
 msgid "Instances"
 msgstr "Instances"
 
@@ -3254,7 +3258,7 @@ msgid "Sound volume"
 msgstr "Sound volume"
 
 #: src/browse/BrowseShow.tsx:50
-#: src/profiles/overrideValue.ts:124
+#: src/profiles/overrideValue.ts:126
 #: src/settings/prefCopy.ts:303
 #: src/settings/prefCopy.ts:370
 #: src/settings/prefCopy.ts:385
@@ -3760,6 +3764,10 @@ msgstr "Could not stop ignoring {source} updates"
 msgid "First updates"
 msgstr "First updates"
 
+#: src/settings/prefCopyGame.ts:60
+msgid "Exact"
+msgstr "Exact"
+
 #: src/nxm/store.ts:39
 msgid "The link was made for another Nexus account than the one signed in."
 msgstr "The link was made for another Nexus account than the one signed in."
@@ -3985,7 +3993,7 @@ msgstr "Grid card size"
 msgid "Add a saved group…"
 msgstr "Add a saved group…"
 
-#: src/settings/prefCopyGame.ts:69
+#: src/settings/prefCopyGame.ts:87
 msgid "Skip the pre-Play check"
 msgstr "Skip the pre-Play check"
 
@@ -3995,8 +4003,8 @@ msgid "Stopped at the API limit; {0} left"
 msgstr "Stopped at the API limit; {0} left"
 
 #: src/game/Sidebar.tsx:216
-#: src/settings/GameSettingsPage.tsx:102
-#: src/settings/GameSettingsPage.tsx:160
+#: src/settings/GameSettingsPage.tsx:103
+#: src/settings/GameSettingsPage.tsx:161
 msgid "Console"
 msgstr "Console"
 
@@ -4048,7 +4056,7 @@ msgid "Duplicates"
 msgstr "Duplicates"
 
 #: src/launch/PlayInstances.tsx:44
-#: src/settings/prefCopyGame.ts:79
+#: src/settings/prefCopyGame.ts:97
 msgid "Delay seconds"
 msgstr "Delay seconds"
 
@@ -4139,7 +4147,7 @@ msgstr "Custom categories"
 #: src/profiles/ProfilesPage.tsx:173
 #: src/saves/SaveBackupsButton.tsx:102
 #: src/saves/SaveBackupsButton.tsx:214
-#: src/settings/prefCopyGame.ts:58
+#: src/settings/prefCopyGame.ts:76
 #: src/settings/sections/DataStoreReport.tsx:422
 #: src/settings/sections/DataStoreReport.tsx:429
 #: src/templates/TemplateDialogs.tsx:116
@@ -4667,7 +4675,7 @@ msgid "Biome"
 msgstr "Biome"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/settings/GameSettingsPage.tsx:181
+#: src/settings/GameSettingsPage.tsx:182
 msgid "Back to {name}"
 msgstr "Back to {name}"
 
@@ -4679,6 +4687,10 @@ msgstr "Send to…"
 #: src/install/store.ts:78
 msgid "Could not undo the install"
 msgstr "Could not undo the install"
+
+#: src/settings/prefCopyGame.ts:55
+msgid "Newest"
+msgstr "Newest"
 
 #: src/settings/prefCopy.ts:417
 msgid "Share libraries and supporting mods"
@@ -5355,7 +5367,7 @@ msgid "Changed outside Mortar"
 msgstr "Changed outside Mortar"
 
 #. placeholder {0}: g.version
-#: src/settings/GameSettingsPage.tsx:117
+#: src/settings/GameSettingsPage.tsx:118
 msgid " · {name} {0}"
 msgstr " · {name} {0}"
 
@@ -5395,7 +5407,7 @@ msgstr "Launch environment"
 
 #: src/settings/prefCopy.ts:97
 #: src/settings/prefCopy.ts:105
-#: src/settings/prefCopyGame.ts:53
+#: src/settings/prefCopyGame.ts:71
 msgid "Ask"
 msgstr "Ask"
 
@@ -5474,7 +5486,7 @@ msgstr "Restore known good"
 msgid "Also updates {0} (same download)"
 msgstr "Also updates {0} (same download)"
 
-#: src/settings/prefCopyGame.ts:80
+#: src/settings/prefCopyGame.ts:98
 msgid "Seconds to wait between those processes"
 msgstr "Seconds to wait between those processes"
 
@@ -5602,7 +5614,7 @@ msgstr "Search Nexus Mods. Free accounts download from the mod's page with Mod M
 msgid "Mortar's own SMAPI mod; it records these timings"
 msgstr "Mortar's own SMAPI mod; it records these timings"
 
-#: src/settings/prefCopyGame.ts:75
+#: src/settings/prefCopyGame.ts:93
 msgid "How many game processes a direct Play starts. Hidden for Steam and store URL launches."
 msgstr "How many game processes a direct Play starts. Hidden for Steam and store URL launches."
 
@@ -5777,7 +5789,7 @@ msgstr "Beta / prerelease"
 msgid "Empty trash?"
 msgstr "Empty trash?"
 
-#: src/settings/prefCopyGame.ts:59
+#: src/settings/prefCopyGame.ts:77
 msgid "Delete them; rolling back still restores the old version."
 msgstr "Delete them; rolling back still restores the old version."
 
@@ -5928,7 +5940,7 @@ msgstr "Needs"
 msgid "Files set aside"
 msgstr "Files set aside"
 
-#: src/settings/GameSettingsPage.tsx:151
+#: src/settings/GameSettingsPage.tsx:152
 msgid "{name} profile history"
 msgstr "{name} profile history"
 
@@ -6599,7 +6611,7 @@ msgstr "Show slowest mods"
 msgid "Copy"
 msgstr "Copy"
 
-#: src/settings/prefCopyGame.ts:49
+#: src/settings/prefCopyGame.ts:67
 msgid "What happens to files the new version of a mod leaves out"
 msgstr "What happens to files the new version of a mod leaves out"
 
@@ -6803,7 +6815,7 @@ msgid "Edit profile…"
 msgstr "Edit profile…"
 
 #: src/game/Home.tsx:189
-#: src/settings/GameSettingsPage.tsx:180
+#: src/settings/GameSettingsPage.tsx:181
 msgid "{name} settings"
 msgstr "{name} settings"
 
@@ -7136,6 +7148,10 @@ msgstr "{0, plural, one {Stopped asking about # folder} other {Stopped asking ab
 #: src/share/ShareDialog.tsx:78
 msgid "Back"
 msgstr "Back"
+
+#: src/settings/prefCopyGame.ts:56
+msgid "Install the newest version; the mod's version is a minimum."
+msgstr "Install the newest version; the mod's version is a minimum."
 
 #: src/game/TemplateMenuItems.tsx:20
 msgid "Save as template…"
@@ -7613,8 +7629,8 @@ msgstr "Send"
 #: src/firstrunTour/TourPopover.tsx:46
 #: src/game/Sidebar.tsx:208
 #: src/mods/ModListVirtual.tsx:314
-#: src/settings/GameSettingsPage.tsx:99
-#: src/settings/GameSettingsPage.tsx:145
+#: src/settings/GameSettingsPage.tsx:100
+#: src/settings/GameSettingsPage.tsx:146
 #: src/settings/sections/Updates.tsx:181
 msgid "Mods"
 msgstr "Mods"
@@ -8162,7 +8178,7 @@ msgstr "Not found"
 
 #: src/profiles/EditProfileDialog.tsx:123
 #: src/profiles/GameSettings.tsx:182
-#: src/profiles/OverrideRows.tsx:137
+#: src/profiles/OverrideRows.tsx:138
 #: src/settings/sections/Appearance.tsx:212
 #: src/settings/sections/GameSettings.tsx:215
 msgid "Use default"
@@ -8847,6 +8863,10 @@ msgstr "Update {loaderName}"
 #: src/firstrunTour/TourPopover.tsx:31
 msgid "Switch mod sets here. Right-click a profile for rename, duplicate, and more."
 msgstr "Switch mod sets here. Right-click a profile for rename, duplicate, and more."
+
+#: src/settings/prefCopyGame.ts:50
+msgid "Which version of a Thunderstore mod's dependency to install when the mod names one"
+msgstr "Which version of a Thunderstore mod's dependency to install when the mod names one"
 
 #. placeholder {0}: overlay.baseLabel
 #: src/install/NeedsRootCallout.tsx:31
@@ -10413,7 +10433,7 @@ msgid "Waiting for {0}'s profile file to finish syncing"
 msgstr "Waiting for {0}'s profile file to finish syncing"
 
 #: src/mods/OldFilesCallouts.tsx:107
-#: src/settings/prefCopyGame.ts:63
+#: src/settings/prefCopyGame.ts:81
 msgid "Keep"
 msgstr "Keep"
 
@@ -10950,6 +10970,10 @@ msgstr "Follow live log"
 #: src/console/StartupPanel.tsx:35
 msgid "The next launch will be measured"
 msgstr "The next launch will be measured"
+
+#: src/settings/prefCopyGame.ts:61
+msgid "Install the version the mod's author named, as Gale does."
+msgstr "Install the version the mod's author named, as Gale does."
 
 #: src/share/MethodPanes.tsx:142
 msgid "A .mortar file suits a profile this size better, and carries your mod settings too."
@@ -11650,7 +11674,7 @@ msgstr "Deprecated"
 msgid "Details of {0}"
 msgstr "Details of {0}"
 
-#: src/settings/prefCopyGame.ts:64
+#: src/settings/prefCopyGame.ts:82
 msgid "Carry them into the new version's folder."
 msgstr "Carry them into the new version's folder."
 
@@ -11695,7 +11719,7 @@ msgid "Show file"
 msgstr "Show file"
 
 #: src/saves/BackupsDialog.tsx:159
-#: src/settings/GameSettingsPage.tsx:100
+#: src/settings/GameSettingsPage.tsx:101
 #: src/settings/sections/DataUsage.tsx:215
 #: src/settings/sections/GameSettings.tsx:385
 msgid "Save backups"
@@ -11731,7 +11755,7 @@ msgstr "Mod link not used"
 msgid "Only a paired computer gets it."
 msgstr "Only a paired computer gets it."
 
-#: src/settings/prefCopyGame.ts:54
+#: src/settings/prefCopyGame.ts:72
 msgid "Set them aside and ask whether to keep or delete them."
 msgstr "Set them aside and ask whether to keep or delete them."
 
@@ -11823,8 +11847,8 @@ msgstr "Stop the game to test a launch."
 #: src/games/GameSelect.tsx:269
 #: src/launch/PlayControl.tsx:184
 #: src/mods/typedConfig/ConfigTab.tsx:317
-#: src/settings/GameSettingsPage.tsx:98
-#: src/settings/GameSettingsPage.tsx:126
+#: src/settings/GameSettingsPage.tsx:99
+#: src/settings/GameSettingsPage.tsx:127
 msgid "Play"
 msgstr "Play"
 
@@ -12022,7 +12046,7 @@ msgstr "{dependentName}'s Nexus page lists {dep} as a requirement."
 
 #: src/fomod/Dialog.tsx:266
 #: src/loader/Banner.tsx:30
-#: src/settings/GameSettingsPage.tsx:94
+#: src/settings/GameSettingsPage.tsx:95
 #: src/settings/sections/LoaderRow.tsx:92
 #: src/settings/sections/LoaderRow.tsx:147
 msgid "Install"
@@ -13760,7 +13784,7 @@ msgstr "Left out: {0}"
 msgid "Could not undo: some mods are missing, and the change's record could not be read."
 msgstr "Could not undo: some mods are missing, and the change's record could not be read."
 
-#: src/settings/prefCopyGame.ts:70
+#: src/settings/prefCopyGame.ts:88
 msgid "Start the game without the Before you play dialog"
 msgstr "Start the game without the Before you play dialog"
 
@@ -14111,7 +14135,7 @@ msgstr "Include categories"
 msgid " {name} wins."
 msgstr " {name} wins."
 
-#: src/settings/prefCopyGame.ts:48
+#: src/settings/prefCopyGame.ts:66
 msgid "Files an update no longer includes"
 msgstr "Files an update no longer includes"
 
@@ -14530,7 +14554,7 @@ msgid "Remove {0} from this profile?"
 msgstr "Remove {0} from this profile?"
 
 #: src/mods/columnLabel.ts:6
-#: src/profiles/overrideValue.ts:121
+#: src/profiles/overrideValue.ts:123
 msgid "On"
 msgstr "On"
 

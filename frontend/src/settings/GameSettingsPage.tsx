@@ -33,7 +33,7 @@ import { usePerProfileRelated } from './usePerProfileRelated.tsx'
 type GamePage = 'install' | 'loader' | 'play' | 'mods' | 'backups' | 'console' | 'streaming'
 
 function modsPrefKeys(
-  info: { hasOptions: boolean; hasCaches: boolean } | undefined,
+  info: { hasOptions: boolean; hasCaches: boolean; sources: string[] | null } | undefined,
   loader: { id: string; builtin: boolean; assets: boolean } | undefined,
 ): string[] {
   const loaderId = loader?.id
@@ -45,6 +45,7 @@ function modsPrefKeys(
     ...(loader?.assets ? ['conflictScanDepth'] : []),
     'offerNewDownloads',
     'oldFilesOnUpdate',
+    ...(info?.sources?.includes('thunderstore') ? ['dependencyVersions'] : []),
     ...(info?.hasOptions ? ['gameSettingsMode'] : []),
     ...(info?.hasCaches ? ['cacheClearing'] : []),
     // Only SMAPI skips dot-named folders; other loaders load what is inside them.

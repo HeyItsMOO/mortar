@@ -101,6 +101,9 @@ const (
 	CacheClearingAuto = "auto"
 	CacheClearingOff  = "off"
 
+	DependencyNewest = "newest"
+	DependencyExact  = "exact"
+
 	OldFilesAsk    = "ask"
 	OldFilesDelete = "delete"
 	OldFilesKeep   = "keep"
@@ -447,6 +450,7 @@ var (
 	oldFilesValues            = []string{OldFilesAsk, OldFilesDelete, OldFilesKeep}
 	gameSettingsModeValues    = []string{GameSettingsEdit, GameSettingsWarn}
 	cacheClearingValues       = []string{CacheClearingAuto, CacheClearingOff}
+	dependencyVersionValues   = []string{DependencyNewest, DependencyExact}
 )
 
 func parseBool(raw string) (bool, error) {

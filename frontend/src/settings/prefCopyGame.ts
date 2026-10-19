@@ -44,6 +44,24 @@ export function gamePrefs(i18n: I18n): Record<string, PrefCopy> {
         },
       ],
     },
+    dependencyVersions: {
+      label: i18n._(msg`Dependency versions`),
+      description: i18n._(
+        msg`Which version of a Thunderstore mod's dependency to install when the mod names one`,
+      ),
+      options: [
+        {
+          value: 'newest',
+          label: i18n._(msg`Newest`),
+          hint: i18n._(msg`Install the newest version; the mod's version is a minimum.`),
+        },
+        {
+          value: 'exact',
+          label: i18n._(msg`Exact`),
+          hint: i18n._(msg`Install the version the mod's author named, as Gale does.`),
+        },
+      ],
+    },
     oldFilesOnUpdate: {
       label: i18n._(msg`Files an update no longer includes`),
       description: i18n._(msg`What happens to files the new version of a mod leaves out`),

@@ -59,7 +59,8 @@ func (s *Service) expandPackages(ctx context.Context, reqs []Request) ([]Request
 			byID[strings.ToLower(q.Package)] = q
 		}
 		cctx, cancel := context.WithTimeout(ctx, closureTimeout)
-		list, err := s.d.Closure(cctx, r.Game, roots)
+		exact := s.d.ExactDependencies != nil && s.d.ExactDependencies(r.Game, r.Profile)
+		list, err := s.d.Closure(cctx, r.Game, roots, exact)
 		cancel()
 		if err != nil {
 			return nil, err

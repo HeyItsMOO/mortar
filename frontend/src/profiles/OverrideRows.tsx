@@ -106,6 +106,7 @@ export function OverridesSection({
           (proton.length > 0 || key !== 'protonVersion') &&
           (info?.hasOptions || key !== 'gameSettingsMode') &&
           (info?.hasCaches || key !== 'cacheClearing') &&
+          (info?.sources?.includes('thunderstore') || key !== 'dependencyVersions') &&
           (directPlay || (key !== 'instances' && key !== 'delaySeconds')) &&
           applies(key, info?.loaders?.[0]),
       ).map((key) => {

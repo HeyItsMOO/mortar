@@ -601,12 +601,19 @@ func run() error {
 		Verify: func(ctx context.Context, id mod.ID, owner, repo string) (bool, error) {
 			return github.Verify(ctx, modMeta, id.Local(), owner, repo)
 		},
-		Closure: func(ctx context.Context, gameID string, roots []thunderstore.Ref) ([]thunderstore.Resolved, error) {
+		Closure: func(ctx context.Context, gameID string, roots []thunderstore.Ref, exact bool) ([]thunderstore.Resolved, error) {
 			key := share.SourceKeys(gameID)["thunderstore"]
 			if key == "" {
 				return nil, fmt.Errorf("%s has no Thunderstore community", gameID)
 			}
-			return thunderstore.Driver{CacheDir: filepath.Join(dataDir, "cache")}.Closure(ctx, key, roots, version)
+			return thunderstore.Driver{CacheDir: filepath.Join(dataDir, "cache")}.Closure(ctx, key, roots, version, exact)
+		},
+		ExactDependencies: func(game, profileID string) bool {
+			p, err := profiles.Get(game, profileID)
+			if err != nil {
+				return false
+			}
+			return settings.ResolveAt(store.Get(), "dependencyVersions", settings.Scope{Game: game, Profile: profileID}, p.PrefOverrides()) == settings.DependencyExact
 		},
 		Held: func(game, profileID, pkg string) string {
 			p, err := profiles.Get(game, profileID)

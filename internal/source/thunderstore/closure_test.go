@@ -61,7 +61,7 @@ func TestClosure(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got, err := d.Closure(t.Context(), "lethal-company", c.roots, "1.2.3")
+			got, err := d.Closure(t.Context(), "lethal-company", c.roots, "1.2.3", false)
 			if c.wantErr != "" {
 				if err == nil || !strings.Contains(err.Error(), c.wantErr) {
 					t.Fatalf("err %v, want it to contain %q", err, c.wantErr)
@@ -79,6 +79,38 @@ func TestClosure(t *testing.T) {
 				t.Fatalf("got %v, want %s", names, c.want)
 			}
 		})
+	}
+}
+
+func TestClosureDependencyVersions(t *testing.T) {
+	f := newFake(t)
+	f.chunk0 = append(f.chunk0,
+		custom("Ns", "A", v("1.0.0", "Ns-B-1.0.0")),
+		custom("Ns", "C", v("1.0.0", "Ns-B-2.0.0")),
+		custom("Ns", "B", v("3.0.0"), v("2.0.0"), v("1.0.0")),
+	)
+	d := Driver{URL: f.srv.URL, CacheDir: t.TempDir()}
+	for name, c := range map[string]struct {
+		exact bool
+		roots []Ref
+		want  string
+	}{
+		"newest takes the latest":                     {false, []Ref{{"Ns", "A", ""}}, "B 3.0.0, A 1.0.0"},
+		"exact takes the pin":                         {true, []Ref{{"Ns", "A", ""}}, "B 1.0.0, A 1.0.0"},
+		"exact with two pins takes the higher":        {true, []Ref{{"Ns", "A", ""}, {"Ns", "C", ""}}, "B 2.0.0, A 1.0.0, C 1.0.0"},
+		"exact keeps a root named at its own version": {true, []Ref{{"Ns", "A", ""}, {"Ns", "B", "3.0.0"}}, "B 3.0.0, A 1.0.0"},
+	} {
+		got, err := d.Closure(t.Context(), "lethal-company", c.roots, "1.2.3", c.exact)
+		if err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+		var names []string
+		for _, r := range got {
+			names = append(names, r.Name+" "+r.Version)
+		}
+		if strings.Join(names, ", ") != c.want {
+			t.Errorf("%s: got %v, want %s", name, names, c.want)
+		}
 	}
 }
 

@@ -11,7 +11,7 @@ import (
 func TestPackageInstallsWithItsDependencies(t *testing.T) {
 	f := newFixture(t)
 	c, _ := f.s.d.Client()
-	f.s.d.Closure = func(_ context.Context, game string, roots []thunderstore.Ref) ([]thunderstore.Resolved, error) {
+	f.s.d.Closure = func(_ context.Context, game string, roots []thunderstore.Ref, _ bool) ([]thunderstore.Resolved, error) {
 		if game != "riskofrain2" || len(roots) != 2 || roots[0].Name != "Mod" || roots[1].Name != "Other" {
 			t.Errorf("closure asked %q %+v", game, roots)
 		}
@@ -72,7 +72,7 @@ func TestInferPackageReasons(t *testing.T) {
 func TestPackageUpdateInstallsANewDependency(t *testing.T) {
 	f := newFixture(t)
 	c, _ := f.s.d.Client()
-	f.s.d.Closure = func(_ context.Context, _ string, roots []thunderstore.Ref) ([]thunderstore.Resolved, error) {
+	f.s.d.Closure = func(_ context.Context, _ string, roots []thunderstore.Ref, _ bool) ([]thunderstore.Resolved, error) {
 		if len(roots) != 1 || roots[0].Version != "2.0.0" {
 			t.Errorf("closure asked %+v", roots)
 		}
