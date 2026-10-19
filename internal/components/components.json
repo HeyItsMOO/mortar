@@ -11553,10 +11553,7 @@
       ],
       "server": {
         "clients": "valheim",
-        "fixed": [
-          "-batchmode",
-          "-nographics"
-        ],
+        "fixed": ["-batchmode", "-nographics"],
         "args": [
           {
             "id": "name",

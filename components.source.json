@@ -10648,8 +10648,8 @@
       },
       "marker": "7DaysToDie.exe",
       "metadata": [],
-      "paths": { "mods": { "windows": "{install}/Mods" } },
       "paths": {
+        "mods": { "windows": "{install}/Mods" },
         "saves": {
           "windows": "{appData}/7DaysToDie/Saves",
           "linux": "{xdgData}/7DaysToDie/Saves"
@@ -11045,10 +11045,7 @@
       ],
       "server": {
         "clients": "valheim",
-        "fixed": [
-          "-batchmode",
-          "-nographics"
-        ],
+        "fixed": ["-batchmode", "-nographics"],
         "args": [
           {
             "id": "name",
