@@ -265,22 +265,30 @@ export function useModReveal<T>(opts: {
   virtualizer: Scroller
 }) {
   const { detailId, groups, items, idOf, collapsed, setCollapsed, gameId, virtualizer } = opts
-  const lastReveal = useRef('')
+  // The mod last expanded for and the mod last scrolled to: each happens once per opened mod, so a group the user
+  // collapses afterwards, or one above it, stays as the user left it.
+  const expandedFor = useRef('')
+  const scrolledTo = useRef('')
   useLayoutEffect(() => {
     if (!detailId) {
+      expandedFor.current = ''
+      scrolledTo.current = ''
       return
     }
     const held = groupKeyHolding(groups, (row) => idOf(row) === detailId)
     if (held !== undefined && collapsed[held] === true) {
-      setCollapsed((cur) => toggleCollapsed(gameId, cur, held, false))
+      if (expandedFor.current !== detailId) {
+        expandedFor.current = detailId
+        setCollapsed((cur) => toggleCollapsed(gameId, cur, held, false))
+      }
       return
     }
+    expandedFor.current = detailId
     const idx = virtualIndexOf(items, detailId, idOf)
-    const token = `${detailId}:${idx}`
-    if (lastReveal.current === token || idx < 0) {
+    if (scrolledTo.current === detailId || idx < 0) {
       return
     }
-    lastReveal.current = token
+    scrolledTo.current = detailId
     virtualizer.scrollToIndex(idx, { align: 'auto' })
   }, [collapsed, detailId, gameId, groups, idOf, items, setCollapsed, virtualizer])
 }
