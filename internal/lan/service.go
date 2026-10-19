@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"net/url"
@@ -1056,7 +1057,10 @@ func (s *Service) query(ctx context.Context) {
 			if entry != nil {
 				found = append(found, entry)
 			}
-		case <-done:
+		case err := <-done:
+			if err != nil {
+				slog.Debug("mdns query", "err", err)
+			}
 			for len(entries) > 0 {
 				if entry := <-entries; entry != nil {
 					found = append(found, entry)
@@ -1068,7 +1072,9 @@ func (s *Service) query(ctx context.Context) {
 			return
 		case <-ctx.Done():
 			cancel()
-			<-done
+			if err := <-done; err != nil && !errors.Is(err, context.Canceled) {
+				slog.Debug("mdns query", "err", err)
+			}
 			return
 		}
 	}

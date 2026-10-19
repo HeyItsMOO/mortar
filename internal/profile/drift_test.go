@@ -57,7 +57,7 @@ func TestScanDriftUnknownDeletedChanged(t *testing.T) {
 		stats[key] = st
 	}
 	got := scanDrift(names, stats, []string{"keep-me", "changed", "gone"}, snap)
-	kinds := map[DriftKind]string{}
+	kinds := make(map[DriftKind]string)
 	for _, d := range got {
 		kinds[d.Kind] = d.Key
 	}
@@ -197,7 +197,7 @@ func TestScanModsDriftOnProfile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	seen := map[DriftKind]bool{}
+	seen := make(map[DriftKind]bool)
 	for _, d := range got {
 		seen[d.Kind] = true
 	}

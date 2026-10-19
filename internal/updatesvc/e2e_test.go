@@ -182,7 +182,8 @@ func runFixture(t *testing.T, path, root string, s *site, pubB64 string, extraEn
 	done := make(chan error, 1)
 	go func() { done <- cmd.Wait() }()
 	select {
-	case <-done:
+	case err := <-done:
+		t.Logf("fixture exited: %v", err)
 	case <-time.After(60 * time.Second):
 		_ = cmd.Process.Kill()
 		t.Fatal("fixture did not exit")

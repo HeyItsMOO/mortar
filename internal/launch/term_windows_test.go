@@ -40,7 +40,8 @@ func TestStartedProcessIsTrackedAndKillable(t *testing.T) {
 		killTree(pid)
 	}
 	select {
-	case <-done:
+	case err := <-done:
+		t.Logf("process ended after killTree: %v", err)
 	case <-time.After(10 * time.Second):
 		t.Fatal("process survived killTree")
 	}

@@ -300,8 +300,8 @@ func duplicatesWithNexus(ctx context.Context, m Meta, scheme string, enabled []f
 		var pageID int
 		var files []NexusFile
 		optional := false
-		for _, copy := range out[i].Copies {
-			page, _, ok := nexusFile(copy.Key)
+		for _, dup := range out[i].Copies {
+			page, _, ok := nexusFile(dup.Key)
 			if !ok {
 				continue
 			}
@@ -309,8 +309,8 @@ func duplicatesWithNexus(ctx context.Context, m Meta, scheme string, enabled []f
 			if page != pageID {
 				continue
 			}
-			if !slices.ContainsFunc(files, func(file NexusFile) bool { return file.Key == copy.Key }) {
-				files = append(files, NexusFile{Key: copy.Key})
+			if !slices.ContainsFunc(files, func(file NexusFile) bool { return file.Key == dup.Key }) {
+				files = append(files, NexusFile{Key: dup.Key})
 			}
 		}
 		if len(files) < 2 || pageID == 0 {

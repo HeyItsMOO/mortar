@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 	"strings"
@@ -98,7 +99,9 @@ func Start(dir, name string, args ...string) (<-chan error, error) {
 // ReleaseOnExit waits for a command whose output nobody reads (a user's tool) and then frees its captured output,
 // which Run does for a game.
 func ReleaseOnExit(exited <-chan error) {
-	<-exited
+	if err := <-exited; err != nil {
+		slog.Debug("tool exited", "err", err)
+	}
 	if out := captureOf(exited); out != nil {
 		captured.Delete(exited)
 		out.release()

@@ -449,7 +449,9 @@ func TestAnInstanceEndingLeavesTheControlFileOfTheOneThatReplacedIt(t *testing.T
 		time.Sleep(10 * time.Millisecond)
 	}
 	cancelA()
-	<-doneA
+	if err := <-doneA; !errors.Is(err, context.Canceled) {
+		t.Fatalf("Serve a: %v", err)
+	}
 	time.Sleep(50 * time.Millisecond)
 	var hello controlwire.Hello
 	if err := controlwire.CallDir(dir, "hello", nil, &hello, time.Second); err != nil || hello.Version != "b" {
