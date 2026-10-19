@@ -30,7 +30,7 @@ func TestSourceParamsAreChecked(t *testing.T) {
 
 func TestProfileSetRejectsABadFlag(t *testing.T) {
 	t.Parallel()
-	if _, err := (&Services{}).profileSet(Params{Key: "skipPlayCheck", Value: "maybe"}, profile.Profile{}, "id"); err == nil {
+	if _, err := (&Services{}).profileSet(t.Context(), Params{Key: "skipPlayCheck", Value: "maybe"}, profile.Profile{}, "id"); err == nil {
 		t.Fatal("a non-boolean skipPlayCheck value must be refused")
 	}
 }

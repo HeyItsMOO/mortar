@@ -72,7 +72,7 @@ func (s *Services) queueAdd(ctx context.Context, p Params) (any, error) {
 
 // profileSet writes one scalar field of the profile; a key that is no field is a per-profile override of a game
 // setting, as before.
-func (s *Services) profileSet(p Params, prof profile.Profile, id string) (any, error) {
+func (s *Services) profileSet(ctx context.Context, p Params, prof profile.Profile, id string) (any, error) {
 	g, v := p.Game, p.Value
 	flag := func() (bool, error) {
 		b, err := strconv.ParseBool(v)
@@ -112,7 +112,7 @@ func (s *Services) profileSet(p Params, prof profile.Profile, id string) (any, e
 		if s.Packs == nil {
 			return nil, errors.New("pack import is unavailable")
 		}
-		return s.Packs.MirrorClient(context.Background(), g, id, v)
+		return s.Packs.MirrorClient(ctx, g, id, v)
 	case "cover":
 		if v == "" {
 			return s.Profiles.ClearCover(g, id)

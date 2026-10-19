@@ -777,7 +777,7 @@ func (s *Services) Handle(ctx context.Context, method string, p Params) (any, er
 			return Removed{Mods: []string{prof.Name}}, s.Profiles.Delete(p.Game, id)
 		})
 	case "profile.set":
-		return s.changed(p.Game, func() (any, error) { return s.profileSet(p, prof, id) })
+		return s.changed(p.Game, func() (any, error) { return s.profileSet(ctx, p, prof, id) })
 	case "store.repair":
 		return s.storeRepair(ctx, p, id)
 	case "profile.repair":
