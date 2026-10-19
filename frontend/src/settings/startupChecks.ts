@@ -59,11 +59,16 @@ export function useStartupChecks() {
             .map((p) => p.catch(ignore)),
         )
       }
-      if (shouldRunStartupCheck(s.tellWhenSmapiOut)) {
-        const game = s.lastGame || (await loadGameStatus()).games.find((g) => g.available)?.id
-        if (game) {
-          await useLoader.getState().check(game)
-          maybeToastLoader(game)
+      // Every installed game that has profiles, not only the last opened one; a game's own setting can turn it off.
+      for (const g of (await loadGameStatus()).games) {
+        if (
+          g.available &&
+          g.installed &&
+          shouldRunStartupCheck(s.games?.[g.id]?.tellWhenLoaderOut) &&
+          ((await List(g.id)) ?? []).length > 0
+        ) {
+          await useLoader.getState().check(g.id)
+          maybeToastLoader(g.id)
         }
       }
     }

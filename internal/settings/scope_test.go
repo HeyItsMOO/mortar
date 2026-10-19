@@ -43,7 +43,7 @@ func TestFileIsSplitByScope(t *testing.T) {
 	if _, ok := doc.Global["nexusName"]; ok {
 		t.Fatalf("a source key sits in global: %s", b)
 	}
-	if doc.Loaders["smapi"]["builds"] != "show" || doc.Loaders["smapi"]["tellWhenOut"] != true || doc.Games["stardew"]["smapiBuilds"] != nil {
+	if doc.Loaders["smapi"]["builds"] != "show" || doc.Games["stardew"]["smapiBuilds"] != nil {
 		t.Fatalf("loader scope: %s", b)
 	}
 	if doc.Loaders["stardew/smapi"]["pin"] != "4.0.0" || doc.Loaders["valheim/bepinex5"]["lastSweepVersion"] != "5.4.2304" || doc.Global["loaderPrefs"] != nil {

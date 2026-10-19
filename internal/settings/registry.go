@@ -54,6 +54,8 @@ type GameSettings struct {
 	BackupLocation    string `json:"backupLocation"`
 	ConflictScanDepth string `json:"conflictScanDepth"`
 	OfferNewDownloads *bool  `json:"offerNewDownloads"`
+	// TellWhenLoaderOut is whether Mortar toasts when a newer version of the game's mod loader exists.
+	TellWhenLoaderOut *bool `json:"tellWhenLoaderOut"`
 	// LastDownloadsSeen is the newest archive mtime (ms) in the download folder already offered or skipped.
 	LastDownloadsSeen     int64                  `json:"lastDownloadsSeen,omitempty"`
 	LastSweepGameVersion  string                 `json:"lastSweepGameVersion,omitempty"`
@@ -183,7 +185,11 @@ var registry = withDefaults([]pref{
 	boolPref("includePrereleaseModVersions", ScopeApp, func(s Settings, _ string) bool { return s.IncludePrereleaseModVersions }, func(s *Settings, _ string, on bool) { s.IncludePrereleaseModVersions = on }),
 	boolPref("checkOnlyEnabledMods", ScopeApp, func(s Settings, _ string) bool { return s.CheckOnlyEnabledMods }, func(s *Settings, _ string, on bool) { s.CheckOnlyEnabledMods = on }),
 	ptrPref("enableModsWhenInstalled", ScopeApp, func(s Settings, _ string) *bool { return s.EnableModsWhenInstalled }, func(s *Settings, _ string, on bool) { s.EnableModsWhenInstalled = &on }),
-	loaderPref("smapi", ptrPref("tellWhenSmapiOut", ScopeLoader, func(s Settings, _ string) *bool { return s.TellWhenSmapiOut }, func(s *Settings, _ string, on bool) { s.TellWhenSmapiOut = &on })),
+	ptrPref("tellWhenLoaderOut", ScopeGame, func(s Settings, g string) *bool { return s.GamePrefs(g).TellWhenLoaderOut }, func(s *Settings, g string, on bool) {
+		gp := s.GamePrefs(g)
+		gp.TellWhenLoaderOut = &on
+		putGame(s, g, gp)
+	}),
 	ptrPref("askEndorseMods", ScopeApp, func(s Settings, _ string) *bool { return s.AskEndorseMods }, func(s *Settings, _ string, on bool) { s.AskEndorseMods = &on }),
 	listColumnsPref(),
 	boolPref("launchAtLogin", ScopeApp, func(s Settings, _ string) bool { return s.LaunchAtLogin }, func(s *Settings, _ string, on bool) {
@@ -318,6 +324,7 @@ func defaultGameSettings() GameSettings {
 		BackupLocation:              "",
 		ConflictScanDepth:           ConflictScanFull,
 		OfferNewDownloads:           on(),
+		TellWhenLoaderOut:           on(),
 		OldFilesOnUpdate:            OldFilesAsk,
 		GameSettingsMode:            GameSettingsEdit,
 		CacheClearing:               CacheClearingAuto,
@@ -413,6 +420,9 @@ func mergeGame(dst *GameSettings, src GameSettings) {
 	if src.OfferNewDownloads != nil {
 		dst.OfferNewDownloads = src.OfferNewDownloads
 	}
+	if src.TellWhenLoaderOut != nil {
+		dst.TellWhenLoaderOut = src.TellWhenLoaderOut
+	}
 	if src.LastDownloadsSeen != 0 {
 		dst.LastDownloadsSeen = src.LastDownloadsSeen
 	}
@@ -498,6 +508,9 @@ func normalizeGame(id string, g *GameSettings) {
 	}
 	if g.OfferNewDownloads == nil {
 		g.OfferNewDownloads = d.OfferNewDownloads
+	}
+	if g.TellWhenLoaderOut == nil {
+		g.TellWhenLoaderOut = d.TellWhenLoaderOut
 	}
 	if !slices.Contains(oldFilesValues, g.OldFilesOnUpdate) {
 		g.OldFilesOnUpdate = d.OldFilesOnUpdate

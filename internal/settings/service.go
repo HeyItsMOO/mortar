@@ -55,10 +55,6 @@ func (s *Service) SystemAccent() string {
 	return c
 }
 
-func (s *Service) SetTellWhenSmapiOut(on bool) error {
-	return s.set(func(v *Settings) { v.TellWhenSmapiOut = &on })
-}
-
 func (s *Service) SetKeepInTray(on bool) error {
 	return s.set(func(v *Settings) { v.KeepInTray = on })
 }
@@ -140,9 +136,9 @@ func (s *Service) SetTipsSeen(ids []string) error {
 	return s.set(func(v *Settings) { v.TipsSeen = ids })
 }
 
-// SetSmapiToastAt stores when Mortar last showed the SMAPI-update toast.
-func (s *Service) SetSmapiToastAt(at string) error {
-	return s.set(func(v *Settings) { v.SmapiToastAt = at })
+// SetLoaderToastAt stores when Mortar last showed the update toast of game's loader.
+func (s *Service) SetLoaderToastAt(game, loaderID, at string) error {
+	return s.set(func(v *Settings) { setLoaderPrefs(v, game, loaderID, func(p *LoaderPrefs) { p.ToastAt = at }) })
 }
 
 // SetBackgroundImage stores path as the wallpaper, or restores the default one when path is empty.

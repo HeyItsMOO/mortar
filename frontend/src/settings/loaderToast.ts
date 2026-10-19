@@ -1,6 +1,6 @@
 import { msg } from '@lingui/core/macro'
 import type { Status } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/loader/models.ts'
-import { SetSmapiToastAt } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
+import { SetLoaderToastAt } from '../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { gameInfo } from '../games/info.ts'
 import { i18n } from '../i18n/index.ts'
 import { useLoader } from '../loader/store.ts'
@@ -30,8 +30,12 @@ export function loaderUpdateText(name: string, status: Status): { title: string;
   }
 }
 
+// The day's toast is kept per game and loader, since the games Mortar checks at start each have their own.
 export function maybeToastLoader(game: string) {
-  if (loaderToastShownToday(useSettings.getState().smapiToastAt)) {
+  const loaderId = gameInfo(game)?.loaderId ?? ''
+  const key = `${game}/${loaderId}`
+  const { loaderPrefs } = useSettings.getState()
+  if (loaderToastShownToday(loaderPrefs?.[key]?.toastAt)) {
     return
   }
   const { status } = useLoader.getState()
@@ -40,8 +44,10 @@ export function maybeToastLoader(game: string) {
   }
   // The day counts as used only once a toast is shown, so an offline start does not silence it.
   const at = new Date().toISOString()
-  useSettings.setState({ smapiToastAt: at })
-  SetSmapiToastAt(at).catch(() => undefined)
+  useSettings.setState({
+    loaderPrefs: { ...loaderPrefs, [key]: { ...loaderPrefs?.[key], toastAt: at } },
+  })
+  SetLoaderToastAt(game, loaderId, at).catch(() => undefined)
   useToasts.getState().push({
     kind: 'info',
     ...loaderUpdateText(gameInfo(game)?.loader ?? '', status),

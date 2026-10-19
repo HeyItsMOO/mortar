@@ -339,6 +339,9 @@ function logsAndNexus(i18n: I18n): Record<string, PrefCopy> {
         msg`Where Mod Manager Download links install. Empty uses the last opened profile.`,
       ),
     },
+    tellWhenLoaderOut: {
+      label: i18n._(msg`Tell me when a new mod loader version is out`),
+    },
     offerNewDownloads: {
       label: i18n._(msg`Offer new downloads`),
       description: i18n._(

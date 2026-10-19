@@ -55,6 +55,8 @@ type LoaderPrefs struct {
 	Pin string `json:"pin,omitempty"`
 	// LastSweepVersion is the loader version the last patch-day sweep ran with.
 	LastSweepVersion string `json:"lastSweepVersion,omitempty"`
+	// ToastAt is when Mortar last toasted that a newer loader exists (RFC3339); at most one toast a day.
+	ToastAt string `json:"toastAt,omitempty"`
 }
 
 // LoaderPin is the version game's loader is pinned to, "" when it follows the latest release.

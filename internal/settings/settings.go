@@ -120,8 +120,6 @@ type Settings struct {
 	LoaderPrefs map[string]LoaderPrefs `json:"loaderPrefs"`
 	// ShowSmapiConsole is whether launches show SMAPI's console. Nil or omitted means off.
 	ShowSmapiConsole *bool `json:"showSmapiConsole"`
-	// TellWhenSmapiOut is whether Mortar toasts when a newer SMAPI exists. Nil or omitted means off.
-	TellWhenSmapiOut *bool `json:"tellWhenSmapiOut"`
 	// KeepInTray keeps Mortar in the system tray when the window is closed.
 	KeepInTray bool `json:"keepInTray"`
 	// LanSharing allows Mortar to discover nearby Mortar users and send or receive profile links.
@@ -140,8 +138,6 @@ type Settings struct {
 	EnableModsWhenInstalled *bool `json:"enableModsWhenInstalled"`
 	// TipsSeen is the empty-state tips the user has dismissed (mods, saves, console, share).
 	TipsSeen []string `json:"tipsSeen"`
-	// SmapiToastAt is when Mortar last showed the SMAPI-update toast (RFC3339). Empty means never.
-	SmapiToastAt string `json:"smapiToastAt"`
 	// OverlayEnabled, OverlayPort and OverlayToken are the Mortar SMAPI Bridge stream overlay.
 	// OverlayToken is a secret: never log it.
 	OverlayEnabled bool   `json:"overlayEnabled"`
@@ -278,7 +274,6 @@ func Defaults() Settings {
 	s.ListSortColumn = defaultListSortColumn
 	s.ListSortDir = defaultListSortDir
 	s.ListGroupBy = defaultListGroupBy
-	s.TellWhenSmapiOut = on()
 	s.SmapiBuilds = SmapiBuildsShow
 	s.ShowSmapiConsole = on()
 	s.EnableModsWhenInstalled = on()
@@ -534,9 +529,6 @@ func normalizeStores(s *Settings) {
 func normalizeToggles(s *Settings) {
 	if s.CheckModUpdatesOnStart == nil {
 		s.CheckModUpdatesOnStart = on()
-	}
-	if s.TellWhenSmapiOut == nil {
-		s.TellWhenSmapiOut = on()
 	}
 	if s.EnableModsWhenInstalled == nil {
 		s.EnableModsWhenInstalled = on()

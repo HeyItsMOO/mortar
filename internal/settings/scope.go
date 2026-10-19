@@ -38,7 +38,7 @@ var sourceFields = map[string][]string{
 
 // loaderFields is sourceFields for mod loaders: the keys that belong to one loader, whichever game uses it.
 var loaderFields = map[string][]string{
-	"smapi": {"smapiBuilds=builds", "showSmapiConsole=showConsole", "tellWhenSmapiOut=tellWhenOut", "smapiToastAt=toastAt"},
+	"smapi": {"smapiBuilds=builds", "showSmapiConsole=showConsole"},
 }
 
 // scopeTables names each keyed scope's block in settings.json and its field table.

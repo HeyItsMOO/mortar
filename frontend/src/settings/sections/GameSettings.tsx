@@ -16,7 +16,6 @@ import {
   SetByKey,
   SetGameFolder,
   SetGameStore,
-  SetTellWhenSmapiOut,
 } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { LauncherLogo } from '../../brand/launchers/LauncherLogo.tsx'
 import { gameInfo, useGameInfo, useGameName } from '../../games/info.ts'
@@ -27,7 +26,6 @@ import { FlatpakGrant } from '../../shell/FlatpakGrant.tsx'
 import { space } from '../../theme/density.ts'
 import { type InlineError, inlineError, reportError, toastError } from '../../toasts/report.ts'
 import { useToasts } from '../../toasts/store.ts'
-import { PrefSwitch } from '../PrefControls.tsx'
 import { PrefByKey, PrefKeys } from '../PrefRow.tsx'
 import { persist, pickFolderSetting } from '../persist.ts'
 import { Searchable, SettingRow, SettingsSection } from '../SettingsSection.tsx'
@@ -329,19 +327,11 @@ function LoaderPage({
   loader: { id: string; name: string }
   onVersion: (v: string) => void
 }) {
-  const { t } = useLingui()
   const game = useCurrentGame()
-  const tellWhenSmapiOut = useSettings((s) => s.tellWhenSmapiOut) !== false
   return (
     <SettingsSection title={loader.name}>
       <LoaderRow loader={loader} onVersion={onVersion} />
-      <SettingRow label={t`Tell me when a new mod loader version is out`}>
-        <PrefSwitch
-          checked={tellWhenSmapiOut}
-          onChange={(on) => persist(() => SetTellWhenSmapiOut(on), t`Could not save that setting`)}
-          label={t`Tell me when a new mod loader version is out`}
-        />
-      </SettingRow>
+      <PrefByKey prefKey="tellWhenLoaderOut" game={game} />
       {loader.id === 'smapi' ? <PrefByKey prefKey="smapiBuilds" game={game} /> : null}
     </SettingsSection>
   )

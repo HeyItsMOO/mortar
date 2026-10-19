@@ -35,7 +35,7 @@ var sectionFields = map[string][]string{
 		"parallelDownloads", "autoRetryDownloads", "thunderstoreHost", "pauseDownloadsWhilePlaying", "nexusPreferredDownloadServer",
 		"nxmRedirectOtherGames", "verifyNexusMD5", "autoTrackNexus", "checkModUpdatesOnStart", "updateCheckIntervalMinutes",
 		"includePrereleaseModVersions", "checkOnlyEnabledMods", "enableModsWhenInstalled", "includeBetaReleases", "showAdultContent",
-		"autoInstallMortarUpdates", "backgroundBadgeChecks", "tellWhenSmapiOut", "reuseFomodChoices", "driftChecks",
+		"autoInstallMortarUpdates", "backgroundBadgeChecks", "reuseFomodChoices", "driftChecks",
 	},
 	SectionStorage: {"keepDownloadArchives", "storeRetentionDays", "trashRetentionDays", "historyEventsKept", "downloadFolder", "watchFolders", "syncFolder", "vortexFolder", "packFolder"},
 	SectionSharing: {

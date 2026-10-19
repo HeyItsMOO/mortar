@@ -11,7 +11,7 @@ const exportVersion = 1
 var portableFields = []string{
 	"language", "accent", "font", "background", "lastGame",
 	"listColumns", "listSortColumn", "listSortDir", "listGroupBy",
-	"checkModUpdatesOnStart", "tellWhenSmapiOut", "askEndorseMods", "smapiBuilds", "loaderPrefs", "showSmapiConsole", "keepInTray", "includeBetaReleases",
+	"checkModUpdatesOnStart", "askEndorseMods", "smapiBuilds", "loaderPrefs", "showSmapiConsole", "keepInTray", "includeBetaReleases",
 	"includePrereleaseModVersions", "checkOnlyEnabledMods", "enableModsWhenInstalled", "tipsSeen",
 	"nexusPreferredDownloadServer", "nxmRedirectOtherGames",
 	"onPlay", "parallelDownloads", "updateCheckIntervalMinutes",
