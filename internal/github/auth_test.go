@@ -41,6 +41,11 @@ func TestAuthApply(t *testing.T) {
 	if other.Header.Get("Authorization") != "" {
 		t.Fatal("token sent to a non-GitHub host")
 	}
+	plain := req(t, "http://api.github.com/repos/o/r/releases")
+	present.Apply(plain)
+	if plain.Header.Get("Authorization") != "" {
+		t.Fatal("token sent over http")
+	}
 }
 
 func TestAuthCachesTheAnswer(t *testing.T) {

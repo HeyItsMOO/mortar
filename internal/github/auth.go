@@ -64,10 +64,11 @@ func IsGitHubHost(host string) bool {
 	return host == "github.com" || host == "api.github.com"
 }
 
-// Apply sets the bearer token on req when it targets GitHub itself and a token is available. A redirect to another
-// host (release asset storage) drops the header in net/http.
+// Apply sets the bearer token on req when it targets GitHub itself over https and a token is available. A
+// redirect to another host (release asset storage) drops the header in net/http; a same-host downgrade to
+// http is refused before the token is attached.
 func (a *Auth) Apply(req *http.Request) {
-	if !IsGitHubHost(req.URL.Hostname()) {
+	if req.URL.Scheme != "https" || !IsGitHubHost(req.URL.Hostname()) {
 		return
 	}
 	if t := a.get(req.Context()); t != "" {
