@@ -2,6 +2,8 @@ package game
 
 import (
 	"fmt"
+	"github.com/Rethunk-Tech/mortar/internal/customgame"
+	"log"
 	"path/filepath"
 	"strings"
 
@@ -129,6 +131,10 @@ type Service struct {
 }
 
 func NewService(home string, store *settings.Store) *Service {
+	// The games the player added join the catalog before anything lists it.
+	if err := customgame.Load(); err != nil {
+		log.Printf("custom games: %v", err)
+	}
 	return &Service{home: home, store: store}
 }
 
@@ -173,6 +179,37 @@ func artFor(appID string) string {
 	}
 	return ArtURL(appID)
 }
+
+// CustomLoader is a loader a game the player describes can pick.
+type CustomLoader struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// CustomLoaders are the loaders the Add a game form offers.
+func (s *Service) CustomLoaders() []CustomLoader {
+	return []CustomLoader{
+		{customgame.BepInEx5, "BepInEx 5"}, {customgame.BepInEx6, "BepInEx 6 (IL2CPP)"},
+		{customgame.MelonLoader, "MelonLoader"}, {customgame.Folder, "None: drop mods in a Mods folder"},
+	}
+}
+
+// AddCustomGame adds a game missing from the catalog, started by the executable at exe, and returns it with the
+// folder to set as its install.
+func (s *Service) AddCustomGame(name, exe, loader string) (CustomGame, error) {
+	e, dir, err := customgame.Add(name, exe, loader)
+	return CustomGame{ID: e.ID, Name: e.Name, Folder: dir}, err
+}
+
+// CustomGame is a game the player added, and the folder it was added from.
+type CustomGame struct {
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Folder string `json:"folder"`
+}
+
+// RemoveCustomGame forgets a game the player added; the game's folder and profiles are left on disk.
+func (s *Service) RemoveCustomGame(id string) error { return customgame.Remove(id) }
 
 // List returns every listed game with its install state and art URL.
 func (s *Service) List() ([]GameInfo, error) { return List(s.home, s.store.Get()) }

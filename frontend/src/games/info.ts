@@ -57,3 +57,9 @@ export function useGameLoader(id?: string): string {
 export function useGameName(id?: string): string {
   return useGameInfo(id)?.name || FALLBACK_NAME
 }
+
+/** Reads the catalog again, after a game was added or removed. */
+export function reloadGames() {
+  requested = false
+  ensureLoaded()
+}

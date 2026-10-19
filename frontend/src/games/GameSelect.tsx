@@ -1,5 +1,5 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, Link, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { Eye, EyeOff, Play, Settings } from 'lucide-react'
 import { type MouseEvent, memo, useRef, useState } from 'react'
@@ -18,7 +18,7 @@ import { formatWhen } from '../i18n/formatWhen.ts'
 import { useNow } from '../i18n/useNow.ts'
 import { playDirect } from '../launch/directPref.ts'
 import { useLaunch } from '../launch/store.ts'
-import { type GameId, openSettings, useNav } from '../nav/store.ts'
+import { type GameId, useNav } from '../nav/store.ts'
 import { useSettings } from '../settings/store.ts'
 import { arrowFocus } from '../shell/arrowFocus.ts'
 import { CoverButton } from '../shell/CoverButton.tsx'
@@ -29,6 +29,7 @@ import { gameArt } from './art.ts'
 import { listItems, useFindGame, useTypeToScroll } from './gameList.ts'
 import { listedGames } from './hidden.ts'
 import { LetterRail } from './LetterRail.tsx'
+import { ListFooter } from './ListFooter.tsx'
 import { gameOrder, initialOf } from './order.ts'
 import { ProfileCards } from './ProfileCards.tsx'
 import { formatPlaytime } from './playtime.ts'
@@ -519,23 +520,13 @@ function GameSelect() {
         </Box>
         {rail ? <LetterRail letters={letters} current={current} onJump={jump} /> : null}
       </Box>
-      {hiddenIds && hiddenIds.length > 0 ? (
-        <Box sx={{ px: 2, py: 0.75 }}>
-          <Link component="button" onClick={() => setShowHidden(!showHidden)} sx={{ fontSize: 14 }}>
-            {showHidden ? t`Hide hidden games` : t`Show hidden games`}
-          </Link>
-        </Box>
-      ) : null}
-      {!status.games.some((g) => g.available && g.installed) && (
-        <Box sx={{ px: 2, py: 0.75, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
-            {t`No supported game was found in your launchers.`}
-          </Typography>
-          <Link component="button" onClick={() => openSettings('launchers')} sx={{ fontSize: 14 }}>
-            {t`Check launchers…`}
-          </Link>
-        </Box>
-      )}
+      <ListFooter
+        games={status.games}
+        hiddenCount={hiddenIds?.length ?? 0}
+        showHidden={showHidden}
+        onShowHidden={setShowHidden}
+        onChanged={refresh}
+      />
     </Box>
   )
 }

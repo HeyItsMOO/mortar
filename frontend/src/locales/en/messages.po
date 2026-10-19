@@ -890,6 +890,10 @@ msgstr "Remove the shortcut"
 msgid "{count, plural, one {{name} logged # error in the last run. First: {first}} other {{name} logged # errors in the last run. First: {first}}}"
 msgstr "{count, plural, one {{name} logged # error in the last run. First: {first}} other {{name} logged # errors in the last run. First: {first}}}"
 
+#: src/games/AddGameDialog.tsx:78
+msgid "Could not choose the program"
+msgstr "Could not choose the program"
+
 #: src/settings/prefCopyModsView.ts:13
 msgid "List"
 msgstr "List"
@@ -1788,7 +1792,7 @@ msgstr "See load errors, missing dependencies, and other issues before you play.
 msgid "Moving copies the whole profile, then removes the old copy, so it needs room for both. On another drive the mods are copies, not links to the shared store, so the profile takes its full size there. Stop the game first."
 msgstr "Moving copies the whole profile, then removes the old copy, so it needs room for both. On another drive the mods are copies, not links to the shared store, so the profile takes its full size there. Stop the game first."
 
-#: src/games/GameSelect.tsx:532
+#: src/games/ListFooter.tsx:48
 msgid "No supported game was found in your launchers."
 msgstr "No supported game was found in your launchers."
 
@@ -2084,6 +2088,7 @@ msgid "Running for {time}"
 msgstr "Running for {time}"
 
 #: src/firstrun/ProfileStep.tsx:178
+#: src/games/AddGameDialog.tsx:64
 #: src/groups/dialogs.tsx:50
 #: src/mods/CategoryEditor.tsx:42
 #: src/mods/columnLabel.ts:7
@@ -3658,6 +3663,10 @@ msgstr "Search GitHub for mods published as releases. Add puts the latest releas
 msgid "And {0} more on the Nexus page"
 msgstr "And {0} more on the Nexus page"
 
+#: src/games/ListFooter.tsx:28
+msgid "Add a game…"
+msgstr "Add a game…"
+
 #: src/profiles/CompareDialog.tsx:324
 msgid "Neither profile has a mod that matches the filter."
 msgstr "Neither profile has a mod that matches the filter."
@@ -4105,7 +4114,7 @@ msgid "Data folder moved"
 msgstr "Data folder moved"
 
 #: src/games/GameMenu.tsx:119
-#: src/games/GameSelect.tsx:418
+#: src/games/GameSelect.tsx:419
 msgid "On this computer"
 msgstr "On this computer"
 
@@ -4512,11 +4521,11 @@ msgstr "config.json, as the mod ships it"
 msgid "The last launch loaded this here, not where its dependencies put it."
 msgstr "The last launch loaded this here, not where its dependencies put it."
 
-#: src/games/GameSelect.tsx:535
+#: src/games/ListFooter.tsx:51
 msgid "Check launchers…"
 msgstr "Check launchers…"
 
-#: src/games/GameSelect.tsx:299
+#: src/games/GameSelect.tsx:300
 msgid "Set up"
 msgstr "Set up"
 
@@ -4854,7 +4863,7 @@ msgstr "Mortar: {label}"
 msgid "{off} switched off"
 msgstr "{off} switched off"
 
-#: src/mods/ModCards.tsx:498
+#: src/mods/ModCards.tsx:499
 #: src/mods/ModList.tsx:410
 #: src/mods/Toolbar.tsx:234
 #: src/mods/typedConfig/ConfigTab.tsx:175
@@ -5322,7 +5331,7 @@ msgstr "Mortar did not install this folder. It moves to Mortar's trash."
 #: src/browse/BrowseShow.tsx:46
 #: src/firstrunTour/TourAgainButton.tsx:16
 #: src/firstrunTour/useFirstRunTour.ts:53
-#: src/games/GameSelect.tsx:270
+#: src/games/GameSelect.tsx:271
 #: src/settings/GraphicsApiRow.tsx:32
 #: src/settings/PrefControls.tsx:190
 #: src/settings/PrefControls.tsx:241
@@ -5791,7 +5800,7 @@ msgstr "{plugin} failed to load."
 msgid "Character"
 msgstr "Character"
 
-#: src/games/GameSelect.tsx:525
+#: src/games/ListFooter.tsx:41
 msgid "Show hidden games"
 msgstr "Show hidden games"
 
@@ -6216,6 +6225,10 @@ msgstr "{gameName} closed with errors"
 msgid "Remove duplicate"
 msgstr "Remove duplicate"
 
+#: src/games/AddGameDialog.tsx:60
+msgid "For a game that is not in Mortar's list. It stays on this computer, and its mods come from archives you add, since Mortar knows no site for it."
+msgstr "For a game that is not in Mortar's list. It stays on this computer, and its mods come from archives you add, since Mortar knows no site for it."
+
 #: src/settings/prefCopy.ts:69
 msgid "How this Mortar appears to nearby installations"
 msgstr "How this Mortar appears to nearby installations"
@@ -6498,7 +6511,7 @@ msgstr "Crew"
 msgid "Remove filter {mod}"
 msgstr "Remove filter {mod}"
 
-#: src/mods/ModsGroupHeader.tsx:103
+#: src/mods/ModsGroupHeader.tsx:109
 msgid "Could not look these mods up"
 msgstr "Could not look these mods up"
 
@@ -6750,6 +6763,10 @@ msgstr "When you enable a mod, also enable its required mods already in the prof
 msgid "Show slowest mods"
 msgstr "Show slowest mods"
 
+#: src/games/AddGameDialog.tsx:76
+msgid "Choose the game's program"
+msgstr "Choose the game's program"
+
 #: src/console/HelpDialog.tsx:55
 #: src/firstrun/LoaderStep.tsx:142
 #: src/saves/lackChipActions.tsx:74
@@ -6860,6 +6877,10 @@ msgstr "Downloaded versions stay in the store for re-use."
 #: src/firstrun/NexusStep.tsx:35
 msgid "Skip for now"
 msgstr "Skip for now"
+
+#: src/games/AddGameDialog.tsx:84
+msgid "How it is modded"
+msgstr "How it is modded"
 
 #. placeholder {0}: fit.gameVersion
 #: src/saves/SaveDetails.tsx:69
@@ -6995,7 +7016,7 @@ msgid "No profiles found."
 msgstr "No profiles found."
 
 #. placeholder {0}: game.name
-#: src/games/GameSelect.tsx:222
+#: src/games/GameSelect.tsx:223
 msgid "Open {0}"
 msgstr "Open {0}"
 
@@ -7024,7 +7045,7 @@ msgstr "Could not move the old files to trash"
 msgid "No profiles yet"
 msgstr "No profiles yet"
 
-#: src/games/GameSelect.tsx:173
+#: src/games/GameSelect.tsx:174
 #: src/games/ProfileCards.tsx:48
 #: src/profiles/store.ts:280
 #: src/profiles/store.ts:361
@@ -7549,6 +7570,10 @@ msgstr "{0} hidden"
 msgid "Choose a variant"
 msgstr "Choose a variant"
 
+#: src/games/AddGameDialog.tsx:49
+msgid "Could not add the game"
+msgstr "Could not add the game"
+
 #: src/install/batchSummary.ts:54
 msgid "{failed} could not be added"
 msgstr "{failed} could not be added"
@@ -7951,6 +7976,10 @@ msgstr "Shortcut removed"
 msgid "Run with this profile"
 msgstr "Run with this profile"
 
+#: src/games/AddGameDialog.tsx:71
+msgid "No game program chosen"
+msgstr "No game program chosen"
+
 #. placeholder {0}: item.name
 #: src/profiles/ProfilesPage.tsx:92
 msgid "Delete {0} permanently"
@@ -8222,6 +8251,10 @@ msgstr "Export or share the open profile"
 #: src/mods/describe.ts:129
 msgid " The winner is unclear."
 msgstr " The winner is unclear."
+
+#: src/games/AddGameDialog.tsx:56
+msgid "Add a game"
+msgstr "Add a game"
 
 #: src/install/DownloadsDialog.tsx:177
 msgid "Looking in the downloads folder…"
@@ -8895,7 +8928,7 @@ msgid "Could not upload the log"
 msgstr "Could not upload the log"
 
 #: src/games/GameMenu.tsx:117
-#: src/games/GameSelect.tsx:417
+#: src/games/GameSelect.tsx:418
 msgid "Recently played"
 msgstr "Recently played"
 
@@ -8961,7 +8994,7 @@ msgstr "Minutes between background update checks"
 msgid "Show all"
 msgstr "Show all"
 
-#: src/games/GameSelect.tsx:158
+#: src/games/GameSelect.tsx:159
 msgid "{playtime} played"
 msgstr "{playtime} played"
 
@@ -8991,6 +9024,7 @@ msgstr "Bosses defeated"
 #: src/console/RunProblems.tsx:138
 #: src/downloads/newDownloads.ts:35
 #: src/game/FarmMenuItem.tsx:104
+#: src/games/AddGameDialog.tsx:119
 #: src/mods/AddToGroupDialog.tsx:105
 #: src/mods/ModDependencyTree.tsx:86
 #: src/mods/ModDependencyTree.tsx:86
@@ -9520,7 +9554,7 @@ msgstr "{name} installed"
 msgid "Edit {0}"
 msgstr "Edit {0}"
 
-#: src/games/GameSelect.tsx:525
+#: src/games/ListFooter.tsx:41
 msgid "Hide hidden games"
 msgstr "Hide hidden games"
 
@@ -9908,7 +9942,7 @@ msgstr "Undo only this mod's change from this entry. Everything else stays as it
 msgid "Unofficial update available: {0}"
 msgstr "Unofficial update available: {0}"
 
-#: src/games/GameSelect.tsx:274
+#: src/games/GameSelect.tsx:275
 msgid "Hide this game"
 msgstr "Hide this game"
 
@@ -10502,7 +10536,7 @@ msgstr "A saved group keeps at least one mod; delete the saved group instead"
 msgid "Could not reset the settings of {0}"
 msgstr "Could not reset the settings of {0}"
 
-#: src/games/GameSelect.tsx:419
+#: src/games/GameSelect.tsx:420
 msgid "Other games"
 msgstr "Other games"
 
@@ -10707,7 +10741,7 @@ msgstr "Reset every shortcut?"
 #: src/firstrun/FirstRun.tsx:47
 #: src/firstrun/GameSetup.tsx:153
 #: src/firstrun/LoaderStep.tsx:222
-#: src/games/GameSelect.tsx:455
+#: src/games/GameSelect.tsx:456
 #: src/profiles/GameSettings.tsx:99
 msgid "Loading…"
 msgstr "Loading…"
@@ -10822,6 +10856,10 @@ msgstr "Signed in"
 #: src/profiles/CompareDialog.tsx:178
 msgid "{0, plural, one {# difference} other {# differences}}"
 msgstr "{0, plural, one {# difference} other {# differences}}"
+
+#: src/games/AddGameDialog.tsx:81
+msgid "Choose the game's program…"
+msgstr "Choose the game's program…"
 
 #: src/console/SearchRunsDialog.tsx:110
 msgid "Search run logs"
@@ -10987,7 +11025,7 @@ msgstr "Save backup folder"
 msgid ".mortar file"
 msgstr ".mortar file"
 
-#: src/games/GameSelect.tsx:274
+#: src/games/GameSelect.tsx:275
 #: src/mods/HiddenInside.tsx:80
 #: src/mods/HiddenInside.tsx:93
 #: src/settings/sections/HiddenMods.tsx:39
@@ -12110,6 +12148,7 @@ msgstr "Got a Mortar link? You see what it holds first. Nexus mods need your Nex
 
 #: src/console/RunProblems.tsx:148
 #: src/console/RunProblems.tsx:196
+#: src/games/AddGameDialog.tsx:102
 #: src/mods/CleanupSection.tsx:88
 #: src/mods/ModMenu.tsx:182
 #: src/mods/ModMenu.tsx:281
@@ -12180,7 +12219,7 @@ msgid "Stop the game to test a launch."
 msgstr "Stop the game to test a launch."
 
 #: src/firstrunTour/TourPopover.tsx:42
-#: src/games/GameSelect.tsx:286
+#: src/games/GameSelect.tsx:287
 #: src/launch/PlayControl.tsx:184
 #: src/mods/typedConfig/ConfigTab.tsx:378
 #: src/settings/GameSettingsPage.tsx:100
@@ -12499,7 +12538,7 @@ msgid "Switch {0} to {1}?"
 msgstr "Switch {0} to {1}?"
 
 #: src/firstrun/GameSetup.tsx:52
-#: src/games/GameSelect.tsx:419
+#: src/games/GameSelect.tsx:420
 msgid "All games"
 msgstr "All games"
 
@@ -13062,7 +13101,7 @@ msgstr "Could not unfreeze the profile"
 msgid "Could not roll back {0}"
 msgstr "Could not roll back {0}"
 
-#: src/games/GameSelect.tsx:281
+#: src/games/GameSelect.tsx:282
 msgid "Play {playName}"
 msgstr "Play {playName}"
 
@@ -13555,7 +13594,7 @@ msgstr "Now needs {0}"
 msgid "New profile from this save"
 msgstr "New profile from this save"
 
-#: src/mods/ModsGroupHeader.tsx:105
+#: src/mods/ModsGroupHeader.tsx:111
 msgid "Find sources"
 msgstr "Find sources"
 
@@ -14162,7 +14201,7 @@ msgstr "Command-line control"
 msgid "Could not repair this profile"
 msgstr "Could not repair this profile"
 
-#: src/games/GameSelect.tsx:171
+#: src/games/GameSelect.tsx:172
 #: src/games/ProfileCards.tsx:46
 #: src/games/ProfileCards.tsx:59
 #: src/games/useOpenGame.ts:42
@@ -14354,7 +14393,7 @@ msgstr "See which mods slow the game"
 
 #. placeholder {0}: game.name
 #: src/firstrun/GameSetup.tsx:176
-#: src/games/GameSelect.tsx:294
+#: src/games/GameSelect.tsx:295
 msgid "Set up {0}"
 msgstr "Set up {0}"
 
@@ -14901,6 +14940,7 @@ msgstr "{count, plural, one {# update} other {# updates}}"
 #: src/console/HelpDialog.tsx:257
 #: src/console/SearchRunsDialog.tsx:177
 #: src/game/FarmMenuItem.tsx:154
+#: src/games/AddGameDialog.tsx:112
 #: src/launch/LaunchLayer.tsx:227
 #: src/launch/SweepDialog.tsx:137
 #: src/mods/AssetMapDialog.tsx:283
@@ -15005,6 +15045,10 @@ msgstr "Send links only"
 #: src/settings/prefCopy.ts:453
 msgid "Open in the tray instead of showing the window"
 msgstr "Open in the tray instead of showing the window"
+
+#: src/games/AddGameDialog.tsx:97
+msgid "Games you added"
+msgstr "Games you added"
 
 #: src/commandPalette/paletteLabels.ts:15
 #: src/profiles/ProfileRow.tsx:239
@@ -15249,6 +15293,10 @@ msgstr "Using your gh login"
 #: src/settings/sections/General.tsx:184
 msgid "Share profiles on the local network"
 msgstr "Share profiles on the local network"
+
+#: src/games/AddGameDialog.tsx:53
+msgid "Could not remove the game"
+msgstr "Could not remove the game"
 
 #: src/share/DestinationGrid.tsx:53
 msgid "A link or .mortar file"

@@ -20,22 +20,29 @@ func Active() *Client { return active.Load() }
 func Games() []GameInfo {
 	if c := active.Load(); c != nil {
 		if g := c.Manifest().Games; len(g) > 0 {
-			return g
+			return withUserGames(g)
 		}
 	}
 	m, err := BundledManifest()
 	if err != nil {
-		return nil
+		return withUserGames(nil)
 	}
-	return m.Games
+	return withUserGames(m.Games)
 }
 
 // Game is the catalog entry with id, from the selected manifest when it lists the game, else the bundled one.
 func Game(id string) (GameInfo, bool) {
+	var g GameInfo
+	var ok bool
 	if c := active.Load(); c != nil {
-		return c.Game(id)
+		g, ok = c.Game(id)
+	} else {
+		g, ok = bundledGame(id)
 	}
-	return bundledGame(id)
+	if !ok {
+		return userGame(id)
+	}
+	return g, true
 }
 
 // HasComponent reports whether the catalog in use (else the bundled one) has the game's component of that name, which
