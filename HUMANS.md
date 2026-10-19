@@ -181,7 +181,7 @@ wails3 task components:refresh
 
 A game is catalog data first and code only where its behaviour differs. `TestEveryCatalogReferenceResolves` (`internal/source/all/catalog_test.go`) fails when an entry names a source, loader, metadata id, store field, path role or path token nothing answers to.
 
-`wails3 task components:audit` lists Thunderstore communities with 20 or more packages that the catalog lacks, and fails when a catalog game's community or loader pack has gone from Thunderstore; run it before a release.
+`wails3 task components:audit` lists Thunderstore communities with 20 or more packages that the catalog lacks, and catalog games Nexus hosts for their loader (or CurseForge hosts, with `MORTAR_CURSEFORGE_KEY` set) that have no source there, and fails when a catalog game's community or loader pack has gone from Thunderstore; run it before a release.
 
 ### The catalog entry
 
