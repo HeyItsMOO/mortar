@@ -8,7 +8,7 @@ import (
 	"github.com/Rethunk-Tech/mortar/internal/datadir/datadirtest"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/game"
-	"github.com/Rethunk-Tech/mortar/internal/loader/bepinex5"
+	"github.com/Rethunk-Tech/mortar/internal/loader"
 	"github.com/Rethunk-Tech/mortar/internal/settings"
 	"github.com/Rethunk-Tech/mortar/internal/testenv"
 )
@@ -34,7 +34,7 @@ func TestALaunchArmsTheBridgesIntroSkipFromTheSettingOrACrashCheck(t *testing.T)
 		if err := svc.armIntroSkip(g, l, p.ID, dir); err != nil {
 			t.Fatal(err)
 		}
-		b, err := fsx.ReadFile(filepath.Join(dir, filepath.FromSlash(bepinex5.IntroSkipFile)))
+		b, err := fsx.ReadFile(filepath.Join(dir, filepath.FromSlash(loader.IntroSkipFile)))
 		if os.IsNotExist(err) {
 			return ""
 		}
