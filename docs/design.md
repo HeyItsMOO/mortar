@@ -37,6 +37,7 @@ Parked; take up when asked.
 - **Runs that need an outside tester:** a launch from a real GOG install and from Flatpak Steam; a Linux launch with Stardew's launch method set to Steam, confirming SMAPI loads the profile's mods; Import from Vortex against a long-lived Vortex folder; timings with the data folder under OneDrive.
 - **Upload a modpack to Thunderstore** from Mortar, as Gale does (its `ApiKeyPref` and modpack page): a team token in the OS keyring, the submission API's multipart upload behind a preview step. Today **Export as Thunderstore modpack…** writes the zip for a manual upload.
 - **A game version per profile** (Gale #157), e.g. Lethal Company v50 for an old modpack beside the latest: fetch the older build with Steam's depot downloader into a per-version folder the profile launches from.
+- **Translate a mod's description** into the player's language (as StarModsManager does for Stardew), optional and per description; revisit together with the app's own translations.
 - **Catalog drift check in CI:** `components:audit` on a schedule, opening an issue on drift.
 - **Hosted share service** with short codes and share versioning; the **Xbox app** version (WindowsApps folders are locked down); an **Add to Mortar** button on Nexus listing tiles, which needs Nexus's approval first ([nexus-application.md](nexus-application.md)).
 - **Settings:** new profiles starting as a copy of the open profile or from a saved group; an offline mode that never contacts the network.
