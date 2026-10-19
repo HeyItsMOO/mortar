@@ -688,6 +688,7 @@ func run() error {
 	problemsSvc.SaveFarms = savesSvc.FarmTypes
 	problemsSvc.Throttle = queueSvc.SourceSlot
 	problemsSvc.GitHub = &github.Client{}
+	problemsSvc.Emit = emit
 	nexusPages := func(ctx context.Context, gameID string, ids []int) (map[int]nexus.Page, error) {
 		details, err := nexusSvc.Prime(ctx, gameID, ids)
 		pages := make(map[int]nexus.Page, len(details))

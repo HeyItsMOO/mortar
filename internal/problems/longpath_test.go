@@ -212,8 +212,98 @@ func TestAPlacedFileIsJudgedAtItsPathInTheGameFolder(t *testing.T) {
 	}
 }
 
+// An answer that does not wait holds the rows the walk before found until the new walk ends, which is then announced;
+// one that waits has the new rows, and a fingerprint is walked once.
+func TestAnAnswerThatDoesNotWaitKeepsTheLastRowsUntilTheWalkEnds(t *testing.T) {
+	defer func(was bool) { checkLongPaths = was }(checkLongPaths)
+	checkLongPaths = true
+	emitted := make(chan Changed, 2)
+	s := &Service{long: map[string]*longPathWalk{}, Emit: func(name string, data any) {
+		if c, ok := data.(Changed); ok && name == ChangedEvent {
+			emitted <- c
+		}
+	}}
+	first := s.longPathWalkOf("stardew", "A", "one", func() []LongPath { return []LongPath{{Key: "a"}} })
+	<-first.done
+	if got := s.withLongPaths(t.Context(), first, false, Result{}).LongPaths; len(got) != 1 {
+		t.Fatalf("a finished walk's rows are in the answer: %+v", got)
+	}
+	release := make(chan struct{})
+	walks := 0
+	walk := func() []LongPath {
+		walks++
+		<-release
+		return []LongPath{{Key: "a"}, {Key: "b"}}
+	}
+	w := s.longPathWalkOf("stardew", "A", "two", walk)
+	if s.longPathWalkOf("stardew", "A", "two", walk) != w {
+		t.Fatal("a fingerprint whose walk has started is not walked again")
+	}
+	if got := s.withLongPaths(t.Context(), w, false, Result{}).LongPaths; len(got) != 1 || got[0].Key != "a" {
+		t.Fatalf("until the walk ends, the rows before stay: %+v", got)
+	}
+	close(release)
+	if got := s.withLongPaths(t.Context(), w, true, Result{}).LongPaths; len(got) != 2 || walks != 1 {
+		t.Fatalf("an answer that waits has the new rows: %+v after %d walks", got, walks)
+	}
+	if got := <-emitted; got != (Changed{Game: "stardew", Profile: "A"}) {
+		t.Fatalf("emitted %+v", got)
+	}
+	select {
+	case got := <-emitted:
+		t.Fatalf("only the walk an answer went without is announced: %+v", got)
+	default:
+	}
+}
+
+// Problems, which the pre-Play check and the command line ask, waits for the walk, and so does the check's health
+// point; ProblemsNoWait then has its rows without walking again.
+func TestProblemsWaitsForTheLongPathWalk(t *testing.T) {
+	datadirtest.Use(t, t.TempDir())
+	set, err := settings.Open()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, profiles := testenv.Stores(t)
+	p := testenv.Profile(t, profiles, "stardew", "A")
+	modsDir, err := profiles.ModsDir("stardew", p.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	long := pathOf(t, filepath.Join(modsDir, "Loose"), maxPath+2)
+	if err := os.MkdirAll(filepath.Dir(long), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(long, []byte("x"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	defer func(was bool) { checkLongPaths = was }(checkLongPaths)
+	checkLongPaths = true
+	s := NewService(t.TempDir(), set, profiles, nil)
+	s.meta = fakeMeta{}
+	got, err := s.Problems(t.Context(), "stardew", p.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.LongPaths) != 1 || got.LongPaths[0].Name != "Loose" || got.LongPaths[0].Longest != long {
+		t.Fatalf("Problems = %+v", got.LongPaths)
+	}
+	if health, err := profiles.HealthHistory("stardew", p.ID); err != nil || len(health) != 1 || health[0].Problems != 1 {
+		t.Fatalf("the check's health point counts the walk's row: %+v, %v", health, err)
+	}
+	walk := s.long["stardew/"+p.ID]
+	got, err = s.ProblemsNoWait(t.Context(), "stardew", p.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.LongPaths) != 1 || s.long["stardew/"+p.ID] != walk || walk.owed {
+		t.Fatalf("ProblemsNoWait = %+v", got.LongPaths)
+	}
+}
+
 // TestTimeTheLongPathWalkOfAnEightHundredModProfile times the long-path check of a redirected game's mods folder on the
-// modfixture profile, shaped like a real 811-mod one (about 48,000 files). It is opt-in: MORTAR_SCALE=1.
+// modfixture profile, shaped like a real 811-mod one (about 48,000 files), and the first answer of a check with and
+// without waiting for it. It is opt-in: MORTAR_SCALE=1.
 // MORTAR_SCALE_DATA names the data folder to build it in and keeps it, and a later run reuses the profile there, so
 // it times a process that did not just write the files.
 func TestTimeTheLongPathWalkOfAnEightHundredModProfile(t *testing.T) {
@@ -250,5 +340,23 @@ func TestTimeTheLongPathWalkOfAnEightHundredModProfile(t *testing.T) {
 		at := time.Now()
 		rows := s.longPaths(gameID, id, mods)
 		t.Logf("check %d: %v over %d mods, %d rows", i+1, time.Since(at).Round(100*time.Microsecond), len(mods), len(rows))
+	}
+	// The first answer of a new process, whose check reads the caches on disk: as the window's loads get it, and as
+	// Problems gives it, waiting for the walk as every check did before it was left to finish after the answer.
+	for i := range 5 {
+		for _, wait := range []bool{false, true} {
+			framework.Forget()
+			s := NewService(t.TempDir(), set, profiles, nil)
+			s.meta = fakeMeta{}
+			at := time.Now()
+			if _, err := s.problems(t.Context(), gameID, id, wait); err != nil {
+				t.Fatal(err)
+			}
+			t.Logf("first answer %d, waiting for the walk %v: %v", i+1, wait, time.Since(at).Round(time.Millisecond))
+			s.mu.Lock()
+			walk := s.long[gameID+"/"+id]
+			s.mu.Unlock()
+			<-walk.done
+		}
 	}
 }

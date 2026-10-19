@@ -2,6 +2,7 @@ package problems
 
 import (
 	"cmp"
+	"context"
 	"io/fs"
 	"maps"
 	"os"
@@ -212,4 +213,111 @@ func (s *Service) longPaths(gameID, id string, mods []framework.Mod) []LongPath 
 		}
 	}
 	return longPathRows(mods, placedPaths(dir, owners, folder, root))
+}
+
+// ChangedEvent is emitted with a Changed when rows a ProblemsNoWait answer went without are in.
+const ChangedEvent = "problems:changed"
+
+// Changed names the profile whose problems changed.
+type Changed struct {
+	Game    string `json:"game"`
+	Profile string `json:"profile"`
+}
+
+// longPathWalk is the long-path walk of one profile for one fingerprint of its mods; rows is set when done closes.
+type longPathWalk struct {
+	fingerprint string
+	done        chan struct{}
+	rows        []LongPath
+	// walked is set with rows, before then runs and done closes.
+	walked bool
+	// then is what runs once the rows are in and before done closes, such as the health point of the check.
+	then []func()
+	// was is what the walk before found, which an answer that does not wait holds until this walk ends, so the rows of
+	// a profile change once instead of leaving and coming back.
+	was []LongPath
+	// owed is set when an answer held was, so the end of the walk is announced.
+	owed bool
+}
+
+// longPathWalkOf is the profile's walk for fingerprint fp, running walk on a goroutine of its own unless the walk for
+// fp has already started. A build that checks nothing has its empty rows at once.
+func (s *Service) longPathWalkOf(gameID, id, fp string, walk func() []LongPath) *longPathWalk {
+	key := gameID + "/" + id
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	last := s.long[key]
+	if last != nil && last.fingerprint == fp {
+		return last
+	}
+	w := &longPathWalk{fingerprint: fp, done: make(chan struct{})}
+	if last != nil {
+		w.was = last.found()
+	}
+	s.long[key] = w
+	if !checkLongPaths {
+		w.walked = true
+		close(w.done)
+		return w
+	}
+	go func() {
+		rows := walk()
+		s.mu.Lock()
+		w.rows, w.walked = rows, true
+		then := w.then
+		s.mu.Unlock()
+		for _, f := range then {
+			f()
+		}
+		s.mu.Lock()
+		close(w.done)
+		owed := w.owed
+		s.mu.Unlock()
+		if owed && s.Emit != nil {
+			s.Emit(ChangedEvent, Changed{Game: gameID, Profile: id})
+		}
+	}()
+	return w
+}
+
+// afterLongPaths runs f once w has its rows, at once when it has them already.
+func (s *Service) afterLongPaths(w *longPathWalk, f func()) {
+	s.mu.Lock()
+	if !w.walked {
+		w.then = append(w.then, f)
+		s.mu.Unlock()
+		return
+	}
+	s.mu.Unlock()
+	f()
+}
+
+// found is the walk's rows once it has ended, else the rows of the walk before. The caller holds Service.mu.
+func (w *longPathWalk) found() []LongPath {
+	select {
+	case <-w.done:
+		return w.rows
+	default:
+		return w.was
+	}
+}
+
+// withLongPaths gives r the walk's rows, waiting for them when wait is set. An answer that does not wait, or whose ctx
+// ends first, gets the rows the walk before found, and the end of this one is announced.
+func (s *Service) withLongPaths(ctx context.Context, w *longPathWalk, wait bool, r Result) Result {
+	if wait {
+		select {
+		case <-w.done:
+		case <-ctx.Done():
+		}
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	r.LongPaths = w.found()
+	select {
+	case <-w.done:
+	default:
+		w.owed = true
+	}
+	return r
 }
