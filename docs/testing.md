@@ -4,17 +4,13 @@ Where the tests are, what each opt-in run proves and how to start it. The gate t
 
 ## Budget
 
-- The default suite (Go with `-race` plus `bun test`) runs in under 10 s warm. Only the `main` package links the Wails `application` package (GTK and WebKit through cgo): services take a `winhost.Host` and `desktopnotify` a `Notifier`, both implemented in `wailshost.go`, so no other test binary pays that link. Cold (empty Go and lint caches) is measured, not enforced.
+- The default suite (Go with `-race` plus `bun test`) runs in under 10 s warm. Only the `main` package links the Wails `application` package (GTK and WebKit through cgo): services take a `winhost.Host` and `desktopnotify` a `Notifier`, both implemented in `wailshost.go`, so no other test binary pays that link. Cold (empty Go and lint caches) is not enforced.
 - A slow path sits behind a flag below, not in the default run.
 - Every `dotnet` invocation leaves an empty six-character dir in `TMPDIR`: a script that runs it gives it a per-run `TMPDIR`.
 - `scripts/vulncheck.sh` skips govulncheck locally while `go.mod` and `go.sum` are unchanged since the last passing run; CI and `MORTAR_GATE_VULNCHECK=1` always run it.
 
-Measurements (2026-10-09, 32 cores):
-
-- Warm gate 6-7 s. Cold 52 s wall and 846 CPU-s (a quiet-machine re-measure at load under 2 is still owed). `go test -race` alone is about 40 s: 33 s of compiling down one chain, the Wails `application` cgo step (10.5 s of gcc over the GTK and WebKit headers) then `modernc.org/sqlite/lib` (9 s), then about 6 s of tests, because `go test` starts no test binary until every one is linked. The lint passes add about 350 CPU-s.
-- `scripts/gate.sh` builds `go build -race ./...` first; the linux lint, govulncheck (`GOFLAGS=-race`) and the race tests then read that one instrumented compile. The windows lint cannot share it and starts beside the chain. This cut cold CPU 28% (1173 to 846 CPU-s) and wall by 2-5 s against separate plain and race compiles.
-- Measured and not worth doing: chaining a plain `go build ./...` before `bun run gate` (cold CPU 1192 to 956 s, wall 59 to 70 s: the -race tests and windows lint compile with other flags and cannot read the plain build's cache), seeding the race cache from a parallel step, `nice` on the lint steps (within noise), `CGO_CFLAGS` changes (the gcc time is header parsing), and limiting the windows lint to packages with windows files (other packages would stop being typechecked for windows).
-- Browser e2e: 49 tests in about 75 s, under its 2-minute budget. One Playwright process took 136-150 s (the tests' own time is 120 s, sandbox start, seed and teardown about 9 s) because the specs mutate one seeded server and need a sandbox each. `bun run e2e` (`frontend/e2e/run-shards.ts`) runs two `playwright test --shard` processes, each with its own sandbox (folder, port, display): two shards split about 60 s and 60 s, three leave one at 52 s, four at 43 s. The longest file, `a11y.pw.ts` (23 s, one test, 88 axe scans), bounds any shard count. Each shard adds a sandbox's memory and a headless display, so the count stays at the smallest that fits the budget.
+- `scripts/gate.sh` builds `go build -race ./...` first, so the linux lint, govulncheck (`GOFLAGS=-race`) and the race tests read that one instrumented compile; the windows lint cannot share it and starts beside it. The cold wall time is a compile chain: the Wails `application` cgo step, then `modernc.org/sqlite/lib`, and `go test` starts no test binary until every one is linked.
+- Browser e2e stays under its 2-minute budget: `bun run e2e` (`frontend/e2e/run-shards.ts`) runs two `playwright test --shard` processes, each with its own sandbox (folder, port, display), because the specs mutate one seeded server. The longest file, `a11y.pw.ts`, bounds any shard count, and each shard costs a sandbox's memory and a headless display, so the count stays at the smallest that fits the budget.
 
 ## Where tests live
 

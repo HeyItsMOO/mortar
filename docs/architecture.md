@@ -143,23 +143,13 @@ Once mods are installed, nothing external is needed to open, edit or launch a pr
 - **Mortar quits mid-operation:** every write is temp-then-rename and startup removes leftover temp folders; a `mods/` folder deleted outside Mortar is rebuilt from the store from `profile.json`.
 - **Startup repairs are reported once:** what startup repaired itself is collected by `internal/tidy`, logged, and shown as one info notification ("Mortar tidied up N things").
 
-## Measured costs
+## Resource limits
 
-Go's soft memory limit is 512 MiB (`memlimit.go`, `debug.SetMemoryLimit`; `GOMEMLIMIT` wins, `GOGC` untouched): a collector target, not a cap. Measured on an 819-mod profile; each holds until the profile size or code path changes.
-
-| Path | Cost | Verdict |
-| --- | --- | --- |
-| Mods tab load (`Service.Mods`, heaviest of `Mods`, `Pages`, `Problems`, `Updates`) | 676 entries, 817 mods: 31-40 ms CPU, 24-35 ms wall (`profile.json` read twice at 2.8 ms each, every manifest, under the profile store lock) | no cache |
-| Memory budget, 811-mod profile (`scripts/mem-budget.sh`, `MORTAR_MEM_DATA`), peak PSS | Problems check: total 1499 to ~1086 MiB (Go 988 to 530, browser 974 to 555). What moved it: the Thunderstore index is stream-decoded as it downloads; the picture cache keeps 192 px thumbnails and a profile hero 1920 px; the wallpaper is served at the window's pixel width. Did not lower the peak: freeing memory after the check, interning Content Patcher shape strings, streaming `Deprecated` | within the 1152 MiB budget |
-| Go soft limit, install and Problems scenarios | a lower limit shrinks the Go peak but costs far more CPU. 320 MiB: Problems total 876-994 MiB, but a 500 MB zip install took 31 s wall and 307 s Go CPU with 2667 GCs, against 9 s, 11 s, 25 GCs at 512 MiB; 384 MiB: 9.8 s wall, 47 s CPU | 512 MiB kept: no lower limit is cheap |
-| Problems steady-state heap | 160 MiB after one check (pack cache 65 MiB for 398 packs, map scans 10 MiB, result caches 6 MiB); decoding the 5 MB pack disk cache ~350 ms CPU once | bounded by installed packs, no leak |
-| Archive extraction peak heap (xz, lzma, zstd windows capped at 256 MiB) | stored zip +0 MB; 3000-file zip +3 MB; solid 7z with 256 MB LZMA2 dictionary +388 MB; RAR window capped at 256 MB | installs run one at a time: ~0.4 GB worst case |
-| `store.Verify`, whole store (1.7 GiB, 772 items, 53,758 files) | 3.3 s CPU compare pass (first, baselining pass cold: 4.3 s CPU, 9.4 s wall) | invisible: ~13 minutes at a fifth of a core, weekly per item |
-| Download dialog (`archivesvc.DownloadsArchives`), 15 archives, 5.4 GB | each archive hashed once, remembered by path, size, mtime in `cache/archive-hashes.json`: 2.9 s CPU first time, then 0.2 ms | only new or changed archives are hashed |
-| Archive preview (`archive.PreviewArchive`), solid 7z: 200 MB, 961 entries, 40 manifests | listing is header-only (under 1 ms CPU); each manifest is opened, decoding the solid stream up to it: 205 ms CPU and the whole 200 MB read when manifests are spread through incompressible data, 5 ms when early. Solid RAR not measured | bounded by archive size |
-| Settings › Storage (`datasvc.Usage`, 105,001 files, 2.16 GB) | 1.3 s CPU for one walk with a per-file extent query; reused for a minute | cached |
-| Data folder move (3.3 GB, warm cache) | hashing the source while copying so verify reads only the target: 22.3 s to 14.1 s wall. On btrfs (105,001 files) cloning every file: 15.6 s to 7.4 s CPU | one source read; clones kept |
-| Not worth optimising | `DotHiddenMods` 676 entries 57-66 ms CPU; `NewGameModsFolders` 819 folders 62-68 ms per call (key on the folder's mtime if a user reports lag); `StoreKeys` with history 0.97 s CPU once, then 20-23 ms; `RefreshDependencies` 62 ms per launch; Bridge Content Patcher timing patches: nanoseconds per call | none |
+- Go's soft memory limit is 512 MiB (`memlimit.go`, `debug.SetMemoryLimit`; `GOMEMLIMIT` wins, `GOGC` untouched): a collector target, not a cap; a lower limit costs far more GC CPU on large installs.
+- A Problems check on a large profile stays under 1152 MiB peak PSS (`scripts/mem-budget.sh`, `MORTAR_MEM_DATA`): the Thunderstore index is stream-decoded as it downloads, the picture cache keeps 192 px thumbnails and a 1920 px profile hero, and the wallpaper is served at the window's pixel width.
+- Archive decoders cap xz, lzma, zstd and RAR windows at 256 MiB, and installs run one at a time.
+- The download dialog hashes each archive once, remembered by path, size and mtime in `cache/archive-hashes.json`; `datasvc.Usage` is reused for a minute; a data folder move hashes the source while copying and clones files on btrfs.
+- `store.Verify` re-checks each store item weekly at a fraction of a core.
 
 ## Tests
 
@@ -377,13 +367,12 @@ Redundant lists enabled C# mods that change the same game members (`internal/dot
 
 #### Asset map
 
-Every asset an enabled mod changes (`contentpatcher/assetmap.go`, `internal/problems/assetmap.go`), with each mod's Action and Priority and the winner; mods are ranked in SMAPI load order (`internal/loadorder`), not profile order. Edits apply by priority, then load order, then patch order ([Content Patcher's EditData docs](https://github.com/Pathoschild/StardewMods/blob/develop/ContentPatcher/docs/author-guide/action-editdata.md), Priority). Trap: for Loads the last loaded wins on a tie although the Load docs say "first" (`PatchManager.ApplyPatchesToAsset` replaces its pick with every later candidate that is not strictly lower); two Exclusive loads apply neither. A losing mod offers **Make win** only when it ties the winner's priority and no other mod in the group already loads after it through its dependencies. Measured on an 819-mod profile: 91,754 assets, 1,002 changed by more than one mod; ~1 s CPU on first open with a warm content-pack cache, 8 s cold, then 40-120 ms per search or page.
+Every asset an enabled mod changes (`contentpatcher/assetmap.go`, `internal/problems/assetmap.go`), with each mod's Action and Priority and the winner; mods are ranked in SMAPI load order (`internal/loadorder`), not profile order. Edits apply by priority, then load order, then patch order ([Content Patcher's EditData docs](https://github.com/Pathoschild/StardewMods/blob/develop/ContentPatcher/docs/author-guide/action-editdata.md), Priority). Trap: for Loads the last loaded wins on a tie although the Load docs say "first" (`PatchManager.ApplyPatchesToAsset` replaces its pick with every later candidate that is not strictly lower); two Exclusive loads apply neither. A losing mod offers **Make win** only when it ties the winner's priority and no other mod in the group already loads after it through its dependencies.
 
-#### Measured costs of problem scans
+#### Problem scan caches
 
-- Reusing each patch's shape index and a pack's reachable dynamic tokens within a check: 0.56 s per check against 0.92 s, identical output (same sha256). CPU time, main profile. The tilesheet map-file scan is saved in `cache/problems-map-scans.json` (gzip; 330 KB for 2,927 scans, loaded in 29 ms). Problems reads the newest run's id from the run index rather than its 0.65-1 MB log.
-- The one-time zip-name repair walks the store and profiles (0.16 s CPU, 105k files); `names-repaired` in the data folder marks a clean pass. Every launch points a mod record whose folder is gone at the one folder differing only by U+FFFD standing for real characters, so switching that mod off keeps working.
-- **Measured, not worth optimising** (main profile: 819 mods, 48,484 files under `mods/`): a full store walk 82 ms over 53,758 files, a profile walk 72 ms; the problem-scan cache 2.5 MB gzip (31 MB raw), rewrite ~0.55 s CPU; a drift scan ~220 ms, reused within 5 s; `Installed()` over 819 manifests 18 ms. JSON Lines for the append-only logs would not help: reading, parsing and rewriting `history.json` (51 KB) costs 0.5 ms CPU per event and `download-history.json` 5.3 ms per finished download, and events are edited in place and trimmed to their cap. Opening a 418-mod profile in the self-test build: mod cards 171 ms after the click; cold start first request 112-128 ms, ~120 binding calls in the first 5 s and none at idle.
+- A check reuses each patch's shape index and a pack's reachable dynamic tokens. The tilesheet map-file scan is saved in `cache/problems-map-scans.json` (gzip). Problems reads the newest run's id from the run index rather than its log.
+- A one-time zip-name repair walks the store and profiles; `names-repaired` in the data folder marks a clean pass. Every launch points a mod record whose folder is gone at the one folder differing only by U+FFFD standing for real characters, so switching that mod off keeps working.
 
 #### Generic Mod Config Menu
 
