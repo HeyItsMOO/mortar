@@ -46,6 +46,8 @@ type Settings struct {
 	FormatVersion int    `json:"formatVersion,omitempty"`
 	Language      string `json:"language"`
 	Accent        string `json:"accent"`
+	// Font is the installed font family the app uses; empty means the bundled font.
+	Font string `json:"font"`
 	// Background is one of the Background* constants.
 	Background string `json:"background"`
 	// BackgroundImage is the absolute path of the user's wallpaper; empty means the default one.

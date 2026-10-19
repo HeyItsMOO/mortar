@@ -9,7 +9,7 @@ import (
 const exportVersion = 1
 
 var portableFields = []string{
-	"language", "accent", "background", "lastGame",
+	"language", "accent", "font", "background", "lastGame",
 	"listColumns", "listSortColumn", "listSortDir", "listGroupBy",
 	"checkModUpdatesOnStart", "tellWhenSmapiOut", "askEndorseMods", "smapiBuilds", "loaderPrefs", "showSmapiConsole", "keepInTray", "includeBetaReleases",
 	"includePrereleaseModVersions", "checkOnlyEnabledMods", "enableModsWhenInstalled", "tipsSeen",

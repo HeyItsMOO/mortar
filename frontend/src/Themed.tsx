@@ -11,6 +11,7 @@ import { createMortarTheme } from './theme/theme.ts'
 export function Themed({ children }: { children: React.ReactNode }) {
   const accent = useSettings((s) => s.accent)
   const systemAccent = useSystemAccent()
+  const font = useSettings((s) => s.font)
   const density = useSettings((s) => s.density)
   const roomy = useRoomy((s) => s.roomy)
   const reduceMotion = useSettings((s) => s.reduceMotion)
@@ -44,13 +45,14 @@ export function Themed({ children }: { children: React.ReactNode }) {
   const theme = React.useMemo(
     () =>
       createMortarTheme(isAccent(accent) ? accent : defaultAccent, {
+        font,
         accentHex: accentColour(accent, systemAccent),
         compact: density === 'compact' && !roomy,
         roomy,
         reduceMotion: honourReducedMotion(reduceMotion || 'system', osReduce),
         mode: honourTheme(colourTheme || 'dark', osLight),
       }),
-    [accent, systemAccent, colourTheme, density, osLight, osReduce, reduceMotion, roomy],
+    [accent, font, systemAccent, colourTheme, density, osLight, osReduce, reduceMotion, roomy],
   )
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }

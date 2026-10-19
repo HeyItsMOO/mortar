@@ -122,6 +122,7 @@ var registry = withDefaults([]pref{
 	enumPref("startScreen", ScopeApp, startScreenValues, func(s Settings, _ string) string { return s.StartScreen }, func(s *Settings, _, v string) { s.StartScreen = v }),
 	enumPref("antivirus", ScopeApp, antivirusValues, func(s Settings, _ string) string { return s.Antivirus }, func(s *Settings, _, v string) { s.Antivirus = v }),
 	strPref("antivirusSocket", ScopeApp, func(s Settings, _ string) string { return s.AntivirusSocket }, func(s *Settings, _, v string) { s.AntivirusSocket = v }),
+	strPref("font", ScopeApp, func(s Settings, _ string) string { return s.Font }, func(s *Settings, _, v string) { s.Font = v }),
 	strPref("antivirusCommand", ScopeApp, func(s Settings, _ string) string { return s.AntivirusCommand }, func(s *Settings, _, v string) { s.AntivirusCommand = v }),
 	enumPref("dates", ScopeApp, datesValues, func(s Settings, _ string) string { return s.Dates }, func(s *Settings, _, v string) { s.Dates = v }),
 	intPref("trashRetentionDays", ScopeApp, MinTrashRetentionDays, MaxTrashRetentionDays, func(s Settings, _ string) int { return s.TrashRetentionDays }, func(s *Settings, _ string, n int) { s.TrashRetentionDays = n }),

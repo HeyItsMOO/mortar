@@ -16,6 +16,7 @@ import { loadPrefSpecs } from './prefSpecs.ts'
 const defaults: Settings = {
   language: '',
   accent: 'sand',
+  font: '',
   background: 'image',
   backgroundImage: '',
   lastGame: '',

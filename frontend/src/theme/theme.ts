@@ -262,9 +262,16 @@ function buttonOverrides(
   }
 }
 
+/** The bundled font behind an installed family the player chose, so a glyph the choice lacks still draws. */
+function fontStack(family: string | undefined): string {
+  const name = (family ?? '').replaceAll('"', '').trim()
+  return name === '' ? FONT : `"${name}", ${FONT}`
+}
+
 function createMortarTheme(
   accent: AccentName,
   opts: {
+    font?: string
     accentHex?: string
     compact?: boolean
     roomy?: boolean
@@ -292,7 +299,7 @@ function createMortarTheme(
     // The global rule below stops CSS transitions; MUI's own timers (Collapse, Fade, ripples) read these durations.
     ...(reduceMotion ? { transitions: { create: () => 'none', duration: noDuration } } : {}),
     typography: {
-      fontFamily: FONT,
+      fontFamily: fontStack(opts.font),
       htmlFontSize: compactUi ? HTML_FONT_SIZE_COMPACT : HTML_FONT_SIZE,
     },
     components: {

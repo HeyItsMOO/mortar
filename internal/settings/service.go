@@ -9,6 +9,7 @@ import (
 
 	"github.com/Rethunk-Tech/mortar/internal/avscan"
 	"github.com/Rethunk-Tech/mortar/internal/datadir"
+	"github.com/Rethunk-Tech/mortar/internal/fonts"
 	"github.com/Rethunk-Tech/mortar/internal/fsx"
 	"github.com/Rethunk-Tech/mortar/internal/picker"
 	"github.com/Rethunk-Tech/mortar/internal/sysaccent"
@@ -41,6 +42,11 @@ func (s *Service) SetLanguage(language string) error {
 
 func (s *Service) SetAccent(accent string) error {
 	return s.set(func(v *Settings) { v.Accent = accent })
+}
+
+// InstalledFonts lists the font families installed on this computer.
+func (s *Service) InstalledFonts() ([]string, error) {
+	return fonts.List()
 }
 
 // SystemAccent is the desktop's accent colour as "#rrggbb", empty when it has none.

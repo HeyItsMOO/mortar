@@ -1,12 +1,23 @@
 import { useLingui } from '@lingui/react/macro'
-import { Box, Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
+import {
+  Autocomplete,
+  Box,
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { ImagePlus, RotateCcw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   ChooseBackgroundImage,
+  InstalledFonts,
   SetAccent,
   SetBackground,
   SetBackgroundImage,
+  SetByKey,
   SetListSort,
 } from '../../../bindings/github.com/Rethunk-Tech/mortar/internal/settings/service.ts'
 import { formatBytes } from '../../i18n/bytes.ts'
@@ -16,7 +27,7 @@ import { BackdropImage } from '../../shell/BackdropImage.tsx'
 import { visuallyHidden } from '../../shell/visuallyHidden.ts'
 import { space } from '../../theme/density.ts'
 import { PAD_FOCUS } from '../../theme/theme.ts'
-import { reportError } from '../../toasts/report.ts'
+import { reportError, reportUnexpected } from '../../toasts/report.ts'
 import { PrefSegmented, PrefSelect } from '../PrefControls.tsx'
 import { PrefByKey, PrefKeys } from '../PrefRow.tsx'
 import { persist } from '../persist.ts'
@@ -84,6 +95,33 @@ function DefaultSort() {
 
 // The accent swatch's height: a picture of the colour, not a control, so it does not follow the density scale.
 const SWATCH_PX = 44
+
+function FontPicker() {
+  const { t } = useLingui()
+  const font = useSettings((s) => s.font)
+  const [families, setFamilies] = useState<string[]>([])
+  useEffect(() => {
+    InstalledFonts()
+      .then((list) => setFamilies(list ?? []))
+      .catch(reportUnexpected)
+  }, [])
+  return (
+    <Searchable terms={`${t`Font`} ${t`Typeface`}`}>
+      <SettingRow label={t`App font`}>
+        <Autocomplete
+          size="small"
+          sx={{ width: 280 }}
+          options={families}
+          value={font === '' ? null : font}
+          onChange={(_, family) => {
+            persist(() => SetByKey('font', family ?? '', ''), t`Could not save that setting`)
+          }}
+          renderInput={(params) => <TextField {...params} placeholder={t`Bundled font`} />}
+        />
+      </SettingRow>
+    </Searchable>
+  )
+}
 
 export function Appearance() {
   const { t } = useLingui()
@@ -168,6 +206,9 @@ export function Appearance() {
             </RadioGroup>
           </Box>
         </Searchable>
+      </SettingsSection>
+      <SettingsSection title={t`Font`}>
+        <FontPicker />
       </SettingsSection>
       <SettingsSection title={t`Background`}>
         <SettingRow label={t`Background`}>
