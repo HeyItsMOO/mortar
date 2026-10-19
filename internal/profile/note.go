@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"unicode"
@@ -64,6 +65,37 @@ func (s *Store) SetEntryNoteTags(game, id, key, note string, tags []string) (Pro
 	return s.patchEntry(game, id, key, func(e *Entry) error {
 		e.Note = note
 		e.Tags = tags
+		return nil
+	})
+}
+
+// MaxDisplayField caps an entry's display name, author or version, in characters.
+const MaxDisplayField = 100
+
+func cleanDisplay(label, raw string) (string, error) {
+	v := strings.TrimSpace(raw)
+	if utf8.RuneCountInString(v) > MaxDisplayField || strings.ContainsFunc(v, unicode.IsControl) {
+		return "", fmt.Errorf("the %s is longer than %d characters or has control characters", label, MaxDisplayField)
+	}
+	return v, nil
+}
+
+// SetEntryDisplay sets the name, author and version this profile shows for an entry that holds one mod; a blank value
+// goes back to the mod's own. The mod's files are not touched.
+func (s *Store) SetEntryDisplay(game, id, key, name, author, version string) (Profile, error) {
+	var vals [3]string
+	for i, f := range []struct{ label, raw string }{{"name", name}, {"author", author}, {"version", version}} {
+		v, err := cleanDisplay(f.label, f.raw)
+		if err != nil {
+			return Profile{}, err
+		}
+		vals[i] = v
+	}
+	return s.patchEntry(game, id, key, func(e *Entry) error {
+		if len(e.Mods) != 1 {
+			return errors.New("this download holds several mods, so it has no single name to change")
+		}
+		e.DisplayName, e.DisplayAuthor, e.DisplayVersion = vals[0], vals[1], vals[2]
 		return nil
 	})
 }

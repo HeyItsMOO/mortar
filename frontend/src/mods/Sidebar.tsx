@@ -45,6 +45,7 @@ import {
   updateFor,
 } from './lookup.ts'
 import { ModDependencyTree } from './ModDependencyTree.tsx'
+import { ModDisplayEdit } from './ModDisplayEdit.tsx'
 import { ModNoteTags } from './ModNoteTags.tsx'
 import { ModVersionsAndSettings } from './ModSections.tsx'
 import { ModUpdateControls } from './ModUpdateControls.tsx'
@@ -459,6 +460,7 @@ function LowerSectionsView({ mod, profile }: { mod: Mod; profile: Profile }) {
         }}
       />
       <HiddenInside mod={mod} profile={profile} />
+      <ModDisplayEdit profile={profile} mod={mod} />
       <ModNoteTags profile={profile} mod={mod} />
     </>
   )

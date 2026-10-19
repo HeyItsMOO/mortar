@@ -856,7 +856,8 @@ func (s *Store) mods(game, id string, bundled bool) ([]Mod, error) {
 		if !bundled && e.Source.Bundled() {
 			continue
 		}
-		for _, m := range e.Mods {
+		for _, c := range e.Mods {
+			m := e.Shown(c)
 			out = append(out, Mod{
 				Key: e.Key, ID: m.ID, Name: m.Name, Author: m.Author, Version: m.Version,
 				Enabled: e.Enabled(m.ID),

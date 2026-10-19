@@ -516,6 +516,11 @@ func (s *Service) SetEntryNoteTags(game, id, key, note string, tags []string) (P
 	return s.store.SetEntryNoteTags(game, id, key, note, tags)
 }
 
+// SetEntryDisplay sets the name, author and version the profile shows for one mod; blank values clear them.
+func (s *Service) SetEntryDisplay(game, id, key, name, author, version string) (Profile, error) {
+	return s.store.SetEntryDisplay(game, id, key, name, author, version)
+}
+
 // ListCustomCategories returns custom mod categories stored for game.
 func (s *Service) ListCustomCategories(game string) ([]CustomCategory, error) {
 	return s.store.ListCustomCategories(game)

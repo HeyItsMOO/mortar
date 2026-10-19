@@ -84,7 +84,8 @@ func (s *Store) packageInstalled(game string, e Entry) []Installed {
 		}
 	}
 	out := make([]Installed, 0, len(e.Mods))
-	for _, c := range e.Mods {
+	for _, raw := range e.Mods {
+		c := e.Shown(raw)
 		mf := manifest.Manifest{Name: c.Name, Author: c.Author, Version: c.Version, MinimumGameVersion: c.MinGame}.WithModID(c.ID)
 		mf.Dependencies = needs
 		out = append(out, Installed{

@@ -104,3 +104,37 @@ func TestTagAndNoteEditsRecordWhatChanged(t *testing.T) {
 		}
 	}
 }
+
+func TestSetEntryDisplayOverridesWhatTheProfileShowsAndNothingElse(t *testing.T) {
+	t.Parallel()
+	s := newStore(t)
+	p := pinTestProfile(t, s)
+	p, err := s.SetEntryDisplay("stardew", p.ID, "nexus-1-1", "  My Name ", "Me", "9.9")
+	if err != nil {
+		t.Fatal(err)
+	}
+	e := p.Entries[0]
+	shown := e.Shown(e.Mods[0])
+	if shown.Name != "My Name" || shown.Author != "Me" || shown.Version != "9.9" || e.Mods[0].Version != "1.0.0" || shown.ID != e.Mods[0].ID {
+		t.Fatalf("shown %+v, the mod's own record %+v", shown, e.Mods[0])
+	}
+	if loaded, err := s.read("stardew", p.ID); err != nil || loaded.Entries[0].DisplayName != "My Name" {
+		t.Fatalf("persisted %+v, %v", loaded.Entries[0], err)
+	}
+	p, err = s.SetEntryDisplay("stardew", p.ID, "nexus-1-1", "", "", "")
+	if err != nil || p.Entries[0].Shown(p.Entries[0].Mods[0]).Version != "1.0.0" {
+		t.Fatalf("blank values restore the mod's own: %+v, %v", p.Entries[0], err)
+	}
+	for _, bad := range [][3]string{{strings.Repeat("n", MaxDisplayField+1), "", ""}, {"", "a\nb", ""}} {
+		if _, err := s.SetEntryDisplay("stardew", p.ID, "nexus-1-1", bad[0], bad[1], bad[2]); err == nil {
+			t.Errorf("accepted %q", bad)
+		}
+	}
+	many := Entry{Key: "two", Mods: []Component{{ID: "smapi:A"}, {ID: "smapi:B"}}}
+	if _, err := s.update("stardew", p.ID, func(cur *Profile, _ string) error { cur.Entries = append(cur.Entries, many); return nil }); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.SetEntryDisplay("stardew", p.ID, "two", "X", "", ""); err == nil {
+		t.Error("a download of several mods took one name")
+	}
+}

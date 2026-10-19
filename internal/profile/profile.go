@@ -2,6 +2,7 @@
 package profile
 
 import (
+	"cmp"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -185,6 +186,11 @@ type Entry struct {
 	Note string `json:"note,omitempty"`
 	// Tags are per-entry labels in this profile, at most MaxEntryTags of MaxEntryTag characters each.
 	Tags []string `json:"tags,omitempty"`
+	// DisplayName, DisplayAuthor and DisplayVersion replace the mod's own name, author and version in this profile; the
+	// mod's files and manifest are never touched. Only an entry holding one mod has them.
+	DisplayName    string `json:"displayName,omitempty"`
+	DisplayAuthor  string `json:"displayAuthor,omitempty"`
+	DisplayVersion string `json:"displayVersion,omitempty"`
 	// CategoryOverride is the primary category for grouping: a custom category id or a Nexus category name.
 	CategoryOverride string `json:"categoryOverride,omitempty"`
 	// Fomod is the chosen plugin names per install step and group, replayed on update and roll back.
@@ -200,6 +206,17 @@ type Entry struct {
 	OverlayFrom string `json:"overlayFrom,omitempty"`
 	OverlayTo   string `json:"overlayTo,omitempty"`
 	OverlayOff  bool   `json:"overlayOff,omitempty"`
+}
+
+// Shown is the component as this profile displays it: the entry's own name, author and version where it overrides them.
+func (e Entry) Shown(c Component) Component {
+	if len(e.Mods) != 1 {
+		return c
+	}
+	c.Name = cmp.Or(e.DisplayName, c.Name)
+	c.Author = cmp.Or(e.DisplayAuthor, c.Author)
+	c.Version = cmp.Or(e.DisplayVersion, c.Version)
+	return c
 }
 
 // CollectionRef is the Nexus collection a profile was imported from.
