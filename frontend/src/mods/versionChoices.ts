@@ -54,7 +54,7 @@ export function targetOfSource(src: {
 }
 
 /** What to queue to install a listed version; with replaces, the entry it takes the place of (even when older). */
-export function wantOf(target: VersionTarget, v: ListedVersion, replaces: string): Want {
+function wantOf(target: VersionTarget, v: ListedVersion, replaces: string): Want {
   const how: Want = replaces
     ? { kind: 'update', currentKey: replaces, exact: true }
     : { kind: 'install' }
